@@ -124,12 +124,7 @@ main {
     opacity: 1;
 }
 
-#home-image img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 10px;
-    animation: pulsate 2s infinite;
-},
+#home-image img,
 #about-image img {
     max-width: 100%;
     height: auto;
@@ -147,6 +142,17 @@ main {
     100% {
         transform: scale(1);
     }
+}
+
+#home-image {
+    position: absolute;
+    top: 0; /* Start at the top of the page */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #about-image {
