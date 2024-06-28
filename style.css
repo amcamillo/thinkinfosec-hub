@@ -124,7 +124,12 @@ main {
     opacity: 1;
 }
 
-#home-image img,
+#home-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    animation: pulsate 2s infinite;
+},
 #about-image img {
     max-width: 100%;
     height: auto;
