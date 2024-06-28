@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudnSec Learning Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <img src="cloundsec-logo.jpg" alt="CloudnSec Logo" id="left-logo">
+        <h1>CloudnSec Learning Hub</h1>
+        <img src="learning-hub-logo.png" alt="Learning Hub Logo" id="right-logo">
+        <nav>
+            <ul class="menu">
+                <li onclick="showPage('home')">Home</li>
+                <li>
+                    Projects
+                    <ul class="submenu">
+                        <li><a href="https://discord.gg/NMefYksn" target="_blank">Discord</a></li>
+                        <li><a href="https://www.youtube.com/channel/UCK5IydDSpf-Yz7qCmVjDN5Q" target="_blank">Youtube</a></li>
+                        <li><a href="https://andrecamillo.medium.com/" target="_blank">Blog</a></li>
+                        <li><a href="https://open.spotify.com/show/2e32C7SFXNUqfRR3YemmtI" target="_blank">Podcast</a></li>
+                        <li><a href="https://linktr.ee/acamillo" target="_blank">Andre's Contacts</a></li>
+                    </ul>
+                </li>
+                <li onclick="showPage('about')">About</li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="home-page" class="page active">
+            <div id="home-image">
+                <img src="learninghub-homepage.png" alt="Learning Hub Home Image">
+            </div>
+        </section>
+        <section id="about-page" class="page">
+            <div id="about-image">
+                <img src="about-bg2.png" alt="About Page Background Image">
+            </div>
+            <div id="about-content">
+                <p>A Community for everyone to learn more about (and check news around) AI, InfoSec, Cloud and what's next!</p>
+                <p>Join the Discord Server here: <a href="https://discord.gg/NMefYksn" target="_blank">DISCORD</a></p>
+                <a href="https://discord.gg/NMefYksn" target="_blank">
+                    <img src="discord.png" alt="Discord Logo" id="discord-logo">
+                </a>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>By Andre Camillo</p>
+    </footer>
+    <div id="music-control">
+        <p id="music-name">Neon Circuitry</p>
+        <button id="play-music" onclick="toggleMusic()">Play</button>
+        <button id="stop-music" onclick="toggleMusic()">Stop</button>
+    </div>
+    <audio id="background-music" src="Neon-circuitry-bg.mp3" loop></audio>
+    <script src="script.js"></script>
+</body>
+</html>
