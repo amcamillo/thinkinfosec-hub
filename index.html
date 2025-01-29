@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudnSec Learning Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>CloudnSec Learning Hub</h1>
+        <nav>
+            <ul class="menu">
+                <li><a href="#" onclick="showPage('home')">Home</a></li>
+                <li><a href="#" onclick="showPage('projects')">Projects</a></li>
+                <li><a href="#" onclick="showPage('about')">About</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="home-page" class="page active">
+            <div id="home-content">
+                <h2>Welcome to CloudnSec Learning Hub</h2>
+                <p>Explore the latest in AI, InfoSec, and Cloud technologies.</p>
+                <img src="home-image.jpg" alt="Home Image" class="home-image">
+            </div>
+        </section>
+
+        <section id="projects-page" class="page">
+            <h2>My Projects</h2>
+            
+            <h3 class="section-title">Tools</h3>
+            <div class="project-container">
+                <div class="project-card">
+                    <h3>Password Hasher</h3>
+                    <p>A simple password generator and hashing tool.</p>
+                    <a href="password-generator.html" target="_blank">Try It</a>
+                </div>
+            </div>
+
+            <h3 class="section-title">Educational</h3>
+            <div class="project-container">
+                <div class="project-card">
+                    <h3>Discord Community</h3>
+                    <p>A space for cybersecurity and AI discussions.</p>
+                    <a href="https://discord.gg/NMefYksn" target="_blank">Join Now</a>
+                </div>
+                <div class="project-card">
+                    <h3>Youtube Channel</h3>
+                    <p>Technical content and tutorials.</p>
+                    <a href="https://www.youtube.com/channel/UCK5IydDSpf-Yz7qCmVjDN5Q" target="_blank">Watch</a>
+                </div>
+                <div class="project-card">
+                    <h3>Blog</h3>
+                    <p>Technical write-ups and insights.</p>
+                    <a href="https://andrecamillo.medium.com/" target="_blank">Read More</a>
+                </div>
+                <div class="project-card">
+                    <h3>Podcast</h3>
+                    <p>Discussions on security and cloud topics.</p>
+                    <a href="https://open.spotify.com/show/2e32C7SFXNUqfRR3YemmtI" target="_blank">Listen Now</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about-page" class="page">
+            <div class="profile-frame">
+                <img src="your-photo.jpg" alt="Your Photo">
+            </div>
+            <div id="about-content">
+                <h2>About Me</h2>
+                <p>Welcome to my learning hub! I specialize in AI, InfoSec, and Cloud technologies.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>By Andre Camillo</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
