@@ -70,6 +70,11 @@ header {
     border-radius: 10px;
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
 }
+.home-logo {
+    display: block;
+    margin: 20px auto;
+    max-width: 200px; /* Adjust size as needed */
+}
 
 /* Project Cards */
 .project-container {
