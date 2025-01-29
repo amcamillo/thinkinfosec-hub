@@ -75,7 +75,11 @@ header {
     margin: 20px auto;
     max-width: 500px; /* Adjust size as needed */
 }
-
+.profile-frame {
+    display: block;
+    margin: 20px auto;
+    max-width: 500px; /* Adjust size as needed */
+}    
 /* Project Cards */
 .project-container {
     display: grid;
