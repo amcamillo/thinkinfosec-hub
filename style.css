@@ -1,14 +1,18 @@
-html, body {
+/* Ensure full background coverage */
+html {
     height: 100%;
-    margin: 0;
-    padding: 0;
+}
+
+body {
+    min-height: 100vh; /* Ensures the background covers the full viewport */
     display: flex;
     flex-direction: column;
-    background: linear-gradient(to bottom, #f8f9fa, #e3f2fd);
+    background: linear-gradient(to bottom, #f8f9fa, #e3f2fd); /* Extend background fully */
     color: #333;
     font-family: 'Poppins', sans-serif;
 }
 
+/* Header */
 header {
     background-color: white;
     text-align: center;
@@ -16,6 +20,7 @@ header {
     font-weight: bold;
 }
 
+/* Navigation Menu */
 .menu {
     list-style: none;
     padding: 0;
@@ -41,6 +46,7 @@ header {
     color: #ff4081;
 }
 
+/* Page Container */
 .page {
     display: none;
     opacity: 0;
@@ -56,6 +62,12 @@ header {
     opacity: 1;
 }
 
+/* Ensures main content takes available space */
+main {
+    flex: 1;
+}
+
+/* Section Titles */
 .section-title {
     font-size: 1.8em;
     margin: 30px 0 15px;
@@ -70,16 +82,14 @@ header {
     border-radius: 10px;
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
 }
+
+/* Home Logo */
 .home-logo {
     display: block;
     margin: 20px auto;
-    max-width: 500px; /* Adjust size as needed */
+    max-width: 200px; /* Adjust size as needed */
 }
-.profile-frame {
-    display: block;
-    margin: 20px auto;
-    max-width: 500px; /* Adjust size as needed */
-}    
+
 /* Project Cards */
 .project-container {
     display: grid;
@@ -104,10 +114,20 @@ header {
     box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* Profile Frame (Centered Profile Image) */
+.profile-frame {
+    display: block;
+    margin: 20px auto;
+    max-width: 500px; /* Adjust size as needed */
+}
+
+/* Footer */
 footer {
     background-color: white;
     text-align: center;
     padding: 1em 0;
     font-size: 1.5em;
     font-weight: bold;
+    width: 100%;
+    position: relative;
 }
