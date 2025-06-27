@@ -360,6 +360,21 @@
             margin-bottom: 1rem;
         }
 
+        .project-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .project-category {
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--border-radius);
+            font-size: 0.8rem;
+            border: 1px solid var(--border-color);
+        }
+
         /* Videos Section */
         .videos-intro {
             text-align: center;
@@ -507,20 +522,6 @@
             padding: 0.25rem 0.5rem;
             border-radius: var(--border-radius);
             border: 1px solid var(--border-color);
-        }}
-
-        .project-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .project-category {
-            background: var(--bg-secondary);
-            color: var(--text-secondary);
-            padding: 0.25rem 0.5rem;
-            border-radius: var(--border-radius);
-            font-size: 0.8rem;
         }
 
         /* About Section */
@@ -758,7 +759,7 @@
                     <p><em>Note: This platform was formerly known as "CloudnSec Learning Hub" and has been rebranded to better reflect our evolving focus on comprehensive information security thinking and education.</em></p>
                     <div class="social-links">
                         <a href="https://discord.gg/NMefYksn" class="social-link" title="Discord">💬</a>
-                        <a href="https://www.youtube.com/channel/UCK5IydDSpf-Yz7qCmVjDN5Q" class="social-link" title="YouTube">📺</a>
+                        <a href="https://www.youtube.com/@cloudnsec" class="social-link" title="YouTube">📺</a>
                         <a href="https://andrecamillo.medium.com/" class="social-link" title="Medium">📝</a>
                         <a href="https://open.spotify.com/show/2e32C7SFXNUqfRR3YemmtI" class="social-link" title="Podcast">🎧</a>
                     </div>
@@ -806,7 +807,6 @@
                 }
             ],
             projects: [
-                
                 {
                     id: 'cybersecurity-tools',
                     title: 'Cybersecurity Tools Collection',
@@ -869,438 +869,11 @@
                     title: 'Learn CrowdStrike Falcon Skills with the new CrowdStrike University | Free certification courses',
                     description: 'Comprehensive guide to CrowdStrike University\'s free certification courses. Learn how to develop Falcon platform skills and advance your cybersecurity career with hands-on training.',
                     category: 'tutorials',
-                    duration: '',
-                    views: '1.5K', 
+                    duration: '15:42',
+                    views: '1.5K',
                     thumbnail: 'https://img.youtube.com/vi/aQANe1ZJCds/maxresdefault.jpg',
                     url: 'https://www.youtube.com/watch?v=aQANe1ZJCds&t=1s'
                 },
                 {
                     id: 'browser-extension-cookies',
-                    title: 'I developed a browser extension to help you audit and secure your browser cookies in seconds!',
-                    description: 'Demonstration of a custom-built browser extension designed to quickly audit and secure browser cookies, enhancing privacy and security for everyday web browsing.',
-                    category: 'security',
-                    duration: ''
-                    views: '1K', 
-                    thumbnail: 'https://img.youtube.com/vi/fRlxZIalUec/maxresdefault.jpg',
-                    url: 'https://www.youtube.com/watch?v=fRlxZIalUec'
-                },
-                {
-                    id: 'ai-history-security',
-                    title: 'A brief history of Artificial Intelligence | AI Security Series',
-                    description: 'First episode in the AI Security Series exploring the evolution of artificial intelligence from its origins to modern applications in cybersecurity and threat detection.',
-                    category: 'ai',
-                    duration: ''
-                    views: '1K',
-                    thumbnail: 'https://img.youtube.com/vi/H_bfuq6fJr8/maxresdefault.jpg',
-                    url: 'https://www.youtube.com/watch?v=H_bfuq6fJr8&list=PLn_e1t8tt2VpCtVt0l8V2nxqPa5Z4a-m7'
-                },
-                {
-                    id: 'ciso-mindmap-tool',
-                    title: 'Cyber Security Strategic Security Tool - The CISO Mindmap',
-                    description: 'Strategic cybersecurity planning tool designed for CISOs and security leaders. Learn how to use mindmapping techniques for comprehensive security program management.',
-                    category: 'security',
-                    duration: ''
-                    views: '1K', 
-                    thumbnail: 'https://img.youtube.com/vi/oiizHlYcbsw/maxresdefault.jpg',
-                    url: 'https://www.youtube.com/watch?v=oiizHlYcbsw&list=PLn_e1t8tt2Vr6kkP9ftj-y2tLk_MrNgZH'
-                }
-            ]
-        };
-
-        // DOM Elements
-        const featuredContainer = document.getElementById('featuredProjects');
-        const projectsContainer = document.getElementById('projectsGrid');
-        const videosContainer = document.getElementById('videosGrid');
-        const searchInput = document.getElementById('searchInput');
-        const categoryFilter = document.getElementById('categoryFilter');
-        const loading = document.getElementById('loading');
-
-        // State
-        let currentFilter = '';
-        let currentSearch = '';
-        let currentVideoCategory = 'all';
-
-        // Initialize the application
-        function init() {
-            renderFeaturedProjects();
-            renderAllProjects();
-            renderVideos();
-            setupEventListeners();
-            setupNavigation();
-        }
-
-        // Render featured projects
-        function renderFeaturedProjects() {
-            const featured = projectsData.featured;
-            
-            featuredContainer.innerHTML = featured.map(project => `
-                <div class="featured-card">
-                    <img src="${project.image}" alt="${project.title}" loading="lazy">
-                    <div class="featured-content">
-                        <h3 class="featured-title">${project.title}</h3>
-                        <p class="featured-description">${project.description}</p>
-                        <div class="featured-tags">
-                            ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                        </div>
-                        <div class="featured-links">
-                            ${project.links.github ? `<a href="${project.links.github}" class="btn btn-primary" target="_blank">View Code</a>` : ''}
-                            ${project.links.demo ? `<a href="${project.links.demo}" class="btn btn-secondary" target="_blank">Live Demo</a>` : ''}
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Render videos
-        function renderVideos(filteredVideos = null) {
-            const videos = filteredVideos || projectsData.videos;
-            
-            if (videos.length === 0) {
-                videosContainer.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
-                        <p style="color: var(--text-secondary);">No videos found in this category.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            videosContainer.innerHTML = videos.map(video => `
-                <div class="video-card" data-category="${video.category}">
-                    <div class="video-thumbnail">
-                        <img src="${video.thumbnail}" alt="${video.title}" loading="lazy">
-                        <div class="play-button" onclick="window.open('${video.url}', '_blank')">▶</div>
-                    </div>
-                    <div class="video-content">
-                        <h3 class="video-title">${video.title}</h3>
-                        <p class="video-description">${video.description}</p>
-                        <div class="video-meta">
-                            <span class="video-duration">${video.duration}</span>
-                            <span>${video.views} views</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Setup video category filtering
-        function setupVideoFiltering() {
-            const categoryTabs = document.querySelectorAll('.category-tab');
-            
-            categoryTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const category = tab.dataset.category;
-                    currentVideoCategory = category;
-                    
-                    // Update active tab
-                    categoryTabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    
-                    // Filter videos
-                    filterVideos();
-                });
-            });
-        }
-
-        // Filter videos by category
-        function filterVideos() {
-            let filtered = projectsData.videos;
-            
-            if (currentVideoCategory !== 'all') {
-                filtered = filtered.filter(video => video.category === currentVideoCategory);
-            }
-            
-            renderVideos(filtered);
-        }
-
-        // Render all projects
-        function renderAllProjects(filteredProjects = null) {
-            const projects = filteredProjects || projectsData.projects;
-            
-            if (projects.length === 0) {
-                projectsContainer.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
-                        <p style="color: var(--text-secondary);">No projects found matching your criteria.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            projectsContainer.innerHTML = projects.map(project => `
-                <div class="project-card" data-category="${project.category}">
-                    <div class="project-icon">${project.icon}</div>
-                    <h3 class="project-title">${project.title}</h3>
-                    <p class="project-description">${project.description}</p>
-                    <div class="project-footer">
-                        <span class="project-category">${project.category}</span>
-                        <div style="display: flex; gap: 0.5rem;">
-                            ${project.links.github ? `<a href="${project.links.github}" class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" target="_blank">Code</a>` : ''}
-                            ${project.links.demo ? `<a href="${project.links.demo}" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" target="_blank">Demo</a>` : ''}
-                            ${project.links.external ? `<a href="${project.links.external}" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" target="_blank">Visit</a>` : ''}
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Setup event listeners
-        function setupEventListeners() {
-            // Search functionality
-            searchInput.addEventListener('input', debounce(handleSearch, 300));
-            
-            // Filter functionality
-            categoryFilter.addEventListener('change', handleFilter);
-            
-            // Video filtering
-            setupVideoFiltering();
-        }
-
-        // Handle search
-        function handleSearch(e) {
-            currentSearch = e.target.value.toLowerCase();
-            filterProjects();
-        }
-
-        // Handle filter
-        function handleFilter(e) {
-            currentFilter = e.target.value;
-            filterProjects();
-        }
-
-        // Filter projects based on search and category
-        function filterProjects() {
-            let filtered = projectsData.projects;
-
-            // Apply category filter
-            if (currentFilter) {
-                filtered = filtered.filter(project => project.category === currentFilter);
-            }
-
-            // Apply search filter
-            if (currentSearch) {
-                filtered = filtered.filter(project => 
-                    project.title.toLowerCase().includes(currentSearch) ||
-                    project.description.toLowerCase().includes(currentSearch) ||
-                    project.tags.some(tag => tag.toLowerCase().includes(currentSearch))
-                );
-            }
-
-            renderAllProjects(filtered);
-        }
-
-        // Setup smooth scrolling navigation
-        function setupNavigation() {
-            const navLinks = document.querySelectorAll('.nav-link');
-            
-            navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = link.getAttribute('href').substring(1);
-                    const targetElement = document.getElementById(targetId);
-                    
-                    if (targetElement) {
-                        targetElement.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                        
-                        // Update active nav link
-                        navLinks.forEach(nl => nl.classList.remove('active'));
-                        link.classList.add('active');
-                    }
-                });
-            });
-
-            // Update active nav on scroll
-            window.addEventListener('scroll', debounce(updateActiveNav, 100));
-        }
-
-        // Update active navigation based on scroll position
-        function updateActiveNav() {
-            const sections = ['featured', 'projects', 'videos', 'about'];
-            const navLinks = document.querySelectorAll('.nav-link');
-            let current = '';
-
-            sections.forEach(sectionId => {
-                const section = document.getElementById(sectionId);
-                if (section) {
-                    const sectionTop = section.offsetTop - 100;
-                    if (window.scrollY >= sectionTop) {
-                        current = sectionId;
-                    }
-                }
-            });
-
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${current}`) {
-                    link.classList.add('active');
-                }
-            });
-        }
-
-        // Debounce utility function
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
-        // Initialize when DOM is loaded
-        document.addEventListener('DOMContentLoaded', init);
-
-        // Add loading animation
-        function showLoading() {
-            loading.style.display = 'block';
-            projectsContainer.style.display = 'none';
-        }
-
-        function hideLoading() {
-            loading.style.display = 'none';
-            projectsContainer.style.display = 'grid';
-        }
-
-        // GitHub API integration (optional enhancement)
-        async function fetchGitHubProjects() {
-            try {
-                const response = await fetch('https://api.github.com/users/amcamillo/repos');
-                const repos = await response.json();
-                
-                // Filter out forked repositories and repos without descriptions
-                return repos.filter(repo => !repo.fork && repo.description && !repo.private)
-                    .map(repo => ({
-                        id: repo.name,
-                        title: repo.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-                        description: repo.description,
-                        category: 'tools', // Default category
-                        tags: repo.topics || [],
-                        icon: '⚡',
-                        links: {
-                            github: repo.html_url,
-                            demo: repo.homepage || null
-                        },
-                        stars: repo.stargazers_count,
-                        language: repo.language
-                    }));
-            } catch (error) {
-                console.error('Error fetching GitHub projects:', error);
-                return [];
-            }
-        }
-
-        // Enhanced project rendering with GitHub data
-        async function loadProjectsWithGitHub() {
-            showLoading();
-            
-            try {
-                const githubProjects = await fetchGitHubProjects();
-                
-                // Merge with existing projects, avoiding duplicates
-                const existingIds = projectsData.projects.map(p => p.id);
-                const newGitHubProjects = githubProjects.filter(p => !existingIds.includes(p.id));
-                
-                projectsData.projects = [...projectsData.projects, ...newGitHubProjects];
-                
-                renderAllProjects();
-            } catch (error) {
-                console.error('Error loading projects:', error);
-                renderAllProjects(); // Fallback to static data
-            } finally {
-                hideLoading();
-            }
-        }
-
-        // Intersection Observer for animations
-        function setupAnimations() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            });
-
-            // Observe all project cards
-            document.querySelectorAll('.project-card, .featured-card').forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                card.style.transition = 'all 0.6s ease-out';
-                observer.observe(card);
-            });
-        }
-
-        // Analytics tracking (placeholder)
-        function trackEvent(eventName, properties = {}) {
-            // Placeholder for analytics tracking
-            console.log('Event tracked:', eventName, properties);
-        }
-
-        // Enhanced initialization
-        async function enhancedInit() {
-            init();
-            
-            // Load GitHub projects asynchronously
-            await loadProjectsWithGitHub();
-            
-            // Setup animations
-            setTimeout(setupAnimations, 100);
-            
-            // Track page view
-            trackEvent('page_view', { page: 'portfolio' });
-        }
-
-        // Service Worker registration for PWA capabilities
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('SW registered: ', registration);
-                    })
-                    .catch(registrationError => {
-                        console.log('SW registration failed: ', registrationError);
-                    });
-            });
-        }
-
-        // Initialize enhanced version
-        document.addEventListener('DOMContentLoaded', enhancedInit);
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey || e.metaKey) {
-                switch(e.key) {
-                    case 'k':
-                        e.preventDefault();
-                        searchInput.focus();
-                        break;
-                    case '/':
-                        e.preventDefault();
-                        searchInput.focus();
-                        break;
-                }
-            }
-        });
-
-        // Theme toggle (future enhancement)
-        function toggleTheme() {
-            document.documentElement.classList.toggle('dark-theme');
-            localStorage.setItem('theme', document.documentElement.classList.contains('dark-theme') ? 'dark' : 'light');
-        }
-
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            document.documentElement.classList.add('dark-theme');
-        }
-    </script>
-</body>
-</html>
+                    title
