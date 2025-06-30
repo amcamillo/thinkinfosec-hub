@@ -102,6 +102,14 @@
             font-size: 2rem;
             font-weight: bold;
             box-shadow: var(--glow);
+            overflow: hidden;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
         }
 
         .header h1 {
@@ -368,11 +376,10 @@
 
         .project-category {
             background: var(--bg-secondary);
-            color: var(--text-muted);
+            color: var(--text-secondary);
             padding: 0.25rem 0.5rem;
             border-radius: var(--border-radius);
             font-size: 0.8rem;
-            border: 1px solid var(--border-color);
         }
 
         /* Videos Section */
@@ -452,19 +459,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-        }
-
-        .video-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-muted);
-        }
-
-        .video-placeholder-icon {
-            font-size: 3rem;
-            opacity: 0.7;
         }
 
         .play-button {
@@ -669,7 +663,9 @@
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <div class="logo">TI</div>
+                <div class="logo">
+                    <img src="learning-hub-logo.png" alt="Thinkinfosec Learning Hub Logo">
+                </div>
                 <h1>Thinkinfosec Learning Hub</h1>
                 <p>Explore the latest in AI, InfoSec, and Cloud technologies</p>
             </div>
@@ -776,7 +772,7 @@
     </footer>
 
     <script>
-        // Project data - This would typically be loaded from a JSON file
+        // Project data
         const projectsData = {
             featured: [
                 {
@@ -808,6 +804,18 @@
             ],
             projects: [
                 {
+                    id: 'azure-sentinel',
+                    title: 'Azure Sentinel Implementation',
+                    description: 'Cloud-native SIEM solution for intelligent security analytics across enterprise environments.',
+                    category: 'research',
+                    tags: ['Azure', 'SIEM', 'Security Analytics', 'Cloud'],
+                    icon: '🛡️',
+                    links: {
+                        github: 'https://github.com/amcamillo/Azure-Sentinel-220919',
+                        demo: '#'
+                    }
+                },
+                {
                     id: 'cybersecurity-tools',
                     title: 'Cybersecurity Tools Collection',
                     description: 'Curated collection of cybersecurity tools and resources for security professionals.',
@@ -816,6 +824,17 @@
                     icon: '🔧',
                     links: {
                         github: 'https://github.com/amcamillo/Cybersecurity_Tools'
+                    }
+                },
+                {
+                    id: 'log4j-poc',
+                    title: 'Log4j2 POC',
+                    description: 'Proof-of-Concept demonstration for the CVE-2021-44228 Log4j vulnerability.',
+                    category: 'research',
+                    tags: ['CVE', 'Log4j', 'Security Research'],
+                    icon: '🔍',
+                    links: {
+                        github: 'https://github.com/amcamillo/log4j2-poc-repo'
                     }
                 },
                 {
@@ -876,4 +895,283 @@
                 },
                 {
                     id: 'browser-extension-cookies',
-                    title
+                    title: 'I developed a browser extension to help you audit and secure your browser cookies in seconds!',
+                    description: 'Demonstration of a custom-built browser extension designed to quickly audit and secure browser cookies, enhancing privacy and security for everyday web browsing.',
+                    category: 'security',
+                    duration: '12:28',
+                    views: '1K',
+                    thumbnail: 'https://img.youtube.com/vi/fRlxZIalUec/maxresdefault.jpg',
+                    url: 'https://www.youtube.com/watch?v=fRlxZIalUec'
+                },
+                {
+                    id: 'ai-history-security',
+                    title: 'A brief history of Artificial Intelligence | AI Security Series',
+                    description: 'First episode in the AI Security Series exploring the evolution of artificial intelligence from its origins to modern applications in cybersecurity and threat detection.',
+                    category: 'ai',
+                    duration: '18:35',
+                    views: '1K',
+                    thumbnail: 'https://img.youtube.com/vi/H_bfuq6fJr8/maxresdefault.jpg',
+                    url: 'https://www.youtube.com/watch?v=H_bfuq6fJr8&list=PLn_e1t8tt2VpCtVt0l8V2nxqPa5Z4a-m7'
+                },
+                {
+                    id: 'ciso-mindmap-tool',
+                    title: 'Cyber Security Strategic Security Tool - The CISO Mindmap',
+                    description: 'Strategic cybersecurity planning tool designed for CISOs and security leaders. Learn how to use mindmapping techniques for comprehensive security program management.',
+                    category: 'security',
+                    duration: '25:17',
+                    views: '1K',
+                    thumbnail: 'https://img.youtube.com/vi/oiizHlYcbsw/maxresdefault.jpg',
+                    url: 'https://www.youtube.com/watch?v=oiizHlYcbsw&list=PLn_e1t8tt2Vr6kkP9ftj-y2tLk_MrNgZH'
+                }
+            ]
+        };
+
+        // DOM Elements
+        const featuredContainer = document.getElementById('featuredProjects');
+        const projectsContainer = document.getElementById('projectsGrid');
+        const videosContainer = document.getElementById('videosGrid');
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const loading = document.getElementById('loading');
+
+        // State
+        let currentFilter = '';
+        let currentSearch = '';
+        let currentVideoCategory = 'all';
+
+        // Initialize the application
+        function init() {
+            renderFeaturedProjects();
+            renderAllProjects();
+            renderVideos();
+            setupEventListeners();
+            setupNavigation();
+        }
+
+        // Render featured projects
+        function renderFeaturedProjects() {
+            const featured = projectsData.featured;
+            
+            featuredContainer.innerHTML = featured.map(project => `
+                <div class="featured-card">
+                    <img src="${project.image}" alt="${project.title}" loading="lazy">
+                    <div class="featured-content">
+                        <h3 class="featured-title">${project.title}</h3>
+                        <p class="featured-description">${project.description}</p>
+                        <div class="featured-tags">
+                            ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        <div class="featured-links">
+                            ${project.links.github ? `<a href="${project.links.github}" class="btn btn-primary" target="_blank">View Code</a>` : ''}
+                            ${project.links.demo ? `<a href="${project.links.demo}" class="btn btn-secondary" target="_blank">Live Demo</a>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render all projects
+        function renderAllProjects(filteredProjects = null) {
+            const projects = filteredProjects || projectsData.projects;
+            
+            if (projects.length === 0) {
+                projectsContainer.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+                        <p style="color: var(--text-secondary);">No projects found matching your criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            projectsContainer.innerHTML = projects.map(project => `
+                <div class="project-card" data-category="${project.category}">
+                    <div class="project-icon">${project.icon}</div>
+                    <h3 class="project-title">${project.title}</h3>
+                    <p class="project-description">${project.description}</p>
+                    <div class="project-footer">
+                        <span class="project-category">${project.category}</span>
+                        <div style="display: flex; gap: 0.5rem;">
+                            ${project.links.github ? `<a href="${project.links.github}" class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" target="_blank">Code</a>` : ''}
+                            ${project.links.demo ? `<a href="${project.links.demo}" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" target="_blank">Demo</a>` : ''}
+                            ${project.links.external ? `<a href="${project.links.external}" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" target="_blank">Visit</a>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render videos
+        function renderVideos(filteredVideos = null) {
+            const videos = filteredVideos || projectsData.videos;
+            
+            if (videos.length === 0) {
+                videosContainer.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+                        <p style="color: var(--text-secondary);">No videos found in this category.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            videosContainer.innerHTML = videos.map(video => `
+                <div class="video-card" data-category="${video.category}">
+                    <div class="video-thumbnail">
+                        <img src="${video.thumbnail}" alt="${video.title}" loading="lazy">
+                        <div class="play-button" onclick="window.open('${video.url}', '_blank')">▶</div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">${video.title}</h3>
+                        <p class="video-description">${video.description}</p>
+                        <div class="video-meta">
+                            <span class="video-duration">${video.duration}</span>
+                            <span>${video.views} views</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Setup video category filtering
+        function setupVideoFiltering() {
+            const categoryTabs = document.querySelectorAll('.category-tab');
+            
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const category = tab.dataset.category;
+                    currentVideoCategory = category;
+                    
+                    // Update active tab
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Filter videos
+                    filterVideos();
+                });
+            });
+        }
+
+        // Filter videos by category
+        function filterVideos() {
+            let filtered = projectsData.videos;
+            
+            if (currentVideoCategory !== 'all') {
+                filtered = filtered.filter(video => video.category === currentVideoCategory);
+            }
+            
+            renderVideos(filtered);
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search functionality
+            searchInput.addEventListener('input', debounce(handleSearch, 300));
+            
+            // Filter functionality
+            categoryFilter.addEventListener('change', handleFilter);
+            
+            // Video filtering
+            setupVideoFiltering();
+        }
+
+        // Handle search
+        function handleSearch(e) {
+            currentSearch = e.target.value.toLowerCase();
+            filterProjects();
+        }
+
+        // Handle filter
+        function handleFilter(e) {
+            currentFilter = e.target.value;
+            filterProjects();
+        }
+
+        // Filter projects based on search and category
+        function filterProjects() {
+            let filtered = projectsData.projects;
+
+            // Apply category filter
+            if (currentFilter) {
+                filtered = filtered.filter(project => project.category === currentFilter);
+            }
+
+            // Apply search filter
+            if (currentSearch) {
+                filtered = filtered.filter(project => 
+                    project.title.toLowerCase().includes(currentSearch) ||
+                    project.description.toLowerCase().includes(currentSearch) ||
+                    project.tags.some(tag => tag.toLowerCase().includes(currentSearch))
+                );
+            }
+
+            renderAllProjects(filtered);
+        }
+
+        // Setup smooth scrolling navigation
+        function setupNavigation() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                        
+                        // Update active nav link
+                        navLinks.forEach(nl => nl.classList.remove('active'));
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+            // Update active nav on scroll
+            window.addEventListener('scroll', debounce(updateActiveNav, 100));
+        }
+
+        // Update active navigation based on scroll position
+        function updateActiveNav() {
+            const sections = ['featured', 'projects', 'videos', 'about'];
+            const navLinks = document.querySelectorAll('.nav-link');
+            let current = '';
+
+            sections.forEach(sectionId => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    const sectionTop = section.offsetTop - 100;
+                    if (window.scrollY >= sectionTop) {
+                        current = sectionId;
+                    }
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Debounce utility function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
