@@ -4,43 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Thinkinfosec Learning Hub - Explore AI, InfoSec, and Cloud technologies with Andre Camillo">
-    <meta name="keywords" content="cybersecurity, cloud security, AI, infosec, azure, aws, portfolio">
     <meta name="author" content="Andre Camillo">
-    <title>Thinkinfosec Learning Hub</title>
+    <title>Thinkinfosec</title>
     
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://amcamillo.github.io/cloudnsec-learninghub/">
-    <meta property="og:title" content="Thinkinfosec Learning Hub">
-    <meta property="og:description" content="Explore the latest in AI, InfoSec, and Cloud technologies">
-    
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://amcamillo.github.io/cloudnsec-learninghub/">
-    <meta property="twitter:title" content="Thinkinfosec Learning Hub">
-    <meta property="twitter:description" content="Explore the latest in AI, InfoSec, and Cloud technologies">
-    
-    <link rel="icon" type="image/png" href="learning-hub-logo.png">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
+        /* Modern, Light Color Scheme */
         :root {
-            --primary-color: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary-color: #94a3b8;
-            --accent-color: #06b6d4;
-            --bg-color: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-card: #334155;
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
-            --border-color: #475569;
-            --border-light: #64748b;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-            --border-radius: 12px;
+            --primary-color: #0077b5; /* Professional Blue Accent */
+            --primary-dark: #005a8c;
+            --background-color: #f4f7f6; /* Light Gray Background */
+            --card-color: #ffffff;       /* White Card */
+            --text-primary: #333333;       /* Dark Gray Text */
+            --text-secondary: #555555;
+            --text-muted: #777777;
+            --border-color: #dddddd;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --glow: 0 0 20px rgba(99, 102, 241, 0.3);
         }
 
         * {
@@ -50,10 +34,10 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             line-height: 1.6;
             color: var(--text-primary);
-            background-color: var(--bg-color);
+            background-color: var(--background-color);
         }
 
         .container {
@@ -64,29 +48,11 @@
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
-            color: white;
+            background: var(--card-color);
+            color: var(--text-primary);
             padding: 4rem 0;
             text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-                        radial-gradient(circle at 70% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 50%);
-            opacity: 0.8;
-        }
-
-        .header-content {
-            position: relative;
-            z-index: 1;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .logo {
@@ -94,14 +60,12 @@
             height: 80px;
             border-radius: 50%;
             margin: 0 auto 1.5rem;
-            border: 3px solid rgba(99, 102, 241, 0.5);
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border: 3px solid var(--primary-color);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2rem;
             font-weight: bold;
-            box-shadow: var(--glow);
             overflow: hidden;
         }
 
@@ -109,33 +73,31 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 50%;
         }
 
         .header h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .header p {
-            font-size: 1.25rem;
-            opacity: 0.9;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
             max-width: 600px;
             margin: 0 auto;
         }
 
         /* Navigation */
         .nav {
-            background: rgba(30, 41, 59, 0.95);
+            background: rgba(255, 255, 255, 0.85);
             padding: 1rem 0;
             border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
             z-index: 100;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .nav-container {
@@ -147,7 +109,7 @@
         .nav-links {
             display: flex;
             list-style: none;
-            gap: 2rem;
+            gap: 1.5rem;
         }
 
         .nav-links a {
@@ -162,48 +124,12 @@
         .nav-links a:hover,
         .nav-links a.active {
             color: var(--primary-color);
-            background: rgba(99, 102, 241, 0.1);
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+            background: rgba(0, 119, 181, 0.1);
         }
-
-        .search-filter {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .search-box {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            font-size: 0.9rem;
-            transition: var(--transition);
-            background: var(--bg-card);
-            color: var(--text-primary);
-        }
-
-        .search-box:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-        }
-
-        .search-box::placeholder {
-            color: var(--text-muted);
-        }
-
-        .filter-select {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            background: var(--bg-card);
-            color: var(--text-primary);
-            cursor: pointer;
-        }
-
-        /* Main Content */
+        
+        /* Main Content & Sections */
         .main {
-            padding: 4rem 0;
+            padding: 3rem 0;
         }
 
         .section {
@@ -211,82 +137,74 @@
         }
 
         .section h2 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             margin-bottom: 2rem;
             text-align: center;
             color: var(--text-primary);
+            font-weight: 600;
         }
-
-        /* Featured Projects */
-        .featured-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .featured-card {
-            background: var(--bg-card);
+        
+        /* General Card Style */
+        .card {
+            background: var(--card-color);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             overflow: hidden;
             transition: var(--transition);
             border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
         }
 
-        .featured-card:hover {
+        .card:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-lg);
             border-color: var(--primary-color);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(99, 102, 241, 0.3);
         }
 
-        .featured-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
         }
-
-        .featured-content {
+        
+        .project-card .card-content {
             padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
-        .featured-title {
-            font-size: 1.25rem;
+        .project-icon {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .project-title {
+            font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
             color: var(--text-primary);
         }
 
-        .featured-description {
+        .project-description {
             color: var(--text-secondary);
+            font-size: 0.95rem;
             margin-bottom: 1rem;
+            flex-grow: 1;
         }
 
-        .featured-tags {
+        .project-footer {
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
         }
-
-        .tag {
-            background: rgba(99, 102, 241, 0.2);
-            color: var(--primary-color);
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            border: 1px solid rgba(99, 102, 241, 0.3);
-        }
-
-        .featured-links {
-            display: flex;
-            gap: 1rem;
-        }
-
+        
         .btn {
-            padding: 0.5rem 1rem;
+            padding: 0.6rem 1.2rem;
             border-radius: var(--border-radius);
             text-decoration: none;
             font-weight: 500;
@@ -296,6 +214,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            font-size: 0.9rem;
         }
 
         .btn-primary {
@@ -307,236 +226,27 @@
             background: var(--primary-dark);
         }
 
-        .btn-secondary {
-            background: transparent;
-            color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-        }
-
-        .btn-secondary:hover {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        /* Projects Grid */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .project-card {
-            background: var(--bg-card);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            padding: 1.5rem;
-            transition: var(--transition);
-            border: 1px solid var(--border-color);
-        }
-
-        .project-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--primary-color);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(99, 102, 241, 0.2);
-        }
-
-        .project-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            border-radius: var(--border-radius);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1rem;
-            color: white;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-        }
-
-        .project-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-        }
-
-        .project-description {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .project-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .project-category {
-            background: var(--bg-secondary);
-            color: var(--text-secondary);
-            padding: 0.25rem 0.5rem;
-            border-radius: var(--border-radius);
-            font-size: 0.8rem;
-        }
-
-        /* Videos Section */
-        .videos-intro {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .videos-intro p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto 1rem;
-        }
-
-        .category-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .category-tab {
-            padding: 0.75rem 1.5rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            background: var(--bg-card);
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 500;
-        }
-
-        .category-tab:hover,
-        .category-tab.active {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
-        }
-
-        .videos-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .video-card {
-            background: var(--bg-card);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            transition: var(--transition);
-            border: 1px solid var(--border-color);
-        }
-
-        .video-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--primary-color);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(99, 102, 241, 0.2);
-        }
-
-        .video-thumbnail {
-            position: relative;
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-card));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .video-thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .play-button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60px;
-            height: 60px;
-            background: rgba(99, 102, 241, 0.9);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            transition: var(--transition);
-            cursor: pointer;
-        }
-
-        .play-button:hover {
-            background: var(--primary-color);
-            transform: translate(-50%, -50%) scale(1.1);
-        }
-
-        .video-content {
-            padding: 1.5rem;
-        }
-
-        .video-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-            line-height: 1.4;
-        }
-
-        .video-description {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            line-height: 1.5;
-        }
-
-        .video-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .video-duration {
-            background: var(--bg-secondary);
-            padding: 0.25rem 0.5rem;
-            border-radius: var(--border-radius);
-            border: 1px solid var(--border-color);
-        }
-
         /* About Section */
         .about {
-            background: var(--bg-secondary);
+            background: var(--card-color);
             padding: 4rem 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .about-content {
             display: grid;
-            grid-template-columns: 300px 1fr;
+            grid-template-columns: 250px 1fr;
             gap: 3rem;
             align-items: center;
         }
 
         .about-image {
-            width: 250px;
-            height: 250px;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
             object-fit: cover;
-            border: 8px solid white;
+            border: 6px solid var(--primary-color);
             box-shadow: var(--shadow-lg);
         }
 
@@ -551,110 +261,27 @@
             margin-bottom: 1.5rem;
         }
 
-        .social-links {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .social-link {
-            width: 48px;
-            height: 48px;
-            background: var(--primary-color);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .social-link:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
         /* Footer */
         .footer {
-            background: var(--text-primary);
-            color: white;
+            background: var(--background-color);
+            color: var(--text-muted);
             padding: 2rem 0;
             text-align: center;
         }
-
-        .footer p {
-            opacity: 0.8;
-        }
-
+        
         /* Responsive Design */
         @media (max-width: 768px) {
             .nav-container {
                 flex-direction: column;
                 gap: 1rem;
             }
-
-            .nav-links {
-                gap: 1rem;
-            }
-
-            .search-filter {
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .search-box,
-            .filter-select {
-                width: 100%;
-            }
-
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .featured-grid {
-                grid-template-columns: 1fr;
-            }
-
             .about-content {
                 grid-template-columns: 1fr;
                 text-align: center;
             }
-
-            .projects-grid {
-                grid-template-columns: 1fr;
+            .about-image {
+                margin: 0 auto;
             }
-        }
-
-        /* Loading Animation */
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--border-color);
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Hide elements by default */
-        .project-card {
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -664,7 +291,7 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <img src="learning-hub-logo.png" alt="Thinkinfosec Learning Hub Logo">
+                    <img src="https://i.ibb.co/6PDe9R2/profile-Image.png" alt="Thinkinfosec Learning Hub Logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/0077b5/FFFFFF?text=AC';">
                 </div>
                 <h1>Thinkinfosec Learning Hub</h1>
                 <p>Explore the latest in AI, InfoSec, and Cloud technologies</p>
@@ -677,20 +304,11 @@
         <div class="container">
             <div class="nav-container">
                 <ul class="nav-links">
-                    <li><a href="#featured" class="nav-link active">Featured</a></li>
-                    <li><a href="#projects" class="nav-link">All Projects</a></li>
+                    <li><a href="#projects" class="nav-link active">Projects</a></li>
+                    <li><a href="#research" class="nav-link">Research</a></li>
                     <li><a href="#videos" class="nav-link">Videos</a></li>
                     <li><a href="#about" class="nav-link">About</a></li>
                 </ul>
-                <div class="search-filter">
-                    <input type="text" class="search-box" placeholder="Search projects..." id="searchInput">
-                    <select class="filter-select" id="categoryFilter">
-                        <option value="">All Categories</option>
-                        <option value="tools">Tools</option>
-                        <option value="educational">Educational</option>
-                        <option value="research">Research</option>
-                    </select>
-                </div>
             </div>
         </div>
     </nav>
@@ -698,46 +316,37 @@
     <!-- Main Content -->
     <main class="main">
         <div class="container">
-            <!-- Featured Projects Section -->
-            <section id="featured" class="section">
-                <h2>Featured Projects</h2>
-                <div class="featured-grid" id="featuredProjects">
-                    <!-- Featured projects will be loaded here -->
+            
+            <!-- All Projects Section -->
+            <section id="projects" class="section">
+                <h2>Projects & Tools</h2>
+                <div class="projects-grid" id="projectsGrid">
+                    <!-- Projects will be loaded here by JavaScript -->
                 </div>
             </section>
 
-            <!-- All Projects Section -->
-            <section id="projects" class="section">
-                <h2>All Projects</h2>
-                <div class="loading" id="loading">
-                    <div class="spinner"></div>
-                    <p>Loading projects...</p>
-                </div>
-                <div class="projects-grid" id="projectsGrid">
-                    <!-- Projects will be loaded here -->
+            <!-- Research Section -->
+            <section id="research" class="section">
+                <h2>Research & Publications</h2>
+                <div class="projects-grid">
+                     <div class="card project-card">
+                        <div class="card-content">
+                            <div class="project-icon"><i class="fas fa-file-alt"></i></div>
+                            <h3 class="project-title">ANZ Managed Security Service Provider (MSSP) Landscape</h3>
+                            <p class="project-description">An in-depth analysis of the Managed Security Service Provider market across Australia and New Zealand, covering key players, trends, and capabilities.</p>
+                            <div class="project-footer">
+                                <a href="https://amcamillo.github.io/thinkinfosec-hub/Research/ANZ-MSSP.html" class="btn btn-primary" target="_blank">Read Publication</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             <!-- Videos Section -->
             <section id="videos" class="section">
                 <h2>Video Content</h2>
-                <div class="videos-intro">
-                    <p>Explore my YouTube content covering cybersecurity, cloud technologies, and AI. Content organized by topics to help you find exactly what you're looking for.</p>
-                    <a href="https://www.youtube.com/@cloudnsec" class="btn btn-primary" target="_blank" style="margin: 1rem 0 2rem 0;">🔗 Visit CloudnSec Channel</a>
-                </div>
-                
-                <div class="video-categories">
-                    <div class="category-tabs">
-                        <button class="category-tab active" data-category="all">All Videos</button>
-                        <button class="category-tab" data-category="tutorials">Tutorials</button>
-                        <button class="category-tab" data-category="security">Security</button>
-                        <button class="category-tab" data-category="cloud">Cloud</button>
-                        <button class="category-tab" data-category="ai">AI & ML</button>
-                    </div>
-                    
-                    <div class="videos-grid" id="videosGrid">
-                        <!-- Videos will be loaded here -->
-                    </div>
+                 <div class="projects-grid" id="videosGrid">
+                    <!-- Videos will be loaded here by JavaScript -->
                 </div>
             </section>
         </div>
@@ -747,18 +356,11 @@
     <section id="about" class="about">
         <div class="container">
             <div class="about-content">
-                <img src="your-photo.png" alt="Andre Camillo" class="about-image">
+                <img src="https://i.ibb.co/6PDe9R2/profile-Image.png" alt="Andre Camillo" class="about-image" onerror="this.onerror=null;this.src='https://placehold.co/200x200/CCCCCC/FFFFFF?text=AC';">
                 <div class="about-text">
                     <h3>About Me</h3>
                     <p>Welcome to my learning hub! I specialize in AI, InfoSec, and Cloud technologies, with a passion for sharing knowledge and building practical solutions.</p>
                     <p>Through this platform, I share tools, research, and educational content to help the cybersecurity and cloud community grow and learn together.</p>
-                    <p><em>Note: This platform was formerly known as "CloudnSec Learning Hub" and has been rebranded to better reflect our evolving focus on comprehensive information security thinking and education.</em></p>
-                    <div class="social-links">
-                        <a href="https://discord.gg/NMefYksn" class="social-link" title="Discord">💬</a>
-                        <a href="https://www.youtube.com/@cloudnsec" class="social-link" title="YouTube">📺</a>
-                        <a href="https://andrecamillo.medium.com/" class="social-link" title="Medium">📝</a>
-                        <a href="https://open.spotify.com/show/2e32C7SFXNUqfRR3YemmtI" class="social-link" title="Podcast">🎧</a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -767,410 +369,88 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2025 Thinkinfosec Learning Hub. Securing the digital world, bit by bit.</p>
+            <p>&copy; 2025 Thinkinfosec Learning Hub. All Rights Reserved.</p>
         </div>
     </footer>
 
     <script>
-        // Project data
-        const projectsData = {
-            featured: [
-                {
-                    id: 'password-hasher',
-                    title: 'Password Hasher',
-                    description: 'A comprehensive password generator and hashing tool with multiple algorithm support, built for security professionals and developers.',
-                    image: 'https://via.placeholder.com/400x200/6366f1/ffffff?text=Password+Security',
-                    category: 'tools',
-                    tags: ['Security', 'Hashing', 'Password', 'Cryptography'],
-                    links: {
-                        demo: 'password-generator.html',
-                        github: '#'
-                    },
-                    featured: true
-                },
-                {
-                    id: 'meraki-vision',
-                    title: 'Meraki Computer Vision',
-                    description: 'Integration of Meraki MV Camera with AWS Rekognition using NodeRed as the front end for intelligent video analytics.',
-                    image: 'https://via.placeholder.com/400x200/2563eb/ffffff?text=Computer+Vision',
-                    category: 'research',
-                    tags: ['AWS', 'Meraki', 'Computer Vision', 'NodeRed'],
-                    links: {
-                        github: 'https://github.com/amcamillo/Meraki-Computer-Vision',
-                        demo: '#'
-                    },
-                    featured: true
-                }
-            ],
+        // Project and Video Data
+        const contentData = {
             projects: [
-                {
-                    id: 'crowdstrike-custom',
-                    title: 'CrowdStrike Custom',
-                    description: 'Custom configurations, scripts, and integrations for CrowdStrike Falcon platform to enhance enterprise security operations and threat detection capabilities.',
-                    category: 'tools',
-                    tags: ['CrowdStrike', 'Falcon', 'Security Operations', 'Custom Scripts'],
-                    icon: '🦅',
-                    links: {
-                        github: 'https://github.com/amcamillo/CrowdStrike-custom',
-                        demo: '#'
-                    }
-                },
-                {
-                    id: 'cybersecurity-tools',
-                    title: 'Cybersecurity Tools Collection',
-                    description: 'Curated collection of cybersecurity tools and resources for security professionals.',
-                    category: 'educational',
-                    tags: ['Security', 'Tools', 'Resources'],
-                    icon: '🔧',
-                    links: {
-                        github: 'https://github.com/amcamillo/Cybersecurity_Tools'
-                    }
-                },
-                {
-                    id: 'games-playground',
-                    title: 'Games Playground',
-                    description: 'Interactive web-based games collection featuring classic games built with HTML5, CSS3, and JavaScript for educational and entertainment purposes.',
-                    category: 'tools',
-                    tags: ['JavaScript', 'HTML5', 'Games', 'Web Development'],
-                    icon: '🎮',
-                    links: {
-                        github: 'https://github.com/amcamillo/Playground',
-                        demo: 'https://amcamillo.github.io/Playground/'
-                    }
-                },
-                {
-                    id: 'discord-community',
-                    title: 'Discord Community',
-                    description: 'Active community space for cybersecurity and AI discussions and learning.',
-                    category: 'educational',
-                    tags: ['Community', 'Discord', 'Learning'],
-                    icon: '💬',
-                    links: {
-                        external: 'https://discord.gg/NMefYksn'
-                    }
-                },
-                {
-                    id: 'youtube-channel',
-                    title: 'YouTube Channel',
-                    description: 'Technical content and tutorials covering cybersecurity, cloud, and AI topics.',
-                    category: 'educational',
-                    tags: ['YouTube', 'Tutorials', 'Content'],
-                    icon: '📺',
-                    links: {
-                        external: 'https://www.youtube.com/@cloudnsec'
-                    }
-                },
-                {
-                    id: 'blog',
-                    title: 'Technical Blog',
-                    description: 'In-depth technical write-ups and insights on security and cloud technologies.',
-                    category: 'educational',
-                    tags: ['Blog', 'Technical Writing', 'Medium'],
-                    icon: '📝',
-                    links: {
-                        external: 'https://andrecamillo.medium.com/'
-                    }
-                },
-                {
-                    id: 'podcast',
-                    title: 'Security Podcast',
-                    description: 'Regular discussions on security trends, cloud technologies, and industry insights.',
-                    category: 'educational',
-                    tags: ['Podcast', 'Security', 'Discussions'],
-                    icon: '🎧',
-                    links: {
-                        external: 'https://open.spotify.com/show/2e32C7SFXNUqfRR3YemmtI'
-                    }
-                }
+                { id: 'password-hasher', title: 'Password Hasher', description: 'A comprehensive password generator and hashing tool with multiple algorithm support, built for security professionals.', category: 'tools', icon: 'fas fa-key', link: '#' },
+                { id: 'meraki-vision', title: 'Meraki Computer Vision', description: 'Integration of Meraki MV Camera with AWS Rekognition using NodeRed for intelligent video analytics.', category: 'research', icon: 'fas fa-video', link: 'https://github.com/amcamillo/Meraki-Computer-Vision' },
+                { id: 'crowdstrike-custom', title: 'CrowdStrike Custom', description: 'Custom scripts and integrations for the CrowdStrike Falcon platform to enhance enterprise security operations.', category: 'tools', icon: 'fas fa-shield-alt', link: 'https://github.com/amcamillo/CrowdStrike-custom' },
+                { id: 'games-playground', title: 'Games Playground', description: 'Interactive web-based games built with HTML5, CSS3, and JavaScript for educational purposes.', category: 'tools', icon: 'fas fa-gamepad', link: 'https://amcamillo.github.io/Playground/' }
             ],
             videos: [
-                {
-                    id: 'crowdstrike-falcon-skills',
-                    title: 'Learn CrowdStrike Falcon Skills with the new CrowdStrike University | Free certification courses',
-                    description: 'Comprehensive guide to CrowdStrike University\'s free certification courses. Learn how to develop Falcon platform skills and advance your cybersecurity career with hands-on training.',
-                    category: 'tutorials',
-                    duration: '15:42',
-                    views: '1.5K',
-                    thumbnail: 'https://img.youtube.com/vi/aQANe1ZJCds/maxresdefault.jpg',
-                    url: 'https://www.youtube.com/watch?v=aQANe1ZJCds&t=1s'
-                },
-                {
-                    id: 'browser-extension-cookies',
-                    title: 'I developed a browser extension to help you audit and secure your browser cookies in seconds!',
-                    description: 'Demonstration of a custom-built browser extension designed to quickly audit and secure browser cookies, enhancing privacy and security for everyday web browsing.',
-                    category: 'security',
-                    duration: '12:28',
-                    views: '1K',
-                    thumbnail: 'https://img.youtube.com/vi/fRlxZIalUec/maxresdefault.jpg',
-                    url: 'https://www.youtube.com/watch?v=fRlxZIalUec'
-                },
-                {
-                    id: 'ai-history-security',
-                    title: 'A brief history of Artificial Intelligence | AI Security Series',
-                    description: 'First episode in the AI Security Series exploring the evolution of artificial intelligence from its origins to modern applications in cybersecurity and threat detection.',
-                    category: 'ai',
-                    duration: '18:35',
-                    views: '1K',
-                    thumbnail: 'https://img.youtube.com/vi/H_bfuq6fJr8/maxresdefault.jpg',
-                    url: 'https://www.youtube.com/watch?v=H_bfuq6fJr8&list=PLn_e1t8tt2VpCtVt0l8V2nxqPa5Z4a-m7'
-                },
-                {
-                    id: 'ciso-mindmap-tool',
-                    title: 'Cyber Security Strategic Security Tool - The CISO Mindmap',
-                    description: 'Strategic cybersecurity planning tool designed for CISOs and security leaders. Learn how to use mindmapping techniques for comprehensive security program management.',
-                    category: 'security',
-                    duration: '25:17',
-                    views: '1K',
-                    thumbnail: 'https://img.youtube.com/vi/oiizHlYcbsw/maxresdefault.jpg',
-                    url: 'https://www.youtube.com/watch?v=oiizHlYcbsw&list=PLn_e1t8tt2Vr6kkP9ftj-y2tLk_MrNgZH'
-                }
+                { id: 'crowdstrike-falcon-skills', title: 'Learn CrowdStrike Falcon Skills', description: 'A guide to CrowdStrike University\'s free certification courses to develop your Falcon platform skills.', link: 'https://www.youtube.com/watch?v=aQANe1ZJCds' },
+                { id: 'browser-extension-cookies', title: 'Browser Cookie Security Extension', description: 'Demonstration of a custom browser extension to help audit and secure your browser cookies in seconds.', link: 'https://www.youtube.com/watch?v=fRlxZIalUec' },
+                { id: 'ai-history-security', title: 'A Brief History of AI', description: 'The first episode in the AI Security Series, exploring the evolution of artificial intelligence and its applications.', link: 'https://www.youtube.com/watch?v=H_bfuq6fJr8' },
+                { id: 'ciso-mindmap-tool', title: 'The CISO Mindmap Tool', description: 'A strategic cybersecurity planning tool for CISOs and security leaders using mindmapping techniques.', link: 'https://www.youtube.com/watch?v=oiizHlYcbsw' }
             ]
         };
 
         // DOM Elements
-        const featuredContainer = document.getElementById('featuredProjects');
         const projectsContainer = document.getElementById('projectsGrid');
         const videosContainer = document.getElementById('videosGrid');
-        const searchInput = document.getElementById('searchInput');
-        const categoryFilter = document.getElementById('categoryFilter');
-        const loading = document.getElementById('loading');
-
-        // State
-        let currentFilter = '';
-        let currentSearch = '';
-        let currentVideoCategory = 'all';
 
         // Initialize the application
         function init() {
-            renderFeaturedProjects();
-            renderAllProjects();
+            renderProjects();
             renderVideos();
-            setupEventListeners();
             setupNavigation();
         }
 
-        // Render featured projects
-        function renderFeaturedProjects() {
-            const featured = projectsData.featured;
-            
-            featuredContainer.innerHTML = featured.map(project => `
-                <div class="featured-card">
-                    <img src="${project.image}" alt="${project.title}" loading="lazy">
-                    <div class="featured-content">
-                        <h3 class="featured-title">${project.title}</h3>
-                        <p class="featured-description">${project.description}</p>
-                        <div class="featured-tags">
-                            ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                        </div>
-                        <div class="featured-links">
-                            ${project.links.github ? `<a href="${project.links.github}" class="btn btn-primary" target="_blank">View Code</a>` : ''}
-                            ${project.links.demo ? `<a href="${project.links.demo}" class="btn btn-secondary" target="_blank">Live Demo</a>` : ''}
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
         // Render all projects
-        function renderAllProjects(filteredProjects = null) {
-            const projects = filteredProjects || projectsData.projects;
-            
-            if (projects.length === 0) {
-                projectsContainer.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
-                        <p style="color: var(--text-secondary);">No projects found matching your criteria.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            projectsContainer.innerHTML = projects.map(project => `
-                <div class="project-card" data-category="${project.category}">
-                    <div class="project-icon">${project.icon}</div>
-                    <h3 class="project-title">${project.title}</h3>
-                    <p class="project-description">${project.description}</p>
-                    <div class="project-footer">
-                        <span class="project-category">${project.category}</span>
-                        <div style="display: flex; gap: 0.5rem;">
-                            ${project.links.github ? `<a href="${project.links.github}" class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" target="_blank">Code</a>` : ''}
-                            ${project.links.demo ? `<a href="${project.links.demo}" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" target="_blank">Demo</a>` : ''}
-                            ${project.links.external ? `<a href="${project.links.external}" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" target="_blank">Visit</a>` : ''}
+        function renderProjects() {
+            projectsContainer.innerHTML = contentData.projects.map(project => `
+                <div class="card project-card" data-category="${project.category}">
+                    <div class="card-content">
+                        <div class="project-icon"><i class="${project.icon}"></i></div>
+                        <h3 class="project-title">${project.title}</h3>
+                        <p class="project-description">${project.description}</p>
+                        <div class="project-footer">
+                           <a href="${project.link}" class="btn btn-primary" target="_blank">View Project</a>
                         </div>
                     </div>
                 </div>
             `).join('');
         }
-
+        
         // Render videos
-        function renderVideos(filteredVideos = null) {
-            const videos = filteredVideos || projectsData.videos;
-            
-            if (videos.length === 0) {
-                videosContainer.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
-                        <p style="color: var(--text-secondary);">No videos found in this category.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            videosContainer.innerHTML = videos.map(video => `
-                <div class="video-card" data-category="${video.category}">
-                    <div class="video-thumbnail">
-                        <img src="${video.thumbnail}" alt="${video.title}" loading="lazy">
-                        <div class="play-button" onclick="window.open('${video.url}', '_blank')">▶</div>
-                    </div>
-                    <div class="video-content">
-                        <h3 class="video-title">${video.title}</h3>
-                        <p class="video-description">${video.description}</p>
-                        <div class="video-meta">
-                            <span class="video-duration">${video.duration}</span>
-                            <span>${video.views} views</span>
+        function renderVideos() {
+            videosContainer.innerHTML = contentData.videos.map(video => `
+                <div class="card project-card">
+                     <div class="card-content">
+                        <div class="project-icon"><i class="fab fa-youtube"></i></div>
+                        <h3 class="project-title">${video.title}</h3>
+                        <p class="project-description">${video.description}</p>
+                        <div class="project-footer">
+                           <a href="${video.link}" class="btn btn-primary" target="_blank">Watch Video</a>
                         </div>
                     </div>
                 </div>
             `).join('');
-        }
-
-        // Setup video category filtering
-        function setupVideoFiltering() {
-            const categoryTabs = document.querySelectorAll('.category-tab');
-            
-            categoryTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const category = tab.dataset.category;
-                    currentVideoCategory = category;
-                    
-                    // Update active tab
-                    categoryTabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    
-                    // Filter videos
-                    filterVideos();
-                });
-            });
-        }
-
-        // Filter videos by category
-        function filterVideos() {
-            let filtered = projectsData.videos;
-            
-            if (currentVideoCategory !== 'all') {
-                filtered = filtered.filter(video => video.category === currentVideoCategory);
-            }
-            
-            renderVideos(filtered);
-        }
-
-        // Setup event listeners
-        function setupEventListeners() {
-            // Search functionality
-            searchInput.addEventListener('input', debounce(handleSearch, 300));
-            
-            // Filter functionality
-            categoryFilter.addEventListener('change', handleFilter);
-            
-            // Video filtering
-            setupVideoFiltering();
-        }
-
-        // Handle search
-        function handleSearch(e) {
-            currentSearch = e.target.value.toLowerCase();
-            filterProjects();
-        }
-
-        // Handle filter
-        function handleFilter(e) {
-            currentFilter = e.target.value;
-            filterProjects();
-        }
-
-        // Filter projects based on search and category
-        function filterProjects() {
-            let filtered = projectsData.projects;
-
-            // Apply category filter
-            if (currentFilter) {
-                filtered = filtered.filter(project => project.category === currentFilter);
-            }
-
-            // Apply search filter
-            if (currentSearch) {
-                filtered = filtered.filter(project => 
-                    project.title.toLowerCase().includes(currentSearch) ||
-                    project.description.toLowerCase().includes(currentSearch) ||
-                    project.tags.some(tag => tag.toLowerCase().includes(currentSearch))
-                );
-            }
-
-            renderAllProjects(filtered);
         }
 
         // Setup smooth scrolling navigation
         function setupNavigation() {
             const navLinks = document.querySelectorAll('.nav-link');
-            
             navLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
-                    const targetId = link.getAttribute('href').substring(1);
-                    const targetElement = document.getElementById(targetId);
-                    
+                    const targetId = link.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
                     if (targetElement) {
-                        targetElement.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80, // Adjust for sticky nav height
+                            behavior: 'smooth'
                         });
-                        
-                        // Update active nav link
-                        navLinks.forEach(nl => nl.classList.remove('active'));
-                        link.classList.add('active');
                     }
                 });
             });
-
-            // Update active nav on scroll
-            window.addEventListener('scroll', debounce(updateActiveNav, 100));
         }
-
-        // Update active navigation based on scroll position
-        function updateActiveNav() {
-            const sections = ['featured', 'projects', 'videos', 'about'];
-            const navLinks = document.querySelectorAll('.nav-link');
-            let current = '';
-
-            sections.forEach(sectionId => {
-                const section = document.getElementById(sectionId);
-                if (section) {
-                    const sectionTop = section.offsetTop - 100;
-                    if (window.scrollY >= sectionTop) {
-                        current = sectionId;
-                    }
-                }
-            });
-
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${current}`) {
-                    link.classList.add('active');
-                }
-            });
-        }
-
-        // Debounce utility function
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
+        
         // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', init);
     </script>
