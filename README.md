@@ -17,7 +17,7 @@ License
 
 🎯 About
 Thinkinfosec Learning Hub (formerly CloudnSec Learning Hub) is a modern, scalable portfolio and educational platform designed to showcase cybersecurity expertise, cloud architecture knowledge, and AI/ML implementations. The platform serves as both a professional portfolio and a learning resource for the cybersecurity community.
-Visit the Hub: https://amcamillo.github.io/cloudnsec-learninghub/
+Visit the Hub: [https://amcamillo.github.io/cloudnsec-learninghub/](https://amcamillo.github.io/thinkinfosec-hub/))
 🔄 Rebrand Notice
 This platform has evolved from "CloudnSec Learning Hub" to "Thinkinfosec Learning Hub" to better reflect our comprehensive approach to information security thinking and education.
 
