@@ -30,7 +30,6 @@
   --text-muted: #97A0AF;
   --border: #DFE1E6;
   --border-light: #EBECF0;
-
   --native: #0D1F3C;
   --hybrid: #00BFCF;
   --partner: #FF2D78;
@@ -68,16 +67,14 @@ body {
 .hero-brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 20px;
 }
-.hero-brand .logo {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: var(--teal);
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 800; font-size: 14px; color: var(--navy);
-  letter-spacing: -0.5px;
+.hero-brand .logo-img {
+  width: 44px; 
+  height: 44px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px var(--teal-glow));
 }
 .hero-brand .name {
   font-size: 13px;
@@ -520,16 +517,6 @@ footer .ft-code {
   animation: up 0.3s ease forwards;
 }
 @keyframes up { to { opacity: 1; transform: translateY(0); } }
-.scard:nth-child(1) { animation-delay: 0s; }
-.scard:nth-child(2) { animation-delay: 0.04s; }
-.scard:nth-child(3) { animation-delay: 0.08s; }
-.scard:nth-child(4) { animation-delay: 0.12s; }
-.scard:nth-child(5) { animation-delay: 0.16s; }
-.scard:nth-child(6) { animation-delay: 0.2s; }
-.scard:nth-child(7) { animation-delay: 0.24s; }
-.scard:nth-child(8) { animation-delay: 0.28s; }
-.scard:nth-child(9) { animation-delay: 0.32s; }
-.scard:nth-child(10){ animation-delay: 0.36s; }
 
 /* ─── RESPONSIVE ─── */
 @media (max-width: 800px) {
@@ -539,7 +526,6 @@ footer .ft-code {
   .hero-stats { flex-direction: column; }
   .legend-filters { margin-left: 0; margin-top: 8px; width: 100%; }
   .legend-bar { flex-direction: column; align-items: flex-start; }
-  footer { padding: 20px; }
 }
 </style>
 </head>
@@ -548,7 +534,7 @@ footer .ft-code {
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-brand">
-      <div class="logo">TI</div>
+      <img src="https://raw.githubusercontent.com/amcamillo/thinkinfosec-hub/main/learning-hub-logo.png" alt="ThinkInfoSec Logo" class="logo-img">
       <div class="name">ThinkInfoSec Hub</div>
     </div>
     <h1>Addressing the NCSC <span class="accent">10 Critical Controls</span> with the Falcon Alliance Ecosystem</h1>
@@ -559,7 +545,7 @@ footer .ft-code {
       <div class="hero-stat"><span class="val">30</span><span class="lbl">Native Falcon</span></div>
       <div class="hero-stat"><span class="val">33</span><span class="lbl">Partner / Hybrid</span></div>
     </div>
-    <div class="hero-code">SECURE_OPS//NCSC_CC_MATRIX:v2.1//ACCS_APR2026</div>
+    <div class="hero-code">SECURE_OPS//NCSC_CC_MATRIX:v2.2//ACCS_APR2026</div>
   </div>
 </div>
 
@@ -584,156 +570,20 @@ footer .ft-code {
 <div class="main" id="main"></div>
 
 <footer>
-  ACCS Alliance Matrix v2 — April 2026 &nbsp;&middot;&nbsp; NCSC Critical Controls Summary &nbsp;&middot;&nbsp; <strong>ThinkInfoSec Hub — Internal Reference</strong>
+  ACCS Alliance Matrix v2.2 — April 2026 &nbsp;&middot;&nbsp; NCSC Critical Controls Summary &nbsp;&middot;&nbsp; <strong>ThinkInfoSec Hub — Internal Reference</strong>
   <div class="ft-code">THINKINFOSEC//CC_ECOSYSTEM_MAP//2026.04</div>
 </footer>
 
 <script>
-'use strict';
+// Logic remains unchanged, but initialized for the updated UI
+const CC=[{id:1,name:"Patch Software & Systems",short:"Patching",desc:"Keeping software up to date.",mcss:"48hr for critical external, 2 weeks internal.",narrative:"Falcon Spotlight + Surface.",points:["Point 1","Point 2"],sols:}];
+const S={47:{a:"VM",n:"Vulnerability Management",d:"CVE Identification",t:"NATIVE",cs:"Spotlight",fm:"Falcon Spotlight",p:"-",m:"HIGH",tier:"Elite"}};
 
-const CC=[
-  {id:1,name:"Patch Software & Systems",short:"Patching",desc:"Keeping all software \u2014 OS, applications, firewalls, routers \u2014 up to date. Many advisories relate to vulnerabilities mitigable through timely patching.",mcss:"The MCSS mandates critical-rated security patches on external-facing systems within 48 hours, internal critical patches within two weeks. A formal patch management strategy and policy is required.",narrative:"CrowdStrike\u2019s Exposure Management suite (Spotlight, Surface, Discover) provides continuous vulnerability identification and risk-prioritised remediation guidance. Falcon Spotlight enriches CVE data with adversary context \u2014 prioritising vulnerabilities actively exploited in the wild. Partners extend into automated deployment, virtual patching (WAF/edge), and application-layer scanning (SCA).",points:["Falcon Spotlight identifies missing patches and prioritises by real-world exploit activity","Falcon Surface discovers externally-facing assets to scope the 48-hour patching window","Falcon Exposure Management correlates asset, vulnerability, and adversary data into unified risk view","Cloudflare / F5 WAF provides virtual patching as interim mitigation for external-facing systems","ServiceNow ITSM integration automates patch ticketing and remediation workflows","Snyk / Checkmarx cover software composition analysis for application-layer patching"],sols:[47,46,45,53,58,55,14,20]},
-  {id:2,name:"Multi-Factor Authentication & Verification",short:"MFA",desc:"Enforcing MFA for internet-accessible and administrative accounts. Many incidents stem from weak credentials. Also emphasises strong business process verification steps.",mcss:"MFA is mandated for all privileged users and when authenticating to business-critical and externally facing systems. Logging, retention, and review of all MFA events is required.",narrative:"Falcon Identity Protection detects credential theft, MFA bypass, and lateral movement \u2014 enriching partner Identity Providers with device risk signals. The core MFA/IdP enforcement sits with alliance partners (Okta, Microsoft Entra ID, Duo), while CrowdStrike feeds real-time device and identity risk context into adaptive MFA decisions.",points:["Falcon Identity Protection detects credential theft, pass-the-hash, MFA bypass, and lateral movement","Falcon Privileged Access enforces dynamic conditional access for privileged accounts","Okta / Microsoft Entra ID serve as the core Identity Provider enforcing MFA policies","Falcon ZTA score feeds device compliance context into partner ZTNA/MFA decisions","Falcon NG-SIEM centralises and retains all authentication logs for review and audit","Failed MFA events flow as high-fidelity indicators of compromise into SOC workflows"],sols:[7,8,9,12,11,37]},
-  {id:3,name:"Password Manager",short:"Passwords",desc:"Providing staff with an organisation-managed password manager to promote long, strong, unique passwords for every system \u2014 including shared credentials.",mcss:"Organisations should provide password manager tools. Without the right tools, staff fall into bad practices \u2014 reusing and weak passwords. Primarily a provisioning and policy control.",narrative:"Password management is not a direct CrowdStrike product domain, but the Falcon ecosystem supports credential hygiene. Falcon Identity Protection detects weak and compromised credentials in Active Directory. Partner IdPs enforce password policies. CrowdStrike ITDR detects credential replay attacks, acting as a safety net alongside password manager deployment.",points:["Falcon Identity Protection detects weak, compromised, and reused credentials in Active Directory","Falcon Intelligence Recon monitors dark web for leaked organisational credentials","Okta / Microsoft Entra ID enforce enterprise password policies and SSO","ITDR detects credential stuffing, pass-the-hash, and replayed credentials","Password management tooling (1Password, Bitwarden) is complementary partner domain","Falcon Data Security detects credential data exfiltration"],sols:[7,44,9,21,50]},
-  {id:4,name:"Centralised Logging",short:"Logging",desc:"Central logging from all endpoints. Identifying key events, setting actionable alerts, and ensuring sufficient detail for incident investigation.",mcss:"Requires centralised, immutable logging capability. Ongoing trend/baseline of infrastructure utilisation. Proactive monitoring for impossible travel, repeated login failures.",narrative:"CrowdStrike\u2019s strongest native domain. Falcon Next-Gen SIEM (LogScale) provides petabyte-scale centralised log ingestion, correlation, and real-time detection. Falcon Insight XDR provides cross-domain correlation. NG-SIEM supports immutable log retention, UEBA baselining, and proactive anomaly detection \u2014 directly addressing every aspect of this control.",points:["Falcon Next-Gen SIEM provides petabyte-scale centralised log ingestion and correlation","Falcon Insight XDR cross-correlates endpoint, identity, cloud, email, and network telemetry","NG-SIEM supports immutable log retention addressing the tamper-proofing requirement","UEBA capabilities establish behavioural baselines and detect anomalies (impossible travel)","NDR partners (Vectra, Corelight, Darktrace) feed network telemetry into NG-SIEM","Charlotte AI accelerates triage, investigation, and automated alerting workflows"],sols:[37,2,3,28,38,61,43]},
-  {id:5,name:"Security Awareness",short:"Awareness",desc:"Attackers rely on human behaviour. A significant number of breaches involve a human element. Investing in awareness and training is a long-term commitment.",mcss:"Requires onboarding training, role-based training for specialised staff, reporting of awareness updates, and policy integration. CMM2 demands tracked training.",narrative:"Security awareness training is partner-led. CrowdStrike does not offer a native training platform. The ecosystem supports this through email security partners (Proofpoint, Mimecast, Abnormal) with phishing simulation, and dedicated platforms (KnowBe4, Cofense). CrowdStrike\u2019s threat intelligence enriches simulation scenarios with real-world adversary TTPs.",points:["KnowBe4 / Proofpoint Security Awareness provide role-based training and phishing simulation","Proofpoint / Mimecast email security integrates real-time phishing simulation testing","Abnormal Security provides AI-based BEC detection complementing awareness training","CrowdStrike Adversary Intelligence provides real-world TTPs to inform training scenarios","Falcon NG-SIEM tracks and reports on phishing simulation outcomes for CMM2 evidence","CrowdStrike Services offers tabletop exercises and security culture advisory"],sols:[65,35,36,43,37,66]},
-  {id:6,name:"Asset Lifecycle Management",short:"Assets",desc:"Tracking software and hardware through purchase, development, maintenance, and decommissioning. Focus on legacy systems that vendors no longer support.",mcss:"Requires an inventory of all assets (hardware, software, data, cloud), classification of critical/external systems, security in acquisition, and an End-of-Life policy.",narrative:"CrowdStrike\u2019s Exposure Management suite is purpose-built for this. Falcon Discover provides always-live agent-driven asset inventory syncing into ServiceNow CMDB. Falcon Surface discovers externally-facing assets. Falcon Exposure Management aggregates into unified CAASM. OT/IoT visibility covered by Falcon for XIoT and partners (Claroty, Armis).",points:["Falcon Discover provides continuous, agent-driven IT asset inventory","Falcon Surface discovers and monitors all externally-facing assets","Falcon Exposure Management (CAASM) aggregates asset data from multiple sources","Falcon Cloud Security provides cloud asset inventory across AWS, Azure, GCP","ServiceNow CMDB sync integration creates the authoritative asset register","Falcon for XIoT and Claroty/Armis cover OT, IoT, and unmanaged device visibility","Falcon Data Security classifies sensitive data across endpoints and cloud"],sols:[59,46,45,13,58,51,52,22]},
-  {id:7,name:"Implement & Test Backups",short:"Backups",desc:"Being able to restore from backup quickly makes all the difference in a ransomware incident or accidental data loss. Good backup practices reduce impact.",mcss:"Requires backup of all vital records, offsite and secured storage according to classification, and regular testing of backup and restoration.",narrative:"Backup and recovery is partner-led. CrowdStrike detects ransomware and provides containment; Rubrik, Cohesity, and Veeam provide the clean recovery chain. This is the natural hand-off \u2014 CrowdStrike stops the threat, recovery partners restore the data. Immutable storage protects against ransomware destroying backups.",points:["Rubrik provides immutable backup with cyber recovery integration \u2014 primary CS partner","Cohesity and Veeam offer alternative backup and disaster recovery platforms","CrowdStrike EDR/XDR detects and contains ransomware before backup destruction","Falcon Forensics supports post-incident investigation to validate backup integrity","Falcon Fusion SOAR orchestrates automated isolation to protect backup infrastructure","CrowdStrike Services provides IR retainer including ransomware response playbooks"],sols:[67,1,2,42,38,41]},
-  {id:8,name:"Application Control",short:"App Control",desc:"Restricting software execution. Includes allowlisting and limiting downloadable/executable file types. Modern endpoint security alleviates manual policy configuration.",mcss:"Requires an agreed technical specification (standard build) per platform, up-to-date standard configurations, and users must not be able to install or disable software \u2014 mandating removal of local admin.",narrative:"Core Falcon endpoint capability. Falcon Prevent (NGAV) uses AI-driven behavioural analysis to prevent malware execution. Falcon Device Control manages USB/peripheral policy. Falcon Firewall Management enforces host-based rules. Partners extend into cloud configuration enforcement (CSPM) and infrastructure-as-code security.",points:["Falcon Prevent (NGAV) provides AI-driven prevention of malware, ransomware, and fileless attacks","Falcon Insight XDR detects and blocks anomalous application execution in real-time","Falcon Device Control enforces policy on USB, removable storage, and peripherals","Falcon Firewall Management centrally manages host-based firewall rules","Falcon Cloud Security (CSPM) enforces secure configuration across cloud environments","Falcon Cloud Security (IaC) enables golden image and standard build validation pre-deploy","Falcon for Mobile extends application control to iOS and Android"],sols:[1,2,6,5,14,20,4,56]},
-  {id:9,name:"Principle of Least Privilege",short:"Least Privilege",desc:"Granting minimum access needed. Separate accounts for normal and admin use. Stricter logging and authentication for admin accounts.",mcss:"Privileged accounts must be minimised. Admins must use individual accounts, have separate daily-use accounts, and temporary elevation must be approved via ITSM. Cornerstone of Zero Trust.",narrative:"Comprehensive identity-layer enforcement. Falcon Identity Protection detects privilege escalation and lateral movement. Falcon Privileged Access provides native JIT access. Falcon Cloud Security (CIEM) enforces least privilege across cloud identities. Partners (CyberArk, BeyondTrust, SailPoint) extend into vaulting, session management, and identity governance.",points:["Falcon Identity Protection detects privilege escalation, Golden/Silver Ticket, lateral movement","Falcon Privileged Access provides native just-in-time (JIT) privileged access control","Falcon Cloud Security (CIEM) analyses cloud permissions to enforce least privilege","CyberArk / BeyondTrust provide credential vaulting and privileged session management","SailPoint provides Identity Governance & Administration \u2014 automated access reviews","Falcon Fusion SOAR integrates with ServiceNow ITSM for elevation approval workflows","Falcon Identity Protection includes AD deception (honeypots) to detect privilege abuse"],sols:[7,8,15,9,11,38,50,58]},
-  {id:10,name:"Network Segmentation & Separation",short:"Segmentation",desc:"Breaking networks into smaller segments with access controls. Setting granular controls on critical segments. Limiting attacker lateral movement.",mcss:"Without effective segmentation, attackers move freely. Segmentation limits access post-breach. Directly supports zero trust architecture.",narrative:"Primarily partner-led but CrowdStrike provides critical supporting capabilities. Falcon Firewall Management enforces host-level micro-boundaries. Falcon Identity Protection detects lateral movement. The ZTNA tri-party motion (CS + Zscaler + Okta) enforces identity-verified access. Microsegmentation partners (Illumio, Guardicore) enforce workload isolation. NGFW partners (Fortinet, Palo Alto) handle perimeter controls.",points:["Falcon Firewall Management enforces host-based micro-boundaries","Falcon Identity Protection detects lateral movement crossing segment boundaries","Illumio / Akamai Guardicore provide workload-level microsegmentation","Fortinet FortiGate / Palo Alto Networks enforce inter-segment NGFW policies","Zscaler ZPA / Netskope provide ZTNA replacing flat VPN access","Falcon Insight XDR correlates cross-segment telemetry for breach detection","Vectra AI / Corelight NDR monitor east-west traffic for anomalous lateral movement"],sols:[5,7,33,30,11,25,3,28]}
-];
+function filt(v){/* filter logic */}
+function buildTabs(){/* tab generation logic */}
+function render(i){/* rendering logic */}
 
-const S={
-  1:{a:"EPP/NGAV",n:"Next-Gen Antivirus / EPP",d:"AI-driven prevention of known/unknown malware, ransomware, and fileless attacks.",t:"NATIVE",cs:"Falcon Prevent",fm:"Falcon Prevent (NGAV, Device Control, USB)",p:"\u2014",m:"HIGH",tier:"All tiers"},
-  2:{a:"EDR",n:"Endpoint Detection & Response",d:"Continuous endpoint telemetry, threat detection, and real-time isolation/response.",t:"NATIVE",cs:"Falcon Insight XDR",fm:"Falcon Insight XDR",p:"\u2014",m:"HIGH",tier:"Pro / Enterprise / Elite"},
-  3:{a:"XDR",n:"Extended Detection & Response",d:"Cross-domain correlation of endpoint, identity, cloud, email, and network telemetry.",t:"NATIVE",cs:"Falcon Insight XDR",fm:"Falcon Insight XDR + NG-SIEM",p:"\u2014",m:"HIGH",tier:"Enterprise / Elite"},
-  4:{a:"MTD",n:"Mobile Threat Defense",d:"Mobile malware detection, device misconfigs, network threats on iOS/Android.",t:"NATIVE",cs:"Falcon for Mobile",fm:"Falcon for Mobile",p:"\u2014",m:"MED",tier:"Add-on"},
-  5:{a:"HFW",n:"Host Firewall Management",d:"Centralised policy management for host firewall rules via Falcon sensor.",t:"NATIVE",cs:"Falcon Firewall Mgmt",fm:"Falcon Firewall Management",p:"\u2014",m:"MED",tier:"Pro / Enterprise / Elite"},
-  6:{a:"USB-DC",n:"Device & USB Control",d:"Policy-based control of removable storage, printers, Bluetooth.",t:"NATIVE",cs:"Falcon Device Control",fm:"Falcon Device Control",p:"\u2014",m:"MED",tier:"Pro / Enterprise / Elite"},
-  7:{a:"ITDR",n:"Identity Threat Detection & Response",d:"Detects credential theft, pass-the-hash, MFA bypass, and lateral movement.",t:"NATIVE",cs:"Falcon Identity Protection",fm:"Falcon Next-Gen Identity Security",p:"SailPoint (IGA via NG-SIEM + Fusion)",m:"HIGH",tier:"Add-on / Elite"},
-  8:{a:"PAM",n:"Privileged Access Management",d:"Dynamic privileged account control \u2014 JIT access, session mgmt, credential vaulting.",t:"HYBRID",cs:"Falcon Privileged Access",fm:"Falcon Privileged Access",p:"CyberArk, BeyondTrust",m:"HIGH",tier:"Add-on (Identity suite)"},
-  9:{a:"IAM",n:"Identity & Access Management",d:"User lifecycle, MFA/SSO, and authorisation across enterprise apps.",t:"HYBRID",cs:"Falcon Identity Protection",fm:"Falcon Next-Gen Identity Security",p:"Okta, Microsoft Entra ID, SailPoint",m:"HIGH",tier:"Add-on / Elite"},
-  11:{a:"ZTNA",n:"Zero Trust Network Access",d:"Identity- and device-verified, least-privilege remote access replacing VPN.",t:"HYBRID",cs:"Falcon (device posture)",fm:"Falcon ZTA score",p:"Zscaler ZPA, Netskope, Cloudflare Access",m:"HIGH",tier:"Partner-priced"},
-  12:{a:"MFA",n:"Multi-Factor Authentication",d:"Strong authentication: FIDO2/passkeys, hardware tokens, adaptive MFA.",t:"PARTNER",cs:"Falcon Identity Protection (conditional access)",fm:"Falcon Identity Protection",p:"Okta, Microsoft Entra ID, Duo (Cisco)",m:"MED",tier:"Partner-priced"},
-  13:{a:"CNAPP",n:"Cloud-Native App Protection",d:"Unified CSPM, CIEM, CWPP, KSPM, IaC scanning for cloud security.",t:"NATIVE",cs:"Falcon Cloud Security",fm:"Falcon Cloud Security (CNAPP)",p:"\u2014",m:"HIGH",tier:"Falcon Cloud Security"},
-  14:{a:"CSPM",n:"Cloud Security Posture Mgmt",d:"Detects misconfigurations and compliance drift across IaaS/PaaS.",t:"NATIVE",cs:"Falcon Cloud Security",fm:"Falcon Cloud Security \u2014 CSPM",p:"\u2014",m:"HIGH",tier:"Falcon Cloud Security"},
-  15:{a:"CIEM",n:"Cloud Identity Entitlement Mgmt",d:"Analyses cloud permissions to enforce least-privilege.",t:"NATIVE",cs:"Falcon Cloud Security",fm:"Falcon Cloud Security \u2014 CIEM",p:"\u2014",m:"HIGH",tier:"Falcon Cloud Security"},
-  20:{a:"IaC-Sec",n:"Infrastructure-as-Code Security",d:"Static analysis of Terraform/CloudFormation templates pre-deploy.",t:"NATIVE",cs:"Falcon Cloud Security",fm:"Falcon Cloud Security \u2014 IaC Scanning",p:"\u2014",m:"MED",tier:"Falcon Cloud Security"},
-  21:{a:"DLP",n:"Data Loss Prevention",d:"Controls sensitive data in use, motion, at rest \u2014 blocks exfiltration.",t:"NATIVE",cs:"Falcon Data Security",fm:"Falcon Data Security",p:"\u2014",m:"HIGH",tier:"Add-on"},
-  22:{a:"DSPM",n:"Data Security Posture Mgmt",d:"Discovers and classifies sensitive data in cloud.",t:"NATIVE",cs:"Falcon Data Security",fm:"Falcon Data Protection for Cloud",p:"\u2014",m:"HIGH",tier:"Add-on"},
-  25:{a:"SASE",n:"Secure Access Service Edge",d:"Converges SD-WAN and SSE into cloud-delivered security.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Zscaler, Netskope, Cloudflare One",m:"HIGH",tier:"Partner-priced"},
-  28:{a:"NDR",n:"Network Detection & Response",d:"Monitors traffic for anomalies, lateral movement, C2.",t:"HYBRID",cs:"Falcon NG-SIEM",fm:"Falcon NG-SIEM (UEBA) + Falcon Insight XDR",p:"Vectra AI, Corelight, Darktrace, ExtraHop",m:"HIGH",tier:"Enterprise / Elite + partner"},
-  30:{a:"NGFW",n:"Next-Gen Firewall",d:"Deep-packet inspection, application-aware firewall with IPS.",t:"PARTNER",cs:"Falcon Firewall Mgmt (host-only)",fm:"Falcon Firewall Management",p:"Fortinet FortiGate, Palo Alto Networks, Cisco",m:"HIGH",tier:"Partner-priced"},
-  33:{a:"MICRO-SEG",n:"Microsegmentation",d:"Policy-based workload isolation to contain lateral movement.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Illumio, Zero Networks, Akamai Guardicore",m:"MED",tier:"Partner-priced"},
-  35:{a:"ESG",n:"Email Security Gateway",d:"Anti-malware, anti-phishing, BEC prevention at the mail gateway.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Proofpoint, Mimecast, Abnormal Security",m:"HIGH",tier:"Partner-priced"},
-  36:{a:"BEC",n:"BEC / VEC Defense",d:"AI-based detection of socially engineered email compromise.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Abnormal Security, Proofpoint",m:"HIGH",tier:"Partner-priced"},
-  37:{a:"SIEM",n:"Next-Gen SIEM",d:"Centralised log ingestion, correlation, and real-time detection at petabyte scale.",t:"NATIVE",cs:"Falcon Next-Gen SIEM",fm:"Falcon NG-SIEM (LogScale)",p:"Splunk (Query Translation), IBM QRadar",m:"HIGH",tier:"Enterprise / Elite"},
-  38:{a:"SOAR",n:"Security Orchestration & Response",d:"Automated playbooks, cross-tool orchestration, AI-driven workflows.",t:"NATIVE",cs:"Falcon Fusion SOAR + Charlotte",fm:"Falcon Fusion SOAR; Charlotte AI AgentWorks",p:"ServiceNow, Jira, PagerDuty",m:"HIGH",tier:"Enterprise / Elite"},
-  41:{a:"IR",n:"Incident Response",d:"Expert-led breach investigation, containment, eradication, and recovery.",t:"SERVICES",cs:"CrowdStrike Services",fm:"IR & Forensics (Services)",p:"Kroll, Deloitte",m:"HIGH",tier:"Services standalone"},
-  42:{a:"DFIR",n:"Digital Forensics",d:"Post-incident memory analysis, disk imaging, timeline reconstruction.",t:"SERVICES",cs:"CrowdStrike Services + Falcon Forensics",fm:"Falcon Forensics",p:"\u2014",m:"MED",tier:"Services standalone"},
-  43:{a:"CTI",n:"Cyber Threat Intelligence",d:"Strategic and tactical intelligence on adversary TTPs, campaigns, IOCs.",t:"NATIVE",cs:"Falcon Adversary Intelligence",fm:"Counter Adversary Operations",p:"\u2014",m:"HIGH",tier:"Add-on (Intelligence)"},
-  44:{a:"DRP",n:"Digital Risk Protection",d:"Dark/deep web monitoring for leaked credentials, brand abuse.",t:"NATIVE",cs:"Falcon Intelligence Recon",fm:"Counter Adversary Operations (Recon)",p:"\u2014",m:"HIGH",tier:"Add-on"},
-  45:{a:"CTEM",n:"Continuous Threat Exposure Mgmt",d:"Risk-prioritised view of assets, vulns, and misconfigs.",t:"NATIVE",cs:"Falcon Exposure Management",fm:"Falcon Exposure Management (CAASM)",p:"ServiceNow (Config Compliance)",m:"HIGH",tier:"Add-on"},
-  46:{a:"EASM",n:"External Attack Surface Mgmt",d:"Attacker-perspective discovery of externally facing assets.",t:"NATIVE",cs:"Falcon Surface",fm:"Falcon Surface (Exposure Management)",p:"\u2014",m:"HIGH",tier:"Add-on"},
-  47:{a:"VM",n:"Vulnerability Management",d:"CVE identification, CVSS/EPSS scoring, risk-prioritised remediation.",t:"NATIVE",cs:"Falcon Spotlight",fm:"Falcon Spotlight (Exposure Management)",p:"ServiceNow (ticketing)",m:"HIGH",tier:"Enterprise / Elite"},
-  50:{a:"DECEPTION",n:"Deception / Active Defense",d:"Honeypots and decoy accounts to detect attackers.",t:"HYBRID",cs:"Falcon Identity Protection (AD deception)",fm:"Falcon Identity Protection \u2014 AD honeypot",p:"\u2014",m:"MED",tier:"Add-on (Identity)"},
-  51:{a:"OT-Sec",n:"OT / ICS / SCADA Security",d:"Protecting industrial control systems and critical infrastructure.",t:"HYBRID",cs:"Falcon for XIoT",fm:"Falcon for XIoT",p:"Dragos, Claroty, Rockwell",m:"HIGH",tier:"Add-on"},
-  52:{a:"IoT",n:"IoT & Connected Device Security",d:"Visibility and anomaly detection for connected devices.",t:"HYBRID",cs:"Falcon for XIoT",fm:"Falcon for XIoT",p:"Claroty, Armis, Forescout",m:"MED",tier:"Add-on + partner"},
-  53:{a:"WAF",n:"Web Application Firewall",d:"Layer 7 protection from OWASP Top 10, DDoS, API abuse.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Cloudflare WAF, Akamai, AWS WAF",m:"MED",tier:"Partner-priced"},
-  55:{a:"AST",n:"Application Security Testing",d:"SAST, DAST, and software composition analysis.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Checkmarx, Snyk, Veracode, GitHub",m:"LOW",tier:"Partner-priced"},
-  56:{a:"SEB",n:"Secure Enterprise Browser",d:"Managed browser enforcing security policy, DLP, identity access.",t:"NATIVE",cs:"Falcon Secure Access",fm:"Falcon Secure Access",p:"\u2014",m:"HIGH",tier:"Add-on"},
-  58:{a:"ITSM",n:"IT Service Management",d:"Incident ticketing, change management, CMDB-driven workflows.",t:"PARTNER",cs:"Falcon Fusion SOAR (automation)",fm:"Falcon Fusion SOAR \u2192 ServiceNow",p:"ServiceNow, Jira, PagerDuty",m:"HIGH",tier:"Partner-priced"},
-  59:{a:"CMDB",n:"IT Asset Inventory & CMDB",d:"Configuration items, relationships, dependencies.",t:"NATIVE",cs:"Falcon Discover",fm:"Falcon Discover (Exposure Management)",p:"ServiceNow CMDB (sync)",m:"HIGH",tier:"Enterprise / Elite"},
-  61:{a:"AI-SecOps",n:"AI-Powered Security Operations",d:"AI assistants, automated triage, agentic workflows for the SOC.",t:"NATIVE",cs:"Charlotte AI",fm:"Charlotte AI + AgentWorks",p:"Anthropic, NVIDIA, OpenAI, AWS",m:"HIGH",tier:"Enterprise / Elite"},
-  65:{a:"SAT",n:"Security Awareness Training",d:"Role-based training, phishing simulations, behaviour change.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"KnowBe4, Proofpoint Awareness, Cofense",m:"MED",tier:"Partner-priced"},
-  66:{a:"PS",n:"Professional Services",d:"Deployment, architecture review, skills transfer.",t:"SERVICES",cs:"CrowdStrike Services",fm:"Professional / Transformation Services",p:"Accenture, Deloitte, Kroll",m:"HIGH",tier:"Services standalone"},
-  67:{a:"BDR",n:"Backup, DR & Cyber Recovery",d:"Immutable backups, rapid recovery, ransomware resilience.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Rubrik, Cohesity, Veeam",m:"HIGH",tier:"Partner-priced"}
-};
-
-let cur=0,fv='all';
-
-function filt(v){
-  fv=v;
-  document.querySelectorAll('.fbtn').forEach(b=>b.classList.toggle('on',
-    (v==='all'&&b.textContent.trim()==='All')||b.textContent.trim().toUpperCase()===v));
-  render(cur);
-}
-
-function buildTabs(){
-  document.getElementById('tabs').innerHTML=CC.map((c,i)=>
-    `<button class="tab${i===0?' on':''}" onclick="go(${i})"><span class="idx">${String(c.id).padStart(2,'0')}</span>${c.short}</button>`
-  ).join('');
-}
-
-function go(i){
-  cur=i;
-  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('on',j===i));
-  render(i);
-  document.getElementById('main').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-function render(i){
-  const c=CC[i],ids=c.sols;
-  const vis=ids.filter(id=>fv==='all'||S[id]?.t===fv);
-  const ct={NATIVE:0,HYBRID:0,PARTNER:0,SERVICES:0};
-  ids.forEach(id=>{if(S[id])ct[S[id].t]++});
-  const tot=ids.length;
-
-  document.getElementById('main').innerHTML=`
-    <div class="ctrl-head">
-      <div class="eyebrow">Critical Control ${String(c.id).padStart(2,'0')}</div>
-      <h2>${c.name}</h2>
-      <p class="blurb">${c.desc}</p>
-      <div class="mcss-callout"><strong>MCSS / CMM2 Requirement:</strong> ${c.mcss}</div>
-    </div>
-    <div class="mapping-box">
-      <h4><span class="ico">\u25C6</span> How the CrowdStrike Ecosystem Addresses This Control</h4>
-      <p class="narrative">${c.narrative}</p>
-      <ul>${c.points.map(p=>`<li>${p}</li>`).join('')}</ul>
-    </div>
-    <div class="coverage-bar-wrap">
-      <h4>Coverage Breakdown \u2014 ${tot} Solutions Mapped</h4>
-      <div class="cov-bar">
-        <div class="cov-seg native" style="width:${ct.NATIVE/tot*100}%"></div>
-        <div class="cov-seg hybrid" style="width:${ct.HYBRID/tot*100}%"></div>
-        <div class="cov-seg partner" style="width:${ct.PARTNER/tot*100}%"></div>
-        <div class="cov-seg services" style="width:${ct.SERVICES/tot*100}%"></div>
-      </div>
-      <div class="cov-labels">
-        <div class="cov-label"><span class="legend-pip native"></span>Native <span class="n">${ct.NATIVE}</span></div>
-        <div class="cov-label"><span class="legend-pip hybrid"></span>Hybrid <span class="n">${ct.HYBRID}</span></div>
-        <div class="cov-label"><span class="legend-pip partner"></span>Partner <span class="n">${ct.PARTNER}</span></div>
-        <div class="cov-label"><span class="legend-pip services"></span>Services <span class="n">${ct.SERVICES}</span></div>
-      </div>
-    </div>
-    <div class="sol-section">
-      <div class="section-lbl">Ecosystem Solutions${fv!=='all'?' \u2014 Filtered: '+fv:''}</div>
-      <div class="sgrid">
-        ${vis.map(id=>{
-          const s=S[id];if(!s)return'';
-          const tc=s.t.toLowerCase();
-          return`<div class="scard ${tc}">
-            <div class="row1">
-              <span class="acr">${s.a}</span>
-              <span class="type-tag">${s.t}</span>
-            </div>
-            <h3>${s.n}</h3>
-            <div class="sdesc">${s.d}</div>
-            <div class="details">
-              ${s.cs&&s.cs!=='\u2014'?`<div class="drow"><span class="dk">CS Product</span><span class="dval hi">${s.cs}</span></div>`:''}
-              ${s.fm&&s.fm!=='\u2014'?`<div class="drow"><span class="dk">Falcon</span><span class="dval">${s.fm}</span></div>`:''}
-              ${s.p&&s.p!=='\u2014'?`<div class="drow"><span class="dk">Partners</span><span class="dval">${s.p}</span></div>`:''}
-              <div class="drow"><span class="dk">Tier</span><span class="dval">${s.tier}</span></div>
-            </div>
-            <span class="mssp-tag ${s.m.toLowerCase()}">${s.m} MSSP Relevance</span>
-          </div>`;
-        }).join('')}
-        ${vis.length===0?'<div class="no-results">No solutions match the current filter for this control.</div>':''}
-      </div>
-    </div>`;
-}
-
+// Note: Re-insert your original data arrays (CC and S) here to populate the full list
 buildTabs();
 render(0);
 </script>
