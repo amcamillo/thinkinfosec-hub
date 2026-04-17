@@ -71,8 +71,8 @@ body {
   margin-bottom: 20px;
 }
 .hero-brand .logo-img {
-  width: 44px; 
-  height: 44px;
+  width: 42px; 
+  height: 42px;
   object-fit: contain;
   filter: drop-shadow(0 0 8px var(--teal-glow));
 }
@@ -575,15 +575,129 @@ footer .ft-code {
 </footer>
 
 <script>
-// Logic remains unchanged, but initialized for the updated UI
-const CC=[{id:1,name:"Patch Software & Systems",short:"Patching",desc:"Keeping software up to date.",mcss:"48hr for critical external, 2 weeks internal.",narrative:"Falcon Spotlight + Surface.",points:["Point 1","Point 2"],sols:}];
-const S={47:{a:"VM",n:"Vulnerability Management",d:"CVE Identification",t:"NATIVE",cs:"Spotlight",fm:"Falcon Spotlight",p:"-",m:"HIGH",tier:"Elite"}};
+'use strict';
 
-function filt(v){/* filter logic */}
-function buildTabs(){/* tab generation logic */}
-function render(i){/* rendering logic */}
+// ─── DATA ARRAYS ───
+const CC = [
+  {id:1,name:"Patch Software & Systems",short:"Patching",desc:"Keeping all software \u2014 OS, applications, firewalls, routers \u2014 up to date.",mcss:"The MCSS mandates critical patches on external-facing systems within 48 hours.",narrative:"CrowdStrike Exposure Management suite provides continuous vulnerability identification.",points:["Falcon Spotlight identifies missing patches","Falcon Surface discovers externally-facing assets"],sols:},
+  {id:2,name:"Multi-Factor Authentication",short:"MFA",desc:"Enforcing MFA for internet-accessible and administrative accounts.",mcss:"MFA is mandated for all privileged users.",narrative:"Falcon Identity Protection detects credential theft and MFA bypass.",points:["Falcon Identity Protection detects credential theft","Okta / Microsoft Entra ID serve as core IdP"],sols:},
+  {id:3,name:"Password Manager",short:"Passwords",desc:"Providing staff with an organisation-managed password manager.",mcss:"Organisations should provide password manager tools.",narrative:"Password management is a complementary partner domain supported by Falcon Identity.",points:["Falcon Identity Protection detects weak credentials","Okta / Microsoft Entra ID enforce password policies"],sols:},
+  {id:4,name:"Centralised Logging",short:"Logging",desc:"Central logging from all endpoints for incident investigation.",mcss:"Requires centralised, immutable logging capability.",narrative:"Falcon Next-Gen SIEM (LogScale) provides petabyte-scale centralised log ingestion.",points:["Falcon Next-Gen SIEM provides log ingestion","Falcon Insight XDR cross-correlates telemetry"],sols:},
+  {id:5,name:"Security Awareness",short:"Awareness",desc:"Investing in awareness and training to address the human element.",mcss:"Requires onboarding training and policy integration.",narrative:"Security awareness training is partner-led (KnowBe4, Proofpoint).",points:["KnowBe4 / Proofpoint provide role-based training","CrowdStrike Services offers tabletop exercises"],sols:},
+  {id:6,name:"Asset Lifecycle Management",short:"Assets",desc:"Tracking software and hardware through its full lifecycle.",mcss:"Requires an inventory of all assets (hardware, software, cloud).",narrative:"Falcon Discover provides always-live agent-driven asset inventory.",points:["Falcon Discover provides continuous asset inventory","Falcon Surface monitors externally-facing assets"],sols:},
+  {id:7,name:"Implement & Test Backups",short:"Backups",desc:"Ensuring rapid recovery from ransomware or accidental loss.",mcss:"Requires regular testing of backup and restoration.",narrative:"Backup is partner-led (Rubrik, Veeam); Falcon provides containment.",points:["Rubrik provides immutable backup with cyber recovery","CrowdStrike contains ransomware before backup destruction"],sols:},
+  {id:8,name:"Application Control",short:"App Control",desc:"Restricting software execution via allowlisting.",mcss:"Users must not be able to install or disable software.",narrative:"Falcon Prevent (NGAV) uses AI-driven analysis to prevent malware execution.",points:["Falcon Prevent (NGAV) provides malware prevention","Falcon Device Control enforces USB policy"],sols:},
+  {id:9,name:"Principle of Least Privilege",short:"Least Privilege",desc:"Granting the minimum access needed for roles.",mcss:"Privileged accounts must be minimised.",narrative:"Falcon Identity Protection detects lateral movement and privilege escalation.",points:["Falcon Identity Protection detects privilege abuse","Falcon Privileged Access provides native JIT control"],sols:},
+  {id:10,name:"Network Segmentation",short:"Segmentation",desc:"Breaking networks into smaller segments to limit lateral movement.",mcss:"Segmentation limits access post-breach.",narrative:"Falcon Firewall Management enforces host-level micro-boundaries.",points:["Falcon Firewall Management enforces host boundaries","Zscaler / Netskope provide ZTNA"],sols:}
+];
 
-// Note: Re-insert your original data arrays (CC and S) here to populate the full list
+const S = {
+  1:{a:"EPP/NGAV",n:"Next-Gen Antivirus",d:"AI-driven prevention.",t:"NATIVE",cs:"Falcon Prevent",fm:"Falcon Prevent",p:"\u2014",m:"HIGH",tier:"All tiers"},
+  2:{a:"EDR",n:"Endpoint Detection & Response",d:"Real-time isolation.",t:"NATIVE",cs:"Falcon Insight XDR",fm:"Falcon Insight XDR",p:"\u2014",m:"HIGH",tier:"Pro/Elite"},
+  3:{a:"XDR",n:"Extended Detection & Response",d:"Cross-domain correlation.",t:"NATIVE",cs:"Falcon Insight XDR",fm:"Falcon NG-SIEM",p:"\u2014",m:"HIGH",tier:"Enterprise/Elite"},
+  5:{a:"HFW",n:"Host Firewall Mgmt",d:"Centralised policy management.",t:"NATIVE",cs:"Falcon Firewall Mgmt",fm:"Falcon Firewall Mgmt",p:"\u2014",m:"MED",tier:"Pro/Elite"},
+  6:{a:"USB-DC",n:"Device & USB Control",d:"USB and peripheral policy.",t:"NATIVE",cs:"Falcon Device Control",fm:"Falcon Device Control",p:"\u2014",m:"MED",tier:"Pro/Elite"},
+  7:{a:"ITDR",n:"Identity Threat Detection",d:"Detects lateral movement.",t:"NATIVE",cs:"Falcon Identity Prot",fm:"Identity Security",p:"\u2014",m:"HIGH",tier:"Add-on"},
+  8:{a:"PAM",n:"Privileged Access Mgmt",d:"JIT access control.",t:"HYBRID",cs:"Falcon Privileged Access",fm:"Privileged Access",p:"CyberArk",m:"HIGH",tier:"Add-on"},
+  9:{a:"IAM",n:"Identity & Access Mgmt",d:"User lifecycle and MFA.",t:"HYBRID",cs:"Falcon Identity Prot",fm:"Identity Security",p:"Okta",m:"HIGH",tier:"Add-on"},
+  11:{a:"ZTNA",n:"Zero Trust Network Access",d:"Identity-verified access.",t:"HYBRID",cs:"Falcon (posture)",fm:"ZTA score",p:"Zscaler, Netskope",m:"HIGH",tier:"Partner-priced"},
+  12:{a:"MFA",n:"Multi-Factor Auth",d:"Strong authentication.",t:"PARTNER",cs:"Falcon Identity",fm:"Identity Prot",p:"Okta, Duo",m:"MED",tier:"Partner-priced"},
+  13:{a:"CNAPP",n:"Cloud-Native Protection",d:"Unified cloud security.",t:"NATIVE",cs:"Falcon Cloud Security",fm:"CNAPP",p:"\u2014",m:"HIGH",tier:"Cloud Security"},
+  14:{a:"CSPM",n:"Cloud Posture Mgmt",d:"Detects misconfigurations.",t:"NATIVE",cs:"Falcon Cloud Security",fm:"CSPM",p:"\u2014",m:"HIGH",tier:"Cloud Security"},
+  15:{a:"CIEM",n:"Cloud Entitlement Mgmt",d:"Least-privilege for cloud.",t:"NATIVE",cs:"Falcon Cloud Security",fm:"CIEM",p:"\u2014",m:"HIGH",tier:"Cloud Security"},
+  21:{a:"DLP",n:"Data Loss Prevention",d:"Blocks data exfiltration.",t:"NATIVE",cs:"Falcon Data Security",fm:"Falcon Data Security",p:"\u2014",m:"HIGH",tier:"Add-on"},
+  28:{a:"NDR",n:"Network Detection",d:"Monitors traffic anomalies.",t:"HYBRID",cs:"Falcon NG-SIEM",fm:"NG-SIEM",p:"Vectra, Corelight",m:"HIGH",tier:"Enterprise+Partner"},
+  30:{a:"NGFW",n:"Next-Gen Firewall",d:"Deep-packet inspection.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Fortinet, Palo Alto",m:"HIGH",tier:"Partner-priced"},
+  33:{a:"MICRO-SEG",n:"Microsegmentation",d:"Workload isolation.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Illumio, Akamai",m:"MED",tier:"Partner-priced"},
+  35:{a:"ESG",n:"Email Security Gateway",d:"Anti-phishing gateway.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Proofpoint, Mimecast",m:"HIGH",tier:"Partner-priced"},
+  36:{a:"BEC",n:"BEC / VEC Defense",d:"AI email defense.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Abnormal Security",m:"HIGH",tier:"Partner-priced"},
+  37:{a:"SIEM",n:"Next-Gen SIEM",d:"Petabyte-scale logging.",t:"NATIVE",cs:"Falcon NG-SIEM",fm:"LogScale",p:"Splunk",m:"HIGH",tier:"Enterprise/Elite"},
+  38:{a:"SOAR",n:"Security Orchestration",d:"Automated workflows.",t:"NATIVE",cs:"Falcon Fusion",fm:"Charlotte AI",p:"ServiceNow",m:"HIGH",tier:"Enterprise/Elite"},
+  42:{a:"DFIR",n:"Digital Forensics",d:"Post-incident analysis.",t:"SERVICES",cs:"CS Services",fm:"Falcon Forensics",p:"\u2014",m:"MED",tier:"Services"},
+  43:{a:"CTI",n:"Threat Intelligence",d:"Adversary TTP context.",t:"NATIVE",cs:"Falcon Intelligence",fm:"Adversary Ops",p:"\u2014",m:"HIGH",tier:"Add-on"},
+  44:{a:"DRP",n:"Digital Risk Protection",d:"Dark web monitoring.",t:"NATIVE",cs:"Falcon Recon",fm:"Adversary Ops",p:"\u2014",m:"HIGH",tier:"Add-on"},
+  45:{a:"CTEM",n:"Exposure Management",d:"Prioritised risk view.",t:"NATIVE",cs:"Falcon Exposure",fm:"CAASM",p:"ServiceNow",m:"HIGH",tier:"Add-on"},
+  46:{a:"EASM",n:"Attack Surface Mgmt",d:"External asset discovery.",t:"NATIVE",cs:"Falcon Surface",fm:"Exposure Mgmt",p:"\u2014",m:"HIGH",tier:"Add-on"},
+  47:{a:"VM",n:"Vulnerability Mgmt",d:"CVE identification.",t:"NATIVE",cs:"Falcon Spotlight",fm:"Exposure Mgmt",p:"ServiceNow",m:"HIGH",tier:"Enterprise/Elite"},
+  50:{a:"DECEPTION",n:"Deception / Defense",d:"Honeypots and decoys.",t:"HYBRID",cs:"Falcon Identity",fm:"AD Honeypot",p:"\u2014",m:"MED",tier:"Add-on"},
+  53:{a:"WAF",n:"Web App Firewall",d:"Layer 7 protection.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Cloudflare, Akamai",m:"MED",tier:"Partner-priced"},
+  58:{a:"ITSM",n:"IT Service Mgmt",d:"Ticketing workflows.",t:"PARTNER",cs:"Falcon Fusion",fm:"Fusion \u2192 ServiceNow",p:"ServiceNow, Jira",m:"HIGH",tier:"Partner-priced"},
+  59:{a:"CMDB",n:"Asset Inventory",d:"CMDB-driven workflows.",t:"NATIVE",cs:"Falcon Discover",fm:"Exposure Mgmt",p:"ServiceNow sync",m:"HIGH",tier:"Enterprise/Elite"},
+  65:{a:"SAT",n:"Security Awareness",d:"Phishing simulation.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"KnowBe4, Proofpoint",m:"MED",tier:"Partner-priced"},
+  66:{a:"PS",n:"Professional Services",d:"Deployment & Review.",t:"SERVICES",cs:"CS Services",fm:"Transformation Svcs",p:"\u2014",m:"HIGH",tier:"Services"},
+  67:{a:"BDR",n:"Backup & Recovery",d:"Immutable recovery.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Rubrik, Veeam",m:"HIGH",tier:"Partner-priced"}
+};
+
+// ─── RENDERING LOGIC ───
+let cur = 0, fv = 'all';
+
+function filt(v) {
+  fv = v;
+  document.querySelectorAll('.fbtn').forEach(b => b.classList.toggle('on', 
+    (v === 'all' && b.textContent.trim() === 'All') || b.textContent.trim().toUpperCase() === v));
+  render(cur);
+}
+
+function buildTabs() {
+  document.getElementById('tabs').innerHTML = CC.map((c, i) =>
+    `<button class="tab${i === 0 ? ' on' : ''}" onclick="go(${i})"><span class="idx">${String(c.id).padStart(2, '0')}</span>${c.short}</button>`
+  ).join('');
+}
+
+function go(i) {
+  cur = i;
+  document.querySelectorAll('.tab').forEach((t, j) => t.classList.toggle('on', j === i));
+  render(i);
+  document.getElementById('main').scrollIntoView({behavior: 'smooth', block: 'start'});
+}
+
+function render(i) {
+  const c = CC[i], ids = c.sols;
+  const vis = ids.filter(id => fv === 'all' || S[id]?.t === fv);
+  const ct = {NATIVE: 0, HYBRID: 0, PARTNER: 0, SERVICES: 0};
+  ids.forEach(id => { if (S[id]) ct[S[id].t]++; });
+  const tot = ids.length;
+
+  document.getElementById('main').innerHTML = `
+    <div class="ctrl-head">
+      <div class="eyebrow">Critical Control ${String(c.id).padStart(2, '0')}</div>
+      <h2>${c.name}</h2>
+      <p class="blurb">${c.desc}</p>
+      <div class="mcss-callout"><strong>MCSS / CMM2 Requirement:</strong> ${c.mcss}</div>
+    </div>
+    <div class="mapping-box">
+      <h4><span class="ico">\u25C6</span> Addressing This Control</h4>
+      <p class="narrative">${c.narrative}</p>
+      <ul>${c.points.map(p => `<li>${p}</li>`).join('')}</ul>
+    </div>
+    <div class="coverage-bar-wrap">
+      <h4>Coverage Breakdown \u2014 ${tot} Solutions</h4>
+      <div class="cov-bar">
+        <div class="cov-seg native" style="width:${ct.NATIVE/tot*100}%"></div>
+        <div class="cov-seg hybrid" style="width:${ct.HYBRID/tot*100}%"></div>
+        <div class="cov-seg partner" style="width:${ct.PARTNER/tot*100}%"></div>
+        <div class="cov-seg services" style="width:${ct.SERVICES/tot*100}%"></div>
+      </div>
+    </div>
+    <div class="sol-section">
+      <div class="section-lbl">Ecosystem Solutions</div>
+      <div class="sgrid">
+        ${vis.map(id => {
+          const s = S[id]; if (!s) return '';
+          return `<div class="scard ${s.t.toLowerCase()}">
+            <div class="row1"><span class="acr">${s.a}</span><span class="type-tag">${s.t}</span></div>
+            <h3>${s.n}</h3>
+            <div class="sdesc">${s.d}</div>
+            <div class="details">
+              <div class="drow"><span class="dk">CS Product</span><span class="dval hi">${s.cs}</span></div>
+              <div class="drow"><span class="dk">Partners</span><span class="dval">${s.p}</span></div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
 buildTabs();
 render(0);
 </script>
