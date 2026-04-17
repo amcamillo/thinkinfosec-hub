@@ -6,73 +6,68 @@
 <title>NCSC Critical Controls × CrowdStrike Ecosystem — Thinkinfosec Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════
-   DESIGN TOKENS — ThinkInfoSec Hub 2026
-   ═══════════════════════════════════════ */
 :root {
   --navy:           #0D1F3C;
-  --navy-deep:      #091628;
-  --navy-mid:       #132D54;
+  --navy-light:     #1A3358;
+  --navy-faint:     #EDF0F5;
   --navy-surface:   #112240;
-  --navy-card:      #15294A;
-  --navy-card-hover:#1A3358;
-  --navy-border:    #1E3A5F;
-  --navy-border-lt: #264573;
 
   --teal:           #00BFCF;
-  --teal-dim:       #009DAA;
+  --teal-dark:      #009DAA;
   --teal-bright:    #00E5F7;
-  --teal-glow:      rgba(0,191,207,0.15);
   --teal-faint:     rgba(0,191,207,0.08);
 
   --pink:           #FF2D78;
-  --pink-glow:      rgba(255,45,120,0.15);
-  --pink-faint:     rgba(255,45,120,0.08);
+  --pink-faint:     rgba(255,45,120,0.07);
 
   --green:          #00875A;
   --green-bright:   #36B37E;
-  --green-glow:     rgba(0,135,90,0.2);
+  --green-faint:    rgba(0,135,90,0.07);
 
   --amber:          #FF8B00;
-  --amber-glow:     rgba(255,139,0,0.15);
+  --amber-faint:    rgba(255,139,0,0.07);
 
   --purple:         #7C3AED;
-  --purple-glow:    rgba(124,58,237,0.15);
+  --purple-faint:   rgba(124,58,237,0.07);
 
   --red:            #DE350B;
 
-  --text-bright:    #E8ECF2;
-  --text-primary:   #CDD5E0;
-  --text-secondary: #8899AA;
-  --text-muted:     #5A6E82;
+  /* Light theme surfaces */
+  --page:           #F6F7FA;
+  --surface:        #FFFFFF;
+  --surface-raised: #F0F2F5;
+  --border:         #DFE1E6;
+  --border-light:   #EBECF0;
 
-  --native-color:   var(--teal);
-  --hybrid-color:   var(--green-bright);
+  /* Text on light */
+  --text-primary:   #172B4D;
+  --text-secondary: #5E6C84;
+  --text-muted:     #97A0AF;
+
+  --native-color:   var(--navy);
+  --hybrid-color:   var(--teal-dark);
   --partner-color:  var(--pink);
   --services-color: var(--purple);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+*{margin:0;padding:0;box-sizing:border-box}
 
 body {
-  background: var(--navy-deep);
+  background: var(--page);
   color: var(--text-primary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
 }
 
-/* ═══════════════════════════════════════
-   HERO — matching PromptInjTechniques
-   ═══════════════════════════════════════ */
+/* ═══════ HERO (stays dark navy) ═══════ */
 .hero {
   position: relative;
   padding: 40px 48px 36px;
   background: var(--navy);
-  border-bottom: 1px solid var(--navy-border);
+  color: #fff;
   overflow: hidden;
 }
-/* Circuit-trace texture */
 .hero::after {
   content: '';
   position: absolute;
@@ -80,14 +75,8 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0v30m0 20v30M0 40h30m20 0h30' stroke='%2300BFCF' stroke-width='0.4' opacity='0.06'/%3E%3Ccircle cx='40' cy='40' r='2' fill='%2300BFCF' opacity='0.04'/%3E%3C/svg%3E");
   pointer-events: none;
 }
-.hero-inner {
-  position: relative;
-  z-index: 1;
-  max-width: 1100px;
-  margin: 0 auto;
-}
+.hero-inner { position:relative; z-index:1; max-width:1100px; margin:0 auto; }
 
-/* Logo + brand row */
 .hero-brand {
   display: flex;
   align-items: center;
@@ -95,35 +84,18 @@ body {
   margin-bottom: 24px;
 }
 .hero-brand img {
-  width: 52px;
-  height: 52px;
+  width: 52px; height: 52px;
   border-radius: 50%;
-  border: 2px solid var(--navy-border);
+  border: 2px solid rgba(255,255,255,0.15);
   object-fit: cover;
 }
-.hero-brand .brand-text {
-  display: flex;
-  flex-direction: column;
-}
-.hero-brand .brand-name {
-  font-size: 18px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: -0.3px;
-}
-.hero-brand .brand-sub {
-  font-size: 11px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--teal);
-  margin-top: 1px;
-}
+.hero-brand .brand-text { display:flex; flex-direction:column; }
+.hero-brand .brand-name { font-size:18px; font-weight:700; color:#fff; letter-spacing:-0.3px; }
+.hero-brand .brand-sub { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:1.5px; color:var(--teal); margin-top:1px; }
 
 .hero h1 {
-  font-size: clamp(24px, 3.2vw, 36px);
+  font-size: clamp(24px,3.2vw,36px);
   font-weight: 800;
-  color: #fff;
   line-height: 1.2;
   letter-spacing: -0.5px;
   max-width: 720px;
@@ -132,518 +104,223 @@ body {
 .hero h1 .accent { color: var(--teal); }
 .hero .subtitle {
   font-size: 14px;
-  color: var(--text-secondary);
+  color: rgba(255,255,255,0.6);
   max-width: 640px;
   line-height: 1.65;
   margin-bottom: 20px;
 }
 
-/* Tag badges — matching PromptInj style */
-.hero-tags {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
+.hero-tags { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
 .htag {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  padding: 5px 14px;
-  border-radius: 4px;
-  border: 1px solid;
+  font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px;
+  padding:5px 14px; border-radius:4px; border:1px solid;
 }
-.htag.teal  { color: var(--teal);   border-color: rgba(0,191,207,0.3);  background: var(--teal-faint); }
-.htag.pink  { color: var(--pink);   border-color: rgba(255,45,120,0.3); background: var(--pink-faint); }
-.htag.green { color: var(--green-bright); border-color: rgba(54,179,126,0.3); background: rgba(54,179,126,0.08); }
+.htag.teal  { color:var(--teal);         border-color:rgba(0,191,207,0.3);  background:rgba(0,191,207,0.1); }
+.htag.pink  { color:var(--pink);         border-color:rgba(255,45,120,0.3); background:rgba(255,45,120,0.1); }
+.htag.green { color:var(--green-bright); border-color:rgba(54,179,126,0.3); background:rgba(54,179,126,0.1); }
 
-/* Stats row */
-.hero-stats {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 18px;
-}
+.hero-stats { display:flex; gap:10px; flex-wrap:wrap; }
 .hstat {
-  padding: 12px 18px;
-  background: var(--navy-surface);
-  border: 1px solid var(--navy-border);
-  border-radius: 8px;
+  padding:12px 18px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px;
 }
-.hstat .val {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--teal);
-}
-.hstat .lbl {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
+.hstat .val { font-family:'JetBrains Mono',monospace; font-size:22px; font-weight:700; color:var(--teal); }
+.hstat .lbl { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px; color:rgba(255,255,255,0.4); margin-top:2px; }
 
-
-
-/* Breadcrumb */
+/* ═══════ BREADCRUMB ═══════ */
 .breadcrumb {
   padding: 10px 48px;
-  background: var(--navy-surface);
-  border-bottom: 1px solid var(--navy-border);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
   font-size: 12px;
   color: var(--text-muted);
 }
-.breadcrumb a {
-  color: var(--teal);
-  text-decoration: none;
-  font-weight: 500;
-}
-.breadcrumb a:hover { text-decoration: underline; }
-.breadcrumb .sep { margin: 0 8px; color: var(--text-muted); }
+.breadcrumb a { color:var(--teal-dark); text-decoration:none; font-weight:500; }
+.breadcrumb a:hover { text-decoration:underline; }
+.breadcrumb .sep { margin:0 8px; color:var(--border); }
 
-/* ═══════════════════════════════════════
-   LEGEND BAR — sticky
-   ═══════════════════════════════════════ */
+/* ═══════ LEGEND BAR ═══════ */
 .legend-bar {
-  position: sticky;
-  top: 0;
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  flex-wrap: wrap;
+  position: sticky; top:0; z-index:200;
+  display: flex; align-items:center; gap:18px; flex-wrap:wrap;
   padding: 10px 48px;
-  background: var(--navy);
-  border-bottom: 1px solid var(--navy-border);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  letter-spacing: 0.2px;
-}
-.lpip {
-  width: 10px; height: 10px;
-  border-radius: 3px;
-}
-.lpip.native  { background: var(--native-color); }
-.lpip.hybrid  { background: var(--hybrid-color); }
-.lpip.partner { background: var(--partner-color); }
-.lpip.services{ background: var(--services-color); }
+.legend-item { display:flex; align-items:center; gap:6px; font-size:11px; font-weight:500; color:var(--text-secondary); }
+.lpip { width:10px; height:10px; border-radius:3px; }
+.lpip.native  { background:var(--native-color); }
+.lpip.hybrid  { background:var(--hybrid-color); }
+.lpip.partner { background:var(--partner-color); }
+.lpip.services{ background:var(--services-color); }
 
-.legend-filters {
-  margin-left: auto;
-  display: flex;
-  gap: 4px;
-}
+.legend-filters { margin-left:auto; display:flex; gap:4px; }
 .fb {
-  padding: 4px 12px;
-  border-radius: 4px;
-  font-size: 10px;
-  font-weight: 600;
-  font-family: 'JetBrains Mono', monospace;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  border: 1px solid var(--navy-border);
-  background: transparent;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.2s;
+  padding:5px 13px; border-radius:5px;
+  font-size:11px; font-weight:600; font-family:inherit;
+  letter-spacing:0.3px; text-transform:uppercase;
+  border:1px solid var(--border);
+  background:var(--surface); color:var(--text-muted);
+  cursor:pointer; transition:all 0.2s;
 }
-.fb:hover { border-color: var(--teal); color: var(--text-secondary); }
-.fb.on {
-  background: var(--teal);
-  border-color: var(--teal);
-  color: var(--navy);
-}
+.fb:hover { border-color:var(--teal); color:var(--text-primary); }
+.fb.on { background:var(--navy); border-color:var(--navy); color:#fff; }
 
-/* ═══════════════════════════════════════
-   CONTROL TABS
-   ═══════════════════════════════════════ */
+/* ═══════ TABS ═══════ */
 .tabs-wrap {
-  padding: 10px 48px;
-  background: var(--navy-deep);
-  border-bottom: 1px solid var(--navy-border);
-  overflow-x: auto;
-  scrollbar-width: none;
+  padding:10px 48px;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  overflow-x:auto; scrollbar-width:none;
 }
-.tabs-wrap::-webkit-scrollbar { display: none; }
-.tabs { display: flex; gap: 5px; }
+.tabs-wrap::-webkit-scrollbar{display:none}
+.tabs{display:flex;gap:5px}
 .tab {
-  flex-shrink: 0;
-  padding: 8px 16px;
-  border-radius: 6px;
-  border: 1px solid var(--navy-border);
-  background: transparent;
-  color: var(--text-muted);
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
+  flex-shrink:0; padding:8px 16px; border-radius:7px;
+  border:1px solid var(--border-light); background:var(--surface);
+  color:var(--text-muted); font-family:inherit; font-size:12px; font-weight:500;
+  cursor:pointer; transition:all 0.2s; white-space:nowrap;
 }
-.tab:hover {
-  border-color: var(--navy-border-lt);
-  color: var(--text-secondary);
-  background: var(--navy-surface);
-}
+.tab:hover { border-color:var(--teal); color:var(--text-primary); background:var(--teal-faint); }
 .tab.on {
-  background: var(--teal-faint);
-  border-color: var(--teal);
-  color: var(--teal);
-  font-weight: 600;
-  box-shadow: 0 0 12px var(--teal-glow);
+  background:var(--teal-faint); border-color:var(--teal); color:var(--navy); font-weight:600;
+  box-shadow:0 0 0 1px var(--teal);
 }
-.tab .idx {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--teal-dim);
-  margin-right: 5px;
-}
-.tab.on .idx { color: var(--teal-bright); }
+.tab .idx { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; color:var(--teal-dark); margin-right:5px; }
 
-/* ═══════════════════════════════════════
-   MAIN CONTENT
-   ═══════════════════════════════════════ */
-.main {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 32px 48px 60px;
-}
+/* ═══════ MAIN ═══════ */
+.main { max-width:1100px; margin:0 auto; padding:32px 48px 60px; }
 
-/* Control header */
 .ctrl-head .eyebrow {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--teal);
+  font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600;
+  letter-spacing:1.5px; text-transform:uppercase; color:var(--teal-dark);
 }
-.ctrl-head h2 {
-  font-size: 24px;
-  font-weight: 800;
-  letter-spacing: -0.3px;
-  color: var(--text-bright);
-  margin-top: 4px;
-}
-.ctrl-head .blurb {
-  margin-top: 10px;
-  font-size: 14px;
-  color: var(--text-secondary);
-  line-height: 1.65;
-  max-width: 700px;
-}
+.ctrl-head h2 { font-size:24px; font-weight:800; letter-spacing:-0.3px; color:var(--navy); margin-top:4px; }
+.ctrl-head .blurb { margin-top:10px; font-size:14px; color:var(--text-secondary); line-height:1.65; max-width:700px; }
 
-/* MCSS callout */
 .mcss-box {
-  margin-top: 16px;
-  padding: 14px 18px;
-  background: var(--navy-surface);
-  border-left: 3px solid var(--teal);
-  border-radius: 0 8px 8px 0;
-  border: 1px solid var(--navy-border);
-  border-left: 3px solid var(--teal);
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.6;
+  margin-top:16px; padding:14px 18px;
+  background:var(--navy-faint);
+  border-left:3px solid var(--navy);
+  border-radius:0 8px 8px 0;
+  font-size:13px; color:var(--text-secondary); line-height:1.6;
 }
-.mcss-box strong {
-  color: var(--teal);
-  font-weight: 600;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
+.mcss-box strong { color:var(--navy); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; }
 
-/* Mapping narrative */
 .map-box {
-  margin-top: 24px;
-  padding: 22px 24px;
-  background: var(--navy-card);
-  border: 1px solid var(--navy-border);
-  border-radius: 10px;
+  margin-top:24px; padding:22px 24px;
+  background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.04);
 }
-.map-box h4 {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-bright);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
-}
+.map-box h4 { font-size:13px; font-weight:700; color:var(--navy); display:flex; align-items:center; gap:8px; margin-bottom:10px; }
 .map-box h4 .ico {
-  width: 20px; height: 20px;
-  border-radius: 5px;
-  background: var(--teal-faint);
-  border: 1px solid rgba(0,191,207,0.2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px; color: var(--teal);
+  width:20px; height:20px; border-radius:5px;
+  background:var(--teal-faint); border:1px solid rgba(0,191,207,0.15);
+  display:flex; align-items:center; justify-content:center;
+  font-size:10px; color:var(--teal-dark);
 }
-.map-box .narr {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.65;
-}
-.map-box ul {
-  list-style: none;
-  margin-top: 14px;
-  display: grid;
-  gap: 5px;
-}
-.map-box ul li {
-  position: relative;
-  padding-left: 20px;
-  font-size: 12.5px;
-  color: var(--text-secondary);
-  line-height: 1.7;
-}
-.map-box ul li::before {
-  content: '\2192';
-  position: absolute;
-  left: 0;
-  color: var(--teal);
-  font-weight: 700;
-}
+.map-box .narr { font-size:13px; color:var(--text-secondary); line-height:1.65; }
+.map-box ul { list-style:none; margin-top:14px; display:grid; gap:5px; }
+.map-box ul li { position:relative; padding-left:20px; font-size:12.5px; color:var(--text-secondary); line-height:1.7; }
+.map-box ul li::before { content:'\2192'; position:absolute; left:0; color:var(--teal-dark); font-weight:700; }
 
-/* Coverage meter */
 .cov-wrap {
-  margin-top: 24px;
-  padding: 16px 20px;
-  background: var(--navy-card);
-  border: 1px solid var(--navy-border);
-  border-radius: 10px;
+  margin-top:24px; padding:16px 20px;
+  background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.04);
 }
-.cov-wrap h4 {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--text-muted);
-  margin-bottom: 10px;
-}
-.cov-track {
-  display: flex;
-  height: 6px;
-  border-radius: 3px;
-  overflow: hidden;
-  background: var(--navy-surface);
-  margin-bottom: 10px;
-}
-.cov-seg { transition: width 0.5s ease; }
-.cov-seg.native  { background: var(--native-color); }
-.cov-seg.hybrid  { background: var(--hybrid-color); }
-.cov-seg.partner { background: var(--partner-color); }
-.cov-seg.services{ background: var(--services-color); }
-.cov-labels {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.cov-lbl {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 11px;
-  color: var(--text-muted);
-}
-.cov-lbl .n {
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
+.cov-wrap h4 { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-muted); margin-bottom:10px; }
+.cov-track { display:flex; height:7px; border-radius:4px; overflow:hidden; background:var(--surface-raised); margin-bottom:10px; }
+.cov-seg { transition:width 0.5s ease; }
+.cov-seg.native  { background:var(--native-color); }
+.cov-seg.hybrid  { background:var(--hybrid-color); }
+.cov-seg.partner { background:var(--partner-color); }
+.cov-seg.services{ background:var(--services-color); }
+.cov-labels { display:flex; gap:16px; flex-wrap:wrap; }
+.cov-lbl { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--text-muted); }
+.cov-lbl .n { font-family:'JetBrains Mono',monospace; font-weight:600; color:var(--text-primary); }
 
-/* ═══════════════════════════════════════
-   SOLUTION CARDS
-   ═══════════════════════════════════════ */
-.sol-section { margin-top: 28px; }
-.sol-section .sec-lbl {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  color: var(--text-muted);
-  margin-bottom: 12px;
-}
-.sgrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 12px;
-}
+/* ═══════ SOLUTION CARDS ═══════ */
+.sol-section { margin-top:28px; }
+.sol-section .sec-lbl { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-muted); margin-bottom:12px; }
+.sgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:12px; }
 
 .sc {
-  background: var(--navy-card);
-  border: 1px solid var(--navy-border);
-  border-radius: 10px;
-  padding: 18px 20px;
-  transition: all 0.25s;
-  position: relative;
-  overflow: hidden;
+  background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  padding:18px 20px; transition:all 0.25s; position:relative; overflow:hidden;
 }
-.sc::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 3px;
-}
-.sc.native::before  { background: var(--native-color); }
-.sc.hybrid::before  { background: var(--hybrid-color); }
-.sc.partner::before { background: var(--partner-color); }
-.sc.services::before{ background: var(--services-color); }
-
+.sc::before { content:''; position:absolute; top:0; left:0; width:100%; height:3px; }
+.sc.native::before  { background:var(--native-color); }
+.sc.hybrid::before  { background:var(--hybrid-color); }
+.sc.partner::before { background:var(--partner-color); }
+.sc.services::before{ background:var(--services-color); }
 .sc:hover {
-  border-color: var(--navy-border-lt);
-  background: var(--navy-card-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+  border-color:var(--teal);
+  transform:translateY(-2px);
+  box-shadow:0 4px 20px rgba(0,191,207,0.08);
 }
 
-.sc .r1 {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 8px;
-}
+.sc .r1 { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
 .sc .acr {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 4px;
-  border: 1px solid;
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600;
+  padding:3px 8px; border-radius:4px; border:1px solid;
 }
-.sc.native  .acr { color: var(--teal);         border-color: rgba(0,191,207,0.25);  background: var(--teal-faint); }
-.sc.hybrid  .acr { color: var(--green-bright); border-color: rgba(54,179,126,0.25); background: rgba(54,179,126,0.08); }
-.sc.partner .acr { color: var(--pink);         border-color: rgba(255,45,120,0.25); background: var(--pink-faint); }
-.sc.services .acr{ color: var(--purple);       border-color: rgba(124,58,237,0.25); background: var(--purple-glow); }
+.sc.native  .acr { color:var(--navy);       border-color:rgba(13,31,60,0.2);   background:var(--navy-faint); }
+.sc.hybrid  .acr { color:var(--teal-dark);  border-color:rgba(0,157,170,0.2);  background:var(--teal-faint); }
+.sc.partner .acr { color:var(--pink);       border-color:rgba(255,45,120,0.2); background:var(--pink-faint); }
+.sc.services .acr{ color:var(--purple);     border-color:rgba(124,58,237,0.2); background:var(--purple-faint); }
 
-.sc .tbadge {
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  padding: 3px 8px;
-  border-radius: 4px;
-}
-.sc.native  .tbadge { background: var(--teal);         color: var(--navy); }
-.sc.hybrid  .tbadge { background: var(--green-bright); color: var(--navy); }
-.sc.partner .tbadge { background: var(--pink);         color: #fff; }
-.sc.services .tbadge{ background: var(--purple);       color: #fff; }
+.sc .tbadge { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; padding:3px 8px; border-radius:4px; }
+.sc.native  .tbadge { background:var(--navy);    color:#fff; }
+.sc.hybrid  .tbadge { background:var(--teal-dark); color:#fff; }
+.sc.partner .tbadge { background:var(--pink);    color:#fff; }
+.sc.services .tbadge{ background:var(--purple);  color:#fff; }
 
-.sc h3 {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text-bright);
-  margin-bottom: 4px;
-}
-.sc .sd {
-  font-size: 12px;
-  color: var(--text-muted);
-  line-height: 1.55;
-  margin-bottom: 12px;
-}
-.sc .dets { display: grid; gap: 5px; }
-.sc .dr {
-  display: flex;
-  gap: 8px;
-  font-size: 11px;
-}
+.sc h3 { font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px; }
+.sc .sd { font-size:12px; color:var(--text-secondary); line-height:1.55; margin-bottom:12px; }
+.sc .dets { display:grid; gap:5px; }
+.sc .dr { display:flex; gap:8px; font-size:11px; }
 .sc .dr .dk {
-  min-width: 80px;
-  flex-shrink: 0;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 500;
-  font-size: 9.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  color: var(--text-muted);
-  padding-top: 1px;
+  min-width:80px; flex-shrink:0;
+  font-family:'JetBrains Mono',monospace; font-weight:500; font-size:9.5px;
+  text-transform:uppercase; letter-spacing:0.4px; color:var(--text-muted); padding-top:1px;
 }
-.sc .dr .dv { color: var(--text-secondary); }
-.sc .dr .dv.hi { color: var(--text-bright); font-weight: 600; }
+.sc .dr .dv { color:var(--text-secondary); }
+.sc .dr .dv.hi { color:var(--navy); font-weight:600; }
 
 .sc .mtag {
-  display: inline-block;
-  margin-top: 10px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  padding: 3px 10px;
-  border-radius: 100px;
-  border: 1px solid;
+  display:inline-block; margin-top:10px;
+  font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px;
+  padding:3px 10px; border-radius:100px; border:1px solid;
 }
-.mtag.high { color: var(--green-bright); border-color: rgba(54,179,126,0.3); background: rgba(54,179,126,0.08); }
-.mtag.med  { color: var(--amber);        border-color: var(--amber-glow);     background: rgba(255,139,0,0.06); }
-.mtag.low  { color: var(--text-muted);   border-color: var(--navy-border);    background: transparent; }
+.mtag.high { color:var(--green);  border-color:rgba(0,135,90,0.25); background:var(--green-faint); }
+.mtag.med  { color:var(--amber);  border-color:rgba(255,139,0,0.25); background:var(--amber-faint); }
+.mtag.low  { color:var(--text-muted); border-color:var(--border); background:transparent; }
 
-.no-res {
-  grid-column: 1/-1;
-  text-align: center;
-  padding: 48px;
-  color: var(--text-muted);
-  font-size: 13px;
-}
+.no-res { grid-column:1/-1; text-align:center; padding:48px; color:var(--text-muted); font-size:13px; }
 
-/* ═══════════════════════════════════════
-   FOOTER — matching Hub style
-   ═══════════════════════════════════════ */
+/* ═══════ FOOTER ═══════ */
 footer {
-  padding: 24px 48px;
-  background: var(--navy);
-  border-top: 1px solid var(--navy-border);
-  text-align: center;
+  padding:24px 48px; background:var(--navy); border-top:1px solid rgba(255,255,255,0.08); text-align:center;
 }
-footer .ft-main {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-footer .ft-main a {
-  color: var(--teal);
-  text-decoration: none;
-}
-footer .ft-main a:hover { text-decoration: underline; }
-footer .ft-sub {
-  margin-top: 4px;
-  font-size: 11px;
-  color: var(--text-muted);
-  opacity: 0.6;
-}
+footer .ft-main { font-size:12px; color:rgba(255,255,255,0.5); }
+footer .ft-main a { color:var(--teal); text-decoration:none; }
+footer .ft-main a:hover { text-decoration:underline; }
+footer .ft-sub { margin-top:4px; font-size:11px; color:rgba(255,255,255,0.3); }
 
-/* ═══════════════════════════════════════
-   ANIMATION
-   ═══════════════════════════════════════ */
-.sc {
-  opacity: 0;
-  transform: translateY(10px);
-  animation: up 0.3s ease forwards;
-}
-@keyframes up { to { opacity:1; transform:translateY(0); } }
-.sc:nth-child(1){animation-delay:0s}
-.sc:nth-child(2){animation-delay:.04s}
-.sc:nth-child(3){animation-delay:.08s}
-.sc:nth-child(4){animation-delay:.12s}
-.sc:nth-child(5){animation-delay:.16s}
-.sc:nth-child(6){animation-delay:.2s}
-.sc:nth-child(7){animation-delay:.24s}
-.sc:nth-child(8){animation-delay:.28s}
-.sc:nth-child(9){animation-delay:.32s}
-.sc:nth-child(10){animation-delay:.36s}
+/* ═══════ ANIM ═══════ */
+.sc { opacity:0; transform:translateY(10px); animation:up 0.3s ease forwards; }
+@keyframes up{to{opacity:1;transform:translateY(0)}}
+.sc:nth-child(1){animation-delay:0s} .sc:nth-child(2){animation-delay:.04s}
+.sc:nth-child(3){animation-delay:.08s} .sc:nth-child(4){animation-delay:.12s}
+.sc:nth-child(5){animation-delay:.16s} .sc:nth-child(6){animation-delay:.2s}
+.sc:nth-child(7){animation-delay:.24s} .sc:nth-child(8){animation-delay:.28s}
+.sc:nth-child(9){animation-delay:.32s} .sc:nth-child(10){animation-delay:.36s}
 
-/* ═══════════════════════════════════════
-   RESPONSIVE
-   ═══════════════════════════════════════ */
+/* ═══════ RESPONSIVE ═══════ */
 @media(max-width:800px){
   .hero,.main{padding-left:20px;padding-right:20px}
   .legend-bar,.tabs-wrap,.breadcrumb{padding-left:20px;padding-right:20px}
@@ -657,7 +334,6 @@ footer .ft-sub {
 </head>
 <body>
 
-<!-- ════════ HERO ════════ -->
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-brand">
@@ -667,37 +343,30 @@ footer .ft-sub {
         <span class="brand-sub">Hub</span>
       </div>
     </div>
-
     <h1>Addressing the NCSC <span class="accent">10 Critical Controls</span> with the Falcon Alliance Ecosystem</h1>
     <p class="subtitle">A complete view of how CrowdStrike — natively and through its certified alliance partners — maps technology coverage to each NCSC Critical Control for New Zealand organisations.</p>
-
     <div class="hero-tags">
       <span class="htag teal">NCSC NZ Critical Controls</span>
       <span class="htag pink">CrowdStrike Alliance</span>
       <span class="htag green">Compliance Framework</span>
     </div>
-
     <div class="hero-stats">
       <div class="hstat"><span class="val">10</span><span class="lbl">Critical Controls</span></div>
       <div class="hstat"><span class="val">70</span><span class="lbl">Alliance Solutions</span></div>
       <div class="hstat"><span class="val">30</span><span class="lbl">Native Falcon</span></div>
       <div class="hstat"><span class="val">33</span><span class="lbl">Partner / Hybrid</span></div>
     </div>
-
-
   </div>
 </div>
 
-<!-- ════════ BREADCRUMB ════════ -->
 <div class="breadcrumb">
   <a href="https://amcamillo.github.io/thinkinfosec-hub/index.html">Hub</a>
-  <span class="sep">›</span>
+  <span class="sep">\u203A</span>
   <a href="https://amcamillo.github.io/thinkinfosec-hub/index.html#research">Research</a>
-  <span class="sep">›</span>
-  NCSC Critical Controls × CrowdStrike Ecosystem
+  <span class="sep">\u203A</span>
+  NCSC Critical Controls \u00D7 CrowdStrike Ecosystem
 </div>
 
-<!-- ════════ LEGEND BAR ════════ -->
 <div class="legend-bar">
   <div class="legend-item"><span class="lpip native"></span>Native Falcon</div>
   <div class="legend-item"><span class="lpip hybrid"></span>Hybrid (CS + Partner)</div>
@@ -712,27 +381,20 @@ footer .ft-sub {
   </div>
 </div>
 
-<!-- ════════ TABS ════════ -->
-<div class="tabs-wrap">
-  <div class="tabs" id="tabs"></div>
-</div>
-
-<!-- ════════ MAIN CONTENT ════════ -->
+<div class="tabs-wrap"><div class="tabs" id="tabs"></div></div>
 <div class="main" id="main"></div>
 
-<!-- ════════ FOOTER ════════ -->
 <footer>
-  <div class="ft-main">ThinkInfoSec 2026 — <a href="https://www.linkedin.com/in/andrecamillo/" target="_blank" rel="noopener">Andre Camillo</a></div>
-  <div class="ft-sub">ACCS Alliance Matrix v2 · April 2026 · NCSC Critical Controls Summary · All content is for educational and research purposes only.</div>
+  <div class="ft-main">ThinkInfoSec 2026 \u2014 <a href="https://www.linkedin.com/in/andrecamillo/" target="_blank" rel="noopener">Andre Camillo</a></div>
+  <div class="ft-sub">ACCS Alliance Matrix v2 \u00B7 April 2026 \u00B7 NCSC Critical Controls Summary \u00B7 All content is for educational and research purposes only.</div>
 </footer>
 
-<!-- ════════ DATA + ENGINE ════════ -->
 <script>
 'use strict';
 
 const CC=[
 {id:1,name:"Patch Software & Systems",short:"Patching",desc:"Keeping all software \u2014 OS, applications, firewalls, routers \u2014 up to date. Many advisories relate to vulnerabilities mitigable through timely patching.",mcss:"The MCSS mandates critical-rated security patches on external-facing systems within 48 hours, internal critical patches within two weeks. A formal patch management strategy and policy is required.",narrative:"CrowdStrike\u2019s Exposure Management suite (Spotlight, Surface, Discover) provides continuous vulnerability identification and risk-prioritised remediation guidance. Falcon Spotlight enriches CVE data with adversary context \u2014 prioritising vulnerabilities actively exploited in the wild. Partners extend into automated deployment, virtual patching (WAF/edge), and application-layer scanning (SCA).",points:["Falcon Spotlight identifies missing patches and prioritises by real-world exploit activity","Falcon Surface discovers externally-facing assets to scope the 48-hour patching window","Falcon Exposure Management correlates asset, vulnerability, and adversary data into unified risk view","Cloudflare / F5 WAF provides virtual patching as interim mitigation for external-facing systems","ServiceNow ITSM integration automates patch ticketing and remediation workflows","Snyk / Checkmarx cover software composition analysis for application-layer patching"],sols:[47,46,45,53,58,55,14,20]},
-{id:2,name:"Multi-Factor Authentication & Verification",short:"MFA",desc:"Enforcing MFA for internet-accessible and administrative accounts. Many incidents stem from weak credentials. Also emphasises strong business process verification steps.",mcss:"MFA is mandated for all privileged users and when authenticating to business-critical and externally facing systems. Logging, retention, and review of all MFA events is required.",narrative:"Falcon Identity Protection detects credential theft, MFA bypass, and lateral movement \u2014 enriching partner Identity Providers with device risk signals. The core MFA/IdP enforcement sits with alliance partners (Okta, Microsoft Entra ID, Duo), while CrowdStrike feeds real-time device and identity risk context into adaptive MFA decisions.",points:["Falcon Identity Protection detects credential theft, pass-the-hash, MFA bypass, and lateral movement","Falcon Privileged Access enforces dynamic conditional access for privileged accounts","Okta / Microsoft Entra ID serve as the core Identity Provider enforcing MFA policies","Falcon ZTA score feeds device compliance context into partner ZTNA/MFA decisions","Falcon NG-SIEM centralises and retains all authentication logs for review and audit","Failed MFA events flow as high-fidelity indicators of compromise into SOC workflows"],sols:[7,8,9,12,11,37]},
+{id:2,name:"Multi-Factor Authentication & Verification",short:"MFA",desc:"Enforcing MFA for internet-accessible and administrative accounts. Many incidents stem from weak credentials. Also emphasises strong business process verification steps.",mcss:"MFA is mandated for all privileged users and when authenticating to business-critical and externally facing systems. Logging, retention, and review of all MFA events is required.",narrative:"Falcon Identity Protection is central to this control \u2014 it provides conditional access enforcement, detects credential theft, MFA bypass attempts, and lateral movement, enriching partner Identity Providers with real-time device and identity risk signals. Falcon Privileged Access extends this with dynamic JIT controls for admin accounts. The core MFA/IdP enforcement sits with alliance partners (Okta, Microsoft Entra ID, Duo), while CrowdStrike\u2019s ITDR capabilities act as a detection and response layer for identity-based attacks that bypass MFA.",points:["Falcon Identity Protection provides conditional access, detects credential theft, pass-the-hash, MFA bypass, and lateral movement","Falcon Privileged Access enforces dynamic just-in-time conditional access for privileged accounts","Falcon Identity Protection enriches partner IdPs (Okta, Entra) with device risk and identity threat signals","Okta / Microsoft Entra ID / Duo serve as the core Identity Providers enforcing MFA policies","Falcon ZTA score feeds device compliance context into partner ZTNA/MFA adaptive decisions","Falcon NG-SIEM centralises and retains all authentication logs for review and audit","Failed MFA events flow as high-fidelity indicators of compromise into SOC detection workflows"],sols:[7,8,9,12,11,37]},
 {id:3,name:"Password Manager",short:"Passwords",desc:"Providing staff with an organisation-managed password manager to promote long, strong, unique passwords for every system \u2014 including shared credentials.",mcss:"Organisations should provide password manager tools. Without the right tools, staff fall into bad practices \u2014 reusing and weak passwords. Primarily a provisioning and policy control.",narrative:"Password management is not a direct CrowdStrike product domain, but the Falcon ecosystem supports credential hygiene. Falcon Identity Protection detects weak and compromised credentials in Active Directory. Partner IdPs enforce password policies. CrowdStrike ITDR detects credential replay attacks, acting as a safety net alongside password manager deployment.",points:["Falcon Identity Protection detects weak, compromised, and reused credentials in Active Directory","Falcon Intelligence Recon monitors dark web for leaked organisational credentials","Okta / Microsoft Entra ID enforce enterprise password policies and SSO","ITDR detects credential stuffing, pass-the-hash, and replayed credentials","Password management tooling (1Password, Bitwarden) is complementary partner domain","Falcon Data Security detects credential data exfiltration"],sols:[7,44,9,21,50]},
 {id:4,name:"Centralised Logging",short:"Logging",desc:"Central logging from all endpoints. Identifying key events, setting actionable alerts, and ensuring sufficient detail for incident investigation.",mcss:"Requires centralised, immutable logging capability. Ongoing trend/baseline of infrastructure utilisation. Proactive monitoring for impossible travel, repeated login failures.",narrative:"CrowdStrike\u2019s strongest native domain. Falcon Next-Gen SIEM (LogScale) provides petabyte-scale centralised log ingestion, correlation, and real-time detection. Falcon Insight XDR provides cross-domain correlation. NG-SIEM supports immutable log retention, UEBA baselining, and proactive anomaly detection \u2014 directly addressing every aspect of this control.",points:["Falcon Next-Gen SIEM provides petabyte-scale centralised log ingestion and correlation","Falcon Insight XDR cross-correlates endpoint, identity, cloud, email, and network telemetry","NG-SIEM supports immutable log retention addressing the tamper-proofing requirement","UEBA capabilities establish behavioural baselines and detect anomalies (impossible travel)","NDR partners (Vectra, Corelight, Darktrace) feed network telemetry into NG-SIEM","Charlotte AI accelerates triage, investigation, and automated alerting workflows"],sols:[37,2,3,28,38,61,43]},
 {id:5,name:"Security Awareness",short:"Awareness",desc:"Attackers rely on human behaviour. A significant number of breaches involve a human element. Investing in awareness and training is a long-term commitment.",mcss:"Requires onboarding training, role-based training for specialised staff, reporting of awareness updates, and policy integration. CMM2 demands tracked training.",narrative:"Security awareness training is partner-led. CrowdStrike does not offer a native training platform. The ecosystem supports this through email security partners (Proofpoint, Mimecast, Abnormal) with phishing simulation, and dedicated platforms (KnowBe4, Cofense). CrowdStrike\u2019s threat intelligence enriches simulation scenarios with real-world adversary TTPs.",points:["KnowBe4 / Proofpoint Security Awareness provide role-based training and phishing simulation","Proofpoint / Mimecast email security integrates real-time phishing simulation testing","Abnormal Security provides AI-based BEC detection complementing awareness training","CrowdStrike Adversary Intelligence provides real-world TTPs to inform training scenarios","Falcon NG-SIEM tracks and reports on phishing simulation outcomes for CMM2 evidence","CrowdStrike Services offers tabletop exercises and security culture advisory"],sols:[65,35,36,43,37,66]},
@@ -750,7 +412,7 @@ const S={
 4:{a:"MTD",n:"Mobile Threat Defense",d:"Mobile malware detection, device misconfigs, network threats on iOS/Android.",t:"NATIVE",cs:"Falcon for Mobile",fm:"Falcon for Mobile",p:"\u2014",m:"MED",tier:"Add-on"},
 5:{a:"HFW",n:"Host Firewall Management",d:"Centralised policy management for host firewall rules via Falcon sensor.",t:"NATIVE",cs:"Falcon Firewall Mgmt",fm:"Falcon Firewall Management",p:"\u2014",m:"MED",tier:"Pro / Enterprise / Elite"},
 6:{a:"USB-DC",n:"Device & USB Control",d:"Policy-based control of removable storage, printers, Bluetooth.",t:"NATIVE",cs:"Falcon Device Control",fm:"Falcon Device Control",p:"\u2014",m:"MED",tier:"Pro / Enterprise / Elite"},
-7:{a:"ITDR",n:"Identity Threat Detection & Response",d:"Detects credential theft, pass-the-hash, MFA bypass, and lateral movement.",t:"NATIVE",cs:"Falcon Identity Protection",fm:"Falcon Next-Gen Identity Security",p:"SailPoint (IGA via NG-SIEM + Fusion)",m:"HIGH",tier:"Add-on / Elite"},
+7:{a:"ITDR",n:"Identity Threat Detection & Response",d:"Detects credential theft, pass-the-hash, MFA bypass, and lateral movement. Provides conditional access enforcement and enriches partner IdPs with risk signals.",t:"NATIVE",cs:"Falcon Identity Protection",fm:"Falcon Next-Gen Identity Security",p:"SailPoint (IGA via NG-SIEM + Fusion)",m:"HIGH",tier:"Add-on / Elite"},
 8:{a:"PAM",n:"Privileged Access Management",d:"Dynamic privileged account control \u2014 JIT access, session mgmt, credential vaulting.",t:"HYBRID",cs:"Falcon Privileged Access",fm:"Falcon Privileged Access",p:"CyberArk, BeyondTrust",m:"HIGH",tier:"Add-on (Identity suite)"},
 9:{a:"IAM",n:"Identity & Access Management",d:"User lifecycle, MFA/SSO, and authorisation across enterprise apps.",t:"HYBRID",cs:"Falcon Identity Protection",fm:"Falcon Next-Gen Identity Security",p:"Okta, Microsoft Entra ID, SailPoint",m:"HIGH",tier:"Add-on / Elite"},
 11:{a:"ZTNA",n:"Zero Trust Network Access",d:"Identity- and device-verified, least-privilege remote access replacing VPN.",t:"HYBRID",cs:"Falcon (device posture)",fm:"Falcon ZTA score",p:"Zscaler ZPA, Netskope, Cloudflare Access",m:"HIGH",tier:"Partner-priced"},
