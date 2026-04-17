@@ -3,253 +3,337 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NCSC Critical Controls × CrowdStrike Ecosystem — ThinkInfoSec</title>
+<title>NCSC Critical Controls × CrowdStrike Ecosystem — Thinkinfosec Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+/* ═══════════════════════════════════════
+   DESIGN TOKENS — ThinkInfoSec Hub 2026
+   ═══════════════════════════════════════ */
 :root {
-  --navy: #0D1F3C;
-  --navy-light: #1A3358;
-  --navy-faint: #E8ECF2;
-  --teal: #00BFCF;
-  --teal-dark: #009DAA;
-  --teal-faint: #E6F9FB;
-  --teal-glow: rgba(0,191,207,0.12);
-  --pink: #FF2D78;
-  --pink-faint: #FFF0F5;
-  --green: #00875A;
-  --green-faint: #E3FCEF;
-  --red: #DE350B;
-  --red-faint: #FFEBE6;
-  --amber: #FF8B00;
-  --amber-faint: #FFF7E6;
-  --surface: #FFFFFF;
-  --surface-raised: #F4F5F7;
-  --surface-page: #F8F9FB;
-  --text-primary: #172B4D;
-  --text-secondary: #6B778C;
-  --text-muted: #97A0AF;
-  --border: #DFE1E6;
-  --border-light: #EBECF0;
-  --native: #0D1F3C;
-  --hybrid: #00BFCF;
-  --partner: #FF2D78;
-  --services: #7C3AED;
+  --navy:           #0D1F3C;
+  --navy-deep:      #091628;
+  --navy-mid:       #132D54;
+  --navy-surface:   #112240;
+  --navy-card:      #15294A;
+  --navy-card-hover:#1A3358;
+  --navy-border:    #1E3A5F;
+  --navy-border-lt: #264573;
+
+  --teal:           #00BFCF;
+  --teal-dim:       #009DAA;
+  --teal-bright:    #00E5F7;
+  --teal-glow:      rgba(0,191,207,0.15);
+  --teal-faint:     rgba(0,191,207,0.08);
+
+  --pink:           #FF2D78;
+  --pink-glow:      rgba(255,45,120,0.15);
+  --pink-faint:     rgba(255,45,120,0.08);
+
+  --green:          #00875A;
+  --green-bright:   #36B37E;
+  --green-glow:     rgba(0,135,90,0.2);
+
+  --amber:          #FF8B00;
+  --amber-glow:     rgba(255,139,0,0.15);
+
+  --purple:         #7C3AED;
+  --purple-glow:    rgba(124,58,237,0.15);
+
+  --red:            #DE350B;
+
+  --text-bright:    #E8ECF2;
+  --text-primary:   #CDD5E0;
+  --text-secondary: #8899AA;
+  --text-muted:     #5A6E82;
+
+  --native-color:   var(--teal);
+  --hybrid-color:   var(--green-bright);
+  --partner-color:  var(--pink);
+  --services-color: var(--purple);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  background: var(--surface-page);
+  background: var(--navy-deep);
   color: var(--text-primary);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
-  font-size: 15px;
-  line-height: 1.5;
+  min-height: 100vh;
 }
 
-/* ─── HERO ─── */
+/* ═══════════════════════════════════════
+   HERO — matching PromptInjTechniques
+   ═══════════════════════════════════════ */
 .hero {
   position: relative;
-  padding: 48px 48px 44px;
+  padding: 40px 48px 36px;
   background: var(--navy);
-  color: #fff;
+  border-bottom: 1px solid var(--navy-border);
   overflow: hidden;
 }
+/* Circuit-trace texture */
 .hero::after {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0v60M0 30h60' stroke='%2300BFCF' stroke-width='0.5' opacity='0.06'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0v30m0 20v30M0 40h30m20 0h30' stroke='%2300BFCF' stroke-width='0.4' opacity='0.06'/%3E%3Ccircle cx='40' cy='40' r='2' fill='%2300BFCF' opacity='0.04'/%3E%3C/svg%3E");
   pointer-events: none;
 }
-.hero-inner { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; }
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+}
 
+/* Logo + brand row */
 .hero-brand {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 14px;
+  margin-bottom: 24px;
 }
-.hero-brand .logo-img {
-  width: 42px; 
-  height: 42px;
-  object-fit: contain;
-  filter: drop-shadow(0 0 8px var(--teal-glow));
+.hero-brand img {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid var(--navy-border);
+  object-fit: cover;
 }
-.hero-brand .name {
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+.hero-brand .brand-text {
+  display: flex;
+  flex-direction: column;
+}
+.hero-brand .brand-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+.hero-brand .brand-sub {
+  font-size: 11px;
+  font-weight: 500;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.7);
+  letter-spacing: 1.5px;
+  color: var(--teal);
+  margin-top: 1px;
 }
+
 .hero h1 {
-  font-size: clamp(26px, 3.5vw, 40px);
+  font-size: clamp(24px, 3.2vw, 36px);
   font-weight: 800;
-  line-height: 1.15;
+  color: #fff;
+  line-height: 1.2;
   letter-spacing: -0.5px;
   max-width: 720px;
+  margin-bottom: 12px;
 }
 .hero h1 .accent { color: var(--teal); }
 .hero .subtitle {
-  margin-top: 14px;
-  font-size: 15px;
-  color: rgba(255,255,255,0.65);
+  font-size: 14px;
+  color: var(--text-secondary);
   max-width: 640px;
-  line-height: 1.6;
+  line-height: 1.65;
+  margin-bottom: 20px;
 }
-.hero-stats {
-  margin-top: 28px;
+
+/* Tag badges — matching PromptInj style */
+.hero-tags {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   flex-wrap: wrap;
+  margin-bottom: 20px;
 }
-.hero-stat {
-  padding: 14px 20px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 10px;
-  backdrop-filter: blur(4px);
+.htag {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 5px 14px;
+  border-radius: 4px;
+  border: 1px solid;
 }
-.hero-stat .val {
+.htag.teal  { color: var(--teal);   border-color: rgba(0,191,207,0.3);  background: var(--teal-faint); }
+.htag.pink  { color: var(--pink);   border-color: rgba(255,45,120,0.3); background: var(--pink-faint); }
+.htag.green { color: var(--green-bright); border-color: rgba(54,179,126,0.3); background: rgba(54,179,126,0.08); }
+
+/* Stats row */
+.hero-stats {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.hstat {
+  padding: 12px 18px;
+  background: var(--navy-surface);
+  border: 1px solid var(--navy-border);
+  border-radius: 8px;
+}
+.hstat .val {
   font-family: 'JetBrains Mono', monospace;
   font-size: 22px;
   font-weight: 700;
   color: var(--teal);
 }
-.hero-stat .lbl {
-  font-size: 11px;
-  font-weight: 500;
+.hstat .lbl {
+  font-size: 10px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
-  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
   margin-top: 2px;
 }
-.hero-code {
-  margin-top: 24px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: var(--teal);
-  opacity: 0.5;
-  letter-spacing: 0.5px;
-}
 
-/* ─── STICKY LEGEND ─── */
+
+
+/* Breadcrumb */
+.breadcrumb {
+  padding: 10px 48px;
+  background: var(--navy-surface);
+  border-bottom: 1px solid var(--navy-border);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.breadcrumb a {
+  color: var(--teal);
+  text-decoration: none;
+  font-weight: 500;
+}
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .sep { margin: 0 8px; color: var(--text-muted); }
+
+/* ═══════════════════════════════════════
+   LEGEND BAR — sticky
+   ═══════════════════════════════════════ */
 .legend-bar {
   position: sticky;
   top: 0;
   z-index: 200;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 18px;
   flex-wrap: wrap;
-  padding: 12px 48px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  padding: 10px 48px;
+  background: var(--navy);
+  border-bottom: 1px solid var(--navy-border);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
 }
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 7px;
-  font-size: 12px;
+  gap: 6px;
+  font-size: 11px;
   font-weight: 500;
   color: var(--text-secondary);
+  letter-spacing: 0.2px;
 }
-.legend-pip {
+.lpip {
   width: 10px; height: 10px;
   border-radius: 3px;
 }
-.legend-pip.native { background: var(--native); }
-.legend-pip.hybrid { background: var(--hybrid); }
-.legend-pip.partner { background: var(--partner); }
-.legend-pip.services { background: var(--services); }
+.lpip.native  { background: var(--native-color); }
+.lpip.hybrid  { background: var(--hybrid-color); }
+.lpip.partner { background: var(--partner-color); }
+.lpip.services{ background: var(--services-color); }
 
 .legend-filters {
   margin-left: auto;
   display: flex;
-  gap: 5px;
+  gap: 4px;
 }
-.fbtn {
-  padding: 5px 14px;
-  border-radius: 6px;
-  font-size: 11px;
+.fb {
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 10px;
   font-weight: 600;
-  font-family: inherit;
-  letter-spacing: 0.3px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text-secondary);
+  border: 1px solid var(--navy-border);
+  background: transparent;
+  color: var(--text-muted);
   cursor: pointer;
   transition: all 0.2s;
 }
-.fbtn:hover { border-color: var(--teal); color: var(--text-primary); }
-.fbtn.on {
-  background: var(--navy);
-  border-color: var(--navy);
-  color: #fff;
+.fb:hover { border-color: var(--teal); color: var(--text-secondary); }
+.fb.on {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: var(--navy);
 }
 
-/* ─── CONTROL TABS ─── */
+/* ═══════════════════════════════════════
+   CONTROL TABS
+   ═══════════════════════════════════════ */
 .tabs-wrap {
-  padding: 12px 48px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  padding: 10px 48px;
+  background: var(--navy-deep);
+  border-bottom: 1px solid var(--navy-border);
   overflow-x: auto;
   scrollbar-width: none;
 }
 .tabs-wrap::-webkit-scrollbar { display: none; }
-.tabs {
-  display: flex;
-  gap: 6px;
-}
+.tabs { display: flex; gap: 5px; }
 .tab {
   flex-shrink: 0;
-  padding: 9px 18px;
-  border-radius: 8px;
-  border: 1px solid var(--border-light);
-  background: var(--surface);
-  color: var(--text-secondary);
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid var(--navy-border);
+  background: transparent;
+  color: var(--text-muted);
   font-family: inherit;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
 }
-.tab:hover { border-color: var(--teal); color: var(--text-primary); background: var(--teal-faint); }
+.tab:hover {
+  border-color: var(--navy-border-lt);
+  color: var(--text-secondary);
+  background: var(--navy-surface);
+}
 .tab.on {
   background: var(--teal-faint);
   border-color: var(--teal);
-  color: var(--navy);
+  color: var(--teal);
   font-weight: 600;
-  box-shadow: 0 0 0 1px var(--teal);
+  box-shadow: 0 0 12px var(--teal-glow);
 }
 .tab .idx {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
-  color: var(--teal-dark);
-  margin-right: 6px;
+  color: var(--teal-dim);
+  margin-right: 5px;
+}
+.tab.on .idx { color: var(--teal-bright); }
+
+/* ═══════════════════════════════════════
+   MAIN CONTENT
+   ═══════════════════════════════════════ */
+.main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 48px 60px;
 }
 
-/* ─── MAIN CONTENT ─── */
-.main { max-width: 1100px; margin: 0 auto; padding: 36px 48px 60px; }
-
+/* Control header */
 .ctrl-head .eyebrow {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: var(--teal-dark);
+  color: var(--teal);
 }
 .ctrl-head h2 {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 800;
   letter-spacing: -0.3px;
-  color: var(--navy);
+  color: var(--text-bright);
   margin-top: 4px;
 }
 .ctrl-head .blurb {
@@ -260,440 +344,531 @@ body {
   max-width: 700px;
 }
 
-.mcss-callout {
+/* MCSS callout */
+.mcss-box {
   margin-top: 16px;
   padding: 14px 18px;
-  background: var(--navy-faint);
-  border-left: 4px solid var(--navy);
+  background: var(--navy-surface);
+  border-left: 3px solid var(--teal);
   border-radius: 0 8px 8px 0;
+  border: 1px solid var(--navy-border);
+  border-left: 3px solid var(--teal);
   font-size: 13px;
   color: var(--text-secondary);
   line-height: 1.6;
 }
-.mcss-callout strong { color: var(--navy); font-weight: 600; }
-
-.mapping-box {
-  margin-top: 28px;
-  padding: 22px 24px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+.mcss-box strong {
+  color: var(--teal);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
-.mapping-box h4 {
-  font-size: 14px;
+
+/* Mapping narrative */
+.map-box {
+  margin-top: 24px;
+  padding: 22px 24px;
+  background: var(--navy-card);
+  border: 1px solid var(--navy-border);
+  border-radius: 10px;
+}
+.map-box h4 {
+  font-size: 13px;
   font-weight: 700;
-  color: var(--navy);
+  color: var(--text-bright);
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 10px;
 }
-.mapping-box h4 .ico {
-  width: 22px; height: 22px;
-  border-radius: 6px;
+.map-box h4 .ico {
+  width: 20px; height: 20px;
+  border-radius: 5px;
   background: var(--teal-faint);
+  border: 1px solid rgba(0,191,207,0.2);
   display: flex; align-items: center; justify-content: center;
-  font-size: 12px; color: var(--teal-dark);
+  font-size: 10px; color: var(--teal);
 }
-.mapping-box .narrative {
-  font-size: 13.5px;
+.map-box .narr {
+  font-size: 13px;
   color: var(--text-secondary);
   line-height: 1.65;
 }
-.mapping-box ul {
+.map-box ul {
   list-style: none;
   margin-top: 14px;
   display: grid;
-  gap: 6px;
+  gap: 5px;
 }
-.mapping-box ul li {
+.map-box ul li {
   position: relative;
   padding-left: 20px;
-  font-size: 13px;
+  font-size: 12.5px;
   color: var(--text-secondary);
   line-height: 1.7;
 }
-.mapping-box ul li::before {
+.map-box ul li::before {
   content: '\2192';
   position: absolute;
   left: 0;
-  color: var(--teal-dark);
+  color: var(--teal);
   font-weight: 700;
 }
 
-.coverage-bar-wrap {
-  margin-top: 28px;
-  padding: 18px 22px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+/* Coverage meter */
+.cov-wrap {
+  margin-top: 24px;
+  padding: 16px 20px;
+  background: var(--navy-card);
+  border: 1px solid var(--navy-border);
+  border-radius: 10px;
 }
-.coverage-bar-wrap h4 {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  color: var(--text-secondary);
-  margin-bottom: 12px;
-}
-.cov-bar {
-  display: flex;
-  height: 8px;
-  border-radius: 4px;
-  overflow: hidden;
-  background: var(--surface-raised);
-  margin-bottom: 12px;
-}
-.cov-seg { transition: width 0.5s ease; }
-.cov-seg.native { background: var(--native); }
-.cov-seg.hybrid { background: var(--hybrid); }
-.cov-seg.partner { background: var(--partner); }
-.cov-seg.services { background: var(--services); }
-.cov-labels {
-  display: flex;
-  gap: 18px;
-  flex-wrap: wrap;
-}
-.cov-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-.cov-label .n {
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-/* ─── SOLUTION GRID ─── */
-.sol-section { margin-top: 32px; }
-.sol-section .section-lbl {
+.cov-wrap h4 {
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
   color: var(--text-muted);
-  margin-bottom: 14px;
+  margin-bottom: 10px;
+}
+.cov-track {
+  display: flex;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--navy-surface);
+  margin-bottom: 10px;
+}
+.cov-seg { transition: width 0.5s ease; }
+.cov-seg.native  { background: var(--native-color); }
+.cov-seg.hybrid  { background: var(--hybrid-color); }
+.cov-seg.partner { background: var(--partner-color); }
+.cov-seg.services{ background: var(--services-color); }
+.cov-labels {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.cov-lbl {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.cov-lbl .n {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* ═══════════════════════════════════════
+   SOLUTION CARDS
+   ═══════════════════════════════════════ */
+.sol-section { margin-top: 28px; }
+.sol-section .sec-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
 }
 .sgrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 14px;
+  gap: 12px;
 }
-.scard {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
+
+.sc {
+  background: var(--navy-card);
+  border: 1px solid var(--navy-border);
+  border-radius: 10px;
+  padding: 18px 20px;
   transition: all 0.25s;
   position: relative;
   overflow: hidden;
 }
-.scard::before {
+.sc::before {
   content: '';
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 3px;
 }
-.scard.native::before { background: var(--native); }
-.scard.hybrid::before { background: var(--hybrid); }
-.scard.partner::before { background: var(--partner); }
-.scard.services::before { background: var(--services); }
+.sc.native::before  { background: var(--native-color); }
+.sc.hybrid::before  { background: var(--hybrid-color); }
+.sc.partner::before { background: var(--partner-color); }
+.sc.services::before{ background: var(--services-color); }
 
-.scard:hover {
-  border-color: var(--teal);
-  box-shadow: 0 4px 20px rgba(0,191,207,0.08);
+.sc:hover {
+  border-color: var(--navy-border-lt);
+  background: var(--navy-card-hover);
   transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.25);
 }
-.scard .row1 {
+
+.sc .r1 {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 8px;
 }
-.scard .acr {
+.sc .acr {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   padding: 3px 8px;
-  border-radius: 5px;
+  border-radius: 4px;
+  border: 1px solid;
 }
-.scard.native .acr { background: var(--navy-faint); color: var(--navy); }
-.scard.hybrid .acr { background: var(--teal-faint); color: var(--teal-dark); }
-.scard.partner .acr { background: var(--pink-faint); color: var(--pink); }
-.scard.services .acr { background: #F3E8FF; color: var(--services); }
+.sc.native  .acr { color: var(--teal);         border-color: rgba(0,191,207,0.25);  background: var(--teal-faint); }
+.sc.hybrid  .acr { color: var(--green-bright); border-color: rgba(54,179,126,0.25); background: rgba(54,179,126,0.08); }
+.sc.partner .acr { color: var(--pink);         border-color: rgba(255,45,120,0.25); background: var(--pink-faint); }
+.sc.services .acr{ color: var(--purple);       border-color: rgba(124,58,237,0.25); background: var(--purple-glow); }
 
-.scard .type-tag {
-  font-size: 10px;
+.sc .tbadge {
+  font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   padding: 3px 8px;
-  border-radius: 5px;
+  border-radius: 4px;
 }
-.scard.native .type-tag { background: var(--navy); color: #fff; }
-.scard.hybrid .type-tag { background: var(--teal); color: var(--navy); }
-.scard.partner .type-tag { background: var(--pink); color: #fff; }
-.scard.services .type-tag { background: var(--services); color: #fff; }
+.sc.native  .tbadge { background: var(--teal);         color: var(--navy); }
+.sc.hybrid  .tbadge { background: var(--green-bright); color: var(--navy); }
+.sc.partner .tbadge { background: var(--pink);         color: #fff; }
+.sc.services .tbadge{ background: var(--purple);       color: #fff; }
 
-.scard h3 {
-  font-size: 15px;
+.sc h3 {
+  font-size: 14px;
   font-weight: 700;
-  color: var(--navy);
+  color: var(--text-bright);
   margin-bottom: 4px;
 }
-.scard .sdesc {
-  font-size: 12.5px;
-  color: var(--text-secondary);
+.sc .sd {
+  font-size: 12px;
+  color: var(--text-muted);
   line-height: 1.55;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
-.scard .details { display: grid; gap: 6px; }
-.scard .drow {
+.sc .dets { display: grid; gap: 5px; }
+.sc .dr {
   display: flex;
   gap: 8px;
-  font-size: 12px;
+  font-size: 11px;
 }
-.scard .drow .dk {
-  min-width: 85px;
+.sc .dr .dk {
+  min-width: 80px;
   flex-shrink: 0;
-  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  font-size: 9.5px;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.4px;
   color: var(--text-muted);
-  font-size: 10.5px;
   padding-top: 1px;
 }
-.scard .drow .dval { color: var(--text-secondary); }
-.scard .drow .dval.hi { color: var(--navy); font-weight: 600; }
+.sc .dr .dv { color: var(--text-secondary); }
+.sc .dr .dv.hi { color: var(--text-bright); font-weight: 600; }
 
-.scard .mssp-tag {
+.sc .mtag {
   display: inline-block;
-  margin-top: 12px;
-  font-size: 10px;
-  font-weight: 700;
+  margin-top: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   padding: 3px 10px;
   border-radius: 100px;
+  border: 1px solid;
 }
-.mssp-tag.high { background: var(--green-faint); color: var(--green); }
-.mssp-tag.med { background: var(--amber-faint); color: var(--amber); }
-.mssp-tag.low { background: var(--surface-raised); color: var(--text-muted); }
+.mtag.high { color: var(--green-bright); border-color: rgba(54,179,126,0.3); background: rgba(54,179,126,0.08); }
+.mtag.med  { color: var(--amber);        border-color: var(--amber-glow);     background: rgba(255,139,0,0.06); }
+.mtag.low  { color: var(--text-muted);   border-color: var(--navy-border);    background: transparent; }
 
-.no-results {
-  grid-column: 1 / -1;
+.no-res {
+  grid-column: 1/-1;
   text-align: center;
-  padding: 48px 24px;
+  padding: 48px;
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 13px;
 }
 
-/* ─── FOOTER ─── */
+/* ═══════════════════════════════════════
+   FOOTER — matching Hub style
+   ═══════════════════════════════════════ */
 footer {
-  padding: 28px 48px;
+  padding: 24px 48px;
   background: var(--navy);
+  border-top: 1px solid var(--navy-border);
   text-align: center;
-  font-size: 12px;
-  color: rgba(255,255,255,0.45);
 }
-footer strong { color: rgba(255,255,255,0.7); }
-footer .ft-code {
-  margin-top: 6px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
+footer .ft-main {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+footer .ft-main a {
   color: var(--teal);
-  opacity: 0.4;
+  text-decoration: none;
+}
+footer .ft-main a:hover { text-decoration: underline; }
+footer .ft-sub {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+  opacity: 0.6;
 }
 
-/* ─── ANIM ─── */
-.scard {
+/* ═══════════════════════════════════════
+   ANIMATION
+   ═══════════════════════════════════════ */
+.sc {
   opacity: 0;
   transform: translateY(10px);
   animation: up 0.3s ease forwards;
 }
-@keyframes up { to { opacity: 1; transform: translateY(0); } }
+@keyframes up { to { opacity:1; transform:translateY(0); } }
+.sc:nth-child(1){animation-delay:0s}
+.sc:nth-child(2){animation-delay:.04s}
+.sc:nth-child(3){animation-delay:.08s}
+.sc:nth-child(4){animation-delay:.12s}
+.sc:nth-child(5){animation-delay:.16s}
+.sc:nth-child(6){animation-delay:.2s}
+.sc:nth-child(7){animation-delay:.24s}
+.sc:nth-child(8){animation-delay:.28s}
+.sc:nth-child(9){animation-delay:.32s}
+.sc:nth-child(10){animation-delay:.36s}
 
-/* ─── RESPONSIVE ─── */
-@media (max-width: 800px) {
-  .hero, .main { padding-left: 20px; padding-right: 20px; }
-  .legend-bar, .tabs-wrap { padding-left: 20px; padding-right: 20px; }
-  .sgrid { grid-template-columns: 1fr; }
-  .hero-stats { flex-direction: column; }
-  .legend-filters { margin-left: 0; margin-top: 8px; width: 100%; }
-  .legend-bar { flex-direction: column; align-items: flex-start; }
+/* ═══════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════ */
+@media(max-width:800px){
+  .hero,.main{padding-left:20px;padding-right:20px}
+  .legend-bar,.tabs-wrap,.breadcrumb{padding-left:20px;padding-right:20px}
+  .sgrid{grid-template-columns:1fr}
+  .hero-stats{flex-direction:column}
+  .legend-filters{margin-left:0;margin-top:8px;width:100%}
+  .legend-bar{flex-direction:column;align-items:flex-start}
+  footer{padding:20px}
 }
 </style>
 </head>
 <body>
 
+<!-- ════════ HERO ════════ -->
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-brand">
-      <img src="https://raw.githubusercontent.com/amcamillo/thinkinfosec-hub/main/learning-hub-logo.png" alt="ThinkInfoSec Logo" class="logo-img">
-      <div class="name">ThinkInfoSec Hub</div>
+      <img src="https://amcamillo.github.io/thinkinfosec-hub/learning-hub-logo.png" alt="Thinkinfosec Logo" onerror="this.style.display='none'">
+      <div class="brand-text">
+        <span class="brand-name">Thinkinfosec</span>
+        <span class="brand-sub">Hub</span>
+      </div>
     </div>
+
     <h1>Addressing the NCSC <span class="accent">10 Critical Controls</span> with the Falcon Alliance Ecosystem</h1>
     <p class="subtitle">A complete view of how CrowdStrike — natively and through its certified alliance partners — maps technology coverage to each NCSC Critical Control for New Zealand organisations.</p>
-    <div class="hero-stats">
-      <div class="hero-stat"><span class="val">10</span><span class="lbl">Critical Controls</span></div>
-      <div class="hero-stat"><span class="val">70</span><span class="lbl">Alliance Solutions</span></div>
-      <div class="hero-stat"><span class="val">30</span><span class="lbl">Native Falcon</span></div>
-      <div class="hero-stat"><span class="val">33</span><span class="lbl">Partner / Hybrid</span></div>
+
+    <div class="hero-tags">
+      <span class="htag teal">NCSC NZ Critical Controls</span>
+      <span class="htag pink">CrowdStrike Alliance</span>
+      <span class="htag green">Compliance Framework</span>
     </div>
-    <div class="hero-code">SECURE_OPS//NCSC_CC_MATRIX:v2.2//ACCS_APR2026</div>
+
+    <div class="hero-stats">
+      <div class="hstat"><span class="val">10</span><span class="lbl">Critical Controls</span></div>
+      <div class="hstat"><span class="val">70</span><span class="lbl">Alliance Solutions</span></div>
+      <div class="hstat"><span class="val">30</span><span class="lbl">Native Falcon</span></div>
+      <div class="hstat"><span class="val">33</span><span class="lbl">Partner / Hybrid</span></div>
+    </div>
+
+
   </div>
 </div>
 
+<!-- ════════ BREADCRUMB ════════ -->
+<div class="breadcrumb">
+  <a href="https://amcamillo.github.io/thinkinfosec-hub/index.html">Hub</a>
+  <span class="sep">›</span>
+  <a href="https://amcamillo.github.io/thinkinfosec-hub/index.html#research">Research</a>
+  <span class="sep">›</span>
+  NCSC Critical Controls × CrowdStrike Ecosystem
+</div>
+
+<!-- ════════ LEGEND BAR ════════ -->
 <div class="legend-bar">
-  <div class="legend-item"><span class="legend-pip native"></span> Native Falcon</div>
-  <div class="legend-item"><span class="legend-pip hybrid"></span> Hybrid (CS + Partner)</div>
-  <div class="legend-item"><span class="legend-pip partner"></span> Partner-Led</div>
-  <div class="legend-item"><span class="legend-pip services"></span> Services</div>
+  <div class="legend-item"><span class="lpip native"></span>Native Falcon</div>
+  <div class="legend-item"><span class="lpip hybrid"></span>Hybrid (CS + Partner)</div>
+  <div class="legend-item"><span class="lpip partner"></span>Partner-Led</div>
+  <div class="legend-item"><span class="lpip services"></span>Services</div>
   <div class="legend-filters">
-    <button class="fbtn on" onclick="filt('all')">All</button>
-    <button class="fbtn" onclick="filt('NATIVE')">Native</button>
-    <button class="fbtn" onclick="filt('HYBRID')">Hybrid</button>
-    <button class="fbtn" onclick="filt('PARTNER')">Partner</button>
-    <button class="fbtn" onclick="filt('SERVICES')">Services</button>
+    <button class="fb on" onclick="filt('all')">All</button>
+    <button class="fb" onclick="filt('NATIVE')">Native</button>
+    <button class="fb" onclick="filt('HYBRID')">Hybrid</button>
+    <button class="fb" onclick="filt('PARTNER')">Partner</button>
+    <button class="fb" onclick="filt('SERVICES')">Services</button>
   </div>
 </div>
 
+<!-- ════════ TABS ════════ -->
 <div class="tabs-wrap">
   <div class="tabs" id="tabs"></div>
 </div>
 
+<!-- ════════ MAIN CONTENT ════════ -->
 <div class="main" id="main"></div>
 
+<!-- ════════ FOOTER ════════ -->
 <footer>
-  ACCS Alliance Matrix v2.2 — April 2026 &nbsp;&middot;&nbsp; NCSC Critical Controls Summary &nbsp;&middot;&nbsp; <strong>ThinkInfoSec Hub — Internal Reference</strong>
-  <div class="ft-code">THINKINFOSEC//CC_ECOSYSTEM_MAP//2026.04</div>
+  <div class="ft-main">ThinkInfoSec 2026 — <a href="https://www.linkedin.com/in/andrecamillo/" target="_blank" rel="noopener">Andre Camillo</a></div>
+  <div class="ft-sub">ACCS Alliance Matrix v2 · April 2026 · NCSC Critical Controls Summary · All content is for educational and research purposes only.</div>
 </footer>
 
+<!-- ════════ DATA + ENGINE ════════ -->
 <script>
 'use strict';
 
-// ─── DATA ARRAYS ───
-const CC = [
-  {id:1,name:"Patch Software & Systems",short:"Patching",desc:"Keeping all software \u2014 OS, applications, firewalls, routers \u2014 up to date.",mcss:"The MCSS mandates critical patches on external-facing systems within 48 hours.",narrative:"CrowdStrike Exposure Management suite provides continuous vulnerability identification.",points:["Falcon Spotlight identifies missing patches","Falcon Surface discovers externally-facing assets"],sols:},
-  {id:2,name:"Multi-Factor Authentication",short:"MFA",desc:"Enforcing MFA for internet-accessible and administrative accounts.",mcss:"MFA is mandated for all privileged users.",narrative:"Falcon Identity Protection detects credential theft and MFA bypass.",points:["Falcon Identity Protection detects credential theft","Okta / Microsoft Entra ID serve as core IdP"],sols:},
-  {id:3,name:"Password Manager",short:"Passwords",desc:"Providing staff with an organisation-managed password manager.",mcss:"Organisations should provide password manager tools.",narrative:"Password management is a complementary partner domain supported by Falcon Identity.",points:["Falcon Identity Protection detects weak credentials","Okta / Microsoft Entra ID enforce password policies"],sols:},
-  {id:4,name:"Centralised Logging",short:"Logging",desc:"Central logging from all endpoints for incident investigation.",mcss:"Requires centralised, immutable logging capability.",narrative:"Falcon Next-Gen SIEM (LogScale) provides petabyte-scale centralised log ingestion.",points:["Falcon Next-Gen SIEM provides log ingestion","Falcon Insight XDR cross-correlates telemetry"],sols:},
-  {id:5,name:"Security Awareness",short:"Awareness",desc:"Investing in awareness and training to address the human element.",mcss:"Requires onboarding training and policy integration.",narrative:"Security awareness training is partner-led (KnowBe4, Proofpoint).",points:["KnowBe4 / Proofpoint provide role-based training","CrowdStrike Services offers tabletop exercises"],sols:},
-  {id:6,name:"Asset Lifecycle Management",short:"Assets",desc:"Tracking software and hardware through its full lifecycle.",mcss:"Requires an inventory of all assets (hardware, software, cloud).",narrative:"Falcon Discover provides always-live agent-driven asset inventory.",points:["Falcon Discover provides continuous asset inventory","Falcon Surface monitors externally-facing assets"],sols:},
-  {id:7,name:"Implement & Test Backups",short:"Backups",desc:"Ensuring rapid recovery from ransomware or accidental loss.",mcss:"Requires regular testing of backup and restoration.",narrative:"Backup is partner-led (Rubrik, Veeam); Falcon provides containment.",points:["Rubrik provides immutable backup with cyber recovery","CrowdStrike contains ransomware before backup destruction"],sols:},
-  {id:8,name:"Application Control",short:"App Control",desc:"Restricting software execution via allowlisting.",mcss:"Users must not be able to install or disable software.",narrative:"Falcon Prevent (NGAV) uses AI-driven analysis to prevent malware execution.",points:["Falcon Prevent (NGAV) provides malware prevention","Falcon Device Control enforces USB policy"],sols:},
-  {id:9,name:"Principle of Least Privilege",short:"Least Privilege",desc:"Granting the minimum access needed for roles.",mcss:"Privileged accounts must be minimised.",narrative:"Falcon Identity Protection detects lateral movement and privilege escalation.",points:["Falcon Identity Protection detects privilege abuse","Falcon Privileged Access provides native JIT control"],sols:},
-  {id:10,name:"Network Segmentation",short:"Segmentation",desc:"Breaking networks into smaller segments to limit lateral movement.",mcss:"Segmentation limits access post-breach.",narrative:"Falcon Firewall Management enforces host-level micro-boundaries.",points:["Falcon Firewall Management enforces host boundaries","Zscaler / Netskope provide ZTNA"],sols:}
+const CC=[
+{id:1,name:"Patch Software & Systems",short:"Patching",desc:"Keeping all software \u2014 OS, applications, firewalls, routers \u2014 up to date. Many advisories relate to vulnerabilities mitigable through timely patching.",mcss:"The MCSS mandates critical-rated security patches on external-facing systems within 48 hours, internal critical patches within two weeks. A formal patch management strategy and policy is required.",narrative:"CrowdStrike\u2019s Exposure Management suite (Spotlight, Surface, Discover) provides continuous vulnerability identification and risk-prioritised remediation guidance. Falcon Spotlight enriches CVE data with adversary context \u2014 prioritising vulnerabilities actively exploited in the wild. Partners extend into automated deployment, virtual patching (WAF/edge), and application-layer scanning (SCA).",points:["Falcon Spotlight identifies missing patches and prioritises by real-world exploit activity","Falcon Surface discovers externally-facing assets to scope the 48-hour patching window","Falcon Exposure Management correlates asset, vulnerability, and adversary data into unified risk view","Cloudflare / F5 WAF provides virtual patching as interim mitigation for external-facing systems","ServiceNow ITSM integration automates patch ticketing and remediation workflows","Snyk / Checkmarx cover software composition analysis for application-layer patching"],sols:[47,46,45,53,58,55,14,20]},
+{id:2,name:"Multi-Factor Authentication & Verification",short:"MFA",desc:"Enforcing MFA for internet-accessible and administrative accounts. Many incidents stem from weak credentials. Also emphasises strong business process verification steps.",mcss:"MFA is mandated for all privileged users and when authenticating to business-critical and externally facing systems. Logging, retention, and review of all MFA events is required.",narrative:"Falcon Identity Protection detects credential theft, MFA bypass, and lateral movement \u2014 enriching partner Identity Providers with device risk signals. The core MFA/IdP enforcement sits with alliance partners (Okta, Microsoft Entra ID, Duo), while CrowdStrike feeds real-time device and identity risk context into adaptive MFA decisions.",points:["Falcon Identity Protection detects credential theft, pass-the-hash, MFA bypass, and lateral movement","Falcon Privileged Access enforces dynamic conditional access for privileged accounts","Okta / Microsoft Entra ID serve as the core Identity Provider enforcing MFA policies","Falcon ZTA score feeds device compliance context into partner ZTNA/MFA decisions","Falcon NG-SIEM centralises and retains all authentication logs for review and audit","Failed MFA events flow as high-fidelity indicators of compromise into SOC workflows"],sols:[7,8,9,12,11,37]},
+{id:3,name:"Password Manager",short:"Passwords",desc:"Providing staff with an organisation-managed password manager to promote long, strong, unique passwords for every system \u2014 including shared credentials.",mcss:"Organisations should provide password manager tools. Without the right tools, staff fall into bad practices \u2014 reusing and weak passwords. Primarily a provisioning and policy control.",narrative:"Password management is not a direct CrowdStrike product domain, but the Falcon ecosystem supports credential hygiene. Falcon Identity Protection detects weak and compromised credentials in Active Directory. Partner IdPs enforce password policies. CrowdStrike ITDR detects credential replay attacks, acting as a safety net alongside password manager deployment.",points:["Falcon Identity Protection detects weak, compromised, and reused credentials in Active Directory","Falcon Intelligence Recon monitors dark web for leaked organisational credentials","Okta / Microsoft Entra ID enforce enterprise password policies and SSO","ITDR detects credential stuffing, pass-the-hash, and replayed credentials","Password management tooling (1Password, Bitwarden) is complementary partner domain","Falcon Data Security detects credential data exfiltration"],sols:[7,44,9,21,50]},
+{id:4,name:"Centralised Logging",short:"Logging",desc:"Central logging from all endpoints. Identifying key events, setting actionable alerts, and ensuring sufficient detail for incident investigation.",mcss:"Requires centralised, immutable logging capability. Ongoing trend/baseline of infrastructure utilisation. Proactive monitoring for impossible travel, repeated login failures.",narrative:"CrowdStrike\u2019s strongest native domain. Falcon Next-Gen SIEM (LogScale) provides petabyte-scale centralised log ingestion, correlation, and real-time detection. Falcon Insight XDR provides cross-domain correlation. NG-SIEM supports immutable log retention, UEBA baselining, and proactive anomaly detection \u2014 directly addressing every aspect of this control.",points:["Falcon Next-Gen SIEM provides petabyte-scale centralised log ingestion and correlation","Falcon Insight XDR cross-correlates endpoint, identity, cloud, email, and network telemetry","NG-SIEM supports immutable log retention addressing the tamper-proofing requirement","UEBA capabilities establish behavioural baselines and detect anomalies (impossible travel)","NDR partners (Vectra, Corelight, Darktrace) feed network telemetry into NG-SIEM","Charlotte AI accelerates triage, investigation, and automated alerting workflows"],sols:[37,2,3,28,38,61,43]},
+{id:5,name:"Security Awareness",short:"Awareness",desc:"Attackers rely on human behaviour. A significant number of breaches involve a human element. Investing in awareness and training is a long-term commitment.",mcss:"Requires onboarding training, role-based training for specialised staff, reporting of awareness updates, and policy integration. CMM2 demands tracked training.",narrative:"Security awareness training is partner-led. CrowdStrike does not offer a native training platform. The ecosystem supports this through email security partners (Proofpoint, Mimecast, Abnormal) with phishing simulation, and dedicated platforms (KnowBe4, Cofense). CrowdStrike\u2019s threat intelligence enriches simulation scenarios with real-world adversary TTPs.",points:["KnowBe4 / Proofpoint Security Awareness provide role-based training and phishing simulation","Proofpoint / Mimecast email security integrates real-time phishing simulation testing","Abnormal Security provides AI-based BEC detection complementing awareness training","CrowdStrike Adversary Intelligence provides real-world TTPs to inform training scenarios","Falcon NG-SIEM tracks and reports on phishing simulation outcomes for CMM2 evidence","CrowdStrike Services offers tabletop exercises and security culture advisory"],sols:[65,35,36,43,37,66]},
+{id:6,name:"Asset Lifecycle Management",short:"Assets",desc:"Tracking software and hardware through purchase, development, maintenance, and decommissioning. Focus on legacy systems that vendors no longer support.",mcss:"Requires an inventory of all assets (hardware, software, data, cloud), classification of critical/external systems, security in acquisition, and an End-of-Life policy.",narrative:"CrowdStrike\u2019s Exposure Management suite is purpose-built for this. Falcon Discover provides always-live agent-driven asset inventory syncing into ServiceNow CMDB. Falcon Surface discovers externally-facing assets. Falcon Exposure Management aggregates into unified CAASM. OT/IoT visibility covered by Falcon for XIoT and partners (Claroty, Armis).",points:["Falcon Discover provides continuous, agent-driven IT asset inventory","Falcon Surface discovers and monitors all externally-facing assets","Falcon Exposure Management (CAASM) aggregates asset data from multiple sources","Falcon Cloud Security provides cloud asset inventory across AWS, Azure, GCP","ServiceNow CMDB sync integration creates the authoritative asset register","Falcon for XIoT and Claroty/Armis cover OT, IoT, and unmanaged device visibility","Falcon Data Security classifies sensitive data across endpoints and cloud"],sols:[59,46,45,13,58,51,52,22]},
+{id:7,name:"Implement & Test Backups",short:"Backups",desc:"Being able to restore from backup quickly makes all the difference in a ransomware incident or accidental data loss. Good backup practices reduce impact.",mcss:"Requires backup of all vital records, offsite and secured storage according to classification, and regular testing of backup and restoration.",narrative:"Backup and recovery is partner-led. CrowdStrike detects ransomware and provides containment; Rubrik, Cohesity, and Veeam provide the clean recovery chain. This is the natural hand-off \u2014 CrowdStrike stops the threat, recovery partners restore the data. Immutable storage protects against ransomware destroying backups.",points:["Rubrik provides immutable backup with cyber recovery integration \u2014 primary CS partner","Cohesity and Veeam offer alternative backup and disaster recovery platforms","CrowdStrike EDR/XDR detects and contains ransomware before backup destruction","Falcon Forensics supports post-incident investigation to validate backup integrity","Falcon Fusion SOAR orchestrates automated isolation to protect backup infrastructure","CrowdStrike Services provides IR retainer including ransomware response playbooks"],sols:[67,1,2,42,38,41]},
+{id:8,name:"Application Control",short:"App Control",desc:"Restricting software execution. Includes allowlisting and limiting downloadable/executable file types. Modern endpoint security alleviates manual policy configuration.",mcss:"Requires an agreed technical specification (standard build) per platform, up-to-date standard configurations, and users must not be able to install or disable software \u2014 mandating removal of local admin.",narrative:"Core Falcon endpoint capability. Falcon Prevent (NGAV) uses AI-driven behavioural analysis to prevent malware execution. Falcon Device Control manages USB/peripheral policy. Falcon Firewall Management enforces host-based rules. Partners extend into cloud configuration enforcement (CSPM) and infrastructure-as-code security.",points:["Falcon Prevent (NGAV) provides AI-driven prevention of malware, ransomware, and fileless attacks","Falcon Insight XDR detects and blocks anomalous application execution in real-time","Falcon Device Control enforces policy on USB, removable storage, and peripherals","Falcon Firewall Management centrally manages host-based firewall rules","Falcon Cloud Security (CSPM) enforces secure configuration across cloud environments","Falcon Cloud Security (IaC) enables golden image and standard build validation pre-deploy","Falcon for Mobile extends application control to iOS and Android"],sols:[1,2,6,5,14,20,4,56]},
+{id:9,name:"Principle of Least Privilege",short:"Least Privilege",desc:"Granting minimum access needed. Separate accounts for normal and admin use. Stricter logging and authentication for admin accounts.",mcss:"Privileged accounts must be minimised. Admins must use individual accounts, have separate daily-use accounts, and temporary elevation must be approved via ITSM. Cornerstone of Zero Trust.",narrative:"Comprehensive identity-layer enforcement. Falcon Identity Protection detects privilege escalation and lateral movement. Falcon Privileged Access provides native JIT access. Falcon Cloud Security (CIEM) enforces least privilege across cloud identities. Partners (CyberArk, BeyondTrust, SailPoint) extend into vaulting, session management, and identity governance.",points:["Falcon Identity Protection detects privilege escalation, Golden/Silver Ticket, lateral movement","Falcon Privileged Access provides native just-in-time (JIT) privileged access control","Falcon Cloud Security (CIEM) analyses cloud permissions to enforce least privilege","CyberArk / BeyondTrust provide credential vaulting and privileged session management","SailPoint provides Identity Governance & Administration \u2014 automated access reviews","Falcon Fusion SOAR integrates with ServiceNow ITSM for elevation approval workflows","Falcon Identity Protection includes AD deception (honeypots) to detect privilege abuse"],sols:[7,8,15,9,11,38,50,58]},
+{id:10,name:"Network Segmentation & Separation",short:"Segmentation",desc:"Breaking networks into smaller segments with access controls. Setting granular controls on critical segments. Limiting attacker lateral movement.",mcss:"Without effective segmentation, attackers move freely. Segmentation limits access post-breach. Directly supports zero trust architecture.",narrative:"Primarily partner-led but CrowdStrike provides critical supporting capabilities. Falcon Firewall Management enforces host-level micro-boundaries. Falcon Identity Protection detects lateral movement. The ZTNA tri-party motion (CS + Zscaler + Okta) enforces identity-verified access. Microsegmentation partners (Illumio, Guardicore) enforce workload isolation. NGFW partners (Fortinet, Palo Alto) handle perimeter controls.",points:["Falcon Firewall Management enforces host-based micro-boundaries","Falcon Identity Protection detects lateral movement crossing segment boundaries","Illumio / Akamai Guardicore provide workload-level microsegmentation","Fortinet FortiGate / Palo Alto Networks enforce inter-segment NGFW policies","Zscaler ZPA / Netskope provide ZTNA replacing flat VPN access","Falcon Insight XDR correlates cross-segment telemetry for breach detection","Vectra AI / Corelight NDR monitor east-west traffic for anomalous lateral movement"],sols:[5,7,33,30,11,25,3,28]}
 ];
 
-const S = {
-  1:{a:"EPP/NGAV",n:"Next-Gen Antivirus",d:"AI-driven prevention.",t:"NATIVE",cs:"Falcon Prevent",fm:"Falcon Prevent",p:"\u2014",m:"HIGH",tier:"All tiers"},
-  2:{a:"EDR",n:"Endpoint Detection & Response",d:"Real-time isolation.",t:"NATIVE",cs:"Falcon Insight XDR",fm:"Falcon Insight XDR",p:"\u2014",m:"HIGH",tier:"Pro/Elite"},
-  3:{a:"XDR",n:"Extended Detection & Response",d:"Cross-domain correlation.",t:"NATIVE",cs:"Falcon Insight XDR",fm:"Falcon NG-SIEM",p:"\u2014",m:"HIGH",tier:"Enterprise/Elite"},
-  5:{a:"HFW",n:"Host Firewall Mgmt",d:"Centralised policy management.",t:"NATIVE",cs:"Falcon Firewall Mgmt",fm:"Falcon Firewall Mgmt",p:"\u2014",m:"MED",tier:"Pro/Elite"},
-  6:{a:"USB-DC",n:"Device & USB Control",d:"USB and peripheral policy.",t:"NATIVE",cs:"Falcon Device Control",fm:"Falcon Device Control",p:"\u2014",m:"MED",tier:"Pro/Elite"},
-  7:{a:"ITDR",n:"Identity Threat Detection",d:"Detects lateral movement.",t:"NATIVE",cs:"Falcon Identity Prot",fm:"Identity Security",p:"\u2014",m:"HIGH",tier:"Add-on"},
-  8:{a:"PAM",n:"Privileged Access Mgmt",d:"JIT access control.",t:"HYBRID",cs:"Falcon Privileged Access",fm:"Privileged Access",p:"CyberArk",m:"HIGH",tier:"Add-on"},
-  9:{a:"IAM",n:"Identity & Access Mgmt",d:"User lifecycle and MFA.",t:"HYBRID",cs:"Falcon Identity Prot",fm:"Identity Security",p:"Okta",m:"HIGH",tier:"Add-on"},
-  11:{a:"ZTNA",n:"Zero Trust Network Access",d:"Identity-verified access.",t:"HYBRID",cs:"Falcon (posture)",fm:"ZTA score",p:"Zscaler, Netskope",m:"HIGH",tier:"Partner-priced"},
-  12:{a:"MFA",n:"Multi-Factor Auth",d:"Strong authentication.",t:"PARTNER",cs:"Falcon Identity",fm:"Identity Prot",p:"Okta, Duo",m:"MED",tier:"Partner-priced"},
-  13:{a:"CNAPP",n:"Cloud-Native Protection",d:"Unified cloud security.",t:"NATIVE",cs:"Falcon Cloud Security",fm:"CNAPP",p:"\u2014",m:"HIGH",tier:"Cloud Security"},
-  14:{a:"CSPM",n:"Cloud Posture Mgmt",d:"Detects misconfigurations.",t:"NATIVE",cs:"Falcon Cloud Security",fm:"CSPM",p:"\u2014",m:"HIGH",tier:"Cloud Security"},
-  15:{a:"CIEM",n:"Cloud Entitlement Mgmt",d:"Least-privilege for cloud.",t:"NATIVE",cs:"Falcon Cloud Security",fm:"CIEM",p:"\u2014",m:"HIGH",tier:"Cloud Security"},
-  21:{a:"DLP",n:"Data Loss Prevention",d:"Blocks data exfiltration.",t:"NATIVE",cs:"Falcon Data Security",fm:"Falcon Data Security",p:"\u2014",m:"HIGH",tier:"Add-on"},
-  28:{a:"NDR",n:"Network Detection",d:"Monitors traffic anomalies.",t:"HYBRID",cs:"Falcon NG-SIEM",fm:"NG-SIEM",p:"Vectra, Corelight",m:"HIGH",tier:"Enterprise+Partner"},
-  30:{a:"NGFW",n:"Next-Gen Firewall",d:"Deep-packet inspection.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Fortinet, Palo Alto",m:"HIGH",tier:"Partner-priced"},
-  33:{a:"MICRO-SEG",n:"Microsegmentation",d:"Workload isolation.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Illumio, Akamai",m:"MED",tier:"Partner-priced"},
-  35:{a:"ESG",n:"Email Security Gateway",d:"Anti-phishing gateway.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Proofpoint, Mimecast",m:"HIGH",tier:"Partner-priced"},
-  36:{a:"BEC",n:"BEC / VEC Defense",d:"AI email defense.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Abnormal Security",m:"HIGH",tier:"Partner-priced"},
-  37:{a:"SIEM",n:"Next-Gen SIEM",d:"Petabyte-scale logging.",t:"NATIVE",cs:"Falcon NG-SIEM",fm:"LogScale",p:"Splunk",m:"HIGH",tier:"Enterprise/Elite"},
-  38:{a:"SOAR",n:"Security Orchestration",d:"Automated workflows.",t:"NATIVE",cs:"Falcon Fusion",fm:"Charlotte AI",p:"ServiceNow",m:"HIGH",tier:"Enterprise/Elite"},
-  42:{a:"DFIR",n:"Digital Forensics",d:"Post-incident analysis.",t:"SERVICES",cs:"CS Services",fm:"Falcon Forensics",p:"\u2014",m:"MED",tier:"Services"},
-  43:{a:"CTI",n:"Threat Intelligence",d:"Adversary TTP context.",t:"NATIVE",cs:"Falcon Intelligence",fm:"Adversary Ops",p:"\u2014",m:"HIGH",tier:"Add-on"},
-  44:{a:"DRP",n:"Digital Risk Protection",d:"Dark web monitoring.",t:"NATIVE",cs:"Falcon Recon",fm:"Adversary Ops",p:"\u2014",m:"HIGH",tier:"Add-on"},
-  45:{a:"CTEM",n:"Exposure Management",d:"Prioritised risk view.",t:"NATIVE",cs:"Falcon Exposure",fm:"CAASM",p:"ServiceNow",m:"HIGH",tier:"Add-on"},
-  46:{a:"EASM",n:"Attack Surface Mgmt",d:"External asset discovery.",t:"NATIVE",cs:"Falcon Surface",fm:"Exposure Mgmt",p:"\u2014",m:"HIGH",tier:"Add-on"},
-  47:{a:"VM",n:"Vulnerability Mgmt",d:"CVE identification.",t:"NATIVE",cs:"Falcon Spotlight",fm:"Exposure Mgmt",p:"ServiceNow",m:"HIGH",tier:"Enterprise/Elite"},
-  50:{a:"DECEPTION",n:"Deception / Defense",d:"Honeypots and decoys.",t:"HYBRID",cs:"Falcon Identity",fm:"AD Honeypot",p:"\u2014",m:"MED",tier:"Add-on"},
-  53:{a:"WAF",n:"Web App Firewall",d:"Layer 7 protection.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Cloudflare, Akamai",m:"MED",tier:"Partner-priced"},
-  58:{a:"ITSM",n:"IT Service Mgmt",d:"Ticketing workflows.",t:"PARTNER",cs:"Falcon Fusion",fm:"Fusion \u2192 ServiceNow",p:"ServiceNow, Jira",m:"HIGH",tier:"Partner-priced"},
-  59:{a:"CMDB",n:"Asset Inventory",d:"CMDB-driven workflows.",t:"NATIVE",cs:"Falcon Discover",fm:"Exposure Mgmt",p:"ServiceNow sync",m:"HIGH",tier:"Enterprise/Elite"},
-  65:{a:"SAT",n:"Security Awareness",d:"Phishing simulation.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"KnowBe4, Proofpoint",m:"MED",tier:"Partner-priced"},
-  66:{a:"PS",n:"Professional Services",d:"Deployment & Review.",t:"SERVICES",cs:"CS Services",fm:"Transformation Svcs",p:"\u2014",m:"HIGH",tier:"Services"},
-  67:{a:"BDR",n:"Backup & Recovery",d:"Immutable recovery.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Rubrik, Veeam",m:"HIGH",tier:"Partner-priced"}
+const S={
+1:{a:"EPP/NGAV",n:"Next-Gen Antivirus / EPP",d:"AI-driven prevention of known/unknown malware, ransomware, and fileless attacks.",t:"NATIVE",cs:"Falcon Prevent",fm:"Falcon Prevent (NGAV, Device Control, USB)",p:"\u2014",m:"HIGH",tier:"All tiers"},
+2:{a:"EDR",n:"Endpoint Detection & Response",d:"Continuous endpoint telemetry, threat detection, and real-time isolation/response.",t:"NATIVE",cs:"Falcon Insight XDR",fm:"Falcon Insight XDR",p:"\u2014",m:"HIGH",tier:"Pro / Enterprise / Elite"},
+3:{a:"XDR",n:"Extended Detection & Response",d:"Cross-domain correlation of endpoint, identity, cloud, email, and network telemetry.",t:"NATIVE",cs:"Falcon Insight XDR",fm:"Falcon Insight XDR + NG-SIEM",p:"\u2014",m:"HIGH",tier:"Enterprise / Elite"},
+4:{a:"MTD",n:"Mobile Threat Defense",d:"Mobile malware detection, device misconfigs, network threats on iOS/Android.",t:"NATIVE",cs:"Falcon for Mobile",fm:"Falcon for Mobile",p:"\u2014",m:"MED",tier:"Add-on"},
+5:{a:"HFW",n:"Host Firewall Management",d:"Centralised policy management for host firewall rules via Falcon sensor.",t:"NATIVE",cs:"Falcon Firewall Mgmt",fm:"Falcon Firewall Management",p:"\u2014",m:"MED",tier:"Pro / Enterprise / Elite"},
+6:{a:"USB-DC",n:"Device & USB Control",d:"Policy-based control of removable storage, printers, Bluetooth.",t:"NATIVE",cs:"Falcon Device Control",fm:"Falcon Device Control",p:"\u2014",m:"MED",tier:"Pro / Enterprise / Elite"},
+7:{a:"ITDR",n:"Identity Threat Detection & Response",d:"Detects credential theft, pass-the-hash, MFA bypass, and lateral movement.",t:"NATIVE",cs:"Falcon Identity Protection",fm:"Falcon Next-Gen Identity Security",p:"SailPoint (IGA via NG-SIEM + Fusion)",m:"HIGH",tier:"Add-on / Elite"},
+8:{a:"PAM",n:"Privileged Access Management",d:"Dynamic privileged account control \u2014 JIT access, session mgmt, credential vaulting.",t:"HYBRID",cs:"Falcon Privileged Access",fm:"Falcon Privileged Access",p:"CyberArk, BeyondTrust",m:"HIGH",tier:"Add-on (Identity suite)"},
+9:{a:"IAM",n:"Identity & Access Management",d:"User lifecycle, MFA/SSO, and authorisation across enterprise apps.",t:"HYBRID",cs:"Falcon Identity Protection",fm:"Falcon Next-Gen Identity Security",p:"Okta, Microsoft Entra ID, SailPoint",m:"HIGH",tier:"Add-on / Elite"},
+11:{a:"ZTNA",n:"Zero Trust Network Access",d:"Identity- and device-verified, least-privilege remote access replacing VPN.",t:"HYBRID",cs:"Falcon (device posture)",fm:"Falcon ZTA score",p:"Zscaler ZPA, Netskope, Cloudflare Access",m:"HIGH",tier:"Partner-priced"},
+12:{a:"MFA",n:"Multi-Factor Authentication",d:"Strong authentication: FIDO2/passkeys, hardware tokens, adaptive MFA.",t:"PARTNER",cs:"Falcon Identity Protection (conditional access)",fm:"Falcon Identity Protection",p:"Okta, Microsoft Entra ID, Duo (Cisco)",m:"MED",tier:"Partner-priced"},
+13:{a:"CNAPP",n:"Cloud-Native App Protection",d:"Unified CSPM, CIEM, CWPP, KSPM, IaC scanning for cloud security.",t:"NATIVE",cs:"Falcon Cloud Security",fm:"Falcon Cloud Security (CNAPP)",p:"\u2014",m:"HIGH",tier:"Falcon Cloud Security"},
+14:{a:"CSPM",n:"Cloud Security Posture Mgmt",d:"Detects misconfigurations and compliance drift across IaaS/PaaS.",t:"NATIVE",cs:"Falcon Cloud Security",fm:"Falcon Cloud Security \u2014 CSPM",p:"\u2014",m:"HIGH",tier:"Falcon Cloud Security"},
+15:{a:"CIEM",n:"Cloud Identity Entitlement Mgmt",d:"Analyses cloud permissions to enforce least-privilege.",t:"NATIVE",cs:"Falcon Cloud Security",fm:"Falcon Cloud Security \u2014 CIEM",p:"\u2014",m:"HIGH",tier:"Falcon Cloud Security"},
+20:{a:"IaC-Sec",n:"Infrastructure-as-Code Security",d:"Static analysis of Terraform/CloudFormation templates pre-deploy.",t:"NATIVE",cs:"Falcon Cloud Security",fm:"Falcon Cloud Security \u2014 IaC Scanning",p:"\u2014",m:"MED",tier:"Falcon Cloud Security"},
+21:{a:"DLP",n:"Data Loss Prevention",d:"Controls sensitive data in use, motion, at rest \u2014 blocks exfiltration.",t:"NATIVE",cs:"Falcon Data Security",fm:"Falcon Data Security",p:"\u2014",m:"HIGH",tier:"Add-on"},
+22:{a:"DSPM",n:"Data Security Posture Mgmt",d:"Discovers and classifies sensitive data in cloud.",t:"NATIVE",cs:"Falcon Data Security",fm:"Falcon Data Protection for Cloud",p:"\u2014",m:"HIGH",tier:"Add-on"},
+25:{a:"SASE",n:"Secure Access Service Edge",d:"Converges SD-WAN and SSE into cloud-delivered security.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Zscaler, Netskope, Cloudflare One",m:"HIGH",tier:"Partner-priced"},
+28:{a:"NDR",n:"Network Detection & Response",d:"Monitors traffic for anomalies, lateral movement, C2.",t:"HYBRID",cs:"Falcon NG-SIEM",fm:"Falcon NG-SIEM (UEBA) + Falcon Insight XDR",p:"Vectra AI, Corelight, Darktrace, ExtraHop",m:"HIGH",tier:"Enterprise / Elite + partner"},
+30:{a:"NGFW",n:"Next-Gen Firewall",d:"Deep-packet inspection, application-aware firewall with IPS.",t:"PARTNER",cs:"Falcon Firewall Mgmt (host-only)",fm:"Falcon Firewall Management",p:"Fortinet FortiGate, Palo Alto Networks, Cisco",m:"HIGH",tier:"Partner-priced"},
+33:{a:"MICRO-SEG",n:"Microsegmentation",d:"Policy-based workload isolation to contain lateral movement.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Illumio, Zero Networks, Akamai Guardicore",m:"MED",tier:"Partner-priced"},
+35:{a:"ESG",n:"Email Security Gateway",d:"Anti-malware, anti-phishing, BEC prevention at the mail gateway.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Proofpoint, Mimecast, Abnormal Security",m:"HIGH",tier:"Partner-priced"},
+36:{a:"BEC",n:"BEC / VEC Defense",d:"AI-based detection of socially engineered email compromise.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Abnormal Security, Proofpoint",m:"HIGH",tier:"Partner-priced"},
+37:{a:"SIEM",n:"Next-Gen SIEM",d:"Centralised log ingestion, correlation, and real-time detection at petabyte scale.",t:"NATIVE",cs:"Falcon Next-Gen SIEM",fm:"Falcon NG-SIEM (LogScale)",p:"Splunk (Query Translation), IBM QRadar",m:"HIGH",tier:"Enterprise / Elite"},
+38:{a:"SOAR",n:"Security Orchestration & Response",d:"Automated playbooks, cross-tool orchestration, AI-driven workflows.",t:"NATIVE",cs:"Falcon Fusion SOAR + Charlotte",fm:"Falcon Fusion SOAR; Charlotte AI AgentWorks",p:"ServiceNow, Jira, PagerDuty",m:"HIGH",tier:"Enterprise / Elite"},
+41:{a:"IR",n:"Incident Response",d:"Expert-led breach investigation, containment, eradication, and recovery.",t:"SERVICES",cs:"CrowdStrike Services",fm:"IR & Forensics (Services)",p:"Kroll, Deloitte",m:"HIGH",tier:"Services standalone"},
+42:{a:"DFIR",n:"Digital Forensics",d:"Post-incident memory analysis, disk imaging, timeline reconstruction.",t:"SERVICES",cs:"CrowdStrike Services + Falcon Forensics",fm:"Falcon Forensics",p:"\u2014",m:"MED",tier:"Services standalone"},
+43:{a:"CTI",n:"Cyber Threat Intelligence",d:"Strategic and tactical intelligence on adversary TTPs, campaigns, IOCs.",t:"NATIVE",cs:"Falcon Adversary Intelligence",fm:"Counter Adversary Operations",p:"\u2014",m:"HIGH",tier:"Add-on (Intelligence)"},
+44:{a:"DRP",n:"Digital Risk Protection",d:"Dark/deep web monitoring for leaked credentials, brand abuse.",t:"NATIVE",cs:"Falcon Intelligence Recon",fm:"Counter Adversary Operations (Recon)",p:"\u2014",m:"HIGH",tier:"Add-on"},
+45:{a:"CTEM",n:"Continuous Threat Exposure Mgmt",d:"Risk-prioritised view of assets, vulns, and misconfigs.",t:"NATIVE",cs:"Falcon Exposure Management",fm:"Falcon Exposure Management (CAASM)",p:"ServiceNow (Config Compliance)",m:"HIGH",tier:"Add-on"},
+46:{a:"EASM",n:"External Attack Surface Mgmt",d:"Attacker-perspective discovery of externally facing assets.",t:"NATIVE",cs:"Falcon Surface",fm:"Falcon Surface (Exposure Management)",p:"\u2014",m:"HIGH",tier:"Add-on"},
+47:{a:"VM",n:"Vulnerability Management",d:"CVE identification, CVSS/EPSS scoring, risk-prioritised remediation.",t:"NATIVE",cs:"Falcon Spotlight",fm:"Falcon Spotlight (Exposure Management)",p:"ServiceNow (ticketing)",m:"HIGH",tier:"Enterprise / Elite"},
+50:{a:"DECEPTION",n:"Deception / Active Defense",d:"Honeypots and decoy accounts to detect attackers.",t:"HYBRID",cs:"Falcon Identity Protection (AD deception)",fm:"Falcon Identity Protection \u2014 AD honeypot",p:"\u2014",m:"MED",tier:"Add-on (Identity)"},
+51:{a:"OT-Sec",n:"OT / ICS / SCADA Security",d:"Protecting industrial control systems and critical infrastructure.",t:"HYBRID",cs:"Falcon for XIoT",fm:"Falcon for XIoT",p:"Dragos, Claroty, Rockwell",m:"HIGH",tier:"Add-on"},
+52:{a:"IoT",n:"IoT & Connected Device Security",d:"Visibility and anomaly detection for connected devices.",t:"HYBRID",cs:"Falcon for XIoT",fm:"Falcon for XIoT",p:"Claroty, Armis, Forescout",m:"MED",tier:"Add-on + partner"},
+53:{a:"WAF",n:"Web Application Firewall",d:"Layer 7 protection from OWASP Top 10, DDoS, API abuse.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Cloudflare WAF, Akamai, AWS WAF",m:"MED",tier:"Partner-priced"},
+55:{a:"AST",n:"Application Security Testing",d:"SAST, DAST, and software composition analysis.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Checkmarx, Snyk, Veracode, GitHub",m:"LOW",tier:"Partner-priced"},
+56:{a:"SEB",n:"Secure Enterprise Browser",d:"Managed browser enforcing security policy, DLP, identity access.",t:"NATIVE",cs:"Falcon Secure Access",fm:"Falcon Secure Access",p:"\u2014",m:"HIGH",tier:"Add-on"},
+58:{a:"ITSM",n:"IT Service Management",d:"Incident ticketing, change management, CMDB-driven workflows.",t:"PARTNER",cs:"Falcon Fusion SOAR (automation)",fm:"Falcon Fusion SOAR \u2192 ServiceNow",p:"ServiceNow, Jira, PagerDuty",m:"HIGH",tier:"Partner-priced"},
+59:{a:"CMDB",n:"IT Asset Inventory & CMDB",d:"Configuration items, relationships, dependencies.",t:"NATIVE",cs:"Falcon Discover",fm:"Falcon Discover (Exposure Management)",p:"ServiceNow CMDB (sync)",m:"HIGH",tier:"Enterprise / Elite"},
+61:{a:"AI-SecOps",n:"AI-Powered Security Operations",d:"AI assistants, automated triage, agentic workflows for the SOC.",t:"NATIVE",cs:"Charlotte AI",fm:"Charlotte AI + AgentWorks",p:"Anthropic, NVIDIA, OpenAI, AWS",m:"HIGH",tier:"Enterprise / Elite"},
+65:{a:"SAT",n:"Security Awareness Training",d:"Role-based training, phishing simulations, behaviour change.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"KnowBe4, Proofpoint Awareness, Cofense",m:"MED",tier:"Partner-priced"},
+66:{a:"PS",n:"Professional Services",d:"Deployment, architecture review, skills transfer.",t:"SERVICES",cs:"CrowdStrike Services",fm:"Professional / Transformation Services",p:"Accenture, Deloitte, Kroll",m:"HIGH",tier:"Services standalone"},
+67:{a:"BDR",n:"Backup, DR & Cyber Recovery",d:"Immutable backups, rapid recovery, ransomware resilience.",t:"PARTNER",cs:"\u2014",fm:"\u2014",p:"Rubrik, Cohesity, Veeam",m:"HIGH",tier:"Partner-priced"}
 };
 
-// ─── RENDERING LOGIC ───
-let cur = 0, fv = 'all';
+let cur=0,fv='all';
 
-function filt(v) {
-  fv = v;
-  document.querySelectorAll('.fbtn').forEach(b => b.classList.toggle('on', 
-    (v === 'all' && b.textContent.trim() === 'All') || b.textContent.trim().toUpperCase() === v));
+function filt(v){
+  fv=v;
+  document.querySelectorAll('.fb').forEach(b=>b.classList.toggle('on',
+    (v==='all'&&b.textContent.trim()==='All')||b.textContent.trim().toUpperCase()===v));
   render(cur);
 }
 
-function buildTabs() {
-  document.getElementById('tabs').innerHTML = CC.map((c, i) =>
-    `<button class="tab${i === 0 ? ' on' : ''}" onclick="go(${i})"><span class="idx">${String(c.id).padStart(2, '0')}</span>${c.short}</button>`
+function buildTabs(){
+  document.getElementById('tabs').innerHTML=CC.map((c,i)=>
+    `<button class="tab${i===0?' on':''}" onclick="go(${i})"><span class="idx">${String(c.id).padStart(2,'0')}</span>${c.short}</button>`
   ).join('');
 }
 
-function go(i) {
-  cur = i;
-  document.querySelectorAll('.tab').forEach((t, j) => t.classList.toggle('on', j === i));
+function go(i){
+  cur=i;
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('on',j===i));
   render(i);
-  document.getElementById('main').scrollIntoView({behavior: 'smooth', block: 'start'});
+  document.getElementById('main').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-function render(i) {
-  const c = CC[i], ids = c.sols;
-  const vis = ids.filter(id => fv === 'all' || S[id]?.t === fv);
-  const ct = {NATIVE: 0, HYBRID: 0, PARTNER: 0, SERVICES: 0};
-  ids.forEach(id => { if (S[id]) ct[S[id].t]++; });
-  const tot = ids.length;
+function render(i){
+  const c=CC[i],ids=c.sols;
+  const vis=ids.filter(id=>fv==='all'||S[id]?.t===fv);
+  const ct={NATIVE:0,HYBRID:0,PARTNER:0,SERVICES:0};
+  ids.forEach(id=>{if(S[id])ct[S[id].t]++});
+  const tot=ids.length;
 
-  document.getElementById('main').innerHTML = `
+  document.getElementById('main').innerHTML=`
     <div class="ctrl-head">
-      <div class="eyebrow">Critical Control ${String(c.id).padStart(2, '0')}</div>
+      <div class="eyebrow">CRITICAL CONTROL ${String(c.id).padStart(2,'0')}</div>
       <h2>${c.name}</h2>
       <p class="blurb">${c.desc}</p>
-      <div class="mcss-callout"><strong>MCSS / CMM2 Requirement:</strong> ${c.mcss}</div>
+      <div class="mcss-box"><strong>MCSS / CMM2 Requirement</strong><br>${c.mcss}</div>
     </div>
-    <div class="mapping-box">
-      <h4><span class="ico">\u25C6</span> Addressing This Control</h4>
-      <p class="narrative">${c.narrative}</p>
-      <ul>${c.points.map(p => `<li>${p}</li>`).join('')}</ul>
+    <div class="map-box">
+      <h4><span class="ico">\u25C6</span> How the CrowdStrike Ecosystem Addresses This Control</h4>
+      <p class="narr">${c.narrative}</p>
+      <ul>${c.points.map(p=>`<li>${p}</li>`).join('')}</ul>
     </div>
-    <div class="coverage-bar-wrap">
-      <h4>Coverage Breakdown \u2014 ${tot} Solutions</h4>
-      <div class="cov-bar">
+    <div class="cov-wrap">
+      <h4>Coverage Breakdown \u2014 ${tot} Solutions Mapped</h4>
+      <div class="cov-track">
         <div class="cov-seg native" style="width:${ct.NATIVE/tot*100}%"></div>
         <div class="cov-seg hybrid" style="width:${ct.HYBRID/tot*100}%"></div>
         <div class="cov-seg partner" style="width:${ct.PARTNER/tot*100}%"></div>
         <div class="cov-seg services" style="width:${ct.SERVICES/tot*100}%"></div>
       </div>
+      <div class="cov-labels">
+        <div class="cov-lbl"><span class="lpip native"></span>Native <span class="n">${ct.NATIVE}</span></div>
+        <div class="cov-lbl"><span class="lpip hybrid"></span>Hybrid <span class="n">${ct.HYBRID}</span></div>
+        <div class="cov-lbl"><span class="lpip partner"></span>Partner <span class="n">${ct.PARTNER}</span></div>
+        <div class="cov-lbl"><span class="lpip services"></span>Services <span class="n">${ct.SERVICES}</span></div>
+      </div>
     </div>
     <div class="sol-section">
-      <div class="section-lbl">Ecosystem Solutions</div>
+      <div class="sec-lbl">ECOSYSTEM SOLUTIONS${fv!=='all'?' \u2014 FILTERED: '+fv:''}</div>
       <div class="sgrid">
-        ${vis.map(id => {
-          const s = S[id]; if (!s) return '';
-          return `<div class="scard ${s.t.toLowerCase()}">
-            <div class="row1"><span class="acr">${s.a}</span><span class="type-tag">${s.t}</span></div>
-            <h3>${s.n}</h3>
-            <div class="sdesc">${s.d}</div>
-            <div class="details">
-              <div class="drow"><span class="dk">CS Product</span><span class="dval hi">${s.cs}</span></div>
-              <div class="drow"><span class="dk">Partners</span><span class="dval">${s.p}</span></div>
+        ${vis.map(id=>{
+          const s=S[id];if(!s)return'';
+          const tc=s.t.toLowerCase();
+          return`<div class="sc ${tc}">
+            <div class="r1">
+              <span class="acr">${s.a}</span>
+              <span class="tbadge">${s.t}</span>
             </div>
+            <h3>${s.n}</h3>
+            <div class="sd">${s.d}</div>
+            <div class="dets">
+              ${s.cs&&s.cs!=='\u2014'?`<div class="dr"><span class="dk">CS Product</span><span class="dv hi">${s.cs}</span></div>`:''}
+              ${s.fm&&s.fm!=='\u2014'?`<div class="dr"><span class="dk">Falcon</span><span class="dv">${s.fm}</span></div>`:''}
+              ${s.p&&s.p!=='\u2014'?`<div class="dr"><span class="dk">Partners</span><span class="dv">${s.p}</span></div>`:''}
+              <div class="dr"><span class="dk">Tier</span><span class="dv">${s.tier}</span></div>
+            </div>
+            <span class="mtag ${s.m.toLowerCase()}">${s.m} MSSP</span>
           </div>`;
         }).join('')}
+        ${vis.length===0?'<div class="no-res">No solutions match the current filter for this control.</div>':''}
       </div>
     </div>`;
 }
