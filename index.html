@@ -66,28 +66,134 @@
         .header {
             background: var(--card-color);
             color: var(--text-primary);
-            padding: 4rem 0;
+            padding: 5.25rem 0 4rem;
             text-align: center;
             border-bottom: 1px solid var(--border-color);
+            overflow: visible;
+        }
+
+        .logo-stage {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
         }
 
         .logo {
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            margin: 0 auto 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2rem;
             font-weight: bold;
             overflow: hidden;
+            position: relative;
+            z-index: 1;
         }
 
         .logo img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+
+        .think-link {
+            position: absolute;
+            left: 78px;
+            top: -70px;
+            width: 118px;
+            height: 108px;
+            z-index: 2;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .think-link:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 3px;
+            border-radius: 18px;
+        }
+
+        .think-trail {
+            position: absolute;
+            border-radius: 50%;
+            background: #fff;
+            border: 1.75px solid rgba(0, 119, 181, 0.38);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            animation: think-pulse 4.2s ease-in-out infinite;
+        }
+
+        .think-trail-1 {
+            width: 8px;
+            height: 8px;
+            left: 0;
+            bottom: 20px;
+            animation-delay: 0s;
+        }
+
+        .think-trail-2 {
+            width: 15px;
+            height: 15px;
+            left: 12px;
+            bottom: 38px;
+            animation-delay: 0.55s;
+        }
+
+        .think-cloud {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 96px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: think-pulse 3.6s ease-in-out infinite;
+            animation-delay: 0.9s;
+        }
+
+        .think-cloud svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            filter: drop-shadow(0 3px 6px rgba(0, 119, 181, 0.14));
+        }
+
+        .think-mark {
+            position: relative;
+            z-index: 1;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+            color: var(--text-primary);
+            opacity: 0;
+            transform: scale(0.65);
+            transition: opacity 0.22s ease, transform 0.22s ease;
+            pointer-events: none;
+        }
+
+        .think-link:hover .think-mark,
+        .think-link:focus-visible .think-mark {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        @keyframes think-pulse {
+            0%, 100% { opacity: 0.42; }
+            50% { opacity: 1; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .think-trail,
+            .think-cloud {
+                animation: none;
+                opacity: 0.88;
+            }
         }
 
         .header h1 {
@@ -471,8 +577,31 @@
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <div class="logo">
-                    <img src="assets/learning-hub-logo.png" alt="Thinkinfosec Hub Logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/0077b5/FFFFFF?text=AC';">
+                <div class="logo-stage">
+                    <div class="logo">
+                        <img src="assets/learning-hub-logo.png" alt="Thinkinfosec Hub Logo" onerror="this.onerror=null;this.src='https://placehold.co/80x80/0077b5/FFFFFF?text=AC';">
+                    </div>
+                    <a class="think-link" href="tools/corpus-map/" aria-label="Open the corpus mind map">
+                        <span class="think-trail think-trail-1" aria-hidden="true"></span>
+                        <span class="think-trail think-trail-2" aria-hidden="true"></span>
+                        <span class="think-cloud" aria-hidden="true">
+                            <svg viewBox="0 0 96 72" fill="none">
+                                <g fill="#fff" stroke="rgba(0,119,181,0.42)" stroke-width="3.2">
+                                    <circle cx="30" cy="42" r="18"/>
+                                    <circle cx="50" cy="30" r="22"/>
+                                    <circle cx="70" cy="40" r="17"/>
+                                    <circle cx="48" cy="50" r="16"/>
+                                </g>
+                                <g fill="#fff">
+                                    <circle cx="30" cy="42" r="18"/>
+                                    <circle cx="50" cy="30" r="22"/>
+                                    <circle cx="70" cy="40" r="17"/>
+                                    <circle cx="48" cy="50" r="16"/>
+                                </g>
+                            </svg>
+                            <span class="think-mark">!</span>
+                        </span>
+                    </a>
                 </div>
                 <h1>Thinkinfosec Hub</h1>
                 <p>Explore the latest in AI, InfoSec, and Cloud technologies</p>
