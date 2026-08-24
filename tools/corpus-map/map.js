@@ -27,7 +27,8 @@
     techCats: new Set(),
     expanded: new Set(["people", "process", "technology"]),
     selected: { type: "core" },
-    filtersOpen: false
+    filtersOpen: false,
+    detailOpen: false
   };
 
   const prevPos = new Map();
@@ -36,6 +37,9 @@
   const svg = document.getElementById("map");
   const wrap = document.getElementById("canvasWrap");
   const detailEl = document.getElementById("detail");
+  const detailToggle = document.getElementById("detailToggle");
+  const detailTitle = document.getElementById("detailTitle");
+  const detailSummary = document.getElementById("detailSummary");
   const filterToggle = document.getElementById("filterToggle");
 
   function hubHref(item) {
@@ -439,6 +443,13 @@
       draw();
       return;
     }
+    if (found.type === "item" && found.item) {
+      state.detailOpen = true;
+      updateDetailToggle();
+      renderDetail(visibleItems());
+      draw();
+      return;
+    }
     renderDetail(visibleItems());
   }
 
@@ -476,12 +487,28 @@
       return `<details open><summary>${escapeXml(kind)} (${groups[kind].length})</summary>${rows}</details>`;
     }).join("");
 
-    detailEl.innerHTML = `<h2>${escapeXml(title)}</h2><p class="meta">${escapeXml(meta)}</p>${body}<div class="list" id="list">${listHtml || "<p class='meta'>Nothing matches these tags.</p>"}</div>`;
+    detailTitle.textContent = title;
+    detailSummary.textContent = meta;
+    detailEl.innerHTML = `${body}<div class="list" id="list">${listHtml || "<p class='meta'>Nothing matches these tags.</p>"}</div>`;
+    updateDetailToggle();
+  }
+
+  function updateDetailToggle() {
+    detailToggle.setAttribute("aria-expanded", state.detailOpen ? "true" : "false");
+    detailEl.classList.toggle("open", state.detailOpen);
+    detailToggle.querySelector(".chevron").textContent = state.detailOpen ? "▼" : "▲";
   }
 
   filterToggle.addEventListener("click", () => {
     state.filtersOpen = !state.filtersOpen;
     updateFilterToggle();
+    draw();
+  });
+
+  detailToggle.addEventListener("click", () => {
+    state.detailOpen = !state.detailOpen;
+    updateDetailToggle();
+    draw();
   });
 
   document.getElementById("q").addEventListener("input", (e) => {

@@ -119,25 +119,37 @@
       padding: 0.35rem 0.55rem; border-radius: 8px; border: 1px solid var(--border);
       margin: 0 0 0.75rem 0.75rem;
     }
-    aside {
-      position: absolute; top: 0.75rem; right: 0.75rem;
-      width: min(280px, calc(100% - 1.5rem));
-      max-height: calc(100% - 1.5rem);
-      overflow: auto;
+    .detail-dock {
+      flex-shrink: 0;
       background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.85rem 1rem;
-      z-index: 2;
+      border-top: 1px solid var(--border);
     }
-    aside h2 { margin: 0 0 0.35rem; font-size: 1.05rem; }
-    aside .meta { color: var(--muted); font-size: 0.8rem; margin-bottom: 0.75rem; }
-    aside a.btn {
+    .detail-toggle {
+      display: flex; align-items: center; gap: 0.75rem; width: 100%;
+      min-height: 44px; padding: 0.45rem 1rem;
+      font: inherit; text-align: left; cursor: pointer;
+      border: 0; background: var(--panel); color: var(--text);
+    }
+    .detail-toggle:hover { background: #f7f8fa; }
+    .detail-toggle[aria-expanded="true"] { border-bottom: 1px solid var(--border); }
+    .detail-toggle .chevron { margin-left: auto; color: var(--muted); font-size: 0.8rem; }
+    .detail-toggle strong { font-weight: 650; }
+    .detail-toggle .meta { color: var(--muted); font-size: 0.8rem; }
+    .detail-body {
+      display: none;
+      max-height: min(38vh, 340px);
+      overflow: auto;
+      padding: 0.75rem 1rem 1rem;
+    }
+    .detail-body.open { display: block; }
+    .detail-body h2 { margin: 0 0 0.35rem; font-size: 1.05rem; }
+    .detail-body .meta { color: var(--muted); font-size: 0.8rem; margin-bottom: 0.75rem; }
+    .detail-body a.btn {
       display: inline-flex; align-items: center; min-height: 40px;
       padding: 0.4rem 0.85rem; background: var(--navy); color: #fff;
       text-decoration: none; border-radius: 8px; font-size: 0.85rem;
     }
-    .list { margin-top: 0.75rem; }
+    .list { margin-top: 0.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem 1.25rem; }
     .list details { border-top: 1px solid var(--border); padding: 0.4rem 0; }
     .list a { color: var(--navy); }
     @media (prefers-reduced-motion: reduce) {
@@ -191,10 +203,14 @@
       <svg id="map" role="img" aria-label="ThinkInfoSec corpus mind map"></svg>
       <div class="hint">Click a tile to open the layer beneath · the map grows downward</div>
     </div>
-    <aside id="detail">
-      <h2>ThinkInfoSec</h2>
-      <p class="meta">Top node. Each row below is the next layer of the map.</p>
-    </aside>
+  </div>
+  <div class="detail-dock">
+    <button type="button" class="detail-toggle" id="detailToggle" aria-expanded="false" aria-controls="detail">
+      <strong id="detailTitle">Details</strong>
+      <span class="meta" id="detailSummary">ThinkInfoSec · click a tile, then open this panel</span>
+      <span class="chevron" aria-hidden="true">▲</span>
+    </button>
+    <div class="detail-body" id="detail"></div>
   </div>
   <script src="../../catalog/catalog.js"></script>
   <script src="map.js"></script>
