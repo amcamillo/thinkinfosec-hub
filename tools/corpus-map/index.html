@@ -34,27 +34,38 @@
     }
     .skip:focus { top: 0.5rem; }
     header {
-      display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem;
-      padding: 0.7rem 1rem;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 0.65rem 1rem;
+      padding: 0.55rem 1rem;
       background: var(--navy); color: #fff;
       border-bottom: 3px solid var(--cyan);
+      flex-shrink: 0;
     }
     header a { color: var(--cyan); text-decoration: none; font-size: 0.9rem; }
     header h1 { margin: 0; font-size: 1.05rem; font-weight: 650; }
-    header p { margin: 0; color: rgba(255,255,255,.72); font-size: 0.82rem; }
+    header .grow { flex: 1; }
+    .filter-toggle {
+      font: inherit; min-height: 40px; padding: 0.35rem 0.85rem;
+      border-radius: 8px; border: 1px solid rgba(255,255,255,.25);
+      background: transparent; color: #fff; cursor: pointer;
+    }
+    .filter-toggle[aria-expanded="true"],
+    .filter-toggle.has-filters { border-color: var(--cyan); color: var(--cyan); }
     .filters {
-      display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center;
+      display: none;
+      flex-wrap: wrap; gap: 0.45rem; align-items: center;
       padding: 0.55rem 1rem;
       background: var(--panel);
       border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
     }
+    .filters.open { display: flex; }
     .filters input[type="search"] {
       font: inherit; min-height: 40px; min-width: 12rem; flex: 1;
-      padding: 0.35rem 0.7rem; border: 1px solid var(--border); border-radius: 999px;
+      padding: 0.35rem 0.7rem; border: 1px solid var(--border); border-radius: 8px;
     }
     .chip {
       font: inherit; font-size: 0.78rem; min-height: 36px;
-      padding: 0.25rem 0.7rem; border-radius: 999px;
+      padding: 0.25rem 0.7rem; border-radius: 8px;
       border: 1px solid var(--border); background: #fff; color: var(--muted);
       cursor: pointer;
     }
@@ -62,25 +73,32 @@
     .chip.people[aria-pressed="true"] { color: var(--people); border-color: var(--people); background: #ffe8f1; }
     .chip.process[aria-pressed="true"] { color: #0a6e76; border-color: var(--process); background: #e6fafb; }
     .chip.tech[aria-pressed="true"] { color: #fff; background: var(--navy); border-color: var(--navy); }
-    .legend { font-size: 0.75rem; color: var(--muted); margin-left: auto; }
-    .legend span { display: inline-flex; align-items: center; gap: 0.3rem; margin-left: 0.7rem; }
-    .swatch { width: 8px; height: 8px; border-radius: 50%; }
-    .workspace { flex: 1; display: grid; grid-template-columns: 1fr minmax(240px, 320px); min-height: 0; }
+    .legend { font-size: 0.75rem; color: var(--muted); }
+    .legend span { display: inline-flex; align-items: center; gap: 0.3rem; margin-right: 0.7rem; }
+    .swatch { width: 10px; height: 10px; border-radius: 3px; }
+    .workspace { flex: 1; position: relative; min-height: 0; }
     .canvas-wrap {
-      position: relative; overflow: hidden; background:
-        radial-gradient(circle at 50% 50%, #fff 0, var(--bg) 70%);
+      position: absolute; inset: 0; overflow: hidden;
+      background: #f3f5f8;
       cursor: grab;
     }
     .canvas-wrap.dragging { cursor: grabbing; }
     svg { display: block; width: 100%; height: 100%; touch-action: none; }
     .hint {
       position: absolute; left: 0.75rem; bottom: 0.75rem;
-      font-size: 0.75rem; color: var(--muted); background: rgba(255,255,255,.9);
-      padding: 0.35rem 0.55rem; border-radius: 6px; border: 1px solid var(--border);
+      font-size: 0.75rem; color: var(--muted); background: rgba(255,255,255,.92);
+      padding: 0.35rem 0.55rem; border-radius: 8px; border: 1px solid var(--border);
     }
     aside {
-      background: var(--panel); border-left: 1px solid var(--border);
-      overflow: auto; padding: 1rem;
+      position: absolute; top: 0.75rem; right: 0.75rem;
+      width: min(300px, calc(100% - 1.5rem));
+      max-height: calc(100% - 1.5rem);
+      overflow: auto;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      box-shadow: 0 8px 24px rgba(13,31,60,.08);
     }
     aside h2 { margin: 0 0 0.35rem; font-size: 1.05rem; }
     aside .meta { color: var(--muted); font-size: 0.8rem; margin-bottom: 0.75rem; }
@@ -89,37 +107,28 @@
       padding: 0.4rem 0.85rem; background: var(--navy); color: #fff;
       text-decoration: none; border-radius: 8px; font-size: 0.85rem;
     }
-    .list { margin-top: 1.25rem; }
+    .list { margin-top: 0.75rem; }
     .list details { border-top: 1px solid var(--border); padding: 0.4rem 0; }
     .list a { color: var(--navy); }
-    @media (max-width: 800px) {
-      .workspace { grid-template-columns: 1fr; grid-template-rows: 1fr 40vh; }
-      aside { border-left: 0; border-top: 1px solid var(--border); }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .node { transition: none; }
-    }
   </style>
 </head>
 <body>
-  <a class="skip" href="#list">Skip to artefact list</a>
+  <a class="skip" href="#detail">Skip to artefact list</a>
   <header>
     <a href="../../index.html">← Hub</a>
-    <div>
-      <h1>ThinkInfoSec corpus</h1>
-      <p>Mind map from the head: People · Processes · Technology. Filter by tags; click a bubble to expand.</p>
-    </div>
+    <h1>ThinkInfoSec corpus</h1>
+    <span class="grow"></span>
+    <button type="button" class="filter-toggle" id="filterToggle" aria-expanded="false" aria-controls="filters">Filters</button>
   </header>
   <div class="filters" id="filters"></div>
   <div class="workspace">
     <div class="canvas-wrap" id="canvasWrap">
       <svg id="map" role="img" aria-label="ThinkInfoSec corpus mind map"></svg>
-      <div class="hint">Scroll to zoom · drag to pan · click a theme to show artefacts</div>
+      <div class="hint">Click a row to expand the layer below · scroll to zoom · drag to pan</div>
     </div>
     <aside id="detail">
-      <h2>Andre Camillo</h2>
-      <p class="meta">Core node. Filters prune the map; empty technology domains stay hidden.</p>
-      <div class="list" id="list"></div>
+      <h2>ThinkInfoSec</h2>
+      <p class="meta">Top node. Each row below is the next layer of the map.</p>
     </aside>
   </div>
   <script src="../../catalog/catalog.js"></script>
