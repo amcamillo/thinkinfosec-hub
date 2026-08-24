@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Corpus map — Thinkinfosec Hub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #0077b5;
+      --background-color: #f4f7f6;
+      --card-color: #ffffff;
+      --text-primary: #333333;
+      --text-secondary: #555555;
+      --text-muted: #777777;
+      --border-color: #dddddd;
+      --border-radius: 8px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--background-color);
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+    header {
+      background: var(--card-color);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1.25rem 1.5rem;
+    }
+    header a { color: var(--primary-color); text-decoration: none; }
+    h1 { margin: 0.35rem 0 0; font-size: 1.6rem; }
+    .lead { color: var(--text-secondary); max-width: 46rem; }
+    main { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .toolbar button {
+      font: inherit;
+      min-height: 44px;
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-color);
+      background: var(--card-color);
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+    .toolbar button[aria-pressed="true"] {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+      background: rgba(0, 119, 181, 0.08);
+    }
+    details {
+      background: var(--card-color);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      margin-bottom: 0.6rem;
+      padding: 0.65rem 0.9rem;
+    }
+    details details { margin: 0.4rem 0 0.2rem 0.75rem; }
+    summary { cursor: pointer; font-weight: 600; }
+    .count { color: var(--text-muted); font-weight: 400; font-size: 0.85rem; }
+    .item {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.45rem 0;
+      border-top: 1px solid var(--border-color);
+    }
+    .item a { color: var(--primary-color); font-weight: 600; text-decoration: none; }
+    .meta { font-size: 0.8rem; color: var(--text-muted); }
+    .empty { color: var(--text-muted); font-size: 0.9rem; padding: 0.35rem 0; }
+    footer { text-align: center; color: var(--text-muted); padding: 2rem 1rem; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../../index.html">← Hub</a>
+    <h1>People · Processes · Technology</h1>
+    <p class="lead">Explorer for the corpus schema (Phase 3a). Technology domains come from the April 2026 landscape plus Falcon Onum (data pipeline). Interactive mind map comes next.</p>
+  </header>
+  <main>
+    <div class="toolbar" role="group" aria-label="Show artefacts by pillar">
+      <button type="button" data-pillar="all" aria-pressed="true">All artefacts</button>
+      <button type="button" data-pillar="people" aria-pressed="false">People</button>
+      <button type="button" data-pillar="process" aria-pressed="false">Processes</button>
+      <button type="button" data-pillar="technology" aria-pressed="false">Technology</button>
+    </div>
+    <div id="tree"></div>
+  </main>
+  <footer>Thinkinfosec corpus map · taxonomy from landscape spreadsheet + domain 71 DPS</footer>
+  <script src="../../catalog/catalog.js"></script>
+  <script>
+    const data = window.THINKINFOSEC_CATALOG;
+    const tax = data.taxonomy;
+    const items = data.corpus.items;
+    const domainById = Object.fromEntries(tax.techDomains.map(d => [d.id, d]));
+    let pillarFilter = 'all';
+
+    function esc(s) {
+      return String(s || '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    }
+
+    function matches(item) {
+      if (pillarFilter === 'all') return true;
+      if (pillarFilter === 'people') return item.pillar === 'people' || (item.people && item.people.length);
+      if (pillarFilter === 'process') return item.pillar === 'process' || (item.processes && item.processes.length);
+      if (pillarFilter === 'technology') return item.pillar === 'technology' || (item.tech && item.tech.length);
+      return true;
+    }
+
+    function hubHref(item) {
+      if (item.origin === 'hub') return '../../' + item.link;
+      return item.link;
+    }
+
+    function renderItemsFixed(list) {
+      if (!list.length) return '<p class="empty">No artefacts tagged here yet.</p>';
+      return list.map(item => {
+        const href = hubHref(item);
+        const extra = item.origin === 'hub' ? '' : ' target="_blank" rel="noopener noreferrer"';
+        const note = item.note ? ` · ${esc(item.note)}` : '';
+        return `<div class="item"><div><a href="${esc(href)}"${extra}>${esc(item.title)}</a><div class="meta">${esc(item.kind)} · ${esc(item.origin)}${note}</div></div></div>`;
+      }).join('');
+    }
+
+    function render() {
+      const visible = items.filter(matches);
+      const peopleHtml = tax.people.map(theme => {
+        const list = visible.filter(i => (i.people || []).includes(theme.id));
+        return `<details open><summary>${esc(theme.label)} <span class="count">${list.length}</span></summary>${renderItemsFixed(list)}</details>`;
+      }).join('');
+      const processHtml = tax.processes.map(theme => {
+        const list = visible.filter(i => (i.processes || []).includes(theme.id));
+        return `<details open><summary>${esc(theme.label)} <span class="count">${list.length}</span></summary>${renderItemsFixed(list)}</details>`;
+      }).join('');
+      const techHtml = tax.techCategories.map(cat => {
+        const domains = tax.techDomains.filter(d => d.category === cat).sort((a, b) => a.sort - b.sort);
+        const catCount = domains.reduce((n, d) => n + visible.filter(i => (i.tech || []).includes(d.id)).length, 0);
+        const inner = domains.map(d => {
+          const list = visible.filter(i => (i.tech || []).includes(d.id));
+          return `<details><summary>${esc(d.acronym)} — ${esc(d.name)} <span class="count">${list.length}</span></summary><p class="meta">${esc(d.description)}</p>${renderItemsFixed(list)}</details>`;
+        }).join('');
+        return `<details><summary>${esc(cat)} <span class="count">${catCount} tagged</span></summary>${inner}</details>`;
+      }).join('');
+
+      document.getElementById('tree').innerHTML = `
+        <details open><summary>People <span class="count">${visible.filter(i => i.people && i.people.length).length} tagged</span></summary>${peopleHtml}</details>
+        <details open><summary>Processes <span class="count">${visible.filter(i => i.processes && i.processes.length).length} tagged</span></summary>${processHtml}</details>
+        <details open><summary>Technology <span class="count">${visible.filter(i => i.tech && i.tech.length).length} tagged</span></summary>${techHtml}</details>
+      `;
+    }
+
+    document.querySelectorAll('.toolbar button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        pillarFilter = btn.getAttribute('data-pillar');
+        document.querySelectorAll('.toolbar button').forEach(other => {
+          other.setAttribute('aria-pressed', other === btn ? 'true' : 'false');
+        });
+        render();
+      });
+    });
+
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,734 @@
+{
+  "version": "2026-08-24",
+  "source": "260427-landscape_reference_3vendors.xlsx Comparison Matrix, plus domain 71 DPS/Onum",
+  "pillars": [
+    {
+      "id": "people",
+      "label": "People",
+      "blurb": "Who you teach, write for, and work with."
+    },
+    {
+      "id": "process",
+      "label": "Processes",
+      "blurb": "How security work is designed, delivered, and assured."
+    },
+    {
+      "id": "technology",
+      "label": "Technology",
+      "blurb": "What is built, mapped, or operated in the stack."
+    }
+  ],
+  "people": [
+    {
+      "id": "thought-leadership",
+      "label": "Thought leadership"
+    },
+    {
+      "id": "teaching",
+      "label": "Teaching"
+    },
+    {
+      "id": "community",
+      "label": "Community"
+    },
+    {
+      "id": "skills-career",
+      "label": "Skills and career"
+    },
+    {
+      "id": "awareness-culture",
+      "label": "Awareness and culture"
+    }
+  ],
+  "processes": [
+    {
+      "id": "govern-assure",
+      "label": "Govern and assure"
+    },
+    {
+      "id": "architect-zt",
+      "label": "Architect and zero trust"
+    },
+    {
+      "id": "threat-model",
+      "label": "Threat-model"
+    },
+    {
+      "id": "detect-hunt",
+      "label": "Detect and hunt"
+    },
+    {
+      "id": "respond-recover",
+      "label": "Respond and recover"
+    },
+    {
+      "id": "channel-mssp",
+      "label": "Channel and MSSP deliver"
+    },
+    {
+      "id": "build-demo",
+      "label": "Build and demo"
+    },
+    {
+      "id": "enable-certify",
+      "label": "Enable and certify"
+    }
+  ],
+  "techCategories": [
+    "Endpoint & Device",
+    "Identity & Access",
+    "Cloud Security",
+    "Data Security",
+    "Network Security",
+    "Email & Collaboration",
+    "Security Operations",
+    "Threat Intel & Exposure",
+    "OT, IoT & Industrial",
+    "Application Security",
+    "Governance, Risk & Compliance",
+    "AI & Agentic Security",
+    "Managed & Professional Services",
+    "Cloud & Infra Ops"
+  ],
+  "techDomains": [
+    {
+      "id": 1,
+      "sort": 1.0,
+      "category": "Endpoint & Device",
+      "sub": "Endpoint Protection",
+      "acronym": "EPP / NGAV",
+      "name": "Next-Generation Antivirus / EPP",
+      "description": "AI-driven prevention of known/unknown malware, ransomware, and fileless attacks before execution."
+    },
+    {
+      "id": 2,
+      "sort": 2.0,
+      "category": "Endpoint & Device",
+      "sub": "EDR",
+      "acronym": "EDR",
+      "name": "Endpoint Detection and Response",
+      "description": "Continuous endpoint telemetry, threat detection, and real-time isolation/response."
+    },
+    {
+      "id": 3,
+      "sort": 3.0,
+      "category": "Endpoint & Device",
+      "sub": "Extended Detection & Response",
+      "acronym": "XDR",
+      "name": "Extended Detection and Response",
+      "description": "Cross-domain correlation of endpoint, identity, cloud, email, and network telemetry."
+    },
+    {
+      "id": 4,
+      "sort": 4.0,
+      "category": "Endpoint & Device",
+      "sub": "Mobile Security",
+      "acronym": "MTD",
+      "name": "Mobile Threat Defense",
+      "description": "Detection of mobile malware, device misconfigs, network threats on iOS/Android."
+    },
+    {
+      "id": 5,
+      "sort": 5.0,
+      "category": "Endpoint & Device",
+      "sub": "Host Firewall",
+      "acronym": "HFW",
+      "name": "Host-Based Firewall Management",
+      "description": "Centralised policy management for Windows/macOS host firewall rules via Falcon sensor."
+    },
+    {
+      "id": 6,
+      "sort": 6.0,
+      "category": "Endpoint & Device",
+      "sub": "Device & USB Control",
+      "acronym": "USB-DC",
+      "name": "Device & USB / Peripheral Control",
+      "description": "Policy-based control of removable storage, printers, Bluetooth; file analysis on USB write."
+    },
+    {
+      "id": 7,
+      "sort": 7.0,
+      "category": "Identity & Access",
+      "sub": "ITDR",
+      "acronym": "ITDR",
+      "name": "Identity Threat Detection and Response",
+      "description": "Detects credential theft, pass-the-hash, Golden/Silver Ticket, MFA bypass, and lateral movement."
+    },
+    {
+      "id": 8,
+      "sort": 8.0,
+      "category": "Identity & Access",
+      "sub": "PAM",
+      "acronym": "PAM",
+      "name": "Privileged Access Management",
+      "description": "Dynamic control of privileged accounts; JIT access, session mgmt, credential vaulting."
+    },
+    {
+      "id": 9,
+      "sort": 9.0,
+      "category": "Identity & Access",
+      "sub": "IAM",
+      "acronym": "IAM",
+      "name": "Identity and Access Management",
+      "description": "User lifecycle provisioning, MFA/SSO, and authorisation across enterprise applications."
+    },
+    {
+      "id": 10,
+      "sort": 10.0,
+      "category": "Identity & Access",
+      "sub": "CIAM",
+      "acronym": "CIAM",
+      "name": "Customer Identity and Access Management",
+      "description": "External customer registrations, SSO, MFA, and consent flows for B2C/B2B services."
+    },
+    {
+      "id": 11,
+      "sort": 11.0,
+      "category": "Identity & Access",
+      "sub": "ZTNA",
+      "acronym": "ZTNA",
+      "name": "Zero Trust Network Access",
+      "description": "Identity- and device-verified, least-privilege remote access replacing traditional VPN."
+    },
+    {
+      "id": 12,
+      "sort": 12.0,
+      "category": "Identity & Access",
+      "sub": "MFA / Passwordless",
+      "acronym": "MFA",
+      "name": "Multi-Factor Authentication & Passwordless",
+      "description": "Strong authentication including FIDO2/passkeys, hardware tokens, and adaptive MFA. Falcon ID provides native MFA/passwordless for AD and cloud apps."
+    },
+    {
+      "id": 13,
+      "sort": 13.0,
+      "category": "Cloud Security",
+      "sub": "CNAPP",
+      "acronym": "CNAPP",
+      "name": "Cloud-Native Application Protection Platform",
+      "description": "Unified suite: CSPM, CIEM, CWPP, KSPM, IaC scanning for end-to-end cloud security."
+    },
+    {
+      "id": 14,
+      "sort": 14.0,
+      "category": "Cloud Security",
+      "sub": "CSPM",
+      "acronym": "CSPM",
+      "name": "Cloud Security Posture Management",
+      "description": "Detects misconfigurations, policy violations, and compliance drift across IaaS/PaaS."
+    },
+    {
+      "id": 15,
+      "sort": 15.0,
+      "category": "Cloud Security",
+      "sub": "CIEM",
+      "acronym": "CIEM",
+      "name": "Cloud Identity and Entitlement Management",
+      "description": "Analyses human and machine identity permissions in cloud to enforce least-privilege."
+    },
+    {
+      "id": 16,
+      "sort": 16.0,
+      "category": "Cloud Security",
+      "sub": "CWPP",
+      "acronym": "CWPP",
+      "name": "Cloud Workload Protection Platform",
+      "description": "Runtime protection for VMs, containers, and serverless workloads in cloud environments."
+    },
+    {
+      "id": 17,
+      "sort": 17.0,
+      "category": "Cloud Security",
+      "sub": "Kubernetes Security",
+      "acronym": "KSPM",
+      "name": "Kubernetes Security Posture Management",
+      "description": "Config auditing, admission control, and runtime protection for Kubernetes clusters."
+    },
+    {
+      "id": 18,
+      "sort": 18.0,
+      "category": "Cloud Security",
+      "sub": "SSPM",
+      "acronym": "SSPM",
+      "name": "SaaS Security Posture Management",
+      "description": "Continuous auditing of entitlements, OAuth grants, and security configs across SaaS apps."
+    },
+    {
+      "id": 19,
+      "sort": 19.0,
+      "category": "Cloud Security",
+      "sub": "CDR",
+      "acronym": "CDR",
+      "name": "Cloud Detection and Response",
+      "description": "Real-time threat detection and investigation within cloud control planes and workloads."
+    },
+    {
+      "id": 20,
+      "sort": 20.0,
+      "category": "Cloud Security",
+      "sub": "IaC Security",
+      "acronym": "IaC-Sec",
+      "name": "Infrastructure-as-Code Security Scanning",
+      "description": "Static analysis of Terraform/CloudFormation/Pulumi templates to find misconfigurations pre-deploy."
+    },
+    {
+      "id": 21,
+      "sort": 21.0,
+      "category": "Data Security",
+      "sub": "DLP",
+      "acronym": "DLP",
+      "name": "Data Loss Prevention",
+      "description": "Controls sensitive data in use, in motion, at rest — blocks exfiltration across endpoints, SaaS, cloud, and AI tools."
+    },
+    {
+      "id": 22,
+      "sort": 22.0,
+      "category": "Data Security",
+      "sub": "DSPM",
+      "acronym": "DSPM",
+      "name": "Data Security Posture Management",
+      "description": "Discovers and classifies sensitive data in cloud; maps data flows and access risks."
+    },
+    {
+      "id": 23,
+      "sort": 23.0,
+      "category": "Data Security",
+      "sub": "Data Classification",
+      "acronym": "DC",
+      "name": "Automated Data Classification",
+      "description": "AI-powered identification and labelling of PII, PCI, IP across endpoints, SaaS, and cloud."
+    },
+    {
+      "id": 24,
+      "sort": 24.0,
+      "category": "Data Security",
+      "sub": "CASB",
+      "acronym": "CASB",
+      "name": "Cloud Access Security Broker",
+      "description": "Enforces policies between users and cloud services; controls shadow IT, SaaS DLP, access governance."
+    },
+    {
+      "id": 25,
+      "sort": 25.0,
+      "category": "Network Security",
+      "sub": "SASE",
+      "acronym": "SASE",
+      "name": "Secure Access Service Edge",
+      "description": "Converges SD-WAN and SSE (ZTNA, SWG, CASB, FWaaS) into single cloud-delivered security."
+    },
+    {
+      "id": 26,
+      "sort": 26.0,
+      "category": "Network Security",
+      "sub": "SSE",
+      "acronym": "SSE",
+      "name": "Security Service Edge",
+      "description": "The security components of SASE: ZTNA, SWG, CASB, FWaaS from the cloud."
+    },
+    {
+      "id": 27,
+      "sort": 27.0,
+      "category": "Network Security",
+      "sub": "SWG",
+      "acronym": "SWG",
+      "name": "Secure Web Gateway",
+      "description": "Proxies and inspects outbound web traffic; URL filtering, malware detection, data policy."
+    },
+    {
+      "id": 28,
+      "sort": 28.0,
+      "category": "Network Security",
+      "sub": "NDR",
+      "acronym": "NDR",
+      "name": "Network Detection and Response",
+      "description": "Monitors east-west and north-south network traffic for anomalies, lateral movement, C2."
+    },
+    {
+      "id": 29,
+      "sort": 29.0,
+      "category": "Network Security",
+      "sub": "NAC",
+      "acronym": "NAC",
+      "name": "Network Access Control",
+      "description": "Enforces device compliance posture before granting wired/wireless/WAN network access."
+    },
+    {
+      "id": 30,
+      "sort": 30.0,
+      "category": "Network Security",
+      "sub": "NGFW",
+      "acronym": "NGFW",
+      "name": "Next-Generation Firewall",
+      "description": "Deep-packet inspection, application-aware firewall with IPS, URL filtering, SSL inspection."
+    },
+    {
+      "id": 31,
+      "sort": 31.0,
+      "category": "Network Security",
+      "sub": "FWaaS",
+      "acronym": "FWaaS",
+      "name": "Firewall as a Service",
+      "description": "Cloud-delivered firewall capabilities replacing or supplementing perimeter hardware."
+    },
+    {
+      "id": 32,
+      "sort": 32.0,
+      "category": "Network Security",
+      "sub": "DNS Security",
+      "acronym": "DNS-Sec",
+      "name": "DNS Security",
+      "description": "DNS-layer filtering and threat detection — blocks C2, data exfil over DNS, malicious domains."
+    },
+    {
+      "id": 33,
+      "sort": 33.0,
+      "category": "Network Security",
+      "sub": "Microsegmentation",
+      "acronym": "MICRO-SEG",
+      "name": "Microsegmentation / East-West Segmentation",
+      "description": "Policy-based workload isolation to contain lateral movement post-breach."
+    },
+    {
+      "id": 34,
+      "sort": 34.0,
+      "category": "Network Security",
+      "sub": "SD-WAN",
+      "acronym": "SD-WAN",
+      "name": "Software-Defined Wide Area Network",
+      "description": "Dynamic policy-driven WAN routing across MPLS, broadband, LTE."
+    },
+    {
+      "id": 35,
+      "sort": 35.0,
+      "category": "Email & Collaboration",
+      "sub": "Email Security Gateway",
+      "acronym": "ESG",
+      "name": "Email Security Gateway",
+      "description": "Anti-malware, anti-phishing, BEC prevention, and email DLP at the mail gateway."
+    },
+    {
+      "id": 36,
+      "sort": 36.0,
+      "category": "Email & Collaboration",
+      "sub": "BEC / VEC Defense",
+      "acronym": "BEC",
+      "name": "Business Email Compromise / Vendor Email Compromise",
+      "description": "AI-based detection of socially engineered BEC/VEC attacks bypassing signature-based gateways."
+    },
+    {
+      "id": 37,
+      "sort": 37.0,
+      "category": "Security Operations",
+      "sub": "SIEM",
+      "acronym": "SIEM",
+      "name": "Next-Gen Security Information and Event Management",
+      "description": "Centralised log ingestion, correlation, and real-time detection from first- and 3rd-party sources at petabyte scale."
+    },
+    {
+      "id": 38,
+      "sort": 38.0,
+      "category": "Security Operations",
+      "sub": "SOAR",
+      "acronym": "SOAR",
+      "name": "Security Orchestration, Automation and Response",
+      "description": "Automated playbooks, cross-tool orchestration, and AI-driven workflow acceleration."
+    },
+    {
+      "id": 39,
+      "sort": 39.0,
+      "category": "Security Operations",
+      "sub": "MDR",
+      "acronym": "MDR",
+      "name": "Managed Detection and Response",
+      "description": "24/7 human-led service combining technology, threat hunting, and remote containment."
+    },
+    {
+      "id": 40,
+      "sort": 40.0,
+      "category": "Security Operations",
+      "sub": "Threat Hunting",
+      "acronym": "TH",
+      "name": "Proactive / Human-Led Threat Hunting",
+      "description": "Hypothesis-driven analyst-led search for undetected adversaries already inside the environment."
+    },
+    {
+      "id": 41,
+      "sort": 41.0,
+      "category": "Security Operations",
+      "sub": "Incident Response",
+      "acronym": "IR",
+      "name": "Incident Response (Reactive & Retainer)",
+      "description": "Expert-led breach investigation, containment, eradication, and recovery services."
+    },
+    {
+      "id": 42,
+      "sort": 42.0,
+      "category": "Security Operations",
+      "sub": "Digital Forensics",
+      "acronym": "DFIR",
+      "name": "Digital Forensics",
+      "description": "Post-incident forensic investigation — memory analysis, disk imaging, artifact collection, timeline reconstruction."
+    },
+    {
+      "id": 43,
+      "sort": 43.0,
+      "category": "Threat Intel & Exposure",
+      "sub": "CTI",
+      "acronym": "CTI",
+      "name": "Cyber Threat Intelligence",
+      "description": "Strategic, tactical, and operational intelligence on adversary TTPs, campaigns, IOCs, and attribution."
+    },
+    {
+      "id": 44,
+      "sort": 44.0,
+      "category": "Threat Intel & Exposure",
+      "sub": "DRP",
+      "acronym": "DRP",
+      "name": "Digital Risk Protection",
+      "description": "Monitors dark/deep/clear web, paste sites, social media for leaked credentials, brand abuse, executive targeting."
+    },
+    {
+      "id": 45,
+      "sort": 45.0,
+      "category": "Threat Intel & Exposure",
+      "sub": "CTEM",
+      "acronym": "CTEM",
+      "name": "Continuous Threat Exposure Management",
+      "description": "Continuous, risk-prioritised view of all assets, vulnerabilities, and misconfigs correlated with adversary intel."
+    },
+    {
+      "id": 46,
+      "sort": 46.0,
+      "category": "Threat Intel & Exposure",
+      "sub": "EASM",
+      "acronym": "EASM",
+      "name": "External Attack Surface Management",
+      "description": "Continuous attacker-perspective discovery and monitoring of all externally facing assets."
+    },
+    {
+      "id": 47,
+      "sort": 47.0,
+      "category": "Threat Intel & Exposure",
+      "sub": "Vulnerability Management",
+      "acronym": "VM",
+      "name": "Vulnerability Management & Prioritisation",
+      "description": "Continuous CVE identification, CVSS/EPSS scoring, and risk-prioritised remediation guidance."
+    },
+    {
+      "id": 48,
+      "sort": 48.0,
+      "category": "Threat Intel & Exposure",
+      "sub": "BAS",
+      "acronym": "BAS",
+      "name": "Breach and Attack Simulation",
+      "description": "Automated continuous simulation of adversary TTPs to validate control effectiveness."
+    },
+    {
+      "id": 49,
+      "sort": 49.0,
+      "category": "Threat Intel & Exposure",
+      "sub": "Red Team / Pen Testing",
+      "acronym": "RED",
+      "name": "Penetration Testing and Adversary Emulation",
+      "description": "Authorised offensive security engagements testing controls, detection capability, and IR maturity."
+    },
+    {
+      "id": 50,
+      "sort": 50.0,
+      "category": "Threat Intel & Exposure",
+      "sub": "Deception Technology",
+      "acronym": "DECEPTION",
+      "name": "Deception / Active Defense",
+      "description": "Honeypots, decoy accounts, and fake credentials to detect and misdirect attackers inside the environment."
+    },
+    {
+      "id": 51,
+      "sort": 51.0,
+      "category": "OT, IoT & Industrial",
+      "sub": "OT Security",
+      "acronym": "OT-Sec",
+      "name": "OT / ICS / SCADA Security",
+      "description": "Protecting industrial control systems, SCADA, PLCs, and HMIs in critical infrastructure."
+    },
+    {
+      "id": 52,
+      "sort": 52.0,
+      "category": "OT, IoT & Industrial",
+      "sub": "IoT Security",
+      "acronym": "IoT",
+      "name": "IoT and Connected Device Security",
+      "description": "Visibility, risk assessment, and anomaly detection for non-traditional connected devices."
+    },
+    {
+      "id": 53,
+      "sort": 53.0,
+      "category": "Application Security",
+      "sub": "WAF",
+      "acronym": "WAF",
+      "name": "Web Application Firewall",
+      "description": "Layer 7 filtering protecting web apps from OWASP Top 10, DDoS, bot attacks, API abuse."
+    },
+    {
+      "id": 54,
+      "sort": 54.0,
+      "category": "Application Security",
+      "sub": "API Security",
+      "acronym": "API-Sec",
+      "name": "API Security",
+      "description": "Discovery, inventory, and threat detection for APIs; prevents OWASP API Top 10 and abuse."
+    },
+    {
+      "id": 55,
+      "sort": 55.0,
+      "category": "Application Security",
+      "sub": "SAST / DAST / SCA",
+      "acronym": "AST",
+      "name": "Application Security Testing",
+      "description": "Static code analysis, dynamic runtime testing, and software composition analysis."
+    },
+    {
+      "id": 56,
+      "sort": 56.0,
+      "category": "Application Security",
+      "sub": "Secure Enterprise Browser",
+      "acronym": "SEB",
+      "name": "Secure Enterprise Browser",
+      "description": "Centrally managed browser enforcing security policy, DLP, and identity-based access control."
+    },
+    {
+      "id": 57,
+      "sort": 57.0,
+      "category": "Governance, Risk & Compliance",
+      "sub": "GRC & Compliance",
+      "acronym": "GRC",
+      "name": "Governance, Risk and Compliance",
+      "description": "Controls management, audit workflows, and compliance mapping (ISO 27001, SOC 2, NIST, CIS, ASD E8)."
+    },
+    {
+      "id": 58,
+      "sort": 58.0,
+      "category": "Governance, Risk & Compliance",
+      "sub": "ITSM / Ticketing",
+      "acronym": "ITSM",
+      "name": "IT Service Management",
+      "description": "Incident ticketing, change management, and CMDB-driven workflows from security events."
+    },
+    {
+      "id": 59,
+      "sort": 59.0,
+      "category": "Governance, Risk & Compliance",
+      "sub": "CMDB / IT Asset Inventory",
+      "acronym": "CMDB",
+      "name": "IT Asset Inventory and CMDB",
+      "description": "Stores configuration items, relationships, and dependencies — foundation for change mgmt and impact analysis."
+    },
+    {
+      "id": 60,
+      "sort": 60.0,
+      "category": "Governance, Risk & Compliance",
+      "sub": "TPRM",
+      "acronym": "TPRM",
+      "name": "Third-Party / Vendor Risk Management",
+      "description": "Assessment, scoring, and continuous monitoring of cyber risk from suppliers and third parties."
+    },
+    {
+      "id": 61,
+      "sort": 61.0,
+      "category": "AI & Agentic Security",
+      "sub": "AI Security Operations",
+      "acronym": "AI-SecOps",
+      "name": "AI-Powered Security Operations / Agentic SOC",
+      "description": "AI assistants, automated triage, LLM-powered investigation, and agentic workflows for the SOC."
+    },
+    {
+      "id": 62,
+      "sort": 62.0,
+      "category": "AI & Agentic Security",
+      "sub": "AI / LLM Threat Detection",
+      "acronym": "AI-ITDR",
+      "name": "AI Application Security / LLM Risk Detection",
+      "description": "Monitoring AI models, agentic workflows, and LLM pipelines for misuse, prompt injection, and data exfil."
+    },
+    {
+      "id": 63,
+      "sort": 63.0,
+      "category": "AI & Agentic Security",
+      "sub": "LLMOps / GenAI Security",
+      "acronym": "LLMOps",
+      "name": "LLM Operations & ML Pipeline Security",
+      "description": "Security controls for model versioning, RAG pipelines, vector databases, and AI supply chain."
+    },
+    {
+      "id": 64,
+      "sort": 64.0,
+      "category": "Managed & Professional Services",
+      "sub": "MSSP Platform",
+      "acronym": "MSSP-PLAT",
+      "name": "Managed Security Service Provider Platform",
+      "description": "White-labelled or co-branded 24/7 monitoring, management, and response built on Falcon."
+    },
+    {
+      "id": 65,
+      "sort": 65.0,
+      "category": "Managed & Professional Services",
+      "sub": "Security Awareness Training",
+      "acronym": "SAT",
+      "name": "Security Awareness & Phishing Simulation Training",
+      "description": "Human risk reduction through role-based training, phishing simulations, and behaviour change."
+    },
+    {
+      "id": 66,
+      "sort": 66.0,
+      "category": "Managed & Professional Services",
+      "sub": "Professional Services",
+      "acronym": "PS",
+      "name": "Professional Services & Implementation",
+      "description": "Vendor and partner-led deployment, architecture review, configuration, and skills transfer."
+    },
+    {
+      "id": 67,
+      "sort": 67.0,
+      "category": "Managed & Professional Services",
+      "sub": "Backup & Cyber Recovery",
+      "acronym": "BDR",
+      "name": "Backup, Disaster Recovery and Cyber Resilience",
+      "description": "Immutable backups, rapid recovery orchestration, and ransomware resilience to minimise downtime."
+    },
+    {
+      "id": 68,
+      "sort": 68.0,
+      "category": "Cloud & Infra Ops",
+      "sub": "FinOps",
+      "acronym": "FinOps",
+      "name": "Cloud Financial Operations",
+      "description": "Cost allocation, resource optimisation, showback/chargeback, and budget governance for cloud spend."
+    },
+    {
+      "id": 69,
+      "sort": 69.0,
+      "category": "Cloud & Infra Ops",
+      "sub": "Data Lakehouse",
+      "acronym": "LAKE",
+      "name": "Data Lakehouse / Analytics Architecture",
+      "description": "Combined data lake and warehouse for BI and ML workloads."
+    },
+    {
+      "id": 70,
+      "sort": 70.0,
+      "category": "Cloud & Infra Ops",
+      "sub": "Vector Database",
+      "acronym": "VEC-DB",
+      "name": "Vector Database (for AI / RAG)",
+      "description": "Stores and queries high-dimensional embeddings for semantic search and RAG-based AI apps."
+    },
+    {
+      "id": 71,
+      "sort": 37.5,
+      "category": "Security Operations",
+      "sub": "Data Pipeline Security",
+      "acronym": "DPS",
+      "name": "Security Data Pipeline",
+      "description": "Collect, parse, enrich, route and reduce security telemetry before it reaches SIEM/XDR. CrowdStrike coverage: Falcon Onum (acquired data-pipeline platform). Distinct from SIEM storage/analytics and from generic data lakehouse."
+    }
+  ]
+}
