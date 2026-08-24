@@ -27,6 +27,54 @@
       "description": "Catalog of common prompt-injection techniques."
     },
     {
+      "id": "diagram-builder",
+      "title": "Architecture Diagram Builder",
+      "kind": "tool",
+      "origin": "hub",
+      "pillar": "process",
+      "people": [],
+      "processes": ["architect-zt", "build-demo", "channel-mssp"],
+      "tech": [64],
+      "link": "tools/diagram-builder/",
+      "description": "Build CrowdStrike architecture diagrams from alliance landscape blocks and export PNG, SVG, Mermaid, or D2."
+    },
+    {
+      "id": "infosec-landscape",
+      "title": "Infosec Solution Landscape",
+      "kind": "tool",
+      "origin": "hub",
+      "pillar": "process",
+      "people": ["thought-leadership"],
+      "processes": ["architect-zt", "channel-mssp"],
+      "tech": [64],
+      "link": "tools/infosec-landscape/",
+      "description": "Interactive map of 70 technology domains across CrowdStrike, Microsoft, and Palo Alto ecosystems."
+    },
+    {
+      "id": "mdv",
+      "title": "MDV",
+      "kind": "tool",
+      "origin": "hub",
+      "pillar": "technology",
+      "people": [],
+      "processes": ["build-demo"],
+      "tech": [],
+      "link": "tools/mdv/",
+      "description": "Zero-egress offline markdown viewer with a sandboxed preview."
+    },
+    {
+      "id": "aidr-lab",
+      "title": "AI Guard Prompt Library",
+      "kind": "tool",
+      "origin": "hub",
+      "pillar": "technology",
+      "people": ["teaching"],
+      "processes": ["threat-model", "build-demo"],
+      "tech": [62],
+      "link": "tools/aidr-lab/",
+      "description": "Searchable browser for CrowdStrike's public AIDR AI Guard test prompts (injection, jailbreak, PII)."
+    },
+    {
       "id": "ai-powered-app-security",
       "title": "AI-Powered APP Security",
       "kind": "tool",
