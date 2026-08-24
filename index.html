@@ -274,6 +274,214 @@
             margin: 0 auto 1.5rem;
         }
 
+        .featured-section {
+            margin-bottom: 4.5rem;
+        }
+
+        .featured-section h2,
+        .featured-section .section-lead {
+            text-align: left;
+            margin-left: 0;
+            max-width: 40rem;
+        }
+
+        .featured-kicker {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #00BFCF;
+            margin-bottom: 0.5rem;
+        }
+
+        .featured-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .featured-card {
+            --glow-x: 78%;
+            --glow-y: 22%;
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
+            gap: 1.75rem;
+            align-items: stretch;
+            background: #0D1F3C;
+            color: #fff;
+            border-radius: 12px;
+            padding: 1.75rem 1.85rem;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            position: relative;
+            isolation: isolate;
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .featured-card::before {
+            content: "";
+            position: absolute;
+            width: 360px;
+            height: 360px;
+            left: var(--glow-x);
+            top: var(--glow-y);
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 45, 120, 0.38), rgba(255, 45, 120, 0.08) 42%, transparent 68%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .featured-card::after {
+            content: "";
+            position: absolute;
+            right: -8%;
+            top: -30%;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 191, 207, 0.22), transparent 68%);
+            pointer-events: none;
+            z-index: 0;
+            transition: opacity 0.4s ease, transform 0.55s ease;
+        }
+
+        .featured-card:hover,
+        .featured-card:focus-within {
+            transform: translateY(-4px);
+            box-shadow:
+                0 16px 36px rgba(13, 31, 60, 0.28),
+                0 0 48px rgba(255, 45, 120, 0.22);
+        }
+
+        .featured-card:hover::before,
+        .featured-card:focus-within::before {
+            opacity: 1;
+        }
+
+        .featured-card:hover::after,
+        .featured-card:focus-within::after {
+            opacity: 0.95;
+            transform: scale(1.12);
+        }
+
+        .featured-copy,
+        .featured-aside {
+            position: relative;
+            z-index: 1;
+            min-width: 0;
+        }
+
+        .featured-eyebrow {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #0D1F3C;
+            background: #00BFCF;
+            border-radius: 999px;
+            padding: 0.25rem 0.7rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .featured-copy h3 {
+            font-size: 1.65rem;
+            font-weight: 700;
+            margin-bottom: 0.65rem;
+            line-height: 1.25;
+        }
+
+        .featured-copy p {
+            color: rgba(255, 255, 255, 0.78);
+            margin-bottom: 1.25rem;
+            max-width: 38rem;
+        }
+
+        .featured-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+        }
+
+        .btn-featured {
+            background: #00BFCF;
+            color: #0D1F3C;
+            min-height: 44px;
+        }
+
+        .btn-featured:hover {
+            background: #5ee0ea;
+            color: #0D1F3C;
+        }
+
+        .btn-featured-ghost {
+            background: transparent;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            min-height: 44px;
+        }
+
+        .btn-featured-ghost:hover {
+            border-color: #00BFCF;
+            color: #00BFCF;
+        }
+
+        .featured-aside {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            padding: 1.15rem 1.2rem;
+        }
+
+        .featured-aside h4 {
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #00BFCF;
+            margin-bottom: 0.75rem;
+        }
+
+        .featured-aside ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .featured-aside li {
+            display: flex;
+            gap: 0.65rem;
+            align-items: flex-start;
+            color: rgba(255, 255, 255, 0.88);
+            font-size: 0.95rem;
+        }
+
+        .featured-aside li i {
+            color: #00BFCF;
+            margin-top: 0.2rem;
+            flex-shrink: 0;
+        }
+
+        .btn-featured:focus-visible,
+        .btn-featured-ghost:focus-visible {
+            outline: 2px solid #00BFCF;
+            outline-offset: 3px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .featured-card,
+            .featured-card::before,
+            .featured-card::after {
+                transition: none;
+            }
+            .featured-card:hover,
+            .featured-card:focus-within {
+                transform: none;
+            }
+        }
+
         .origin-filters {
             display: flex;
             flex-wrap: wrap;
@@ -568,11 +776,14 @@
             .about-image {
                 margin: 0 auto;
             }
+            .featured-card {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <a class="skip-link" href="#tools">Skip to tools</a>
+    <a class="skip-link" href="#outcomes">Skip to featured outcomes</a>
     <!-- Header -->
     <header class="header">
         <div class="container">
@@ -614,7 +825,8 @@
         <div class="container">
             <div class="nav-container">
                 <ul class="nav-links">
-                    <li><a href="#tools" class="nav-link active">Tools</a></li>
+                    <li><a href="#outcomes" class="nav-link active">Outcomes</a></li>
+                    <li><a href="#tools" class="nav-link">Tools</a></li>
                     <li><a href="#research" class="nav-link">Research</a></li>
                     <li><a href="#learn" class="nav-link">Learn</a></li>
                     <li><a href="#connect" class="nav-link">Connect</a></li>
@@ -628,6 +840,13 @@
     <main class="main">
         <div class="container">
             
+            <section id="outcomes" class="section featured-section" aria-labelledby="outcomes-heading">
+                <p class="featured-kicker">Cybersecurity value</p>
+                <h2 id="outcomes-heading">Outcomes-driven tools</h2>
+                <p class="section-lead">Security work that shows its value — program outcomes, framework coverage, and decisions boards can use. More tools join this set over time.</p>
+                <div class="featured-grid" id="featuredGrid"></div>
+            </section>
+
             <section id="tools" class="section">
                 <h2>Tools</h2>
                 <p class="section-lead">Work I built — on this hub, hosted live elsewhere, or as source on GitHub.</p>
@@ -758,6 +977,21 @@
         const HASH_ALIASES = { '#projects': '#tools', '#videos': '#learn' };
 
         const contentData = {
+            featured: [
+                {
+                    id: 'thinkinfosec-outcomes',
+                    title: 'ThinkInfoSec Outcomes',
+                    eyebrow: 'Lead feature',
+                    description: 'Map cybersecurity program work to outcomes and framework coverage — so security spend, controls, and delivery show their value to boards, customers, and operators.',
+                    points: [
+                        'Track program outcomes against the work actually delivered',
+                        'Visualise framework and control coverage in one place',
+                        'Brief stakeholders on security value, not a tool inventory'
+                    ],
+                    origin: 'elsewhere',
+                    link: 'https://cyber-roadmap.acrmai.org'
+                }
+            ],
             projects: [
                 { id: 'thinkinfosec-outcomes', title: 'ThinkInfosec Outcomes', description: 'An interactive mapping and visualization tool designed to track cybersecurity program outcomes and framework compliance metrics.', icon: 'fas fa-bullseye', origin: 'elsewhere', link: 'https://cyber-roadmap.acrmai.org' },
                 { id: 'promptInjectiontechniques', title: 'Prompt Inj. Techniques', description: 'A reference tool for exploring Prompt Injection common techniques.', icon: 'fas fa-list-check', origin: 'hub', link: 'tools/prompt-injection/' },
@@ -781,11 +1015,14 @@
             ]
         };
 
+        const featuredContainer = document.getElementById('featuredGrid');
         const projectsContainer = document.getElementById('projectsGrid');
         const videosContainer = document.getElementById('videosGrid');
         let activeOrigin = 'all';
 
         function init() {
+            renderFeatured();
+            bindFeaturedGlow();
             renderProjects();
             renderVideos();
             setupFilters();
@@ -795,6 +1032,45 @@
 
         function originMeta(origin) {
             return ORIGIN[origin] || ORIGIN.elsewhere;
+        }
+
+        function renderFeatured() {
+            const items = contentData.featured || [];
+            featuredContainer.innerHTML = items.map(item => {
+                const meta = originMeta(item.origin);
+                const extra = meta.external ? ' target="_blank" rel="noopener noreferrer"' : '';
+                const points = (item.points || []).map(point =>
+                    `<li><i class="fas fa-check" aria-hidden="true"></i><span>${point}</span></li>`
+                ).join('');
+                return `
+                <article class="featured-card">
+                    <div class="featured-copy">
+                        <span class="featured-eyebrow">${item.eyebrow}</span>
+                        <h3>${item.title}</h3>
+                        <p>${item.description}</p>
+                        <div class="featured-actions">
+                            <a href="${item.link}" class="btn btn-featured"${extra}>Open live tool</a>
+                            <a href="#tools" class="btn btn-featured-ghost nav-link">See all tools</a>
+                        </div>
+                    </div>
+                    <div class="featured-aside">
+                        <h4>Why it matters</h4>
+                        <ul>${points}</ul>
+                    </div>
+                </article>`;
+            }).join('');
+        }
+
+        function bindFeaturedGlow() {
+            const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            featuredContainer.querySelectorAll(".featured-card").forEach((card) => {
+                if (reduce) return;
+                card.addEventListener("pointermove", (event) => {
+                    const box = card.getBoundingClientRect();
+                    card.style.setProperty("--glow-x", `${event.clientX - box.left}px`);
+                    card.style.setProperty("--glow-y", `${event.clientY - box.top}px`);
+                });
+            });
         }
 
         function renderProjects() {
