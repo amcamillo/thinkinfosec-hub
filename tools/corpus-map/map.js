@@ -3,18 +3,20 @@
   const tax = data.taxonomy;
   const allItems = data.corpus.items;
   const domainById = Object.fromEntries(tax.techDomains.map((d) => [d.id, d]));
-  const COLORS = { people: "#FF2D78", process: "#00BFCF", technology: "#0D1F3C", core: "#0D1F3C" };
+  const STROKE = { people: "#d97a9a", process: "#6bb8bf", technology: "#7a8ba0", core: "#9aa8b8" };
+  const FILL = { people: "#fbe7ee", process: "#e4f6f7", technology: "#e7edf3", core: "#ffffff", item: "#ffffff" };
   const SIZE = {
-    core: { w: 140, h: 100 },
-    pillar: { w: 150, h: 50 },
-    theme: { w: 158, h: 48 },
-    domain: { w: 128, h: 44 },
-    item: { w: 170, h: 46 }
+    core: { w: 148, h: 104 },
+    pillar: { w: 156, h: 52 },
+    theme: { w: 168, h: 52 },
+    domain: { w: 140, h: 48 },
+    item: { w: 176, h: 50 }
   };
-  const GAP_X = 18;
-  const ROW_H = 112;
-  const TOP = 36;
+  const GAP_X = 12;
+  const GAP_Y = 22;
+  const PAD = 28;
   const LOGO = "../../assets/thinkinfosec-logo.png";
+  const MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 380;
 
   const state = {
     search: "",
@@ -25,15 +27,14 @@
     techCats: new Set(),
     expanded: new Set(["people", "process", "technology"]),
     selected: { type: "core" },
-    pan: { x: 0, y: 0, k: 1 },
-    dragging: false,
-    last: null,
     filtersOpen: false
   };
 
+  const prevPos = new Map();
+  let anim = null;
+
   const svg = document.getElementById("map");
   const wrap = document.getElementById("canvasWrap");
-  const filtersEl = document.getElementById("filters");
   const detailEl = document.getElementById("detail");
   const filterToggle = document.getElementById("filterToggle");
 
@@ -90,47 +91,8 @@
     return `<button type="button" class="chip ${cls || ""}" data-group="${group}" data-value="${value}" aria-pressed="${pressed}">${label}</button>`;
   }
 
-  function updateFilterToggle() {
-    const n = activeFilterCount();
-    filterToggle.textContent = n ? `Filters (${n})` : "Filters";
-    filterToggle.setAttribute("aria-expanded", state.filtersOpen ? "true" : "false");
-    filterToggle.classList.toggle("has-filters", n > 0);
-    filtersEl.classList.toggle("open", state.filtersOpen);
-  }
-
-  function renderFilters() {
-    const usedCats = [...new Set(allItems.flatMap((i) => (i.tech || []).map((id) => domainById[id]?.category).filter(Boolean)))];
-    filtersEl.innerHTML = `
-      <input type="search" id="q" placeholder="Search artefacts" value="${state.search.replace(/"/g, "&quot;")}" aria-label="Search artefacts">
-      ${["tool", "research", "learn", "writing"].map((k) => chip("kinds", k, k, "")).join("")}
-      ${["hub", "elsewhere", "source", "youtube", "medium"].map((k) => chip("origins", k, k, "")).join("")}
-      ${tax.people.map((t) => chip("people", t.id, t.label, "people")).join("")}
-      ${tax.processes.map((t) => chip("processes", t.id, t.label, "process")).join("")}
-      ${usedCats.map((c) => chip("techCats", c, c, "tech")).join("")}
-      <button type="button" class="chip" id="clear">Clear filters</button>
-      <div class="legend">
-        <span><i class="swatch" style="background:var(--people)"></i>People</span>
-        <span><i class="swatch" style="background:var(--process)"></i>Processes</span>
-        <span><i class="swatch" style="background:var(--tech)"></i>Technology</span>
-      </div>
-    `;
-    updateFilterToggle();
-    filtersEl.querySelector("#q").addEventListener("input", (e) => {
-      state.search = e.target.value;
-      updateFilterToggle();
-      draw();
-    });
-    filtersEl.querySelector("#clear").addEventListener("click", () => {
-      state.kinds.clear();
-      state.origins.clear();
-      state.people.clear();
-      state.processes.clear();
-      state.techCats.clear();
-      state.search = "";
-      renderFilters();
-      draw();
-    });
-    filtersEl.querySelectorAll("button.chip[data-group]").forEach((btn) => {
+  function bindChips(root) {
+    root.querySelectorAll("button.chip[data-group]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const group = btn.getAttribute("data-group");
         const value = btn.getAttribute("data-value");
@@ -140,6 +102,27 @@
         draw();
       });
     });
+  }
+
+  function updateFilterToggle() {
+    const n = activeFilterCount();
+    filterToggle.textContent = n ? `Filters (${n})` : "Filters";
+    filterToggle.setAttribute("aria-expanded", state.filtersOpen ? "true" : "false");
+    filterToggle.classList.toggle("has-filters", n > 0);
+    document.getElementById("filters").classList.toggle("open", state.filtersOpen);
+  }
+
+  function renderFilters() {
+    const usedCats = [...new Set(allItems.flatMap((i) => (i.tech || []).map((id) => domainById[id]?.category).filter(Boolean)))];
+    document.getElementById("filter-kind").innerHTML = ["tool", "research", "learn", "writing"].map((k) => chip("kinds", k, k, "")).join("");
+    document.getElementById("filter-origin").innerHTML = ["hub", "elsewhere", "source", "youtube", "medium"].map((k) => chip("origins", k, k, "")).join("");
+    document.getElementById("filter-people").innerHTML = tax.people.map((t) => chip("people", t.id, t.label, "people")).join("");
+    document.getElementById("filter-processes").innerHTML = tax.processes.map((t) => chip("processes", t.id, t.label, "process")).join("");
+    document.getElementById("filter-tech").innerHTML = usedCats.map((c) => chip("techCats", c, c, "tech")).join("");
+    const q = document.getElementById("q");
+    q.value = state.search;
+    updateFilterToggle();
+    bindChips(document.getElementById("filters"));
   }
 
   function node(partial) {
@@ -152,14 +135,14 @@
       id: "core",
       type: "core",
       label: "ThinkInfoSec",
-      color: COLORS.core,
+      colorKey: "core",
       count: items.length
     });
 
     const pillars = [
-      { id: "people", label: "People", color: COLORS.people, list: items.filter((i) => (i.people || []).length) },
-      { id: "process", label: "Processes", color: COLORS.process, list: items.filter((i) => (i.processes || []).length) },
-      { id: "technology", label: "Technology", color: COLORS.tech, list: items.filter((i) => (i.tech || []).length) }
+      { id: "people", label: "People", colorKey: "people", list: items.filter((i) => (i.people || []).length) },
+      { id: "process", label: "Processes", colorKey: "process", list: items.filter((i) => (i.processes || []).length) },
+      { id: "technology", label: "Technology", colorKey: "technology", list: items.filter((i) => (i.tech || []).length) }
     ];
 
     pillars.forEach((p) => {
@@ -168,7 +151,7 @@
         type: "pillar",
         pillar: p.id,
         label: p.label,
-        color: p.color,
+        colorKey: p.colorKey,
         count: p.list.length,
         items: p.list
       });
@@ -184,12 +167,12 @@
             type: "theme",
             pillar: "people",
             label: t.label,
-            color: p.color,
+            colorKey: p.colorKey,
             count: list.length,
             items: list
           });
           pillar.children.push(theme);
-          if (state.expanded.has(theme.id)) addItemChildren(theme, list, p.color);
+          if (state.expanded.has(theme.id)) addItemChildren(theme, list, p.colorKey);
         });
       }
 
@@ -202,12 +185,12 @@
             type: "theme",
             pillar: "process",
             label: t.label,
-            color: p.color,
+            colorKey: p.colorKey,
             count: list.length,
             items: list
           });
           pillar.children.push(theme);
-          if (state.expanded.has(theme.id)) addItemChildren(theme, list, p.color);
+          if (state.expanded.has(theme.id)) addItemChildren(theme, list, p.colorKey);
         });
       }
 
@@ -221,7 +204,7 @@
             type: "theme",
             pillar: "technology",
             label: cat,
-            color: p.color,
+            colorKey: p.colorKey,
             count: list.length,
             items: list
           });
@@ -235,13 +218,12 @@
               type: "domain",
               pillar: "technology",
               label: d.acronym,
-              sub: d.name,
-              color: p.color,
+              colorKey: p.colorKey,
               count: dlist.length,
               items: dlist
             });
             theme.children.push(domain);
-            if (state.expanded.has(domain.id)) addItemChildren(domain, dlist, p.color);
+            if (state.expanded.has(domain.id)) addItemChildren(domain, dlist, p.colorKey);
           });
         });
       }
@@ -250,51 +232,67 @@
     return root;
   }
 
-  function addItemChildren(parent, list, color) {
+  function addItemChildren(parent, list, colorKey) {
     uniqueItems(list).forEach((item) => {
       parent.children.push(node({
         id: parent.id + ":item:" + item.id,
         type: "item",
         label: item.title,
         item,
-        color,
+        colorKey,
         count: 0
       }));
     });
   }
 
-  function measure(n) {
-    if (!n.children.length) {
-      n.subtreeW = n.w;
-      return;
-    }
-    n.children.forEach(measure);
-    const kids = n.children.reduce((s, c) => s + c.subtreeW, 0) + GAP_X * (n.children.length - 1);
-    n.subtreeW = Math.max(n.w, kids);
+  function colCount(maxW, tileW) {
+    return Math.max(1, Math.floor((maxW + GAP_X) / (tileW + GAP_X)));
   }
 
-  function childrenSpan(n) {
-    return n.children.reduce((s, c) => s + c.subtreeW, 0) + GAP_X * (n.children.length - 1);
+  function layout(n, x, y, maxW) {
+    n.x = x + maxW / 2;
+    n.y = y + n.h / 2;
+
+    if (!n.children.length) {
+      n.blockH = n.h;
+      return n.blockH;
+    }
+
+    const tileW = Math.max(...n.children.map((c) => c.w));
+    const cols = Math.min(n.children.length, colCount(maxW, tileW));
+    const colW = cols === 1 ? maxW : (maxW - GAP_X * (cols - 1)) / cols;
+
+    n.children.forEach((c) => layout(c, 0, 0, colW));
+
+    let cursorY = y + n.h + GAP_Y;
+    for (let i = 0; i < n.children.length; i += cols) {
+      const row = n.children.slice(i, i + cols);
+      const rowH = Math.max(...row.map((c) => c.blockH));
+      const rowWidth = row.length * colW + GAP_X * (row.length - 1);
+      const rowLeft = x + (maxW - rowWidth) / 2;
+      row.forEach((c, j) => {
+        const ox = rowLeft + j * (colW + GAP_X);
+        walk(c, (node) => {
+          node.x += ox;
+          node.y += cursorY;
+        });
+      });
+      cursorY += rowH + GAP_Y;
+    }
+
+    n.blockH = cursorY - GAP_Y - y;
+    return n.blockH;
   }
 
-  function place(n, left, depth) {
-    n.y = TOP + depth * ROW_H;
-    if (!n.children.length) {
-      n.x = left + n.subtreeW / 2;
-      return;
-    }
-    let childLeft = left + (n.subtreeW - childrenSpan(n)) / 2;
-    n.children.forEach((c) => {
-      place(c, childLeft, depth + 1);
-      childLeft += c.subtreeW + GAP_X;
-    });
-    n.x = (n.children[0].x + n.children[n.children.length - 1].x) / 2;
+  function walk(n, fn) {
+    fn(n);
+    n.children.forEach((c) => walk(c, fn));
   }
 
   function flatten(n, nodes, links) {
     nodes.push(n);
     n.children.forEach((c) => {
-      links.push({ from: n, to: c, color: c.color || n.color });
+      links.push({ from: n, to: c });
       flatten(c, nodes, links);
     });
   }
@@ -324,67 +322,47 @@
     return `M ${x1} ${y1} L ${x1} ${mid} L ${x2} ${mid} L ${x2} ${y2}`;
   }
 
-  function textFill(n) {
-    if (n.type === "item") return "#172B4D";
-    if (n.type === "core") return "#0D1F3C";
-    if (n.pillar === "technology" || n.type === "pillar" && n.id === "technology") return "#fff";
-    if (n.pillar === "process" || n.id === "process") return "#0D1F3C";
-    if (n.pillar === "people" || n.id === "people") return "#fff";
-    return "#0D1F3C";
+  function easeOut(t) {
+    return 1 - Math.pow(1 - t, 3);
   }
 
-  function draw() {
-    const items = visibleItems();
-    const root = buildTree(items);
-    measure(root);
-    place(root, 0, 0);
-    const nodes = [];
-    const links = [];
-    flatten(root, nodes, links);
-
-    const pad = 48;
-    const minX = Math.min(...nodes.map((n) => n.x - n.w / 2));
-    const maxX = Math.max(...nodes.map((n) => n.x + n.w / 2));
-    const minY = Math.min(...nodes.map((n) => n.y - n.h / 2));
-    const maxY = Math.max(...nodes.map((n) => n.y + n.h / 2));
-    const vbW = Math.max(maxX - minX + pad * 2, wrap.clientWidth || 800);
-    const vbH = Math.max(maxY - minY + pad * 2, wrap.clientHeight || 600);
-    const ox = pad - minX + (vbW - (maxX - minX + pad * 2)) / 2;
-    nodes.forEach((n) => {
-      n.x += ox;
-      n.y += pad - minY;
-    });
-
-    const linkMarkup = links.map((l) =>
-      `<path d="${elbow(l.from, l.to)}" fill="none" stroke="${l.color}" stroke-opacity="0.4" stroke-width="2"/>`
-    ).join("");
+  function paint(nodes, links, display, vbW, vbH) {
+    const byId = Object.fromEntries(nodes.map((n) => [n.id, n]));
+    const linkMarkup = links.map((l, i) => {
+      const a = { x: display[l.from.id].x, y: display[l.from.id].y, h: l.from.h };
+      const b = { x: display[l.to.id].x, y: display[l.to.id].y, h: l.to.h };
+      return `<path class="link" data-i="${i}" d="${elbow(a, b)}" fill="none" stroke="${STROKE[l.to.colorKey]}" stroke-opacity="0.45" stroke-width="1.5"/>`;
+    }).join("");
 
     const nodeMarkup = nodes.map((n) => {
+      const p = display[n.id];
       const hw = n.w / 2;
       const hh = n.h / 2;
-      const rx = 10;
-      const fill = n.type === "item" || n.type === "core" ? "#fff" : n.color;
-      const stroke = n.color;
-      const shape = `<rect x="${-hw}" y="${-hh}" width="${n.w}" height="${n.h}" rx="${rx}" ry="${rx}" fill="${fill}" stroke="${stroke}" stroke-width="2"/>`;
+      const fill = n.type === "item" || n.type === "core" ? FILL.item : FILL[n.colorKey];
+      const stroke = STROKE[n.colorKey];
+      const shape = `<rect x="${-hw}" y="${-hh}" width="${n.w}" height="${n.h}" rx="10" ry="10" fill="${fill}" stroke="${stroke}" stroke-width="1.25"/>`;
       let inner = shape;
       if (n.type === "core") {
         inner = `${shape}
-          <image href="${LOGO}" x="${-28}" y="${-42}" width="56" height="56" preserveAspectRatio="xMidYMid meet"/>
-          <text text-anchor="middle" y="32" fill="#0D1F3C" font-size="12" font-weight="700">ThinkInfoSec</text>`;
+          <image href="${LOGO}" x="-28" y="-42" width="56" height="56" preserveAspectRatio="xMidYMid meet"/>
+          <text text-anchor="middle" y="34" fill="#172B4D" font-size="12" font-weight="700">ThinkInfoSec</text>`;
       } else {
         const lines = wrapLabel(n.label, n.type === "item" ? 18 : 16);
         const text = lines.map((line, i) => {
-          const y = (i - (lines.length - 1) / 2) * 12 - (n.count ? 4 : 0);
-          return `<text text-anchor="middle" y="${y}" fill="${textFill(n)}" font-size="11" font-weight="650">${escapeXml(line)}</text>`;
+          const y = (i - (lines.length - 1) / 2) * 12 - (n.count ? 5 : 0);
+          return `<text text-anchor="middle" y="${y}" fill="#172B4D" font-size="11" font-weight="600">${escapeXml(line)}</text>`;
         }).join("");
-        const count = n.count ? `<text text-anchor="middle" y="${hh - 10}" fill="${textFill(n)}" font-size="10" opacity="0.8">${n.count}</text>` : "";
+        const count = n.count ? `<text text-anchor="middle" y="${hh - 10}" fill="#6B778C" font-size="10">${n.count}</text>` : "";
         inner = `${shape}${text}${count}`;
       }
-      return `<g class="node" data-id="${escapeXml(n.id)}" data-type="${n.type}" transform="translate(${n.x},${n.y})" style="cursor:pointer">${inner}</g>`;
+      const opacity = p.opacity;
+      return `<g class="node" data-id="${escapeXml(n.id)}" transform="translate(${p.x},${p.y})" opacity="${opacity}" style="cursor:pointer">${inner}</g>`;
     }).join("");
 
     svg.setAttribute("viewBox", `0 0 ${vbW} ${vbH}`);
-    svg.innerHTML = `<g id="viewport" transform="translate(${state.pan.x},${state.pan.y}) scale(${state.pan.k})">${linkMarkup}${nodeMarkup}</g>`;
+    svg.setAttribute("width", String(vbW));
+    svg.setAttribute("height", String(vbH));
+    svg.innerHTML = `${linkMarkup}${nodeMarkup}`;
 
     svg.querySelectorAll("g.node").forEach((g) => {
       g.addEventListener("click", (e) => {
@@ -392,7 +370,58 @@
         onNodeClick(g.getAttribute("data-id"), nodes);
       });
     });
+  }
 
+  function draw() {
+    const items = visibleItems();
+    const root = buildTree(items);
+    const canvasW = Math.max(320, wrap.clientWidth || 800);
+    const maxW = canvasW - PAD * 2;
+    layout(root, PAD, PAD, maxW);
+    const nodes = [];
+    const links = [];
+    flatten(root, nodes, links);
+    const maxY = Math.max(...nodes.map((n) => n.y + n.h / 2));
+    const vbW = canvasW;
+    const vbH = Math.max(maxY + PAD, wrap.clientHeight || 480);
+
+    const from = {};
+    const to = {};
+    nodes.forEach((n) => {
+      to[n.id] = { x: n.x, y: n.y, opacity: 1 };
+      const prev = prevPos.get(n.id);
+      from[n.id] = prev ? { x: prev.x, y: prev.y, opacity: 1 } : { x: n.x, y: n.y - 18, opacity: 0 };
+    });
+
+    if (anim) cancelAnimationFrame(anim.frame);
+    const start = performance.now();
+
+    function frame(now) {
+      const t = MOTION ? Math.min(1, (now - start) / MOTION) : 1;
+      const u = easeOut(t);
+      const display = {};
+      nodes.forEach((n) => {
+        const a = from[n.id];
+        const b = to[n.id];
+        display[n.id] = {
+          x: a.x + (b.x - a.x) * u,
+          y: a.y + (b.y - a.y) * u,
+          opacity: a.opacity + (b.opacity - a.opacity) * u
+        };
+      });
+      paint(nodes, links, display, vbW, vbH);
+      if (t < 1) {
+        anim = { frame: requestAnimationFrame(frame) };
+      } else {
+        anim = null;
+        nodes.forEach((n) => prevPos.set(n.id, { x: n.x, y: n.y }));
+        [...prevPos.keys()].forEach((id) => {
+          if (!to[id]) prevPos.delete(id);
+        });
+      }
+    }
+
+    frame(performance.now());
     renderDetail(items);
   }
 
@@ -416,7 +445,7 @@
   function renderDetail(items) {
     const sel = state.selected;
     let title = "ThinkInfoSec";
-    let meta = `${items.length} artefacts in the current filter. Expand a row to open the layer beneath.`;
+    let meta = `${items.length} artefacts in the current filter. Expand a tile to open the layer beneath.`;
     let body = "";
     let list = items;
 
@@ -450,44 +479,28 @@
     detailEl.innerHTML = `<h2>${escapeXml(title)}</h2><p class="meta">${escapeXml(meta)}</p>${body}<div class="list" id="list">${listHtml || "<p class='meta'>Nothing matches these tags.</p>"}</div>`;
   }
 
-  function setupPanZoom() {
-    wrap.addEventListener("wheel", (e) => {
-      e.preventDefault();
-      const factor = e.deltaY < 0 ? 1.08 : 0.92;
-      state.pan.k = Math.min(2.4, Math.max(0.45, state.pan.k * factor));
-      const vp = svg.querySelector("#viewport");
-      if (vp) vp.setAttribute("transform", `translate(${state.pan.x},${state.pan.y}) scale(${state.pan.k})`);
-    }, { passive: false });
-
-    wrap.addEventListener("pointerdown", (e) => {
-      if (e.target.closest("g.node")) return;
-      state.dragging = true;
-      wrap.classList.add("dragging");
-      state.last = { x: e.clientX, y: e.clientY };
-      wrap.setPointerCapture(e.pointerId);
-    });
-    wrap.addEventListener("pointermove", (e) => {
-      if (!state.dragging || !state.last) return;
-      state.pan.x += e.clientX - state.last.x;
-      state.pan.y += e.clientY - state.last.y;
-      state.last = { x: e.clientX, y: e.clientY };
-      const vp = svg.querySelector("#viewport");
-      if (vp) vp.setAttribute("transform", `translate(${state.pan.x},${state.pan.y}) scale(${state.pan.k})`);
-    });
-    wrap.addEventListener("pointerup", () => {
-      state.dragging = false;
-      state.last = null;
-      wrap.classList.remove("dragging");
-    });
-  }
-
   filterToggle.addEventListener("click", () => {
     state.filtersOpen = !state.filtersOpen;
     updateFilterToggle();
   });
 
+  document.getElementById("q").addEventListener("input", (e) => {
+    state.search = e.target.value;
+    updateFilterToggle();
+    draw();
+  });
+  document.getElementById("clear").addEventListener("click", () => {
+    state.kinds.clear();
+    state.origins.clear();
+    state.people.clear();
+    state.processes.clear();
+    state.techCats.clear();
+    state.search = "";
+    renderFilters();
+    draw();
+  });
+
   window.addEventListener("resize", () => draw());
   renderFilters();
-  setupPanZoom();
   draw();
 })();
