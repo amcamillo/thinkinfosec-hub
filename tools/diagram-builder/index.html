@@ -671,11 +671,20 @@ function renderTelemetry(){
   const on=srcs.filter(s=>st[s.id]);
   // Layout metrics
   const W=1440, pad=20, laneLabW=92, laneX=pad+laneLabW, laneW=W-laneX-pad;
+  const insetX=12;                    // horizontal padding inside each lane (left & right)
+  const innerW=laneW-insetX*2;        // usable width for chips inside a lane
   const chipH=34, chipGap=6;
-  const perRow=Math.max(1,Math.floor(laneW/150));
+  // Sources: pick a column count that fits, then derive chip width from innerW.
+  const perRow=Math.max(1,Math.min(on.length,Math.floor((innerW+chipGap)/(140+chipGap))));
   const srcRows=Math.max(1,Math.ceil(on.length/perRow));
-  const srcH=Math.max(64, srcRows*(chipH+chipGap)+26);
-  const pathH=54, pipeH=64, destH=54, outH=64;
+  const srcH=Math.max(64, 22 + srcRows*chipH + (srcRows-1)*chipGap + 10);
+  const pathH=54, pipeH=64, destH=54;
+  // Outcomes: compute rows from the same innerW so we can size the lane to fit.
+  const oChipH=28, oGap=6, oMinW=150;
+  const oPerRow=Math.max(1,Math.floor((innerW+oGap)/(oMinW+oGap)));
+  const onOutcomeCount=[...new Set(on.flatMap(s=>s.outcomes))].length;
+  const oRows=Math.max(1,Math.ceil(onOutcomeCount/oPerRow));
+  const outH=Math.max(56, 22 + oRows*oChipH + (oRows-1)*oGap + 10);
   const laneGap=34; // room for arrows
   const H = pad*2 + srcH + pathH + pipeH + destH + outH + laneGap*4;
   svg.innerHTML='';
@@ -707,10 +716,10 @@ function renderTelemetry(){
   // ── SOURCES lane ──
   lane(ySrc,srcH,'Sources','#0D1F3C','#FAFBFC');
   const pos={};
+  const cw=(innerW-(perRow-1)*chipGap)/perRow;
   on.forEach((s,i)=>{
     const col=i%perRow,row=Math.floor(i/perRow);
-    const cw=(laneW-20-(perRow-1)*chipGap)/perRow;
-    const x=laneX+10+col*(cw+chipGap), cy=ySrc+22+row*(chipH+chipGap);
+    const x=laneX+insetX+col*(cw+chipGap), cy=ySrc+22+row*(chipH+chipGap);
     pos[s.id]={x,y:cy,w:cw,h:chipH};
   });
   // ── PATH lane ──
@@ -722,10 +731,13 @@ function renderTelemetry(){
   const pathPos={};
   const pathNodeW=150, pathNodeH=30;
   const nPathNodes=activePathIds.length;
-  const pathSpacing=(laneW-20-nPathNodes*pathNodeW)/Math.max(1,nPathNodes-1||1);
+  // Fit within innerW: shrink node width if needed, then distribute evenly.
+  const pw=Math.min(pathNodeW,(innerW-(nPathNodes-1)*12)/nPathNodes);
+  const pathSpan=nPathNodes*pw+(nPathNodes-1)*12;
+  const pathX0=laneX+insetX+Math.max(0,(innerW-pathSpan)/2);
   activePathIds.forEach((p,i)=>{
-    const x=nPathNodes===1?laneX+laneW/2-pathNodeW/2:laneX+10+i*(pathNodeW+Math.max(0,pathSpacing));
-    pathPos[p]={x,y:yPath+12,w:pathNodeW,h:pathNodeH};
+    const x=pathX0+i*(pw+12);
+    pathPos[p]={x,y:yPath+12,w:pw,h:pathNodeH};
   });
   // ── PIPELINE lane ──
   lane(yPipe,pipeH,'Pipeline','#00BFCF','rgba(0,191,207,0.05)');
@@ -783,11 +795,10 @@ function renderTelemetry(){
   // destination → outcomes
   const onOutcomeIds=[...new Set(on.flatMap(s=>s.outcomes))];
   const outPos={};
-  const oChipW=180, oChipH=28, oGap=6;
-  const oPerRow=Math.max(1,Math.floor(laneW/(oChipW+oGap)));
+  const oChipW=(innerW-(oPerRow-1)*oGap)/oPerRow;
   onOutcomeIds.forEach((oid,i)=>{
     const col=i%oPerRow,row=Math.floor(i/oPerRow);
-    const x=laneX+10+col*(oChipW+oGap), cy=yOut+22+row*(oChipH+oGap);
+    const x=laneX+insetX+col*(oChipW+oGap), cy=yOut+22+row*(oChipH+oGap);
     outPos[oid]={x,y:cy,w:oChipW,h:oChipH};
   });
   const dx=destPos.x+destPos.w/2, ddy=destPos.y+destPos.h;
