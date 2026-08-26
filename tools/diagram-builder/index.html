@@ -3,104 +3,139 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CrowdStrike Architecture Diagram Builder — ThinkInfoSec</title>
+<title>Architecture Diagram Builder — ThinkInfoSec Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* ── ThinkInfoSec design tokens (single source of truth) ── */
 :root {
-  --navy: #0a1628; --navy-mid: #111d33; --teal: #00d4aa; --teal-dim: #00b894;
-  --pink: #ff3e7f; --amber: #ffa502; --purple: #7c5cff; --light-bg: #f0f2f5;
-  --card-bg: #ffffff; --text-primary: #0a1628; --text-secondary: #4a5568;
-  --text-muted: #718096; --border: #e2e8f0;
-  --mono: 'Space Mono', monospace; --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --accent:#00BFCF; --accent-strong:#0D1F3C; --accent-soft:rgba(0,191,207,0.14);
+  --navy:#0D1F3C;
+  --bg:#E9ECF1; --surface:#FFFFFF; --surface-2:#F4F5F7; --border:#DFE1E6;
+  --text:#172B4D; --text-secondary:#4a5568; --text-muted:#6B778C;
+  /* semantic diagram roles */
+  --native:#00BFCF; --hybrid:#FF8B00; --partner:#7C3AED; --services:#FF2D78;
+  --ghost:#9aa4b2;
+  --mono:'Space Mono', monospace; --sans:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --teal:var(--accent);
+}
+:root[data-theme="dark"] {
+  --accent:#00BFCF; --accent-strong:#5ee0ea; --accent-soft:rgba(0,191,207,0.16);
+  --bg:#0D1F3C; --surface:#112240; --surface-2:#0D1F3C; --border:#1A3358;
+  --text:#E9ECF1; --text-secondary:#aebdd0; --text-muted:#8BA0B8;
+  --native:#00BFCF; --hybrid:#FFAB4A; --partner:#a78bfa; --services:#ff6b9d;
+  --ghost:#5a6b82;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:var(--sans); background:var(--light-bg); color:var(--text-primary); }
+body { font-family:var(--sans); background:var(--bg); color:var(--text); transition:background .2s ease,color .2s ease; }
+::selection { background:var(--accent-soft); }
+
+/* ── Shell: header ── */
 .header {
-  background: linear-gradient(135deg, var(--navy), var(--navy-mid));
-  color:#fff; padding:0.8rem 1.5rem; display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;
+  background:var(--surface); color:var(--text);
+  border-bottom:1px solid var(--border);
+  padding:0.7rem 1.25rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap;
 }
-.header-brand { font-family:var(--mono); font-size:0.65rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--teal); text-decoration:none; }
-.header-brand:hover { color:#fff; }
-.header h1 { font-family:var(--mono); font-size:0.95rem; font-weight:700; }
-.header h1 span { color:var(--teal); }
-.template-tabs { display:flex; gap:0.3rem; margin-left:auto; }
+.header-brand { display:flex; align-items:center; gap:0.6rem; text-decoration:none; color:inherit; }
+.header-brand img { width:30px; height:30px; border-radius:50%; object-fit:cover; box-shadow:0 0 0 1px var(--border); }
+.header-brand .brand-name { font-family:var(--mono); font-size:0.62rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--accent-strong); }
+.header-brand:hover .brand-name { color:var(--accent); }
+.header h1 { font-family:var(--mono); font-size:0.95rem; font-weight:700; letter-spacing:0.01em; }
+.header h1 span { color:var(--accent); }
+.header .spacer { margin-left:auto; display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap; }
+.template-tabs { display:flex; gap:0.3rem; }
 .template-tab {
   font-family:var(--mono); font-size:0.58rem; letter-spacing:0.04em; padding:0.35rem 0.65rem;
-  border:1px solid rgba(255,255,255,0.15); border-radius:3px; background:transparent;
-  color:rgba(255,255,255,0.6); cursor:pointer; transition:all 0.15s; text-transform:uppercase;
+  border:1px solid var(--border); border-radius:6px; background:var(--surface);
+  color:var(--text-muted); cursor:pointer; transition:all 0.15s; text-transform:uppercase;
 }
-.template-tab:hover { border-color:rgba(255,255,255,0.4); color:#fff; }
-.template-tab.active { background:var(--teal); color:var(--navy); border-color:var(--teal); font-weight:700; }
-.app { display:flex; height:calc(100vh - 50px); }
+.template-tab:hover { border-color:var(--accent); color:var(--text); }
+.template-tab.active { background:var(--accent); color:#0D1F3C; border-color:var(--accent); font-weight:700; }
+.theme-toggle {
+  display:inline-flex; align-items:center; gap:0.4rem; font-family:var(--mono); font-size:0.58rem;
+  letter-spacing:0.06em; text-transform:uppercase; padding:0.35rem 0.6rem; border-radius:6px;
+  border:1px solid var(--border); background:var(--surface); color:var(--text-muted); cursor:pointer; transition:all .15s;
+}
+.theme-toggle:hover { border-color:var(--accent); color:var(--text); }
+.theme-toggle .swatch { width:11px; height:11px; border-radius:50%; background:linear-gradient(135deg,var(--accent) 50%,var(--accent-strong) 50%); box-shadow:0 0 0 1px var(--border); }
+
+.app { display:flex; height:calc(100vh - 53px); }
 .sidebar {
-  width:260px; min-width:260px; background:var(--card-bg); border-right:1px solid var(--border);
-  overflow-y:auto; padding:0.6rem; flex-shrink:0;
+  width:264px; min-width:264px; background:var(--surface-2); border-right:1px solid var(--border);
+  overflow-y:auto; padding:0.7rem; flex-shrink:0;
 }
-.sidebar-section { margin-bottom:0.8rem; }
+.sidebar-section { margin-bottom:0.85rem; }
 .sidebar-section-title {
   font-family:var(--mono); font-size:0.55rem; text-transform:uppercase; letter-spacing:0.1em;
-  color:var(--text-muted); margin-bottom:0.3rem; padding-bottom:0.25rem; border-bottom:1px solid var(--border);
+  color:var(--text-muted); margin-bottom:0.35rem; padding-bottom:0.25rem; border-bottom:1px solid var(--border);
 }
 .template-desc { font-size:0.68rem; color:var(--text-secondary); line-height:1.45; margin-bottom:0.6rem; }
 .block-toggle {
-  display:flex; align-items:center; gap:0.35rem; padding:0.18rem 0; cursor:pointer; user-select:none;
+  display:flex; align-items:center; gap:0.4rem; padding:0.2rem 0; cursor:pointer; user-select:none;
 }
-.block-toggle:hover { opacity:0.8; }
-.block-toggle input[type="checkbox"] { accent-color:var(--teal); width:12px; height:12px; cursor:pointer; }
-.block-toggle-label { font-size:0.64rem; color:var(--text-primary); line-height:1.15; }
-.block-toggle-sub { font-size:0.52rem; color:var(--text-muted); font-family:var(--mono); }
-.block-toggle .cov-dot { width:6px; height:6px; border-radius:2px; flex-shrink:0; }
-.zone-group { margin-bottom:0.5rem; }
-.zone-group-title { font-size:0.56rem; font-weight:600; color:var(--navy); margin-bottom:0.15rem; text-transform:uppercase; letter-spacing:0.04em; }
+.block-toggle:hover { opacity:0.85; }
+.block-toggle input[type="checkbox"] { accent-color:var(--accent); width:13px; height:13px; cursor:pointer; }
+.block-toggle-label { font-size:0.65rem; color:var(--text); line-height:1.2; }
+.block-toggle-sub { font-size:0.53rem; color:var(--text-muted); font-family:var(--mono); }
+.block-toggle .cov-dot { width:7px; height:7px; border-radius:2px; flex-shrink:0; }
+.zone-group { margin-bottom:0.55rem; }
+.zone-group-title { font-size:0.57rem; font-weight:600; color:var(--accent-strong); margin-bottom:0.2rem; text-transform:uppercase; letter-spacing:0.04em; }
 .canvas-area { flex:1; display:flex; flex-direction:column; overflow:hidden; }
 .canvas-wrapper {
-  flex:1; overflow:auto; display:flex; align-items:center; justify-content:center; padding:0.8rem;
-  background: repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(0,0,0,0.012) 19px,rgba(0,0,0,0.012) 20px),
-    repeating-linear-gradient(90deg,transparent,transparent 19px,rgba(0,0,0,0.012) 19px,rgba(0,0,0,0.012) 20px);
+  flex:1; overflow:auto; display:flex; align-items:center; justify-content:center; padding:0.9rem;
+  background: repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(120,130,150,0.04) 19px,rgba(120,130,150,0.04) 20px),
+    repeating-linear-gradient(90deg,transparent,transparent 19px,rgba(120,130,150,0.04) 19px,rgba(120,130,150,0.04) 20px);
 }
-#diagramSvg { background:#fff; border-radius:6px; box-shadow:0 2px 10px rgba(10,22,40,0.07); max-width:100%; height:auto; }
+#diagramSvg { background:var(--surface); border:1px solid var(--border); border-radius:8px; box-shadow:0 2px 10px rgba(13,31,60,0.08); max-width:100%; height:auto; }
 .export-bar {
-  background:var(--card-bg); border-top:1px solid var(--border); padding:0.4rem 1.5rem;
-  display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;
+  background:var(--surface); border-top:1px solid var(--border); padding:0.45rem 1.25rem;
+  display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;
 }
 .export-bar-label { font-family:var(--mono); font-size:0.55rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-right:0.3rem; }
 .export-btn {
-  font-family:var(--mono); font-size:0.55rem; letter-spacing:0.04em; padding:0.3rem 0.6rem;
-  border:1px solid var(--border); border-radius:3px; background:var(--card-bg); color:var(--text-secondary); cursor:pointer; transition:all 0.15s;
+  font-family:var(--mono); font-size:0.56rem; letter-spacing:0.04em; padding:0.32rem 0.65rem;
+  border:1px solid var(--border); border-radius:6px; background:var(--surface); color:var(--text-secondary); cursor:pointer; transition:all 0.15s;
 }
-.export-btn:hover { border-color:var(--navy); color:var(--navy); }
-.export-btn.primary { background:var(--navy); color:#fff; border-color:var(--navy); }
-.export-btn.primary:hover { background:var(--teal); color:var(--navy); border-color:var(--teal); }
-.modal-overlay { display:none; position:fixed; inset:0; background:rgba(10,22,40,0.6); z-index:100; align-items:center; justify-content:center; }
+.export-btn:hover { border-color:var(--accent-strong); color:var(--accent-strong); }
+.export-btn.primary { background:var(--accent-strong); color:#fff; border-color:var(--accent-strong); }
+.export-btn.primary:hover { background:var(--accent); color:#0D1F3C; border-color:var(--accent); }
+.export-btn.active { background:var(--accent); color:#0D1F3C; border-color:var(--accent); font-weight:700; }
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(13,31,60,0.6); z-index:100; align-items:center; justify-content:center; }
 .modal-overlay.active { display:flex; }
-.modal { background:var(--card-bg); border-radius:8px; padding:1.25rem; width:90%; max-width:700px; max-height:80vh; overflow-y:auto; box-shadow:0 8px 32px rgba(10,22,40,0.2); }
-.modal h3 { font-family:var(--mono); font-size:0.75rem; margin-bottom:0.6rem; color:var(--navy); }
-.modal pre { background:var(--navy); color:var(--teal); padding:0.75rem; border-radius:4px; font-family:var(--mono); font-size:0.65rem; line-height:1.6; overflow-x:auto; white-space:pre-wrap; }
-.modal-actions { display:flex; gap:0.4rem; margin-top:0.75rem; }
+.modal { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.25rem; width:90%; max-width:700px; max-height:80vh; overflow-y:auto; box-shadow:0 8px 32px rgba(13,31,60,0.22); }
+.modal h3 { font-family:var(--mono); font-size:0.75rem; margin-bottom:0.6rem; color:var(--accent-strong); }
+.modal pre { background:var(--navy); color:var(--accent); padding:0.75rem; border-radius:6px; font-family:var(--mono); font-size:0.65rem; line-height:1.6; overflow-x:auto; white-space:pre-wrap; }
+.modal-actions { display:flex; gap:0.45rem; margin-top:0.8rem; }
 .disclaimer {
-  font-size:0.52rem; color:var(--text-muted); line-height:1.4; margin-top:0.5rem;
-  padding:0.4rem; background:#f7f8fa; border-radius:3px; border-left:2px solid var(--amber);
+  font-size:0.53rem; color:var(--text-muted); line-height:1.4; margin-top:0.5rem;
+  padding:0.45rem; background:var(--surface); border-radius:4px; border-left:2px solid var(--hybrid);
 }
 .tooltip {
   display:none; position:fixed; z-index:200; background:var(--navy); color:#fff;
-  padding:8px 12px; border-radius:5px; max-width:260px; pointer-events:none;
-  box-shadow:0 4px 16px rgba(10,22,40,0.35); font-family:var(--sans);
+  padding:8px 12px; border-radius:6px; max-width:300px; pointer-events:none;
+  box-shadow:0 4px 16px rgba(13,31,60,0.35); font-family:var(--sans);
 }
 .tooltip .tip-name { font-size:0.72rem; font-weight:600; margin-bottom:2px; }
-.tooltip .tip-sub { font-family:var(--mono); font-size:0.56rem; color:#94a3b8; margin-bottom:5px; }
-.tooltip .tip-badge { display:inline-block; font-family:var(--mono); font-size:0.5rem; padding:1px 6px; border-radius:2px; font-weight:700; }
+.tooltip .tip-sub { font-family:var(--mono); font-size:0.56rem; color:#9fb2c8; margin-bottom:5px; }
+.tooltip .tip-badge { display:inline-block; font-family:var(--mono); font-size:0.5rem; padding:1px 6px; border-radius:3px; font-weight:700; }
+.tooltip .tip-row { font-size:0.6rem; color:#dbe4ee; margin-top:3px; line-height:1.4; }
 @media (max-width:768px) {
-  .sidebar { width:200px; min-width:200px; }
-  .template-tabs { margin-left:0; }
+  .sidebar { width:210px; min-width:210px; }
+  .header .spacer { margin-left:0; }
 }
 </style>
 </head>
 <body>
 <header class="header">
-  <a class="header-brand" href="../../index.html">▲ ThinkInfoSec Hub</a>
+  <a class="header-brand" href="../../index.html" title="ThinkInfoSec Hub">
+    <img src="../../assets/learning-hub-logo.png" alt="ThinkInfoSec Hub" onerror="this.style.display='none'">
+    <span class="brand-name">ThinkInfoSec</span>
+  </a>
   <h1>Architecture <span>Diagram Builder</span></h1>
-  <div class="template-tabs" id="templateTabs"></div>
+  <div class="spacer">
+    <div class="template-tabs" id="templateTabs"></div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"><span class="swatch"></span><span id="themeLabel">Dark</span></button>
+  </div>
 </header>
 <div class="app">
   <aside class="sidebar" id="sidebar"></aside>
@@ -112,8 +147,13 @@ body { font-family:var(--sans); background:var(--light-bg); color:var(--text-pri
       <button class="export-btn" onclick="exportSVG()">SVG</button>
       <button class="export-btn" onclick="showMermaid()">Mermaid</button>
       <button class="export-btn" onclick="showD2()">D2</button>
+      <span style="width:1px;height:16px;background:var(--border);margin:0 4px"></span>
+      <button class="export-btn" id="viewToggle" onclick="toggleVolumeView()" style="display:none">Volume view</button>
+      <button class="export-btn" onclick="saveConfig()">Save</button>
+      <button class="export-btn" onclick="document.getElementById('loadFile').click()">Load</button>
+      <input type="file" id="loadFile" accept="application/json,.json" style="display:none" onchange="loadConfig(event)">
       <span style="margin-left:auto;font-size:0.52rem;color:var(--text-muted);font-family:var(--mono)">
-        Unofficial CrowdStrike Alliance Landscape — April 2026
+        Unofficial CrowdStrike reference — thinkinfosec.org · April 2026
       </span>
     </div>
   </div>
@@ -129,43 +169,153 @@ body { font-family:var(--sans); background:var(--light-bg); color:var(--text-pri
     </div>
   </div>
 </div>
+<div class="modal-overlay" id="errModal">
+  <div class="modal">
+    <h3>Could not load diagram</h3>
+    <pre id="errModalContent" style="color:#ffb3c6"></pre>
+    <div class="modal-actions">
+      <button class="export-btn primary" onclick="document.getElementById('errModal').classList.remove('active')">Close</button>
+    </div>
+  </div>
+</div>
 <div id="tooltip" class="tooltip"></div>
 <script>
-// ═══════════════════════════════════════
-// CONSTANTS
-// ═══════════════════════════════════════
-const COV = {
-  NATIVE:   {fill:'#e6faf4',stroke:'#00d4aa',accent:'#00d4aa',text:'#00896e'},
-  HYBRID:   {fill:'#fff6e6',stroke:'#ffa502',accent:'#ffa502',text:'#b37300'},
-  PARTNER:  {fill:'#f0ecff',stroke:'#7c5cff',accent:'#7c5cff',text:'#5a3fcc'},
-  SERVICES: {fill:'#ffe8f0',stroke:'#ff3e7f',accent:'#ff3e7f',text:'#c42858'},
+/* ═══════════════════════════════════════════════════════════════════════
+   LAYER 1 — SCHEMA  (extractable, versioned, no DOM)
+   -----------------------------------------------------------------------
+   This section is written as if it were a standalone schema module. It is
+   pure data + pure functions and can be lifted into its own file later
+   with zero changes. Bump SCHEMA_VERSION on any breaking change.
+   ═══════════════════════════════════════════════════════════════════════ */
+const SCHEMA_VERSION = "2.0";
+
+/** Collection paths — HOW telemetry reaches the platform. */
+const PATHS = {
+  'sensor-native': { id:'sensor-native', label:'Sensor-native', via:'direct',   desc:'Falcon sensor on the asset' },
+  'falcon-shield': { id:'falcon-shield', label:'Falcon Shield', via:'direct',   desc:'Native SaaS / SSPM integration' },
+  'connector':     { id:'connector',     label:'Connector',     via:'direct',   desc:'Native NG-SIEM / LogScale connector' },
+  'onum':          { id:'onum',          label:'Via Onum',      via:'onum',     desc:'Falcon Onum pipeline — parse/enrich/route' },
+  'syslog':        { id:'syslog',        label:'Syslog',        via:'onum',     desc:'Syslog collector into Onum/LogScale' },
+  'api-pull':      { id:'api-pull',      label:'API pull',      via:'direct',   desc:'Direct API ingestion' },
 };
-const GHOST = {fill:'none',stroke:'#d1d5db',accent:'#d1d5db',text:'#a0aec0'};
+
+/** Telemetry sources. paths[] lists supported paths; defaultPath is recommended. */
+const SOURCES = [
+  { id:'endpoints',   label:'Endpoints',            category:'endpoint', volume:'high', paths:['sensor-native'],                 defaultPath:'sensor-native', ocsfClasses:['Process Activity','File System Activity','Network Activity'], outcomes:['edr-detect','insight'] },
+  { id:'identity',    label:'Identity (AD / Entra)',category:'identity', volume:'high', paths:['sensor-native'],                 defaultPath:'sensor-native', ocsfClasses:['Authentication','Account Change'], outcomes:['itdr','insight'] },
+  { id:'cloud-work',  label:'Cloud workloads',      category:'cloud',    volume:'med',  paths:['sensor-native'],                 defaultPath:'sensor-native', ocsfClasses:['Process Activity','Network Activity'], outcomes:['cdr','insight'] },
+  { id:'cloudtrail',  label:'AWS CloudTrail',       category:'cloud',    volume:'med',  paths:['api-pull','onum'],               defaultPath:'api-pull',      ocsfClasses:['API Activity'], outcomes:['cdr','cloud-posture'] },
+  { id:'okta',        label:'Okta / IdP logs',      category:'identity', volume:'med',  paths:['api-pull','onum'],               defaultPath:'api-pull',      ocsfClasses:['Authentication','User Access'], outcomes:['itdr'] },
+  { id:'m365',        label:'Microsoft 365',        category:'saas',     volume:'med',  paths:['falcon-shield','connector','onum'], defaultPath:'falcon-shield', ocsfClasses:['Email Activity','File Hosting Activity'], outcomes:['saas-posture','dlp'] },
+  { id:'saas-apps',   label:'SaaS apps (generic)',  category:'saas',     volume:'low',  paths:['falcon-shield'],                 defaultPath:'falcon-shield', ocsfClasses:['Application Lifecycle','Config State'], outcomes:['saas-posture'] },
+  { id:'firewall',    label:'Firewall / Netflow',   category:'network',  volume:'high', paths:['syslog','onum'],                 defaultPath:'onum',          ocsfClasses:['Network Activity'], outcomes:['network-vis'] },
+  { id:'dns',         label:'DNS resolver',         category:'network',  volume:'med',  paths:['syslog','onum'],                 defaultPath:'onum',          ocsfClasses:['DNS Activity'], outcomes:['network-vis'] },
+  { id:'ot',          label:'OT / ICS',             category:'ot',       volume:'low',  paths:['syslog','onum'],                 defaultPath:'onum',          ocsfClasses:['Network Activity'], outcomes:['ot-vis'] },
+];
+
+/** Pipeline stages (Onum). */
+const PIPELINES = [
+  { id:'onum', label:'Falcon Onum', stages:['parse','enrich','filter','route'] },
+];
+
+/** Destinations. */
+const DESTINATIONS = [
+  { id:'ngsiem',    label:'NG-SIEM (LogScale)', kind:'ng-siem' },
+  { id:'datalake',  label:'Data lake',          kind:'data-lake' },
+  { id:'thirdparty',label:'Third-party SIEM',   kind:'third-party-siem' },
+];
+
+/** Outcomes — what the telemetry enables. sources[] references Source ids. */
+const OUTCOMES = [
+  { id:'edr-detect',   label:'Endpoint detection (EDR/XDR)', sources:['endpoints'] },
+  { id:'itdr',         label:'Identity threat detection',    sources:['identity','okta'] },
+  { id:'cdr',          label:'Cloud detection & response',   sources:['cloud-work','cloudtrail'] },
+  { id:'cloud-posture',label:'Cloud posture / API activity', sources:['cloudtrail'] },
+  { id:'saas-posture', label:'SaaS security posture (SSPM)', sources:['m365','saas-apps'] },
+  { id:'dlp',          label:'Data loss prevention',         sources:['m365'] },
+  { id:'network-vis',  label:'Network visibility',           sources:['firewall','dns'] },
+  { id:'ot-vis',       label:'OT visibility',                sources:['ot'] },
+  { id:'insight',      label:'Cross-domain XDR insight',     sources:['endpoints','identity','cloud-work'] },
+];
+
+/** Registry lookup helpers (pure). */
+const REG = {
+  source: id => SOURCES.find(s => s.id === id),
+  path: id => PATHS[id],
+  destination: id => DESTINATIONS.find(d => d.id === id),
+  outcome: id => OUTCOMES.find(o => o.id === id),
+};
+
+/** Resolve the active collection path for a source given user overrides. */
+function resolveActivePath(sourceId, overrides) {
+  const s = REG.source(sourceId); if (!s) return null;
+  const ov = overrides && overrides[sourceId];
+  return (ov && s.paths.includes(ov)) ? ov : s.defaultPath;
+}
+
+/** Validate + normalize a Diagram config. Returns { ok, config?, errors[] }. */
+function normalizeConfig(raw) {
+  const errors = [];
+  if (!raw || typeof raw !== 'object') { return { ok:false, errors:['File is not a JSON object.'] }; }
+  if (raw.version !== SCHEMA_VERSION) errors.push(`Unsupported version "${raw.version}" (expected ${SCHEMA_VERSION}).`);
+  const cfg = {
+    version: SCHEMA_VERSION,
+    template: typeof raw.template === 'string' ? raw.template : 'telemetry-ingest',
+    nodes: Array.isArray(raw.nodes) ? raw.nodes.filter(n => n && typeof n.id === 'string') : [],
+    edges: Array.isArray(raw.edges) ? raw.edges.filter(e => e && e.from && e.to) : [],
+    pathOverrides: (raw.pathOverrides && typeof raw.pathOverrides === 'object') ? raw.pathOverrides : {},
+    theme: (raw.theme === 'dark' || raw.theme === 'light') ? raw.theme : null,
+    blockStates: (raw.blockStates && typeof raw.blockStates === 'object') ? raw.blockStates : null,
+  };
+  // Validate telemetry entity references where present
+  Object.keys(cfg.pathOverrides).forEach(sid => {
+    const s = REG.source(sid);
+    if (!s) { errors.push(`pathOverrides references unknown source "${sid}".`); delete cfg.pathOverrides[sid]; return; }
+    if (!s.paths.includes(cfg.pathOverrides[sid])) { errors.push(`Source "${sid}" does not support path "${cfg.pathOverrides[sid]}" — reverting to default.`); delete cfg.pathOverrides[sid]; }
+  });
+  return { ok: errors.length === 0, config: cfg, errors };
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   LAYER 2 — TEMPLATE CONTENT (alliance templates, unchanged content)
+   ═══════════════════════════════════════════════════════════════════════ */
+const COV = {
+  NATIVE:   {fill:'rgba(0,191,207,0.12)',stroke:'#00BFCF',accent:'#00BFCF',text:'#0a7c86'},
+  HYBRID:   {fill:'rgba(255,139,0,0.12)',stroke:'#FF8B00',accent:'#FF8B00',text:'#b3651a'},
+  PARTNER:  {fill:'rgba(124,58,237,0.10)',stroke:'#7C3AED',accent:'#7C3AED',text:'#5a3fcc'},
+  SERVICES: {fill:'rgba(255,45,120,0.10)',stroke:'#FF2D78',accent:'#FF2D78',text:'#c42858'},
+};
+const GHOST = {fill:'none',stroke:'#9aa4b2',accent:'#9aa4b2',text:'#9aa4b2'};
 const DISCLAIMER = 'This is a visual reference tool for mapping architecture domains. It does not constitute a recommendation, endorsement, or assurance of architectural validity. Validate all designs with qualified professionals.';
 const CONN_TYPES = {
-  ops:      {stroke:'#00d4aa',width:1.5,dash:'none'},
-  response: {stroke:'#ff3e7f',width:1.3,dash:'5 3'},
-  data:     {stroke:'#7c5cff',width:1,  dash:'3 2'},
+  ops:      {stroke:'#00BFCF',width:1.5,dash:'none'},
+  response: {stroke:'#FF2D78',width:1.3,dash:'5 3'},
+  data:     {stroke:'#7C3AED',width:1,  dash:'3 2'},
 };
 const BH = 36, BGAP = 4, ZPAD = 6, ZHDR = 20;
+const INK = '#172B4D', MUTED = '#6B778C', FAINT = '#9aa4b2';
 
-// ═══════════════════════════════════════
-// TEMPLATES
-// ═══════════════════════════════════════
 const TEMPLATES = [
+// ─── TELEMETRY INGEST (flagship) ───
+{
+  id:'telemetry-ingest', name:'Telemetry Ingest', telemetry:true,
+  desc:'How telemetry reaches NG-SIEM. Each source shows its collection path; sensor-native sources route direct, everything else funnels through Onum or a connector. Toggle sources, click a path pill to change it, or switch to Volume view.',
+  sources: SOURCES.map(s => ({ id:s.id, on:['endpoints','identity','cloud-work','m365','cloudtrail','firewall'].includes(s.id) })),
+  destinations:['ngsiem'],
+},
 // ─── FALCON CORE STACK ───
 {
   id:'falcon-core', name:'Falcon Core Stack',
   desc:'Foundational CrowdStrike deployment — endpoint, cloud, identity, and data protection with unified security operations.',
   canvas:{w:1440,h:490},
   zones:[
-    {id:'identity',label:'Identity Security',x:20,y:15,w:930,h:68,color:'#e8f8f4',bc:'#00d4aa',overlay:true,dir:'h'},
-    {id:'endpoints',label:'Endpoints',x:20,y:93,w:300,h:230,color:'#f0faf5',bc:'#00d4aa'},
-    {id:'cloud',label:'Cloud & SaaS',x:330,y:93,w:300,h:230,color:'#f5f0ff',bc:'#7c5cff'},
-    {id:'data',label:'Data',x:640,y:93,w:300,h:230,color:'#fff0f3',bc:'#ff3e7f'},
-    {id:'secops',label:'Security Operations',x:20,y:333,w:930,h:68,color:'#f0f2f8',bc:'#0a1628',overlay:true,dir:'h'},
-    {id:'siem-bar',label:'NG-SIEM',x:20,y:411,w:930,h:48,color:'#eaeff5',bc:'#0a1628',isSiemBar:true},
-    {id:'services',label:'Services & Managed',x:960,y:15,w:460,h:444,color:'#fafbfc',bc:'#94a3b8',isServices:true},
+    {id:'identity',label:'Identity Security',x:20,y:15,w:930,h:68,color:'rgba(0,191,207,0.08)',bc:'#00BFCF',overlay:true,dir:'h'},
+    {id:'endpoints',label:'Endpoints',x:20,y:93,w:300,h:230,color:'rgba(0,191,207,0.06)',bc:'#00BFCF'},
+    {id:'cloud',label:'Cloud & SaaS',x:330,y:93,w:300,h:230,color:'rgba(124,58,237,0.06)',bc:'#7C3AED'},
+    {id:'data',label:'Data',x:640,y:93,w:300,h:230,color:'rgba(255,45,120,0.06)',bc:'#FF2D78'},
+    {id:'secops',label:'Security Operations',x:20,y:333,w:930,h:68,color:'rgba(23,43,77,0.05)',bc:'#0D1F3C',overlay:true,dir:'h'},
+    {id:'siem-bar',label:'NG-SIEM',x:20,y:411,w:930,h:48,color:'rgba(23,43,77,0.06)',bc:'#0D1F3C',isSiemBar:true},
+    {id:'services',label:'Services & Managed',x:960,y:15,w:460,h:444,color:'rgba(23,43,77,0.03)',bc:'#6B778C',isServices:true},
   ],
   blocks:[
     {id:'itdr',label:'Falcon Identity Protection',sub:'ITDR',zone:'identity',cov:'NATIVE',on:true},
@@ -211,13 +361,13 @@ const TEMPLATES = [
   desc:'Horizontal technology layers with service delivery options on the right. CrowdStrike-managed, MSSP-delivered, or blended.',
   canvas:{w:1440,h:510},
   zones:[
-    {id:'detect',label:'Detection & Visibility',x:20,y:15,w:455,h:230,color:'#f0faf5',bc:'#00d4aa'},
-    {id:'protect',label:'Protection & Prevention',x:485,y:15,w:455,h:230,color:'#f5f0ff',bc:'#7c5cff'},
-    {id:'platform',label:'Falcon Platform',x:20,y:255,w:920,h:68,color:'#e8f8f4',bc:'#00d4aa',overlay:true,dir:'h'},
-    {id:'siem-bar',label:'NG-SIEM',x:20,y:333,w:920,h:48,color:'#eaeff5',bc:'#0a1628',isSiemBar:true},
-    {id:'cs-managed',label:'CrowdStrike Managed',x:960,y:15,w:460,h:190,color:'#fff0f3',bc:'#ff3e7f',isServices:true},
-    {id:'partner-managed',label:'MSSP / Partner Delivered',x:960,y:215,w:460,h:190,color:'#fff8f0',bc:'#ffa502',isServices:true},
-    {id:'pro-services',label:'Professional Services',x:960,y:415,w:460,h:68,color:'#fafbfc',bc:'#94a3b8',isServices:true,dir:'h'},
+    {id:'detect',label:'Detection & Visibility',x:20,y:15,w:455,h:230,color:'rgba(0,191,207,0.06)',bc:'#00BFCF'},
+    {id:'protect',label:'Protection & Prevention',x:485,y:15,w:455,h:230,color:'rgba(124,58,237,0.06)',bc:'#7C3AED'},
+    {id:'platform',label:'Falcon Platform',x:20,y:255,w:920,h:68,color:'rgba(0,191,207,0.08)',bc:'#00BFCF',overlay:true,dir:'h'},
+    {id:'siem-bar',label:'NG-SIEM',x:20,y:333,w:920,h:48,color:'rgba(23,43,77,0.06)',bc:'#0D1F3C',isSiemBar:true},
+    {id:'cs-managed',label:'CrowdStrike Managed',x:960,y:15,w:460,h:190,color:'rgba(255,45,120,0.06)',bc:'#FF2D78',isServices:true},
+    {id:'partner-managed',label:'MSSP / Partner Delivered',x:960,y:215,w:460,h:190,color:'rgba(255,139,0,0.06)',bc:'#FF8B00',isServices:true},
+    {id:'pro-services',label:'Professional Services',x:960,y:415,w:460,h:68,color:'rgba(23,43,77,0.03)',bc:'#6B778C',isServices:true,dir:'h'},
   ],
   blocks:[
     {id:'siem-ms',label:'Falcon NG-SIEM',sub:'LogScale',zone:'siem-bar',cov:'NATIVE',on:true},
@@ -258,13 +408,13 @@ const TEMPLATES = [
   desc:'End-to-end data protection across endpoints, SaaS, cloud, and AI workloads — AIDR for Workforce and AIDR for Agents.',
   canvas:{w:1440,h:410},
   zones:[
-    {id:'ai-overlay',label:'AI Security — CrowdStrike AIDR',x:20,y:15,w:930,h:68,color:'#f0ecff',bc:'#7c5cff',overlay:true,dir:'h'},
-    {id:'browser',label:'Browser & Endpoints',x:20,y:93,w:300,h:150,color:'#f0faf5',bc:'#00d4aa'},
-    {id:'saas',label:'SaaS & Email',x:330,y:93,w:300,h:150,color:'#f5f0ff',bc:'#7c5cff'},
-    {id:'clouddata',label:'Cloud & Data Stores',x:640,y:93,w:300,h:150,color:'#fff0f3',bc:'#ff3e7f'},
-    {id:'visibility',label:'Visibility & Operations',x:20,y:253,w:930,h:68,color:'#f0f2f8',bc:'#0a1628',overlay:true,dir:'h'},
-    {id:'siem-bar',label:'NG-SIEM',x:20,y:331,w:930,h:48,color:'#eaeff5',bc:'#0a1628',isSiemBar:true},
-    {id:'services',label:'Services & Partners',x:960,y:15,w:460,h:364,color:'#fafbfc',bc:'#94a3b8',isServices:true},
+    {id:'ai-overlay',label:'AI Security — CrowdStrike AIDR',x:20,y:15,w:930,h:68,color:'rgba(124,58,237,0.08)',bc:'#7C3AED',overlay:true,dir:'h'},
+    {id:'browser',label:'Browser & Endpoints',x:20,y:93,w:300,h:150,color:'rgba(0,191,207,0.06)',bc:'#00BFCF'},
+    {id:'saas',label:'SaaS & Email',x:330,y:93,w:300,h:150,color:'rgba(124,58,237,0.06)',bc:'#7C3AED'},
+    {id:'clouddata',label:'Cloud & Data Stores',x:640,y:93,w:300,h:150,color:'rgba(255,45,120,0.06)',bc:'#FF2D78'},
+    {id:'visibility',label:'Visibility & Operations',x:20,y:253,w:930,h:68,color:'rgba(23,43,77,0.05)',bc:'#0D1F3C',overlay:true,dir:'h'},
+    {id:'siem-bar',label:'NG-SIEM',x:20,y:331,w:930,h:48,color:'rgba(23,43,77,0.06)',bc:'#0D1F3C',isSiemBar:true},
+    {id:'services',label:'Services & Partners',x:960,y:15,w:460,h:364,color:'rgba(23,43,77,0.03)',bc:'#6B778C',isServices:true},
   ],
   blocks:[
     {id:'aidr-wf',label:'AIDR for Workforce',sub:'AI Traffic — Endpoints',zone:'ai-overlay',cov:'HYBRID',on:true},
@@ -295,33 +445,51 @@ const TEMPLATES = [
 }
 ];
 
-// ═══════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════════════
+   LAYER 3 — STATE + MODEL  (derived, no direct schema reads by render)
+   ═══════════════════════════════════════════════════════════════════════ */
 let activeTemplateId = TEMPLATES[0].id;
 let blockStates = {};
-TEMPLATES.forEach(t => { blockStates[t.id] = {}; t.blocks.forEach(b => { blockStates[t.id][b.id] = b.on; }); });
-function tpl() { return TEMPLATES.find(t => t.id === activeTemplateId); }
+let pathOverrides = {};           // telemetry: { sourceId: pathId }
+let volumeView = false;           // telemetry: path view vs Sankey volume view
 let pinnedBlock = null;
+TEMPLATES.forEach(t => {
+  blockStates[t.id] = {};
+  if (t.telemetry) t.sources.forEach(s => { blockStates[t.id][s.id] = s.on; });
+  else (t.blocks||[]).forEach(b => { blockStates[t.id][b.id] = b.on; });
+});
+function tpl() { return TEMPLATES.find(t => t.id === activeTemplateId); }
+function isTelemetry() { return !!tpl().telemetry; }
 
-// ═══════════════════════════════════════
-// SVG HELPERS
-// ═══════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════════════
+   LAYER 4 — RENDER (SVG engine) + SHELL (DOM)
+   ═══════════════════════════════════════════════════════════════════════ */
 const NS = 'http://www.w3.org/2000/svg';
 function el(tag,a={}){const e=document.createElementNS(NS,tag);for(const[k,v]of Object.entries(a))e.setAttribute(k,v);return e;}
 function txt(t,x,y,a={}){const e=el('text',{x,y,...a});e.textContent=t;return e;}
 
-// ═══════════════════════════════════════
-// CONNECTION ROUTING
-// ═══════════════════════════════════════
-function routeConnection(fromId,toId,bp,template,st){
+/* ── Theme ── */
+function applyTheme(theme){
+  document.documentElement.setAttribute('data-theme', theme==='dark' ? 'dark' : 'light');
+  document.getElementById('themeLabel').textContent = theme==='dark' ? 'Light' : 'Dark';
+  try{ localStorage.setItem('tih-db-theme', theme); }catch(e){}
+}
+function currentTheme(){ return document.documentElement.getAttribute('data-theme')==='dark' ? 'dark' : 'light'; }
+function initTheme(){
+  let t=null; try{ t=localStorage.getItem('tih-db-theme'); }catch(e){}
+  if(!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) t='dark';
+  applyTheme(t==='dark' ? 'dark' : 'light');
+}
+document.getElementById('themeToggle').addEventListener('click',()=>{ applyTheme(currentTheme()==='dark'?'light':'dark'); });
+
+/* ── Connection routing (alliance templates) ── */
+function routeConnection(fromId,toId,bp,template){
   const fp=bp[fromId],tp=bp[toId];
   if(!fp||!tp)return'';
   const fb=template.blocks.find(b=>b.id===fromId),tb=template.blocks.find(b=>b.id===toId);
   if(!fb||!tb)return'';
   const fz=template.zones.find(z=>z.id===fb.zone),tz=template.zones.find(z=>z.id===tb.zone);
   if(!fz||!tz)return'';
-  // Same zone
   if(fz.id===tz.id){
     if(fz.dir==='h'){
       const x1=fp.x+fp.w+2,y1=fp.y+fp.h/2,x2=tp.x-2,y2=tp.y+tp.h/2;
@@ -332,37 +500,31 @@ function routeConnection(fromId,toId,bp,template,st){
     const x=fp.x+fp.w/2;
     return`M${x},${fp.y+fp.h+2} L${x},${tp.y-2}`;
   }
-  // Cross-zone
   const fpCx=fp.x+fp.w/2,tpCx=tp.x+tp.w/2;
   const hOv=Math.min(fz.x+fz.w,tz.x+tz.w)-Math.max(fz.x,tz.x);
   const vOv=Math.min(fz.y+fz.h,tz.y+tz.h)-Math.max(fz.y,tz.y);
   const vGd=tz.y-(fz.y+fz.h),vGu=fz.y-(tz.y+tz.h);
   const hGr=tz.x-(fz.x+fz.w),hGl=fz.x-(tz.x+tz.w);
-  // Adjacent vertical down
   if(hOv>30&&vGd>=0&&vGd<25){
     const ex=fpCx,ey=fp.y+fp.h+2,nx=tpCx,ny=tp.y-2,gy=fz.y+fz.h+vGd/2;
     if(Math.abs(ex-nx)<8)return`M${ex},${ey} L${ex},${ny}`;
     return`M${ex},${ey} L${ex},${gy} L${nx},${gy} L${nx},${ny}`;
   }
-  // Adjacent vertical up
   if(hOv>30&&vGu>=0&&vGu<25){
     const ex=fpCx,ey=fp.y-2,nx=tpCx,ny=tp.y+tp.h+2,gy=tz.y+tz.h+vGu/2;
     if(Math.abs(ex-nx)<8)return`M${ex},${ey} L${ex},${ny}`;
     return`M${ex},${ey} L${ex},${gy} L${nx},${gy} L${nx},${ny}`;
   }
-  // Adjacent horizontal right
   if(vOv>30&&hGr>=0&&hGr<25){
     const ex=fp.x+fp.w+2,ey=fp.y+fp.h/2,nx=tp.x-2,ny=tp.y+tp.h/2,gx=fz.x+fz.w+hGr/2;
     if(Math.abs(ey-ny)<5)return`M${ex},${ey} L${nx},${ny}`;
     return`M${ex},${ey} L${gx},${ey} L${gx},${ny} L${nx},${ny}`;
   }
-  // Adjacent horizontal left
   if(vOv>30&&hGl>=0&&hGl<25){
     const ex=fp.x-2,ey=fp.y+fp.h/2,nx=tp.x+tp.w+2,ny=tp.y+tp.h/2,gx=tz.x+tz.w+hGl/2;
     if(Math.abs(ey-ny)<5)return`M${ex},${ey} L${nx},${ny}`;
     return`M${ex},${ey} L${gx},${ey} L${gx},${ny} L${nx},${ny}`;
   }
-  // Non-adjacent fallback
   const goD=tp.y>fp.y;
   if(goD){
     const ex=fpCx,ey=fp.y+fp.h+2,nx=tpCx,ny=tp.y-2,wy=fz.y+fz.h+4;
@@ -375,21 +537,24 @@ function routeConnection(fromId,toId,bp,template,st){
   }
 }
 
-// ═══════════════════════════════════════
-// RENDER
-// ═══════════════════════════════════════
+/* ── RENDER dispatch ── */
 function render(){
+  if (isTelemetry()) renderTelemetry();
+  else renderAlliance();
+  setupHover();
+}
+
+/* ── RENDER: alliance templates (re-tokened) ── */
+function renderAlliance(){
   const t=tpl(),st=blockStates[t.id];
   const svg=document.getElementById('diagramSvg');
   svg.innerHTML='';
   svg.setAttribute('width',t.canvas.w);svg.setAttribute('height',t.canvas.h);
   svg.setAttribute('viewBox',`0 0 ${t.canvas.w} ${t.canvas.h}`);
-  // Style for transitions
   svg.appendChild(Object.assign(el('style'),{textContent:'[data-block],[data-conn]{transition:opacity 0.15s ease}'}));
-  // Defs
   const defs=el('defs');
   const bsf=el('filter',{id:'bs',x:'-3%',y:'-3%',width:'106%',height:'110%'});
-  bsf.appendChild(el('feDropShadow',{dx:'0',dy:'1',stdDeviation:'1.2','flood-color':'rgba(10,22,40,0.05)'}));
+  bsf.appendChild(el('feDropShadow',{dx:'0',dy:'1',stdDeviation:'1.2','flood-color':'rgba(13,31,60,0.06)'}));
   defs.appendChild(bsf);
   Object.entries(CONN_TYPES).forEach(([k,ct])=>{
     const m=el('marker',{id:`ah-${k}`,viewBox:'0 0 10 10',refX:'9',refY:'5',markerWidth:'5',markerHeight:'5',orient:'auto'});
@@ -397,27 +562,23 @@ function render(){
     defs.appendChild(m);
   });
   svg.appendChild(defs);
-  // BG
-  svg.appendChild(el('rect',{x:0,y:0,width:t.canvas.w,height:t.canvas.h,fill:'#ffffff',rx:6}));
-  // Watermark + Disclaimer
-  svg.appendChild(txt('thinkinfosec.org',t.canvas.w-14,t.canvas.h-8,{'text-anchor':'end','font-family':'Space Mono,monospace','font-size':'7',fill:'#d1d5db','letter-spacing':'0.04em'}));
-  svg.appendChild(txt(t.name,t.canvas.w-14,t.canvas.h-18,{'text-anchor':'end','font-family':'Space Mono,monospace','font-size':'8','font-weight':'700',fill:'#d1d5db'}));
-  svg.appendChild(txt('Visual reference only — not a recommendation or assurance of architectural validity.',20,t.canvas.h-8,{'font-family':'Inter,sans-serif','font-size':'6.5',fill:'#b0b8c4'}));
+  svg.appendChild(el('rect',{x:0,y:0,width:t.canvas.w,height:t.canvas.h,fill:'#ffffff',rx:8}));
+  svg.appendChild(txt('thinkinfosec.org',t.canvas.w-14,t.canvas.h-8,{'text-anchor':'end','font-family':'Space Mono,monospace','font-size':'7',fill:'#c3ccd6','letter-spacing':'0.04em'}));
+  svg.appendChild(txt(t.name,t.canvas.w-14,t.canvas.h-18,{'text-anchor':'end','font-family':'Space Mono,monospace','font-size':'8','font-weight':'700',fill:'#c3ccd6'}));
+  svg.appendChild(txt('Visual reference only — not a recommendation or assurance of architectural validity.',20,t.canvas.h-8,{'font-family':'Inter,sans-serif','font-size':'6.5',fill:'#b6bfca'}));
 
-  // ══ ZONES ══
   t.zones.forEach(z=>{
     const g=el('g',{'data-zone':z.id});
-    const fc=z.isServices?'#f8f9fb':z.isSiemBar?'#eaeff5':z.color;
-    g.appendChild(el('rect',{x:z.x,y:z.y,width:z.w,height:z.h,rx:4,fill:fc,stroke:z.bc,
+    const fc=z.isServices?'rgba(23,43,77,0.03)':z.isSiemBar?'rgba(23,43,77,0.06)':z.color;
+    g.appendChild(el('rect',{x:z.x,y:z.y,width:z.w,height:z.h,rx:6,fill:fc,stroke:z.bc,
       'stroke-width':z.isSiemBar?1.5:z.overlay?1:0.7,
       'stroke-dasharray':z.overlay?'5 3':z.isServices?'3 2':'none'}));
-    if(z.isServices)g.appendChild(txt('⚙',z.x+z.w-16,z.y+13,{'font-size':'9',fill:'#94a3b8'}));
+    if(z.isServices)g.appendChild(txt('⚙',z.x+z.w-16,z.y+13,{'font-size':'9',fill:'#6B778C'}));
     if(!z.isSiemBar)g.appendChild(txt(z.label.toUpperCase(),z.x+8,z.y+13,{
-      'font-family':'Space Mono,monospace','font-size':'8','font-weight':'700',fill:z.bc,'letter-spacing':'0.05em',opacity:'0.8'}));
+      'font-family':'Space Mono,monospace','font-size':'8','font-weight':'700',fill:z.bc,'letter-spacing':'0.05em',opacity:'0.85'}));
     svg.appendChild(g);
   });
 
-  // ══ BLOCK POSITIONS ══
   const blockPos={};
   t.zones.forEach(z=>{
     const ab=t.blocks.filter(b=>b.zone===z.id);
@@ -435,30 +596,27 @@ function render(){
     }
   });
 
-  // ══ CHEVRONS between side-by-side zones ══
   const mz=t.zones.filter(z=>!z.overlay&&!z.isServices&&!z.isSiemBar);
   for(let i=0;i<mz.length-1;i++){
     const a=mz[i],b=mz[i+1];
     if(Math.abs(a.y-b.y)<20){
       const ax=a.x+a.w+1,ay=a.y+a.h/2;
-      svg.appendChild(el('path',{d:`M${ax+2},${ay-5} L${ax+7},${ay} L${ax+2},${ay+5}`,fill:'none',stroke:'#d1d5db','stroke-width':'1.2','stroke-linecap':'round'}));
+      svg.appendChild(el('path',{d:`M${ax+2},${ay-5} L${ax+7},${ay} L${ax+2},${ay+5}`,fill:'none',stroke:'#c3ccd6','stroke-width':'1.2','stroke-linecap':'round'}));
     }
   }
 
-  // ══ CONNECTIONS (behind blocks) ══
-  const connLayer=el('g',{opacity:'0.6'});
+  const connLayer=el('g',{opacity:'0.65'});
   t.connections.forEach(conn=>{
     if(!st[conn.from]||!st[conn.to])return;
     if(!blockPos[conn.from]||!blockPos[conn.to])return;
     const type=conn.type||'ops',ct=CONN_TYPES[type];
-    const path=routeConnection(conn.from,conn.to,blockPos,t,st);
+    const path=routeConnection(conn.from,conn.to,blockPos,t);
     if(!path)return;
     connLayer.appendChild(el('path',{d:path,fill:'none',stroke:ct.stroke,'stroke-width':ct.width,
       'stroke-dasharray':ct.dash,'marker-end':`url(#ah-${type})`,'data-conn':`${conn.from}→${conn.to}`,'data-type':type}));
   });
   svg.appendChild(connLayer);
 
-  // ══ BLOCKS ══
   t.blocks.forEach(b=>{
     const pos=blockPos[b.id];if(!pos)return;
     const isA=st[b.id],c=isA?(COV[b.cov]||COV.NATIVE):GHOST;
@@ -466,54 +624,272 @@ function render(){
     const g=el('g',{'data-block':b.id});
     if(isA)g.setAttribute('filter','url(#bs)');
     g.style.cursor='pointer';
-    // Rect
-    g.appendChild(el('rect',{x:pos.x,y:pos.y,width:pos.w,height:pos.h,rx:isSB?4:3,
+    g.appendChild(el('rect',{x:pos.x,y:pos.y,width:pos.w,height:pos.h,rx:isSB?6:5,
       fill:isA?'#fff':'none',stroke:c.stroke,'stroke-width':isA?(isSB?1.4:0.8):0.7,
       'stroke-dasharray':isA?'none':'4 3',opacity:isA?1:0.55}));
-    // Accent
     g.appendChild(el('rect',{x:pos.x,y:pos.y,width:isSB?4:3,height:pos.h,rx:1.5,fill:c.accent,opacity:isA?1:0.35}));
-    // Label
     const maxC=Math.floor(pos.w/5.8);let label=b.label;
     if(label.length>maxC)label=label.substring(0,maxC-1)+'…';
     g.appendChild(txt(label,pos.x+(isSB?12:9),pos.y+(isSB?16:14),{
-      'font-family':'Inter,sans-serif','font-size':isSB?'10':'8.5','font-weight':isA?(isSB?'700':'600'):'400',fill:isA?'#0a1628':'#a0aec0'}));
-    // Sub (compact — shown smaller)
+      'font-family':'Inter,sans-serif','font-size':isSB?'10':'8.5','font-weight':isA?(isSB?'700':'600'):'400',fill:isA?'#172B4D':'#9aa4b2'}));
     if(b.sub){
       const subMax=Math.floor(pos.w/4.2);let sub=b.sub;
       if(sub.length>subMax)sub=sub.substring(0,subMax-1)+'…';
       g.appendChild(txt(sub,pos.x+(isSB?12:9),pos.y+(isSB?28:25),{
         'font-family':'Space Mono,monospace','font-size':isSB?'7':'6.5',fill:isA?c.text:'#cbd5e1','letter-spacing':'0.01em'}));
     }
-    // Coverage dot
     if(isA){
-      g.appendChild(el('circle',{cx:pos.x+pos.w-10,cy:pos.y+10,r:3.5,fill:c.accent,opacity:'0.8'}));
+      g.appendChild(el('circle',{cx:pos.x+pos.w-10,cy:pos.y+10,r:3.5,fill:c.accent,opacity:'0.85'}));
     }else{
-      g.appendChild(txt('GAP',pos.x+pos.w-20,pos.y+12,{'font-family':'Space Mono,monospace','font-size':'5.5','font-weight':'700',fill:'#d1d5db'}));
+      g.appendChild(txt('GAP',pos.x+pos.w-20,pos.y+12,{'font-family':'Space Mono,monospace','font-size':'5.5','font-weight':'700',fill:'#c3ccd6'}));
     }
     svg.appendChild(g);
   });
 
-  // ══ TELEMETRY BUS above SIEM bar ══
   const sb=t.zones.find(z=>z.isSiemBar);
   if(sb){
     const ay=sb.y-3,techW=sb.w;
     const pts=[0.12,0.28,0.44,0.6,0.76,0.92];
     pts.forEach(p=>{
       const ax=sb.x+techW*p;
-      svg.appendChild(el('path',{d:`M${ax-3},${ay-4} L${ax},${ay} L${ax+3},${ay-4}`,fill:'none',stroke:'#c4cdd8','stroke-width':'0.8','stroke-linecap':'round'}));
+      svg.appendChild(el('path',{d:`M${ax-3},${ay-4} L${ax},${ay} L${ax+3},${ay-4}`,fill:'none',stroke:'#c9d2dc','stroke-width':'0.8','stroke-linecap':'round'}));
     });
     svg.appendChild(txt('▼ TELEMETRY INGESTION',sb.x+techW/2,ay-7,{
-      'text-anchor':'middle','font-family':'Space Mono,monospace','font-size':'5.5',fill:'#b0b8c4','letter-spacing':'0.1em','font-weight':'700'}));
+      'text-anchor':'middle','font-family':'Space Mono,monospace','font-size':'5.5','font-weight':'700',fill:'#b6bfca','letter-spacing':'0.1em'}));
   }
-
-  setupHover();
 }
 
-// ═══════════════════════════════════════
-// HOVER & TOOLTIP
-// ═══════════════════════════════════════
+/* ── RENDER: telemetry template ── */
+const VOL_H = { low:4, med:9, high:16 };
+function telemetrySources(){ return tpl().sources.map(s => REG.source(s.id)).filter(Boolean); }
+function activeSources(){ const st=blockStates[tpl().id]; return telemetrySources().filter(s => st[s.id]); }
+
+function renderTelemetry(){
+  const t=tpl(), st=blockStates[t.id];
+  const svg=document.getElementById('diagramSvg');
+  const srcs=telemetrySources();
+  const on=srcs.filter(s=>st[s.id]);
+  // Layout metrics
+  const W=1440, pad=20, laneLabW=92, laneX=pad+laneLabW, laneW=W-laneX-pad;
+  const chipH=34, chipGap=6;
+  const perRow=Math.max(1,Math.floor(laneW/150));
+  const srcRows=Math.max(1,Math.ceil(on.length/perRow));
+  const srcH=Math.max(64, srcRows*(chipH+chipGap)+26);
+  const pathH=54, pipeH=64, destH=54, outH=64;
+  const laneGap=34; // room for arrows
+  const H = pad*2 + srcH + pathH + pipeH + destH + outH + laneGap*4;
+  svg.innerHTML='';
+  svg.setAttribute('width',W); svg.setAttribute('height',H);
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.appendChild(Object.assign(el('style'),{textContent:'[data-src]{transition:opacity .15s ease;cursor:pointer}'}));
+  const defs=el('defs');
+  const mk=(id,color)=>{const m=el('marker',{id,viewBox:'0 0 10 10',refX:'9',refY:'5',markerWidth:'6',markerHeight:'6',orient:'auto'});m.appendChild(el('path',{d:'M0 1.5 L10 5 L0 8.5 z',fill:color}));defs.appendChild(m);};
+  mk('ah-acc','#00BFCF'); mk('ah-navy','#0D1F3C'); mk('ah-mut','#9aa4b2');
+  svg.appendChild(defs);
+  svg.appendChild(el('rect',{x:0,y:0,width:W,height:H,fill:'#ffffff',rx:8}));
+  svg.appendChild(txt('thinkinfosec.org',W-14,H-10,{'text-anchor':'end','font-family':'Space Mono,monospace','font-size':'7',fill:'#c3ccd6','letter-spacing':'0.04em'}));
+  svg.appendChild(txt('Telemetry ingestion — collection path per source',20,H-10,{'font-family':'Inter,sans-serif','font-size':'6.5',fill:'#b6bfca'}));
+
+  // Lane Y positions
+  let y=pad;
+  const ySrc=y; y+=srcH+laneGap;
+  const yPath=y; y+=pathH+laneGap;
+  const yPipe=y; y+=pipeH+laneGap;
+  const yDest=y; y+=destH+laneGap;
+  const yOut=y;
+
+  const lane=(ly,lh,label,accent,fill)=>{
+    svg.appendChild(el('rect',{x:laneX,y:ly,width:laneW,height:lh,rx:8,fill:fill,stroke:'#DFE1E6','stroke-width':0.8,'stroke-dasharray':'none'}));
+    const lx=pad+10, lcy=ly+lh/2;
+    svg.appendChild(txt(label.toUpperCase(),lx,lcy,{'font-family':'Space Mono,monospace','font-size':'8','font-weight':'700',fill:accent,'letter-spacing':'0.08em','text-anchor':'start'}));
+  };
+
+  // ── SOURCES lane ──
+  lane(ySrc,srcH,'Sources','#0D1F3C','#FAFBFC');
+  const pos={};
+  on.forEach((s,i)=>{
+    const col=i%perRow,row=Math.floor(i/perRow);
+    const cw=(laneW-20-(perRow-1)*chipGap)/perRow;
+    const x=laneX+10+col*(cw+chipGap), cy=ySrc+22+row*(chipH+chipGap);
+    pos[s.id]={x,y:cy,w:cw,h:chipH};
+  });
+  // ── PATH lane ──
+  lane(yPath,pathH,'Collection','#00BFCF','rgba(0,191,207,0.05)');
+  // path nodes: distinct active paths in play
+  const activePathIds=[...new Set(on.map(s=>resolveActivePath(s.id,pathOverrides)))];
+  const directPaths=activePathIds.filter(p=>PATHS[p].via==='direct');
+  const onumNeeded=activePathIds.some(p=>PATHS[p].via==='onum');
+  const pathPos={};
+  const pathNodeW=150, pathNodeH=30;
+  const nPathNodes=activePathIds.length;
+  const pathSpacing=(laneW-20-nPathNodes*pathNodeW)/Math.max(1,nPathNodes-1||1);
+  activePathIds.forEach((p,i)=>{
+    const x=nPathNodes===1?laneX+laneW/2-pathNodeW/2:laneX+10+i*(pathNodeW+Math.max(0,pathSpacing));
+    pathPos[p]={x,y:yPath+12,w:pathNodeW,h:pathNodeH};
+  });
+  // ── PIPELINE lane ──
+  lane(yPipe,pipeH,'Pipeline','#00BFCF','rgba(0,191,207,0.05)');
+  const onumPos={x:laneX+laneW/2-190,y:yPipe+16,w:380,h:32};
+  // ── DESTINATION lane ──
+  lane(yDest,destH,'Destination','#0D1F3C','rgba(23,43,77,0.04)');
+  const destPos={x:laneX+laneW/2-190,y:yDest+11,w:380,h:32};
+  // ── OUTCOMES lane ──
+  lane(yOut,outH,'Outcomes','#0D1F3C','#FAFBFC');
+
+  // ── CONNECTIONS ──
+  const connG=el('g',{opacity:'0.8'});
+  const volScale={low:2,med:4,high:7};
+  on.forEach(s=>{
+    if(!pos[s.id])return;
+    const p=resolveActivePath(s.id,pathOverrides), pv=PATHS[p].via;
+    const sx=pos[s.id].x+pos[s.id].w/2, sy=pos[s.id].y+pos[s.id].h;
+    const sw=volScale[s.volume]||3;
+    if(volumeView){
+      // Sankey-style band straight to destination, width = volume
+      const tx=destPos.x+destPos.w/2, ty=destPos.y;
+      const midY=(sy+ty)/2;
+      connG.appendChild(el('path',{d:`M${sx},${sy} C${sx},${midY} ${tx},${midY} ${tx},${ty}`,fill:'none',
+        stroke:'#00BFCF','stroke-width':sw*2,opacity:'0.28','data-src-conn':s.id,stroke_linecap:'round'}));
+    } else if(pv==='direct'){
+      const pp=pathPos[p]; if(!pp)return;
+      const px=pp.x+pp.w/2, py=pp.y;
+      connG.appendChild(el('path',{d:`M${sx},${sy} L${sx},${py-6} L${px},${py-6} L${px},${py}`,fill:'none',stroke:'#0D1F3C','stroke-width':1.2,'data-src-conn':s.id}));
+    } else {
+      const pp=pathPos[p]; if(!pp)return;
+      const px=pp.x+pp.w/2, py=pp.y;
+      connG.appendChild(el('path',{d:`M${sx},${sy} L${sx},${py-6} L${px},${py-6} L${px},${py}`,fill:'none',stroke:'#00BFCF','stroke-width':1.2,'data-src-conn':s.id}));
+    }
+  });
+  if(!volumeView){
+    // path → pipeline/destination
+    activePathIds.forEach(p=>{
+      const pp=pathPos[p]; if(!pp)return;
+      const px=pp.x+pp.w/2, py=pp.y+pp.h;
+      if(PATHS[p].via==='onum'){
+        const ox=onumPos.x+onumPos.w/2, oy=onumPos.y;
+        connG.appendChild(el('path',{d:`M${px},${py} L${px},${oy-8} L${ox},${oy-8} L${ox},${oy}`,fill:'none',stroke:'#00BFCF','stroke-width':1.4,'marker-end':'url(#ah-acc)'}));
+      } else {
+        const dx=destPos.x+destPos.w/2, dy=destPos.y;
+        connG.appendChild(el('path',{d:`M${px},${py} L${px},${dy-8} L${dx},${dy-8} L${dx},${dy}`,fill:'none',stroke:'#0D1F3C','stroke-width':1.4,'marker-end':'url(#ah-navy)'}));
+      }
+    });
+    // onum → destination
+    if(onumNeeded){
+      const ox=onumPos.x+onumPos.w/2, oy=onumPos.y+onumPos.h;
+      const dx=destPos.x+destPos.w/2, dy=destPos.y;
+      connG.appendChild(el('path',{d:`M${ox},${oy} L${ox},${dy-6} L${dx},${dy-6} L${dx},${dy}`,fill:'none',stroke:'#00BFCF','stroke-width':1.6,'marker-end':'url(#ah-acc)'}));
+    }
+  }
+  // destination → outcomes
+  const onOutcomeIds=[...new Set(on.flatMap(s=>s.outcomes))];
+  const outPos={};
+  const oChipW=180, oChipH=28, oGap=6;
+  const oPerRow=Math.max(1,Math.floor(laneW/(oChipW+oGap)));
+  onOutcomeIds.forEach((oid,i)=>{
+    const col=i%oPerRow,row=Math.floor(i/oPerRow);
+    const x=laneX+10+col*(oChipW+oGap), cy=yOut+22+row*(oChipH+oGap);
+    outPos[oid]={x,y:cy,w:oChipW,h:oChipH};
+  });
+  const dx=destPos.x+destPos.w/2, ddy=destPos.y+destPos.h;
+  onOutcomeIds.forEach(oid=>{
+    if(!outPos[oid])return;
+    const ox=outPos[oid].x+outPos[oid].w/2, oy=outPos[oid].y;
+    connG.appendChild(el('path',{d:`M${dx},${ddy} L${dx},${oy-6} L${ox},${oy-6} L${ox},${oy}`,fill:'none',stroke:'#9aa4b2','stroke-width':0.9,'stroke-dasharray':'3 3'}));
+  });
+  svg.appendChild(connG);
+
+  // ── SOURCE chips (with path pill) ──
+  on.forEach(s=>{
+    const p=pos[s.id]; if(!p)return;
+    const ap=resolveActivePath(s.id,pathOverrides), path=PATHS[ap];
+    const multi=s.paths.length>1;
+    const g=el('g',{'data-src':s.id,'data-kind':'source'});
+    g.appendChild(el('rect',{x:p.x,y:p.y,width:p.w,height:p.h,rx:6,fill:'#fff',stroke:'#00BFCF','stroke-width':1.2}));
+    g.appendChild(el('rect',{x:p.x,y:p.y,width:3,height:p.h,rx:1.5,fill:'#00BFCF'}));
+    const maxC=Math.floor(p.w/6.2);let lbl=s.label; if(lbl.length>maxC)lbl=lbl.substring(0,maxC-1)+'…';
+    g.appendChild(txt(lbl,p.x+9,p.y+14,{'font-family':'Inter,sans-serif','font-size':'9','font-weight':'600',fill:'#172B4D'}));
+    // path pill
+    const pillW=Math.min(p.w-16, 8+path.label.length*4.6), pillX=p.x+8, pillY=p.y+19;
+    const pg=el('g',{'data-pathpill':s.id, style:'cursor:'+(multi?'pointer':'default')});
+    pg.appendChild(el('rect',{x:pillX,y:pillY,width:pillW,height:11,rx:2,
+      fill: ap==='sensor-native'?'#0D1F3C':(ap==='falcon-shield'?'rgba(0,191,207,0.15)':'rgba(23,43,77,0.08)'),
+      stroke: ap==='sensor-native'?'#0D1F3C':(ap==='falcon-shield'?'#00BFCF':'#9aa4b2'),'stroke-width':0.7,
+      'stroke-dasharray': ap==='syslog'?'2 2':'none'}));
+    pg.appendChild(txt(path.label+(multi?' ▸':''),pillX+pillW/2,pillY+8,{'text-anchor':'middle','font-family':'Space Mono,monospace','font-size':'6','letter-spacing':'0.04em','font-weight':'700',
+      fill: ap==='sensor-native'?'#00BFCF':'#172B4D'}));
+    g.appendChild(pg);
+    svg.appendChild(g);
+  });
+
+  // ── PATH nodes ──
+  if(!volumeView){
+    activePathIds.forEach(p=>{
+      const pp=pathPos[p]; if(!pp)return;
+      const path=PATHS[p];
+      const g=el('g',{'data-src':p,'data-kind':'pathnode'});
+      g.appendChild(el('rect',{x:pp.x,y:pp.y,width:pp.w,height:pp.h,rx:6,fill:'#fff',stroke:'#00BFCF','stroke-width':1.3}));
+      g.appendChild(txt(path.label,pp.x+pp.w/2,pp.y+13,{'text-anchor':'middle','font-family':'Inter,sans-serif','font-size':'9.5','font-weight':'600',fill:'#0D1F3C'}));
+      g.appendChild(txt(path.via==='direct'?'direct to NG-SIEM':'via Onum',pp.x+pp.w/2,pp.y+23,{'text-anchor':'middle','font-family':'Space Mono,monospace','font-size':'6',fill:'#6B778C'}));
+      svg.appendChild(g);
+    });
+  }
+
+  // ── PIPELINE (Onum) ──
+  if(!volumeView && onumNeeded){
+    const g=el('g',{'data-src':'onum','data-kind':'pipeline'});
+    g.appendChild(el('rect',{x:onumPos.x,y:onumPos.y,width:onumPos.w,height:onumPos.h,rx:6,fill:'#fff',stroke:'#00BFCF','stroke-width':1.4}));
+    g.appendChild(txt('Falcon Onum',onumPos.x+12,onumPos.y+14,{'font-family':'Inter,sans-serif','font-size':'10','font-weight':'700',fill:'#0D1F3C'}));
+    const stages=PIPELINES[0].stages;
+    g.appendChild(txt(stages.join(' → '),onumPos.x+12,onumPos.y+25,{'font-family':'Space Mono,monospace','font-size':'6.5',fill:'#6B778C'}));
+    svg.appendChild(g);
+  }
+
+  // ── DESTINATION ──
+  {
+    const g=el('g',{'data-src':'ngsiem','data-kind':'destination'});
+    g.appendChild(el('rect',{x:destPos.x,y:destPos.y,width:destPos.w,height:destPos.h,rx:6,fill:'#0D1F3C',stroke:'#0D1F3C','stroke-width':1.4}));
+    g.appendChild(txt('NG-SIEM (LogScale)',destPos.x+destPos.w/2,destPos.y+15,{'text-anchor':'middle','font-family':'Inter,sans-serif','font-size':'10.5','font-weight':'700',fill:'#00BFCF'}));
+    g.appendChild(txt(volumeView?'ingest volume ∝ band width':'unified data platform',destPos.x+destPos.w/2,destPos.y+25,{'text-anchor':'middle','font-family':'Space Mono,monospace','font-size':'6.5',fill:'#9fb2c8'}));
+    svg.appendChild(g);
+  }
+
+  // ── OUTCOME chips ──
+  onOutcomeIds.forEach(oid=>{
+    const o=REG.outcome(oid), p=outPos[oid]; if(!o||!p)return;
+    const g=el('g',{'data-src':oid,'data-kind':'outcome'});
+    g.appendChild(el('rect',{x:p.x,y:p.y,width:p.w,height:p.h,rx:6,fill:'rgba(0,191,207,0.08)',stroke:'#00BFCF','stroke-width':0.9}));
+    const maxC=Math.floor(p.w/5.6);let lbl=o.label; if(lbl.length>maxC)lbl=lbl.substring(0,maxC-1)+'…';
+    g.appendChild(txt(lbl,p.x+p.w/2,p.y+p.h/2+3,{'text-anchor':'middle','font-family':'Inter,sans-serif','font-size':'8.5','font-weight':'600',fill:'#0D1F3C'}));
+    svg.appendChild(g);
+  });
+}
+
+/* ── Path pill click (cycle supported paths) ── */
+document.getElementById('diagramSvg').addEventListener('click', e=>{
+  const pill=e.target.closest('[data-pathpill]');
+  if(pill){
+    e.stopPropagation();
+    const sid=pill.dataset.pathpill, s=REG.source(sid); if(!s||s.paths.length<2)return;
+    const cur=resolveActivePath(sid,pathOverrides);
+    const idx=s.paths.indexOf(cur);
+    const next=s.paths[(idx+1)%s.paths.length];
+    pathOverrides[sid]=next;
+    pinnedBlock=null;
+    renderTelemetry();
+    return;
+  }
+});
+
+/* ── Hover & tooltip ── */
 function setupHover(){
   const svg=document.getElementById('diagramSvg');
+  if(isTelemetry()){
+    svg.querySelectorAll('[data-src]').forEach(g=>{
+      g.addEventListener('mouseenter',e=>onTelemetryHover(g.dataset.src,e));
+      g.addEventListener('mouseleave',()=>{clearHL();});
+    });
+    return;
+  }
   svg.querySelectorAll('[data-block]').forEach(g=>{
     g.addEventListener('mouseenter',e=>onHover(g.dataset.block,e));
     g.addEventListener('mouseleave',()=>{if(!pinnedBlock)clearHL();});
@@ -524,6 +900,52 @@ function setupHover(){
     });
   });
   svg.addEventListener('click',()=>{if(pinnedBlock){pinnedBlock=null;clearHL();}});
+}
+function onTelemetryHover(id,ev){
+  const svg=document.getElementById('diagramSvg');
+  const s=REG.source(id);
+  // build related set: for a source → its route + outcomes; for an outcome → contributing sources
+  const rel=new Set([id]);
+  if(s){
+    rel.add(resolveActivePath(id,pathOverrides));
+    if(PATHS[resolveActivePath(id,pathOverrides)].via==='onum')rel.add('onum');
+    rel.add('ngsiem');
+    s.outcomes.forEach(o=>rel.add(o));
+  } else if(REG.outcome(id)){
+    rel.add('ngsiem');
+    REG.outcome(id).sources.forEach(sid=>{ if(blockStates[tpl().id][sid]){ rel.add(sid); rel.add(resolveActivePath(sid,pathOverrides)); } });
+  } else { rel.add('ngsiem'); }
+  svg.querySelectorAll('[data-src]').forEach(g=>{ g.style.opacity=rel.has(g.dataset.src)?'1':'0.15'; });
+  svg.querySelectorAll('[data-src-conn]').forEach(p=>{ p.style.opacity=(s&&p.dataset.srcConn===id)?'0.6':'0.08'; });
+  showTelemetryTip(id,ev);
+}
+function showTelemetryTip(id,ev){
+  const tip=document.getElementById('tooltip');
+  const s=REG.source(id), o=REG.outcome(id);
+  let html='';
+  if(s){
+    const ap=resolveActivePath(id,pathOverrides), path=PATHS[ap];
+    html=`<div class="tip-name">${s.label}</div><div class="tip-sub">${s.category} · volume: ${s.volume}</div>`
+      +`<span class="tip-badge" style="background:rgba(0,191,207,0.2);color:#00BFCF">${path.label}</span>`
+      +`<div class="tip-row"><b>OCSF:</b> ${s.ocsfClasses.join(', ')}</div>`
+      +`<div class="tip-row"><b>Enables:</b> ${s.outcomes.map(x=>REG.outcome(x)?.label||x).join('; ')}</div>`
+      +(s.paths.length>1?`<div class="tip-row" style="color:#9fb2c8">Click the pill to change path (${s.paths.map(p=>PATHS[p].label).join(' / ')})</div>`:'');
+  } else if(o){
+    html=`<div class="tip-name">${o.label}</div><div class="tip-sub">outcome</div>`
+      +`<div class="tip-row"><b>Fed by:</b> ${o.sources.map(x=>REG.source(x)?.label||x).join('; ')}</div>`;
+  } else {
+    const path=PATHS[id];
+    if(path) html=`<div class="tip-name">${path.label}</div><div class="tip-sub">collection path</div><div class="tip-row">${path.desc}</div>`;
+    else if(id==='onum') html=`<div class="tip-name">Falcon Onum</div><div class="tip-sub">pipeline</div><div class="tip-row">${PIPELINES[0].stages.join(' → ')}</div>`;
+    else if(id==='ngsiem') html=`<div class="tip-name">NG-SIEM (LogScale)</div><div class="tip-sub">destination</div><div class="tip-row">Unified data platform — all telemetry lands here.</div>`;
+  }
+  if(!html)return;
+  tip.innerHTML=html; tip.style.display='block';
+  const r=tip.getBoundingClientRect(),vw=window.innerWidth,vh=window.innerHeight;
+  let lx=ev.clientX+14,ly=ev.clientY-10;
+  if(lx+r.width>vw-10)lx=ev.clientX-r.width-10;
+  if(ly+r.height>vh-10)ly=ev.clientY-r.height-10;
+  tip.style.left=lx+'px';tip.style.top=ly+'px';
 }
 function onHover(bid,ev){
   const t=tpl(),st=blockStates[t.id],svg=document.getElementById('diagramSvg');
@@ -545,6 +967,8 @@ function onHover(bid,ev){
 function clearHL(){
   const svg=document.getElementById('diagramSvg');
   svg.querySelectorAll('[data-block]').forEach(g=>{g.style.opacity='';});
+  svg.querySelectorAll('[data-src]').forEach(g=>{g.style.opacity='';});
+  svg.querySelectorAll('[data-src-conn]').forEach(p=>{p.style.opacity='';});
   svg.querySelectorAll('[data-conn]').forEach(p=>{
     p.style.opacity='';p.setAttribute('stroke-width',String(CONN_TYPES[p.dataset.type||'ops'].width));
   });
@@ -564,14 +988,36 @@ function showTip(bid,ev){
   tip.style.left=lx+'px';tip.style.top=ly+'px';
 }
 
-// ═══════════════════════════════════════
-// SIDEBAR
-// ═══════════════════════════════════════
+/* ── Sidebar ── */
 function renderSidebar(){
   const t=tpl(),st=blockStates[t.id],sb=document.getElementById('sidebar');
+  if(t.telemetry){
+    let h=`<div class="template-desc">${t.desc}</div>`;
+    h+=`<div class="sidebar-section"><div class="sidebar-section-title">Sources — toggle to add/remove</div>`;
+    const groups={}; telemetrySources().forEach(s=>{ (groups[s.category]=groups[s.category]||[]).push(s); });
+    Object.keys(groups).forEach(cat=>{
+      h+=`<div class="zone-group"><div class="zone-group-title">${cat}</div>`;
+      groups[cat].forEach(s=>{
+        h+=`<label class="block-toggle"><input type="checkbox" data-block="${s.id}" ${st[s.id]?'checked':''}><span class="cov-dot" style="background:#00BFCF"></span><span><span class="block-toggle-label">${s.label}</span><br><span class="block-toggle-sub">${s.volume} vol · ${s.paths.map(p=>PATHS[p].label).join(' / ')}</span></span></label>`;
+      });
+      h+=`</div>`;
+    });
+    h+=`</div>`;
+    h+=`<div class="sidebar-section"><div class="sidebar-section-title">Collection paths</div>`;
+    Object.values(PATHS).forEach(p=>{
+      h+=`<div style="font-size:0.6rem;margin-bottom:2px"><b style="color:#0D1F3C">${p.label}</b> <span style="color:#6B778C">— ${p.desc}</span></div>`;
+    });
+    h+=`</div>`;
+    h+=`<div class="disclaimer">${DISCLAIMER}</div>`;
+    sb.innerHTML=h;
+    sb.querySelectorAll('input[data-block]').forEach(cb=>{
+      cb.addEventListener('change',()=>{st[cb.dataset.block]=cb.checked;pinnedBlock=null;render();});
+    });
+    return;
+  }
   let h=`<div class="template-desc">${t.desc}</div>`;
   const groups={};t.blocks.forEach(b=>{if(!groups[b.zone])groups[b.zone]=[];groups[b.zone].push(b);});
-  h+=`<div class="sidebar-section"><div class="sidebar-section-title">Domains — Toggle to add/remove</div>`;
+  h+=`<div class="sidebar-section"><div class="sidebar-section-title">Domains — toggle to add/remove</div>`;
   const tz=t.zones.filter(z=>!z.isServices),sz=t.zones.filter(z=>z.isServices);
   [...tz,...sz].forEach(z=>{
     if(!groups[z.id])return;
@@ -583,20 +1029,18 @@ function renderSidebar(){
     h+=`</div>`;
   });
   h+=`</div>`;
-  // Legend
   h+=`<div class="sidebar-section"><div class="sidebar-section-title">Coverage</div>`;
-  [['NATIVE','Native Module','#00d4aa'],['HYBRID','CS + Partner','#ffa502'],['PARTNER','Partner-Led','#7c5cff'],['SERVICES','Managed Service','#ff3e7f']].forEach(([k,l,c])=>{
+  [['NATIVE','Native Module','#00BFCF'],['HYBRID','CS + Partner','#FF8B00'],['PARTNER','Partner-Led','#7C3AED'],['SERVICES','Managed Service','#FF2D78']].forEach(([k,l,c])=>{
     h+=`<div style="display:flex;align-items:center;gap:4px;margin-bottom:1px;font-size:0.6rem"><span class="cov-dot" style="background:${c}"></span>${l}</div>`;
   });
-  h+=`<div style="display:flex;align-items:center;gap:4px;margin-top:3px;font-size:0.6rem;color:#a0aec0"><span style="width:16px;height:1px;border-top:2px dashed #d1d5db;display:inline-block"></span>Gap / upsell</div>`;
+  h+=`<div style="display:flex;align-items:center;gap:4px;margin-top:3px;font-size:0.6rem;color:#9aa4b2"><span style="width:16px;height:1px;border-top:2px dashed #c3ccd6;display:inline-block"></span>Gap / upsell</div>`;
   h+=`</div>`;
-  // Connection legend
   h+=`<div class="sidebar-section"><div class="sidebar-section-title">Connections</div>`;
   h+=`<div style="font-size:0.58rem;display:flex;flex-direction:column;gap:2px">`;
-  h+=`<div style="display:flex;align-items:center;gap:5px"><span style="width:18px;height:2px;background:#00d4aa;display:inline-block;border-radius:1px"></span>Operational chain</div>`;
-  h+=`<div style="display:flex;align-items:center;gap:5px"><span style="width:18px;height:0;border-top:2px dashed #ff3e7f;display:inline-block"></span>Response action</div>`;
-  h+=`<div style="display:flex;align-items:center;gap:5px"><span style="width:18px;height:0;border-top:2px dotted #7c5cff;display:inline-block"></span>Data flow</div>`;
-  h+=`<div style="display:flex;align-items:center;gap:5px;color:#a0aec0"><span style="font-size:0.7rem">▼▼</span>Telemetry ingestion</div>`;
+  h+=`<div style="display:flex;align-items:center;gap:5px"><span style="width:18px;height:2px;background:#00BFCF;display:inline-block;border-radius:1px"></span>Operational chain</div>`;
+  h+=`<div style="display:flex;align-items:center;gap:5px"><span style="width:18px;height:0;border-top:2px dashed #FF2D78;display:inline-block"></span>Response action</div>`;
+  h+=`<div style="display:flex;align-items:center;gap:5px"><span style="width:18px;height:0;border-top:2px dotted #7C3AED;display:inline-block"></span>Data flow</div>`;
+  h+=`<div style="display:flex;align-items:center;gap:5px;color:#9aa4b2"><span style="font-size:0.7rem">▼▼</span>Telemetry ingestion</div>`;
   h+=`</div></div>`;
   h+=`<div class="disclaimer">${DISCLAIMER}</div>`;
   sb.innerHTML=h;
@@ -605,20 +1049,64 @@ function renderSidebar(){
   });
 }
 
-// ═══════════════════════════════════════
-// TABS
-// ═══════════════════════════════════════
+/* ── Tabs ── */
 function renderTabs(){
   const c=document.getElementById('templateTabs');
   c.innerHTML=TEMPLATES.map(t=>`<button class="template-tab ${t.id===activeTemplateId?'active':''}" data-tpl="${t.id}">${t.name}</button>`).join('');
   c.querySelectorAll('.template-tab').forEach(btn=>{
-    btn.addEventListener('click',()=>{activeTemplateId=btn.dataset.tpl;pinnedBlock=null;renderTabs();renderSidebar();render();});
+    btn.addEventListener('click',()=>{activeTemplateId=btn.dataset.tpl;pinnedBlock=null;volumeView=false;syncViewToggle();renderTabs();renderSidebar();render();});
   });
 }
+function syncViewToggle(){
+  const vt=document.getElementById('viewToggle');
+  if(isTelemetry()){ vt.style.display=''; vt.textContent=volumeView?'Path view':'Volume view'; vt.classList.toggle('active',volumeView); }
+  else vt.style.display='none';
+}
+function toggleVolumeView(){ volumeView=!volumeView; syncViewToggle(); renderTelemetry(); }
 
-// ═══════════════════════════════════════
-// EXPORTS
-// ═══════════════════════════════════════
+/* ── Save / Load ── */
+function saveConfig(){
+  const t=tpl();
+  const cfg={
+    version:SCHEMA_VERSION,
+    template:t.id,
+    theme:currentTheme(),
+    pathOverrides: t.telemetry ? pathOverrides : {},
+    blockStates: blockStates[t.id],
+    volumeView: t.telemetry ? volumeView : undefined,
+    nodes:[], edges:[],
+  };
+  const d=new Date(), ymd=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+  dl(new Blob([JSON.stringify(cfg,null,2)],{type:'application/json'}),`diagram-${t.id}-${ymd}.json`);
+}
+function loadConfig(ev){
+  const f=ev.target.files && ev.target.files[0]; if(!f)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    let raw;
+    try{ raw=JSON.parse(reader.result); }
+    catch(e){ showErr(['File is not valid JSON.', String(e)]); return; }
+    const res=normalizeConfig(raw);
+    if(!res.ok){ showErr(res.errors); return; }
+    const c=res.config;
+    if(!TEMPLATES.find(t=>t.id===c.template)){ showErr([`Unknown template "${c.template}".`]); return; }
+    activeTemplateId=c.template;
+    if(c.blockStates){ blockStates[c.template]=Object.assign({}, blockStates[c.template], c.blockStates); }
+    if(c.pathOverrides) pathOverrides=Object.assign({}, c.pathOverrides);
+    volumeView = !!c.volumeView;
+    if(c.theme) applyTheme(c.theme);
+    if(res.errors.length) showErr(res.errors); // non-fatal notices
+    pinnedBlock=null; renderTabs(); renderSidebar(); syncViewToggle(); render();
+  };
+  reader.readAsText(f);
+  ev.target.value='';
+}
+function showErr(list){
+  document.getElementById('errModalContent').textContent=list.join('\n');
+  document.getElementById('errModal').classList.add('active');
+}
+
+/* ── Exports ── */
 function exportSVG(){
   const svg=document.getElementById('diagramSvg').cloneNode(true);
   const s=document.createElementNS(NS,'style');
@@ -631,29 +1119,60 @@ function exportPNG(){
   const s=document.createElementNS(NS,'style');
   s.textContent="@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');";
   svg.insertBefore(s,svg.firstChild);
-  svg.setAttribute('width',t.canvas.w*sc);svg.setAttribute('height',t.canvas.h*sc);
+  const w=+svg.getAttribute('width'),h=+svg.getAttribute('height');
+  svg.setAttribute('width',w*sc);svg.setAttribute('height',h*sc);
   const url=URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(svg)],{type:'image/svg+xml;charset=utf-8'}));
   const img=new Image();
   img.onload=()=>{
-    const c=document.createElement('canvas');c.width=t.canvas.w*sc;c.height=t.canvas.h*sc;
+    const c=document.createElement('canvas');c.width=w*sc;c.height=h*sc;
     const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0);
     c.toBlob(b=>{dl(b,`${t.id}-architecture.png`);URL.revokeObjectURL(url);},'image/png');
   };
   img.src=url;
 }
 function generateMermaid(){
-  const t=tpl(),st=blockStates[t.id];let lines=['graph TD'];
+  const t=tpl(),st=blockStates[t.id];
+  if(t.telemetry){
+    // Simplified flow — swimlanes & volume don't map to Mermaid.
+    const lines=['graph LR','  %% Simplified telemetry flow (swimlanes/volume not representable)'];
+    const on=activeSources();
+    on.forEach(s=>{
+      const ap=resolveActivePath(s.id,pathOverrides), pv=PATHS[ap].via;
+      const sid2=sid(s.id);
+      lines.push(`  ${sid2}["${s.label}"]`);
+      if(pv==='direct') lines.push(`  ${sid2} --> NGSIEM["NG-SIEM (LogScale)"]`);
+      else lines.push(`  ${sid2} --> ONUM["Falcon Onum"]`);
+    });
+    if(on.some(s=>PATHS[resolveActivePath(s.id,pathOverrides)].via==='onum')) lines.push('  ONUM --> NGSIEM');
+    return lines.join('\n');
+  }
+  let lines=['graph TD'];
   t.zones.forEach(z=>{const vb=t.blocks.filter(b=>b.zone===z.id&&st[b.id]);if(!vb.length)return;
     lines.push(`  subgraph ${sid(z.id)}["${z.label}"]`);vb.forEach(b=>lines.push(`    ${sid(b.id)}["${b.label}<br/><small>${b.sub}</small>"]`));lines.push('  end');});
   t.connections.forEach(c=>{if(!st[c.from]||!st[c.to])return;const s=c.type==='response'?'-.->':c.type==='data'?'..>':'-->';lines.push(`  ${sid(c.from)} ${s} ${sid(c.to)}`);});
-  lines.push('','  classDef native fill:#e6faf4,stroke:#00d4aa,color:#00896e','  classDef hybrid fill:#fff6e6,stroke:#ffa502,color:#b37300',
-    '  classDef partner fill:#f0ecff,stroke:#7c5cff,color:#5a3fcc','  classDef services fill:#ffe8f0,stroke:#ff3e7f,color:#c42858');
+  lines.push('','  classDef native fill:rgba(0,191,207,0.12),stroke:#00BFCF,color:#0a7c86','  classDef hybrid fill:rgba(255,139,0,0.12),stroke:#FF8B00,color:#b3651a',
+    '  classDef partner fill:rgba(124,58,237,0.10),stroke:#7C3AED,color:#5a3fcc','  classDef services fill:rgba(255,45,120,0.10),stroke:#FF2D78,color:#c42858');
   t.blocks.forEach(b=>{if(st[b.id])lines.push(`  class ${sid(b.id)} ${b.cov.toLowerCase()}`);});return lines.join('\n');
 }
 function generateD2(){
-  const t=tpl(),st=blockStates[t.id];let lines=[`# ${t.name}`,`# Generated by ThinkInfoSec Diagram Builder`,''];
+  const t=tpl(),st=blockStates[t.id];
+  if(t.telemetry){
+    const lines=[`# ${t.name}`,`# Simplified telemetry flow — ThinkInfoSec Diagram Builder`,''];
+    activeSources().forEach(s=>{
+      const ap=resolveActivePath(s.id,pathOverrides), pv=PATHS[ap].via;
+      const id2=s.id.replace(/-/g,'_');
+      lines.push(`${id2}: "${s.label}"`);
+      if(pv==='direct') lines.push(`${id2} -> ngsiem: "${PATHS[ap].label}"`);
+      else lines.push(`${id2} -> onum: "${PATHS[ap].label}"`);
+    });
+    lines.push('onum: "Falcon Onum"');
+    lines.push('ngsiem: "NG-SIEM (LogScale)"');
+    lines.push('onum -> ngsiem');
+    return lines.join('\n');
+  }
+  let lines=[`# ${t.name}`,`# Generated by ThinkInfoSec Diagram Builder`,''];
   t.zones.forEach(z=>{const vb=t.blocks.filter(b=>b.zone===z.id&&st[b.id]);if(!vb.length)return;
-    const zid=z.id.replace(/-/g,'_');lines.push(`${zid}: "${z.label}" {`);lines.push(`  style.fill: "${z.color}"`);
+    const zid=z.id.replace(/-/g,'_');lines.push(`${zid}: "${z.label}" {`);
     vb.forEach(b=>lines.push(`  ${b.id.replace(/-/g,'_')}: "${b.label}\\n${b.sub}"`));lines.push('}','');});
   t.connections.forEach(c=>{if(!st[c.from]||!st[c.to])return;
     const fz=t.blocks.find(b=>b.id===c.from)?.zone.replace(/-/g,'_'),tz=t.blocks.find(b=>b.id===c.to)?.zone.replace(/-/g,'_');
@@ -662,18 +1181,39 @@ function generateD2(){
 }
 function sid(id){return id.replace(/[^a-zA-Z0-9]/g,'_');}
 let codeFormat='mermaid';
-function showMermaid(){codeFormat='mermaid';document.getElementById('codeModalTitle').textContent='Mermaid';document.getElementById('codeModalContent').textContent=generateMermaid();document.getElementById('codeModal').classList.add('active');}
-function showD2(){codeFormat='d2';document.getElementById('codeModalTitle').textContent='D2';document.getElementById('codeModalContent').textContent=generateD2();document.getElementById('codeModal').classList.add('active');}
-function copyCode(){navigator.clipboard.writeText(document.getElementById('codeModalContent').textContent).then(()=>{const b=document.querySelector('.modal-actions .primary');b.textContent='Copied!';setTimeout(()=>b.textContent='Copy to Clipboard',1500);});}
+function showMermaid(){codeFormat='mermaid';document.getElementById('codeModalTitle').textContent='Mermaid'+(isTelemetry()?' (simplified)':'');document.getElementById('codeModalContent').textContent=generateMermaid();document.getElementById('codeModal').classList.add('active');}
+function showD2(){codeFormat='d2';document.getElementById('codeModalTitle').textContent='D2'+(isTelemetry()?' (simplified)':'');document.getElementById('codeModalContent').textContent=generateD2();document.getElementById('codeModal').classList.add('active');}
+function copyCode(){navigator.clipboard.writeText(document.getElementById('codeModalContent').textContent).then(()=>{const b=document.querySelector('#codeModal .modal-actions .primary');b.textContent='Copied!';setTimeout(()=>b.textContent='Copy to Clipboard',1500);});}
 function downloadCode(){const ext=codeFormat==='mermaid'?'mmd':'d2';dl(new Blob([document.getElementById('codeModalContent').textContent],{type:'text/plain'}),`${tpl().id}.${ext}`);}
 function closeModal(){document.getElementById('codeModal').classList.remove('active');}
 document.getElementById('codeModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+document.getElementById('errModal').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('active');});
 function dl(blob,fn){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fn;a.click();URL.revokeObjectURL(a.href);}
 
-// ═══════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════
-renderTabs();renderSidebar();render();
+/* ── selfTest (dev: append ?test=1) ── */
+function selfTest(){
+  const problems=[];
+  TEMPLATES.forEach(t=>{
+    if(t.telemetry){
+      telemetrySources().forEach(s=>{
+        if(!s.paths.includes(s.defaultPath)) problems.push(`${s.id}: defaultPath not in paths[]`);
+        s.outcomes.forEach(o=>{ if(!REG.outcome(o)) problems.push(`${s.id}: unknown outcome ${o}`); });
+        s.paths.forEach(p=>{ if(!PATHS[p]) problems.push(`${s.id}: unknown path ${p}`); });
+      });
+      OUTCOMES.forEach(o=>o.sources.forEach(sid=>{ if(!REG.source(sid)) problems.push(`outcome ${o.id}: unknown source ${sid}`); }));
+    } else {
+      (t.blocks||[]).forEach(b=>{ if(!t.zones.find(z=>z.id===b.zone)) problems.push(`${t.id}/${b.id}: bad zone`); });
+    }
+  });
+  if(problems.length){ console.error('[diagram-builder selfTest]', problems); }
+  else console.log('[diagram-builder selfTest] OK');
+  return problems;
+}
+
+/* ── INIT ── */
+initTheme();
+renderTabs(); renderSidebar(); syncViewToggle(); render();
+if(/[?&]test=1/.test(location.search)) selfTest();
 </script>
 </body>
 </html>
