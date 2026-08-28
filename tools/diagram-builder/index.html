@@ -16,7 +16,8 @@
   /* semantic diagram roles */
   --native:#00BFCF; --hybrid:#FF8B00; --partner:#7C3AED; --services:#FF2D78;
   --ghost:#9aa4b2;
-  --mono:'Space Mono', monospace; --sans:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono:'Space Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
   --teal:var(--accent);
 }
 :root[data-theme="dark"] {
@@ -27,7 +28,7 @@
   --ghost:#5a6b82;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:var(--sans); background:var(--bg); color:var(--text); transition:background .2s ease,color .2s ease; }
+body { font-family:var(--sans); background:var(--bg); color:var(--text); transition:background .2s ease,color .2s ease; display:flex; flex-direction:column; height:100vh; }
 ::selection { background:var(--accent-soft); }
 
 /* ── Shell: header ── */
@@ -51,6 +52,12 @@ body { font-family:var(--sans); background:var(--bg); color:var(--text); transit
 }
 .template-tab:hover { border-color:var(--accent); color:var(--text); }
 .template-tab.active { background:var(--accent); color:#0D1F3C; border-color:var(--accent); font-weight:700; }
+.tab-badge {
+  display:inline-block; margin-left:0.4rem; padding:0.08rem 0.32rem; border-radius:3px;
+  font-size:0.5rem; font-weight:700; letter-spacing:0.08em; vertical-align:1px;
+  background:rgba(255,139,0,0.15); color:#FF8B00; border:1px solid rgba(255,139,0,0.4);
+}
+.template-tab.active .tab-badge { background:rgba(13,31,60,0.15); color:#0D1F3C; border-color:rgba(13,31,60,0.35); }
 .theme-toggle {
   display:inline-flex; align-items:center; gap:0.4rem; font-family:var(--mono); font-size:0.58rem;
   letter-spacing:0.06em; text-transform:uppercase; padding:0.35rem 0.6rem; border-radius:6px;
@@ -59,7 +66,42 @@ body { font-family:var(--sans); background:var(--bg); color:var(--text); transit
 .theme-toggle:hover { border-color:var(--accent); color:var(--text); }
 .theme-toggle .swatch { width:11px; height:11px; border-radius:50%; background:linear-gradient(135deg,var(--accent) 50%,var(--accent-strong) 50%); box-shadow:0 0 0 1px var(--border); }
 
-.app { display:flex; height:calc(100vh - 53px); }
+.app { display:flex; flex:1; min-height:0; }
+
+/* ── Hero: value prop + lens flow ── */
+.hero {
+  position:relative; display:flex; align-items:center; gap:1.5rem;
+  background:var(--surface); border-bottom:1px solid var(--border);
+  padding:0.55rem 1.25rem;
+}
+.hero-text { max-width:26rem; flex-shrink:0; }
+.hero-kicker { font-family:var(--mono); font-size:0.55rem; text-transform:uppercase; letter-spacing:0.14em; color:var(--accent-strong); margin-bottom:0.2rem; }
+.hero-text p { font-size:0.7rem; line-height:1.5; color:var(--text); }
+.hero-flow { flex:1; min-width:0; display:flex; align-items:center; justify-content:center; gap:0.5rem; flex-wrap:wrap; }
+.hf-node {
+  font-family:var(--mono); font-size:0.56rem; letter-spacing:0.03em; color:var(--text);
+  background:var(--surface-2); border:1px solid var(--border); border-radius:6px;
+  padding:0.35rem 0.6rem; text-align:center; line-height:1.45;
+}
+.hf-end { border-color:var(--accent); }
+.hf-arrow { color:var(--text-muted); font-size:0.75rem; flex-shrink:0; }
+.hf-lenses { display:flex; flex-direction:column; gap:0.25rem; }
+.hf-lens {
+  display:flex; align-items:baseline; gap:0.45rem;
+  font-family:var(--mono); font-size:0.54rem; color:var(--text-muted);
+  background:var(--surface-2); border:1px solid var(--border); border-left:3px solid var(--lens);
+  border-radius:5px; padding:0.18rem 0.55rem; white-space:nowrap;
+}
+.hf-lens b { color:var(--text); font-size:0.57rem; }
+.hero-toggle {
+  position:absolute; top:6px; right:10px; background:none; border:none; cursor:pointer;
+  color:var(--text-muted); font-family:var(--mono); font-size:0.55rem; letter-spacing:0.08em; text-transform:uppercase;
+}
+.hero-toggle:hover { color:var(--accent); }
+.hero.collapsed { padding:0.3rem 1.25rem; }
+.hero.collapsed .hero-text, .hero.collapsed .hero-flow { display:none; }
+.hero-collapsed-label { display:none; font-family:var(--mono); font-size:0.55rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-muted); }
+.hero.collapsed .hero-collapsed-label { display:inline; }
 .sidebar {
   width:264px; min-width:264px; background:var(--surface-2); border-right:1px solid var(--border);
   overflow-y:auto; padding:0.7rem; flex-shrink:0;
@@ -80,6 +122,28 @@ body { font-family:var(--sans); background:var(--bg); color:var(--text); transit
 .block-toggle .cov-dot { width:7px; height:7px; border-radius:2px; flex-shrink:0; }
 .zone-group { margin-bottom:0.55rem; }
 .zone-group-title { font-size:0.57rem; font-weight:600; color:var(--accent-strong); margin-bottom:0.2rem; text-transform:uppercase; letter-spacing:0.04em; }
+/* Collapsible sections & groups */
+.sidebar-section-title, .zone-group-title { cursor:pointer; user-select:none; display:flex; align-items:center; gap:0.3rem; }
+.sidebar-section-title:hover, .zone-group-title:hover { color:var(--accent); }
+.collapse-chev { display:inline-block; font-size:0.5rem; transition:transform 0.15s; flex-shrink:0; width:0.6rem; }
+.collapsed > .collapse-chev, .collapsed .collapse-chev { transform:rotate(-90deg); }
+.sidebar-section.collapsed > .sidebar-section-body,
+.zone-group.collapsed > .zone-group-body { display:none; }
+.zone-group-count { margin-left:auto; font-weight:400; color:var(--text-muted); font-size:0.52rem; letter-spacing:0; text-transform:none; }
+.sidebar-util { display:flex; justify-content:flex-end; margin-bottom:0.4rem; }
+.sidebar-util-btn {
+  background:none; border:1px solid var(--border); border-radius:4px; cursor:pointer;
+  color:var(--text-muted); font-family:var(--mono); font-size:0.5rem;
+  letter-spacing:0.08em; text-transform:uppercase; padding:0.22rem 0.5rem;
+}
+.sidebar-util-btn:hover { color:var(--accent); border-color:var(--accent); }
+.author-input {
+  background:var(--surface); border:1px solid var(--border); border-radius:5px;
+  color:var(--text); font-family:var(--mono); font-size:0.56rem; letter-spacing:0.04em;
+  padding:0.32rem 0.5rem; width:8.5rem; outline:none;
+}
+.author-input:focus { border-color:var(--accent); }
+.author-input::placeholder { color:var(--text-muted); }
 .canvas-area { flex:1; display:flex; flex-direction:column; overflow:hidden; }
 .canvas-wrapper {
   flex:1; overflow:auto; display:flex; align-items:center; justify-content:center; padding:0.9rem;
@@ -137,6 +201,27 @@ body { font-family:var(--sans); background:var(--bg); color:var(--text); transit
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"><span class="swatch"></span><span id="themeLabel">Dark</span></button>
   </div>
 </header>
+<section class="hero" id="hero">
+  <span class="hero-collapsed-label">Why this tool — coverage &amp; roadmap lenses</span>
+  <div class="hero-text">
+    <div class="hero-kicker">Why this tool</div>
+    <p>Create clear visualisations of <b>coverage</b> and the potential <b>roadmap of new capabilities</b>, viewed through different lenses.</p>
+  </div>
+  <div class="hero-flow" id="heroFlow">
+    <span class="hf-node">Coverage &amp;<br>roadmap questions</span>
+    <span class="hf-arrow">→</span>
+    <span class="hf-lenses">
+      <span class="hf-lens" style="--lens:#00BFCF"><b>Falcon Core Stack</b>technology-aligned</span>
+      <span class="hf-lens" style="--lens:#FF2D78"><b>Managed Services</b>services-aligned</span>
+      <span class="hf-lens" style="--lens:#7C3AED"><b>Data Protection</b>outcome-aligned</span>
+    </span>
+    <span class="hf-arrow">→</span>
+    <span class="hf-node">Gap assessment</span>
+    <span class="hf-arrow">→</span>
+    <span class="hf-node hf-end">Roadmap —<br>new capabilities</span>
+  </div>
+  <button class="hero-toggle" id="heroToggle">Hide</button>
+</section>
 <div class="app">
   <aside class="sidebar" id="sidebar"></aside>
   <div class="canvas-area">
@@ -149,11 +234,14 @@ body { font-family:var(--sans); background:var(--bg); color:var(--text); transit
       <button class="export-btn" onclick="showD2()">D2</button>
       <span style="width:1px;height:16px;background:var(--border);margin:0 4px"></span>
       <button class="export-btn" id="viewToggle" onclick="toggleVolumeView()" style="display:none">Volume view</button>
+      <button class="export-btn" id="gapToggle" onclick="toggleGapView()">Gap view</button>
+      <button class="export-btn" id="paletteToggle">Pro palette</button>
+      <input type="text" id="authorInput" class="author-input" placeholder="Author name" oninput="setAuthor(this.value)">
       <button class="export-btn" onclick="saveConfig()">Save</button>
       <button class="export-btn" onclick="document.getElementById('loadFile').click()">Load</button>
       <input type="file" id="loadFile" accept="application/json,.json" style="display:none" onchange="loadConfig(event)">
       <span style="margin-left:auto;font-size:0.52rem;color:var(--text-muted);font-family:var(--mono)">
-        Unofficial CrowdStrike reference — thinkinfosec.org · April 2026
+        Unofficial CrowdStrike reference — thinkinfosec.org · August 2026
       </span>
     </div>
   </div>
@@ -266,6 +354,10 @@ function normalizeConfig(raw) {
     pathOverrides: (raw.pathOverrides && typeof raw.pathOverrides === 'object') ? raw.pathOverrides : {},
     theme: (raw.theme === 'dark' || raw.theme === 'light') ? raw.theme : null,
     blockStates: (raw.blockStates && typeof raw.blockStates === 'object') ? raw.blockStates : null,
+    volumeView: raw.volumeView === true,
+    showGaps: raw.showGaps !== false,
+    palette: (raw.palette === 'pro' || raw.palette === 'standard') ? raw.palette : null,
+    author: typeof raw.author === 'string' ? raw.author : null,
   };
   // Validate telemetry entity references where present
   Object.keys(cfg.pathOverrides).forEach(sid => {
@@ -296,86 +388,113 @@ const BH = 36, BGAP = 4, ZPAD = 6, ZHDR = 20;
 const INK = '#172B4D', MUTED = '#6B778C', FAINT = '#9aa4b2';
 
 const TEMPLATES = [
-// ─── TELEMETRY INGEST (flagship) ───
-{
-  id:'telemetry-ingest', name:'Telemetry Ingest', telemetry:true,
-  desc:'How telemetry reaches NG-SIEM. Each source shows its collection path; sensor-native sources route direct, everything else funnels through Onum or a connector. Toggle sources, click a path pill to change it, or switch to Volume view.',
-  sources: SOURCES.map(s => ({ id:s.id, on:['endpoints','identity','cloud-work','m365','cloudtrail','firewall'].includes(s.id) })),
-  destinations:['ngsiem'],
-},
 // ─── FALCON CORE STACK ───
+// 2026 module set, names verified against CrowdStrike official sources.
+// Seven equal pillar columns side by side; NG-SIEM as the data backbone bar;
+// Services as a full-width band at the bottom. Modules that genuinely span
+// pillars render a dashed "echo" copy in each extra pillar via b.span —
+// echo and primary share toggle state and hover highlighting.
 {
-  id:'falcon-core', name:'Falcon Core Stack',
-  desc:'Foundational CrowdStrike deployment — endpoint, cloud, identity, and data protection with unified security operations.',
-  canvas:{w:1440,h:490},
+  id:'falcon-core', name:'Falcon Core Stack', noFlowArrows:true, noSiemAnnotation:true,
+  desc:'The 2026 Falcon platform by pillar, using official module names. Pillars are equal columns; Falcon Onum sits in the telemetry pipeline row feeding NG-SIEM; services sit below. Dashed blocks are secondary placements of modules that span pillars.',
+  canvas:{w:1440,h:613},
+  // Grid engine descriptor: tracks are vertical columns of row-stacks; rows size to content and reflow when zones hide.
+  layout:{tracks:[{w:1400,rows:[['endpoints','identity','cloud','data','aisec','exposure','secops'],['pipeline'],['siem-bar'],['services']]}]},
   zones:[
-    {id:'identity',label:'Identity Security',x:20,y:15,w:930,h:68,color:'rgba(0,191,207,0.08)',bc:'#00BFCF',overlay:true,dir:'h'},
-    {id:'endpoints',label:'Endpoints',x:20,y:93,w:300,h:230,color:'rgba(0,191,207,0.06)',bc:'#00BFCF'},
-    {id:'cloud',label:'Cloud & SaaS',x:330,y:93,w:300,h:230,color:'rgba(124,58,237,0.06)',bc:'#7C3AED'},
-    {id:'data',label:'Data',x:640,y:93,w:300,h:230,color:'rgba(255,45,120,0.06)',bc:'#FF2D78'},
-    {id:'secops',label:'Security Operations',x:20,y:333,w:930,h:68,color:'rgba(23,43,77,0.05)',bc:'#0D1F3C',overlay:true,dir:'h'},
-    {id:'siem-bar',label:'NG-SIEM',x:20,y:411,w:930,h:48,color:'rgba(23,43,77,0.06)',bc:'#0D1F3C',isSiemBar:true},
-    {id:'services',label:'Services & Managed',x:960,y:15,w:460,h:444,color:'rgba(23,43,77,0.03)',bc:'#6B778C',isServices:true},
+    // Seven equal pillar columns (w:191, gap:10)
+    {id:'endpoints',label:'Endpoint',x:20,y:15,w:191,h:350,color:'rgba(0,191,207,0.06)',bc:'#00BFCF'},
+    {id:'identity',label:'Identity',x:221,y:15,w:191,h:350,color:'rgba(0,191,207,0.08)',bc:'#00BFCF'},
+    {id:'cloud',label:'Cloud & SaaS',x:422,y:15,w:191,h:350,color:'rgba(124,58,237,0.06)',bc:'#7C3AED'},
+    {id:'data',label:'Data Security',x:623,y:15,w:191,h:350,color:'rgba(255,45,120,0.06)',bc:'#FF2D78'},
+    {id:'aisec',label:'AI Security',x:824,y:15,w:191,h:350,color:'rgba(124,58,237,0.08)',bc:'#7C3AED'},
+    {id:'exposure',label:'Exposure Mgmt',x:1025,y:15,w:191,h:350,color:'rgba(255,139,0,0.06)',bc:'#FF8B00'},
+    {id:'secops',label:'Security Operations',x:1226,y:15,w:194,h:350,color:'rgba(23,43,77,0.05)',bc:'#0D1F3C'},
+    // Telemetry pipeline row — Falcon Onum lives here (official CrowdStrike categorisation)
+    {id:'pipeline',label:'Telemetry Pipeline',x:20,y:373,w:1400,h:68,color:'rgba(0,191,207,0.05)',bc:'#00BFCF',dir:'h'},
+    // Data backbone
+    {id:'siem-bar',label:'NG-SIEM',x:20,y:449,w:1400,h:48,color:'rgba(23,43,77,0.06)',bc:'#0D1F3C',isSiemBar:true},
+    // Services band at the very bottom
+    {id:'services',label:'Services & Managed',x:20,y:505,w:1400,h:78,color:'rgba(23,43,77,0.03)',bc:'#6B778C',isServices:true,dir:'h'},
   ],
   blocks:[
-    {id:'itdr',label:'Falcon Identity Protection',sub:'ITDR',zone:'identity',cov:'NATIVE',on:true},
-    {id:'fid',label:'Falcon ID',sub:'MFA / Passwordless',zone:'identity',cov:'HYBRID',on:true},
-    {id:'epp',label:'Falcon Prevent',sub:'EPP / NGAV',zone:'endpoints',cov:'NATIVE',on:true},
+    // Endpoint
+    {id:'epp',label:'Falcon Prevent',sub:'NGAV',zone:'endpoints',cov:'NATIVE',on:true},
     {id:'edr',label:'Falcon Insight XDR',sub:'EDR / XDR',zone:'endpoints',cov:'NATIVE',on:true},
-    {id:'fw',label:'Falcon Firewall Mgmt',sub:'Host Firewall',zone:'endpoints',cov:'NATIVE',on:true},
-    {id:'devctl',label:'Falcon Device Control',sub:'USB / Peripheral',zone:'endpoints',cov:'NATIVE',on:false},
+    {id:'fw',label:'Falcon Firewall Management',sub:'Host firewall',zone:'endpoints',cov:'NATIVE',on:true},
+    {id:'devctl',label:'Falcon Device Control',sub:'USB / peripheral',zone:'endpoints',cov:'NATIVE',on:false},
     {id:'mobile',label:'Falcon for Mobile',sub:'MTD',zone:'endpoints',cov:'NATIVE',on:false},
-    {id:'cnapp',label:'Falcon Cloud Security',sub:'CNAPP',zone:'cloud',cov:'NATIVE',on:true},
-    {id:'shield',label:'Falcon Shield',sub:'SSPM',zone:'cloud',cov:'NATIVE',on:true},
+    {id:'forensics',label:'Falcon Forensics',sub:'IR data collection',zone:'endpoints',cov:'NATIVE',on:false,span:['secops']},
+    // Identity
+    {id:'itdr',label:'Falcon Identity Protection',sub:'ITDR — AD / Entra ID',zone:'identity',cov:'NATIVE',on:true},
+    {id:'fid',label:'Falcon ID',sub:'MFA / passwordless',zone:'identity',cov:'HYBRID',on:true},
+    {id:'privacc',label:'Falcon Privileged Access',sub:'PAM / standing privilege',zone:'identity',cov:'NATIVE',on:true},
+    // Cloud & SaaS
+    {id:'cnapp',label:'Falcon Cloud Security',sub:'CNAPP — CSPM/CIEM/CWPP/ASPM',zone:'cloud',cov:'NATIVE',on:true,span:['exposure']},
+    {id:'shield',label:'Falcon Shield',sub:'SSPM — SaaS posture',zone:'cloud',cov:'NATIVE',on:true,span:['aisec']},
     {id:'cdr',label:'Cloud Detection & Response',sub:'CDR',zone:'cloud',cov:'NATIVE',on:true},
-    {id:'dlp',label:'Falcon Data Security',sub:'DLP',zone:'data',cov:'NATIVE',on:true},
-    {id:'dspm',label:'Data Security Posture',sub:'DSPM',zone:'data',cov:'NATIVE',on:true},
-    {id:'dc',label:'AI Data Classification',sub:'Classification',zone:'data',cov:'NATIVE',on:false},
-    {id:'soar',label:'Falcon Fusion SOAR',sub:'Automation',zone:'secops',cov:'NATIVE',on:true},
+    // Data Security (unified Falcon Data Security, split by surface)
+    {id:'dlp',label:'Falcon Data Security for Endpoint',sub:'DLP — data in motion',zone:'data',cov:'NATIVE',on:true,span:['endpoints']},
+    {id:'ds-cloud',label:'Falcon Data Security for Cloud',sub:'Runtime DSPM',zone:'data',cov:'NATIVE',on:true,span:['cloud']},
+    {id:'seb',label:'Falcon Secure Access',sub:'Secure enterprise browser',zone:'data',cov:'NATIVE',on:false,span:['endpoints']},
+    // AI Security — Falcon AIDR ships as two modules (native, built into the Falcon sensor);
+    // ids match the Data Protection lens so toggle state carries over
+    {id:'aidr-wf',label:'Falcon AIDR for Workforce',sub:'AI traffic — endpoints',zone:'aisec',cov:'NATIVE',on:true,span:['endpoints']},
+    {id:'aidr-ag',label:'Falcon AIDR for Agents',sub:'AI workloads — cloud',zone:'aisec',cov:'NATIVE',on:true,span:['cloud']},
+    // Exposure Management (Surface = EASM, Spotlight = VM; Discover + IT hygiene fold in here)
+    {id:'ctem',label:'Falcon Exposure Management',sub:'RBVM / ExPRT.AI — unified exposure',zone:'exposure',cov:'NATIVE',on:true},
+    {id:'surface',label:'Falcon Surface',sub:'EASM — external attack surface',zone:'exposure',cov:'NATIVE',on:true},
+    {id:'spotlight',label:'Falcon Spotlight',sub:'Vulnerability management',zone:'exposure',cov:'NATIVE',on:true},
+    {id:'discover',label:'Falcon Discover',sub:'Asset inventory / IT hygiene',zone:'exposure',cov:'NATIVE',on:true},
+    {id:'filevantage',label:'Falcon FileVantage',sub:'File integrity monitoring',zone:'exposure',cov:'NATIVE',on:false},
+    {id:'forit',label:'Falcon for IT',sub:'IT ops / hygiene',zone:'exposure',cov:'NATIVE',on:false},
+    {id:'drp',label:'Falcon Intelligence Recon',sub:'DRP — digital risk protection',zone:'exposure',cov:'NATIVE',on:false},
+    // Security Operations
+    {id:'soar',label:'Falcon Fusion SOAR',sub:'Automation & playbooks',zone:'secops',cov:'NATIVE',on:true},
     {id:'charlotte',label:'Charlotte AI',sub:'Agentic SOC',zone:'secops',cov:'NATIVE',on:true},
-    {id:'agentworks',label:'AgentWorks',sub:'Agentic Ecosystem',zone:'secops',cov:'NATIVE',on:true},
-    {id:'onum',label:'Falcon Onum',sub:'Data Pipeline',zone:'secops',cov:'NATIVE',on:true},
-    {id:'cti',label:'Falcon Adversary Intel',sub:'CTI',zone:'secops',cov:'NATIVE',on:true},
-    {id:'drp',label:'Falcon Intel Recon',sub:'DRP',zone:'secops',cov:'NATIVE',on:false},
-    {id:'ctem',label:'Falcon Exposure Mgmt',sub:'CTEM / EASM',zone:'secops',cov:'NATIVE',on:false},
-    {id:'siem',label:'Falcon NG-SIEM',sub:'LogScale — Unified Data Platform',zone:'siem-bar',cov:'NATIVE',on:true},
+    {id:'agentworks',label:'Charlotte AI AgentWorks',sub:'Custom agent builder',zone:'secops',cov:'NATIVE',on:true},
+    {id:'cti',label:'Falcon Adversary Intelligence',sub:'Threat intel · Sandbox analysis',zone:'secops',cov:'NATIVE',on:true},
+    {id:'foundry',label:'Falcon Foundry',sub:'Low-code custom apps',zone:'secops',cov:'NATIVE',on:false},
+    // Telemetry Pipeline row
+    {id:'onum',label:'Falcon Onum',sub:'Real-time data control plane — parse · enrich · filter · route',zone:'pipeline',cov:'NATIVE',on:true},
+    {id:'logcoll',label:'Falcon LogScale Collector',sub:'Log collection & shipping',zone:'pipeline',cov:'NATIVE',on:false},
+    // NG-SIEM bar
+    {id:'siem',label:'Falcon Next-Gen SIEM',sub:'LogScale — unified data platform',zone:'siem-bar',cov:'NATIVE',on:true},
+    // Services & Managed (bottom band)
     {id:'complete',label:'Falcon Complete',sub:'Agentic MDR',zone:'services',cov:'SERVICES',on:true},
-    {id:'overwatch',label:'Falcon OverWatch',sub:'Managed Threat Hunting',zone:'services',cov:'SERVICES',on:true},
-    {id:'ir',label:'CrowdStrike IR Services',sub:'Incident Response Retainer',zone:'services',cov:'SERVICES',on:false},
-    {id:'ps',label:'CrowdStrike Pro Services',sub:'Deployment & Architecture',zone:'services',cov:'SERVICES',on:false},
-    {id:'mssp-svc',label:'MSSP Managed Service',sub:'Partner-Delivered SOC',zone:'services',cov:'PARTNER',on:false},
-    {id:'gsi',label:'SI Delivery',sub:'System Integrator Services',zone:'services',cov:'PARTNER',on:false},
-    {id:'zscaler-resp',label:'Zscaler',sub:'ZIA Host Group Response',zone:'services',cov:'PARTNER',on:false},
-    {id:'entra-resp',label:'Microsoft Entra ID',sub:'User State Response',zone:'services',cov:'PARTNER',on:false},
-    {id:'fortinet-resp',label:'Fortinet',sub:'Access Group Response',zone:'services',cov:'PARTNER',on:false},
+    {id:'overwatch',label:'Falcon Adversary OverWatch',sub:'Managed threat hunting',zone:'services',cov:'SERVICES',on:true},
+    {id:'ir',label:'CrowdStrike IR Services',sub:'IR retainer',zone:'services',cov:'SERVICES',on:false},
+    {id:'ps',label:'CrowdStrike Pro Services',sub:'Deployment & architecture',zone:'services',cov:'SERVICES',on:false},
+    {id:'mssp-svc',label:'MSSP Managed Service',sub:'Partner-delivered SOC',zone:'services',cov:'PARTNER',on:false},
+    {id:'gsi',label:'Professional Services Delivery',sub:'SI / integrator delivery',zone:'services',cov:'PARTNER',on:false},
   ],
   connections:[
-    {from:'onum',to:'siem',type:'data'},
+    {from:'onum',to:'siem',type:'data'},{from:'logcoll',to:'siem',type:'data'},
     {from:'siem',to:'soar',type:'ops'},{from:'soar',to:'charlotte',type:'ops'},{from:'charlotte',to:'agentworks',type:'ops'},
-    {from:'soar',to:'zscaler-resp',type:'response'},{from:'soar',to:'entra-resp',type:'response'},{from:'soar',to:'fortinet-resp',type:'response'},
   ]
 },
 // ─── MANAGED SERVICES ───
 {
   id:'managed-services', name:'Managed Services',
-  desc:'Horizontal technology layers with service delivery options on the right. CrowdStrike-managed, MSSP-delivered, or blended.',
+  desc:'Technology capability columns on top, telemetry pipeline and NG-SIEM backbone in the middle, and service delivery options — CrowdStrike-managed, MSSP-delivered, or professional services — as equal columns at the bottom.',
   canvas:{w:1440,h:510},
+  layout:{tracks:[{w:1400,rows:[['detect','protect','platform'],['pipeline'],['siem-bar'],['cs-managed','partner-managed','pro-services']]}]},
   zones:[
     {id:'detect',label:'Detection & Visibility',x:20,y:15,w:455,h:230,color:'rgba(0,191,207,0.06)',bc:'#00BFCF'},
     {id:'protect',label:'Protection & Prevention',x:485,y:15,w:455,h:230,color:'rgba(124,58,237,0.06)',bc:'#7C3AED'},
-    {id:'platform',label:'Falcon Platform',x:20,y:255,w:920,h:68,color:'rgba(0,191,207,0.08)',bc:'#00BFCF',overlay:true,dir:'h'},
-    {id:'siem-bar',label:'NG-SIEM',x:20,y:333,w:920,h:48,color:'rgba(23,43,77,0.06)',bc:'#0D1F3C',isSiemBar:true},
-    {id:'cs-managed',label:'CrowdStrike Managed',x:960,y:15,w:460,h:190,color:'rgba(255,45,120,0.06)',bc:'#FF2D78',isServices:true},
-    {id:'partner-managed',label:'MSSP / Partner Delivered',x:960,y:215,w:460,h:190,color:'rgba(255,139,0,0.06)',bc:'#FF8B00',isServices:true},
-    {id:'pro-services',label:'Professional Services',x:960,y:415,w:460,h:68,color:'rgba(23,43,77,0.03)',bc:'#6B778C',isServices:true,dir:'h'},
+    {id:'platform',label:'Falcon Platform',x:950,y:15,w:470,h:230,color:'rgba(0,191,207,0.08)',bc:'#00BFCF'},
+    {id:'pipeline',label:'Telemetry Pipeline',x:20,y:255,w:1400,h:68,color:'rgba(0,191,207,0.05)',bc:'#00BFCF',dir:'h'},
+    {id:'siem-bar',label:'NG-SIEM',x:20,y:333,w:1400,h:48,color:'rgba(23,43,77,0.06)',bc:'#0D1F3C',isSiemBar:true},
+    {id:'cs-managed',label:'CrowdStrike Managed',x:20,y:391,w:455,h:190,color:'rgba(255,45,120,0.06)',bc:'#FF2D78',isServices:true},
+    {id:'partner-managed',label:'MSSP / Partner Delivered',x:485,y:391,w:455,h:190,color:'rgba(255,139,0,0.06)',bc:'#FF8B00',isServices:true},
+    {id:'pro-services',label:'Professional Services',x:950,y:391,w:470,h:190,color:'rgba(23,43,77,0.03)',bc:'#6B778C',isServices:true},
   ],
   blocks:[
-    {id:'siem-ms',label:'Falcon NG-SIEM',sub:'LogScale',zone:'siem-bar',cov:'NATIVE',on:true},
+    {id:'siem',label:'Falcon Next-Gen SIEM',sub:'LogScale',zone:'siem-bar',cov:'NATIVE',on:true},
     {id:'edr',label:'Falcon Insight XDR',sub:'EDR / XDR',zone:'detect',cov:'NATIVE',on:true},
-    {id:'cti',label:'Falcon Adversary Intel',sub:'CTI',zone:'detect',cov:'NATIVE',on:true},
-    {id:'onum',label:'Falcon Onum',sub:'Data Pipeline',zone:'detect',cov:'NATIVE',on:false},
-    {id:'ctem',label:'Falcon Exposure Mgmt',sub:'CTEM / EASM',zone:'detect',cov:'NATIVE',on:false},
-    {id:'drp',label:'Falcon Intel Recon',sub:'DRP',zone:'detect',cov:'NATIVE',on:false},
+    {id:'cti',label:'Falcon Adversary Intelligence',sub:'CTI',zone:'detect',cov:'NATIVE',on:true},
+    {id:'onum',label:'Falcon Onum',sub:'Real-time data control plane — parse · enrich · filter · route',zone:'pipeline',cov:'NATIVE',on:false},
+    {id:'ctem',label:'Falcon Exposure Management',sub:'CTEM / EASM',zone:'detect',cov:'NATIVE',on:false},
+    {id:'drp',label:'Falcon Intelligence Recon',sub:'DRP',zone:'detect',cov:'NATIVE',on:false},
     {id:'epp',label:'Falcon Prevent',sub:'EPP / NGAV',zone:'protect',cov:'NATIVE',on:true},
     {id:'itdr',label:'Falcon Identity Protection',sub:'ITDR',zone:'protect',cov:'NATIVE',on:true},
     {id:'cnapp',label:'Falcon Cloud Security',sub:'CNAPP',zone:'protect',cov:'NATIVE',on:true},
@@ -383,10 +502,10 @@ const TEMPLATES = [
     {id:'seb',label:'Falcon Secure Access',sub:'Secure Browser',zone:'protect',cov:'NATIVE',on:false},
     {id:'soar',label:'Falcon Fusion SOAR',sub:'Playbook Automation',zone:'platform',cov:'NATIVE',on:true},
     {id:'charlotte',label:'Charlotte AI',sub:'Agentic SOC',zone:'platform',cov:'NATIVE',on:true},
-    {id:'agentworks',label:'AgentWorks',sub:'Agentic Ecosystem',zone:'platform',cov:'NATIVE',on:true},
+    {id:'agentworks',label:'Charlotte AI AgentWorks',sub:'Agentic Ecosystem',zone:'platform',cov:'NATIVE',on:true},
     {id:'foundry',label:'Falcon Foundry',sub:'Custom Apps',zone:'platform',cov:'NATIVE',on:false},
     {id:'complete',label:'Falcon Complete',sub:'Agentic MDR',zone:'cs-managed',cov:'SERVICES',on:true},
-    {id:'overwatch',label:'Falcon OverWatch',sub:'Managed Threat Hunting',zone:'cs-managed',cov:'SERVICES',on:true},
+    {id:'overwatch',label:'Falcon Adversary OverWatch',sub:'Managed Threat Hunting',zone:'cs-managed',cov:'SERVICES',on:true},
     {id:'complete-sp',label:'Falcon Complete for SPs',sub:'Service Provider MDR',zone:'cs-managed',cov:'SERVICES',on:false},
     {id:'ir',label:'CrowdStrike IR Services',sub:'Incident Response Retainer',zone:'cs-managed',cov:'SERVICES',on:false},
     {id:'mssp-soc',label:'MSSP SOC Service',sub:'24/7 Partner-Run SOC',zone:'partner-managed',cov:'PARTNER',on:true},
@@ -395,68 +514,82 @@ const TEMPLATES = [
     {id:'mssp-identity',label:'MSSP Identity Ops',sub:'Partner Identity Monitoring',zone:'partner-managed',cov:'PARTNER',on:false},
     {id:'ps-deploy',label:'Platform Deployment',sub:'CrowdStrike Pro Services',zone:'pro-services',cov:'SERVICES',on:true},
     {id:'ps-arch',label:'Architecture Review',sub:'CrowdStrike Services',zone:'pro-services',cov:'SERVICES',on:true},
-    {id:'gsi',label:'SI Delivery',sub:'System Integrator Services',zone:'pro-services',cov:'PARTNER',on:false},
+    {id:'gsi',label:'Professional Services Delivery',sub:'SI / integrator delivery',zone:'pro-services',cov:'PARTNER',on:false},
     {id:'ps-transform',label:'Security Transformation',sub:'CrowdStrike Services',zone:'pro-services',cov:'SERVICES',on:false},
   ],
   connections:[
-    {from:'siem-ms',to:'soar',type:'ops'},{from:'soar',to:'charlotte',type:'ops'},{from:'charlotte',to:'agentworks',type:'ops'},
+    {from:'onum',to:'siem',type:'data'},
+    {from:'siem',to:'soar',type:'ops'},{from:'soar',to:'charlotte',type:'ops'},{from:'charlotte',to:'agentworks',type:'ops'},
   ]
 },
 // ─── DATA PROTECTION ───
 {
   id:'data-protection', name:'Data Protection',
-  desc:'End-to-end data protection across endpoints, SaaS, cloud, and AI workloads — AIDR for Workforce and AIDR for Agents.',
+  desc:'End-to-end data protection across endpoints, SaaS, cloud, and AI workloads — AIDR for Workforce and AIDR for Agents. AI security spans the top, operations and pipeline sit above the NG-SIEM backbone, services at the bottom.',
   canvas:{w:1440,h:410},
+  layout:{tracks:[{w:1400,rows:[['ai-overlay'],['browser','saas','clouddata'],['visibility'],['pipeline'],['siem-bar'],['services']]}]},
   zones:[
-    {id:'ai-overlay',label:'AI Security — CrowdStrike AIDR',x:20,y:15,w:930,h:68,color:'rgba(124,58,237,0.08)',bc:'#7C3AED',overlay:true,dir:'h'},
-    {id:'browser',label:'Browser & Endpoints',x:20,y:93,w:300,h:150,color:'rgba(0,191,207,0.06)',bc:'#00BFCF'},
-    {id:'saas',label:'SaaS & Email',x:330,y:93,w:300,h:150,color:'rgba(124,58,237,0.06)',bc:'#7C3AED'},
-    {id:'clouddata',label:'Cloud & Data Stores',x:640,y:93,w:300,h:150,color:'rgba(255,45,120,0.06)',bc:'#FF2D78'},
-    {id:'visibility',label:'Visibility & Operations',x:20,y:253,w:930,h:68,color:'rgba(23,43,77,0.05)',bc:'#0D1F3C',overlay:true,dir:'h'},
-    {id:'siem-bar',label:'NG-SIEM',x:20,y:331,w:930,h:48,color:'rgba(23,43,77,0.06)',bc:'#0D1F3C',isSiemBar:true},
-    {id:'services',label:'Services & Partners',x:960,y:15,w:460,h:364,color:'rgba(23,43,77,0.03)',bc:'#6B778C',isServices:true},
+    {id:'ai-overlay',label:'AI Security — Falcon AIDR',x:20,y:15,w:1400,h:68,color:'rgba(124,58,237,0.08)',bc:'#7C3AED',overlay:true,dir:'h'},
+    {id:'browser',label:'Browser & Endpoints',x:20,y:93,w:455,h:150,color:'rgba(0,191,207,0.06)',bc:'#00BFCF'},
+    {id:'saas',label:'SaaS & Email',x:485,y:93,w:455,h:150,color:'rgba(124,58,237,0.06)',bc:'#7C3AED'},
+    {id:'clouddata',label:'Cloud & Data Stores',x:950,y:93,w:470,h:150,color:'rgba(255,45,120,0.06)',bc:'#FF2D78'},
+    {id:'visibility',label:'Visibility & Operations',x:20,y:253,w:1400,h:68,color:'rgba(23,43,77,0.05)',bc:'#0D1F3C',overlay:true,dir:'h'},
+    {id:'pipeline',label:'Telemetry Pipeline',x:20,y:331,w:1400,h:68,color:'rgba(0,191,207,0.05)',bc:'#00BFCF',dir:'h'},
+    {id:'siem-bar',label:'NG-SIEM',x:20,y:409,w:1400,h:48,color:'rgba(23,43,77,0.06)',bc:'#0D1F3C',isSiemBar:true},
+    {id:'services',label:'Services & Partners',x:20,y:467,w:1400,h:68,color:'rgba(23,43,77,0.03)',bc:'#6B778C',isServices:true,dir:'h'},
   ],
   blocks:[
     {id:'aidr-wf',label:'AIDR for Workforce',sub:'AI Traffic — Endpoints',zone:'ai-overlay',cov:'HYBRID',on:true},
     {id:'aidr-ag',label:'AIDR for Agents',sub:'AI Workloads — Cloud',zone:'ai-overlay',cov:'HYBRID',on:true},
-    {id:'seb',label:'Falcon Secure Access',sub:'Secure Enterprise Browser',zone:'browser',cov:'NATIVE',on:true},
-    {id:'dlp',label:'Falcon Data Security',sub:'Endpoint DLP',zone:'browser',cov:'NATIVE',on:true},
+    {id:'seb',label:'Falcon Secure Access',sub:'Secure Enterprise Browser',zone:'browser',cov:'NATIVE',on:false},
+    {id:'dlp',label:'Falcon Data Security for Endpoint',sub:'Endpoint DLP',zone:'browser',cov:'NATIVE',on:true},
     {id:'devctl',label:'Falcon Device Control',sub:'USB / Peripheral DLP',zone:'browser',cov:'NATIVE',on:false},
     {id:'shield',label:'Falcon Shield',sub:'SSPM',zone:'saas',cov:'NATIVE',on:true},
     {id:'email',label:'Email Security',sub:'Proofpoint / Abnormal',zone:'saas',cov:'PARTNER',on:true},
-    {id:'dspm',label:'Falcon DSPM',sub:'Cloud Data Posture',zone:'clouddata',cov:'NATIVE',on:true},
-    {id:'dc',label:'AI Data Classification',sub:'PII / PCI / IP Labelling',zone:'clouddata',cov:'NATIVE',on:true},
+    {id:'ds-cloud',label:'Falcon Data Security for Cloud',sub:'Runtime DSPM',zone:'clouddata',cov:'NATIVE',on:true},
+    {id:'dc',label:'AI Data Classification',sub:'Falcon Data Security feature',zone:'clouddata',cov:'NATIVE',on:true},
     {id:'cnapp',label:'Falcon Cloud Security',sub:'Workload Protection',zone:'clouddata',cov:'NATIVE',on:false},
     {id:'charlotte',label:'Charlotte AI',sub:'Data Investigation',zone:'visibility',cov:'NATIVE',on:true},
     {id:'soar',label:'Falcon Fusion SOAR',sub:'DLP Response Playbooks',zone:'visibility',cov:'NATIVE',on:true},
-    {id:'onum',label:'Falcon Onum',sub:'Data Pipeline',zone:'visibility',cov:'NATIVE',on:false},
-    {id:'agentworks',label:'AgentWorks',sub:'Agentic Ecosystem',zone:'visibility',cov:'NATIVE',on:false},
-    {id:'siem',label:'Falcon NG-SIEM',sub:'LogScale — Unified Data Platform',zone:'siem-bar',cov:'NATIVE',on:true},
+    {id:'onum',label:'Falcon Onum',sub:'Real-time data control plane — parse · enrich · filter · route',zone:'pipeline',cov:'NATIVE',on:false},
+    {id:'agentworks',label:'Charlotte AI AgentWorks',sub:'Agentic Ecosystem',zone:'visibility',cov:'NATIVE',on:false},
+    {id:'siem',label:'Falcon Next-Gen SIEM',sub:'LogScale — Unified Data Platform',zone:'siem-bar',cov:'NATIVE',on:true},
     {id:'casb',label:'CASB',sub:'Netskope / Zscaler',zone:'services',cov:'PARTNER',on:true},
     {id:'purview',label:'Microsoft Purview',sub:'Label Integration',zone:'services',cov:'PARTNER',on:true},
     {id:'complete',label:'Falcon Complete',sub:'Managed DLP Response',zone:'services',cov:'SERVICES',on:false},
-    {id:'ps',label:'Data Protection Workshop',sub:'CrowdStrike Pro Services',zone:'services',cov:'SERVICES',on:false},
+    {id:'ps-workshop',label:'Data Protection Workshop',sub:'CrowdStrike Pro Services',zone:'services',cov:'SERVICES',on:false},
     {id:'mssp-dlp',label:'MSSP Data Security Ops',sub:'Partner-Managed DLP',zone:'services',cov:'PARTNER',on:false},
   ],
   connections:[
+    {from:'onum',to:'siem',type:'data'},
     {from:'siem',to:'soar',type:'ops'},{from:'soar',to:'charlotte',type:'ops'},
     {from:'dc',to:'dlp',type:'data'},
   ]
-}
+},
+// ─── TELEMETRY INGEST (alpha) ───
+{
+  id:'telemetry-ingest', name:'Telemetry Ingest', telemetry:true, badge:'ALPHA',
+  desc:'How telemetry reaches NG-SIEM. Each source shows its collection path; sensor-native sources route direct, everything else funnels through Onum or a connector. Toggle sources, click a path pill to change it, or switch to Volume view.',
+  sources: SOURCES.map(s => ({ id:s.id, on:['endpoints','identity','cloud-work','m365','cloudtrail','firewall'].includes(s.id) })),
+  destinations:['ngsiem'],
+},
 ];
 
 /* ═══════════════════════════════════════════════════════════════════════
    LAYER 3 — STATE + MODEL  (derived, no direct schema reads by render)
    ═══════════════════════════════════════════════════════════════════════ */
 let activeTemplateId = TEMPLATES[0].id;
+// Global module state, keyed by module/source id — a toggle in one view carries over to
+// every other view that features the same module. First template to declare an id sets its default.
 let blockStates = {};
 let pathOverrides = {};           // telemetry: { sourceId: pathId }
 let volumeView = false;           // telemetry: path view vs Sankey volume view
+let showGaps = true;              // alliance: show off-modules as GAP ghosts vs hide them entirely
+const collapsedSections = {};     // sidebar: { 'templateId:sectionKey': bool } — session-only
 let pinnedBlock = null;
 TEMPLATES.forEach(t => {
-  blockStates[t.id] = {};
-  if (t.telemetry) t.sources.forEach(s => { blockStates[t.id][s.id] = s.on; });
-  else (t.blocks||[]).forEach(b => { blockStates[t.id][b.id] = b.on; });
+  if (t.telemetry) t.sources.forEach(s => { if (blockStates[s.id] === undefined) blockStates[s.id] = s.on; });
+  else (t.blocks||[]).forEach(b => { if (blockStates[b.id] === undefined) blockStates[b.id] = b.on; });
 });
 function tpl() { return TEMPLATES.find(t => t.id === activeTemplateId); }
 function isTelemetry() { return !!tpl().telemetry; }
@@ -465,6 +598,9 @@ function isTelemetry() { return !!tpl().telemetry; }
    LAYER 4 — RENDER (SVG engine) + SHELL (DOM)
    ═══════════════════════════════════════════════════════════════════════ */
 const NS = 'http://www.w3.org/2000/svg';
+// Hub font stacks — keep SVG text on the same fallback chain as the shell UI
+const FONT_SANS = "'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans',Helvetica,Arial,sans-serif";
+const FONT_MONO = "'Space Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace";
 function el(tag,a={}){const e=document.createElementNS(NS,tag);for(const[k,v]of Object.entries(a))e.setAttribute(k,v);return e;}
 function txt(t,x,y,a={}){const e=el('text',{x,y,...a});e.textContent=t;return e;}
 
@@ -481,6 +617,100 @@ function initTheme(){
   applyTheme(t==='dark' ? 'dark' : 'light');
 }
 document.getElementById('themeToggle').addEventListener('click',()=>{ applyTheme(currentTheme()==='dark'?'light':'dark'); });
+
+/* ── Hero: value prop + lens flow ── */
+function initHero(){
+  const hero=document.getElementById('hero'), btn=document.getElementById('heroToggle');
+  if(!hero||!btn) return;
+  let collapsed=false; try{ collapsed=localStorage.getItem('tih-db-hero')==='collapsed'; }catch(e){}
+  const apply=c=>{ hero.classList.toggle('collapsed',c); btn.textContent=c?'Show':'Hide'; };
+  apply(collapsed);
+  btn.addEventListener('click',()=>{
+    const c=!hero.classList.contains('collapsed');
+    apply(c);
+    try{ localStorage.setItem('tih-db-hero',c?'collapsed':'open'); }catch(e){}
+  });
+}
+
+/* ── Diagram palette ── */
+// 'standard' = ThinkInfoSec accent set; 'pro' = muted, boardroom-safe tones.
+// C() maps any hard-coded diagram colour through the active palette at render time.
+let palette = 'standard';
+const PRO_COLORS = {
+  // CrowdStrike-flavoured: desaturated teal + brick red on charcoal, numbed neutrals
+  '#00BFCF':'#3F7E7C', // cyan accent   → muted teal
+  '#7C3AED':'#6B6875', // violet        → numbed plum-grey
+  '#FF2D78':'#A6494B', // magenta       → muted CS red
+  '#FF8B00':'#9C7A3C', // orange        → numbed bronze
+  '#0D1F3C':'#23282D', // navy          → charcoal
+  '#172B4D':'#242A30', // ink           → near-black slate
+  '#6B778C':'#6E7478', // muted         → warm grey
+  '#9AA4B2':'#9A9FA3', // faint         → neutral grey
+  '#C3CCD6':'#C9CDD1', // light border
+  '#DFE1E6':'#E3E5E7', // lane border
+  '#B6BFCA':'#9CA0A5',
+  '#9FB2C8':'#9AA0A5',
+  '#44546A':'#4A4F55', // echo label
+  '#CBD5E1':'#CDD1D5',
+  '#C9D2DC':'#CDD1D5',
+  '#0A7C86':'#35605E', // coverage text tones
+  '#B3651A':'#6F5A2E',
+  '#5A3FCC':'#565C66',
+  '#C42858':'#7E3A40',
+};
+function C(col){
+  if(palette==='standard'||!col) return col;
+  const up=col.toUpperCase();
+  if(PRO_COLORS[up]) return PRO_COLORS[up];
+  const m=col.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)$/);
+  if(m){
+    const key='#'+[m[1],m[2],m[3]].map(n=>(+n).toString(16).padStart(2,'0')).join('').toUpperCase();
+    const tgt=PRO_COLORS[key];
+    if(tgt&&m[4]!==undefined){
+      const r=parseInt(tgt.slice(1,3),16),g=parseInt(tgt.slice(3,5),16),b=parseInt(tgt.slice(5,7),16);
+      return `rgba(${r},${g},${b},${m[4]})`;
+    }
+  }
+  return col;
+}
+function covC(k){ const v=COV[k]||COV.NATIVE; return {fill:C(v.fill),stroke:C(v.stroke),accent:C(v.accent),text:C(v.text)}; }
+function ghostC(){ return {fill:GHOST.fill,stroke:C(GHOST.stroke),accent:C(GHOST.accent),text:C(GHOST.text)}; }
+function applyPalette(p){
+  palette=p==='pro'?'pro':'standard';
+  try{ localStorage.setItem('tih-db-palette',palette); }catch(e){}
+  const btn=document.getElementById('paletteToggle');
+  if(btn){ btn.textContent=palette==='pro'?'Standard palette':'Pro palette'; btn.classList.toggle('active',palette==='pro'); }
+}
+function initPalette(){
+  let p=null; try{ p=localStorage.getItem('tih-db-palette'); }catch(e){}
+  applyPalette(p==='pro'?'pro':'standard');
+}
+document.getElementById('paletteToggle').addEventListener('click',()=>{ applyPalette(palette==='pro'?'standard':'pro'); pinnedBlock=null; renderSidebar(); render(); });
+
+/* ── Diagram documentation header ── */
+const HEADER_H=46, FOOTER_H=26, DIAG_M=20, ROW_GAP=10;
+let authorName='';
+function initAuthor(){
+  try{ authorName=localStorage.getItem('tih-db-author')||''; }catch(e){}
+  const inp=document.getElementById('authorInput');
+  if(inp) inp.value=authorName;
+}
+function setAuthor(v){
+  authorName=v.trim();
+  try{ localStorage.setItem('tih-db-author',authorName); }catch(e){}
+  render();
+}
+function generatedStamp(){
+  const d=new Date(), MON=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  return `${String(d.getDate()).padStart(2,'0')} ${MON[d.getMonth()]} ${d.getFullYear()}`;
+}
+function drawHeader(svg,t,W){
+  svg.appendChild(txt(t.name,DIAG_M,22,{'font-family':FONT_SANS,'font-size':'14','font-weight':'700',fill:C('#172B4D')}));
+  svg.appendChild(txt('CrowdStrike architecture reference — thinkinfosec.org',DIAG_M,34,{'font-family':FONT_MONO,'font-size':'6.5',fill:C('#6B778C'),'letter-spacing':'0.04em'}));
+  svg.appendChild(txt(`GENERATED ${generatedStamp()}`,W-DIAG_M,18,{'text-anchor':'end','font-family':FONT_MONO,'font-size':'6.5','font-weight':'700',fill:C('#6B778C'),'letter-spacing':'0.08em'}));
+  svg.appendChild(txt(`AUTHOR ${(authorName||'ThinkInfoSec').toUpperCase()}`,W-DIAG_M,29,{'text-anchor':'end','font-family':FONT_MONO,'font-size':'6.5',fill:C('#9AA4B2'),'letter-spacing':'0.08em'}));
+  svg.appendChild(el('line',{x1:DIAG_M,y1:39,x2:W-DIAG_M,y2:39,stroke:C('#DFE1E6'),'stroke-width':0.8}));
+}
 
 /* ── Connection routing (alliance templates) ── */
 function routeConnection(fromId,toId,bp,template){
@@ -546,11 +776,50 @@ function render(){
 
 /* ── RENDER: alliance templates (re-tokened) ── */
 function renderAlliance(){
-  const t=tpl(),st=blockStates[t.id];
+  const t=tpl(),st=blockStates;
   const svg=document.getElementById('diagramSvg');
   svg.innerHTML='';
-  svg.setAttribute('width',t.canvas.w);svg.setAttribute('height',t.canvas.h);
-  svg.setAttribute('viewBox',`0 0 ${t.canvas.w} ${t.canvas.h}`);
+
+  // Gap view off: zones with no enabled modules (primary or echo) are removed entirely.
+  const vis=b=>showGaps||st[b.id];
+  const zoneHasContent=z=>showGaps||t.blocks.some(b=>vis(b)&&(b.zone===z.id||(b.span||[]).includes(z.id)));
+
+  // ── Grid engine: rows size to content, tracks stack vertically, hidden zones leave no hole ──
+  const zById=id=>t.zones.find(z=>z.id===id);
+  const contentH=z=>{
+    if(z.isSiemBar) return BH+12;
+    if(z.dir==='h') return ZHDR+ZPAD*2+BH;
+    const n=t.blocks.filter(b=>vis(b)&&(b.zone===z.id||(b.span||[]).includes(z.id))).length;
+    return Math.max(ZHDR+ZPAD*2+BH, ZHDR+ZPAD*2 + n*BH + Math.max(0,n-1)*BGAP);
+  };
+  const W=t.canvas.w;
+  const tracks=t.layout.tracks.map(tr=>({
+    w:tr.w,
+    rows:tr.rows.map(row=>row.filter(id=>{const z=zById(id);return z&&zoneHasContent(z);})).filter(r=>r.length)
+  })).filter(tr=>tr.rows.length);
+  const availW=W-DIAG_M*2-(tracks.length-1)*ROW_GAP;
+  const totW=tracks.reduce((a,tr)=>a+tr.w,0)||1;
+  const geom={}, bottoms=[];
+  let tx=DIAG_M;
+  tracks.forEach(tr=>{
+    const tw=Math.round(availW*tr.w/totW);
+    let ty=HEADER_H;
+    tr.rows.forEach(row=>{
+      const rh=Math.max(...row.map(id=>contentH(zById(id))));
+      const zw=(tw-(row.length-1)*ROW_GAP)/row.length;
+      row.forEach((id,ci)=>{ geom[id]={x:Math.round(tx+ci*(zw+ROW_GAP)),y:ty,w:Math.round(zw),h:rh}; });
+      ty+=rh+ROW_GAP;
+    });
+    bottoms.push(ty-ROW_GAP);
+    tx+=tw+ROW_GAP;
+  });
+  const maxB=bottoms.length?Math.max(...bottoms):HEADER_H;
+  // Equalise track bottoms so columns end flush
+  tracks.forEach((tr,ti)=>{ tr.rows[tr.rows.length-1].forEach(id=>{ geom[id].h+=maxB-bottoms[ti]; }); });
+  const H=maxB+FOOTER_H;
+
+  svg.setAttribute('width',W);svg.setAttribute('height',H);
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
   svg.appendChild(Object.assign(el('style'),{textContent:'[data-block],[data-conn]{transition:opacity 0.15s ease}'}));
   const defs=el('defs');
   const bsf=el('filter',{id:'bs',x:'-3%',y:'-3%',width:'106%',height:'110%'});
@@ -558,50 +827,77 @@ function renderAlliance(){
   defs.appendChild(bsf);
   Object.entries(CONN_TYPES).forEach(([k,ct])=>{
     const m=el('marker',{id:`ah-${k}`,viewBox:'0 0 10 10',refX:'9',refY:'5',markerWidth:'5',markerHeight:'5',orient:'auto'});
-    m.appendChild(el('path',{d:'M0 1.5 L10 5 L0 8.5 z',fill:ct.stroke}));
+    m.appendChild(el('path',{d:'M0 1.5 L10 5 L0 8.5 z',fill:C(ct.stroke)}));
     defs.appendChild(m);
   });
   svg.appendChild(defs);
-  svg.appendChild(el('rect',{x:0,y:0,width:t.canvas.w,height:t.canvas.h,fill:'#ffffff',rx:8}));
-  svg.appendChild(txt('thinkinfosec.org',t.canvas.w-14,t.canvas.h-8,{'text-anchor':'end','font-family':'Space Mono,monospace','font-size':'7',fill:'#c3ccd6','letter-spacing':'0.04em'}));
-  svg.appendChild(txt(t.name,t.canvas.w-14,t.canvas.h-18,{'text-anchor':'end','font-family':'Space Mono,monospace','font-size':'8','font-weight':'700',fill:'#c3ccd6'}));
-  svg.appendChild(txt('Visual reference only — not a recommendation or assurance of architectural validity.',20,t.canvas.h-8,{'font-family':'Inter,sans-serif','font-size':'6.5',fill:'#b6bfca'}));
+  svg.appendChild(el('rect',{x:0,y:0,width:W,height:H,fill:'#ffffff',rx:8}));
+  drawHeader(svg,t,W);
+  svg.appendChild(txt('thinkinfosec.org',W-14,H-8,{'text-anchor':'end','font-family':FONT_MONO,'font-size':'7',fill:'#c3ccd6','letter-spacing':'0.04em'}));
+  if(t.badge) svg.appendChild(txt(t.badge,W-14-t.name.length*4.9-10,H-18,{'text-anchor':'end','font-family':FONT_MONO,'font-size':'7','font-weight':'700',fill:C('#FF8B00'),'letter-spacing':'0.08em'}));
+  svg.appendChild(txt('Visual reference only — not a recommendation or assurance of architectural validity.',20,H-8,{'font-family':FONT_SANS,'font-size':'6.5',fill:'#b6bfca'}));
 
   t.zones.forEach(z=>{
+    const zg=geom[z.id];
+    if(!zg)return;
     const g=el('g',{'data-zone':z.id});
     const fc=z.isServices?'rgba(23,43,77,0.03)':z.isSiemBar?'rgba(23,43,77,0.06)':z.color;
-    g.appendChild(el('rect',{x:z.x,y:z.y,width:z.w,height:z.h,rx:6,fill:fc,stroke:z.bc,
+    g.appendChild(el('rect',{x:zg.x,y:zg.y,width:zg.w,height:zg.h,rx:6,fill:C(fc),stroke:C(z.bc),
       'stroke-width':z.isSiemBar?1.5:z.overlay?1:0.7,
       'stroke-dasharray':z.overlay?'5 3':z.isServices?'3 2':'none'}));
-    if(z.isServices)g.appendChild(txt('⚙',z.x+z.w-16,z.y+13,{'font-size':'9',fill:'#6B778C'}));
-    if(!z.isSiemBar)g.appendChild(txt(z.label.toUpperCase(),z.x+8,z.y+13,{
-      'font-family':'Space Mono,monospace','font-size':'8','font-weight':'700',fill:z.bc,'letter-spacing':'0.05em',opacity:'0.85'}));
+    if(z.isServices)g.appendChild(txt('⚙',zg.x+zg.w-16,zg.y+13,{'font-size':'9',fill:C('#6B778C')}));
+    if(!z.isSiemBar)g.appendChild(txt(z.label.toUpperCase(),zg.x+8,zg.y+13,{
+      'font-family':FONT_MONO,'font-size':'8','font-weight':'700',fill:C(z.bc),'letter-spacing':'0.05em',opacity:'0.85'}));
     svg.appendChild(g);
   });
 
+  // Layout: primary blocks plus dashed "echo" copies for blocks whose span[]
+  // lists this zone. Echoes share the block's toggle state and hover id.
   const blockPos={};
+  const drawItems=[]; // {b, pos, zone, echo}
   t.zones.forEach(z=>{
-    const ab=t.blocks.filter(b=>b.zone===z.id);
-    if(!ab.length)return;
-    if(z.isSiemBar){ab.forEach(b=>{blockPos[b.id]={x:z.x+ZPAD,y:z.y+6,w:z.w-ZPAD*2,h:z.h-12};});return;}
+    const zg=geom[z.id];
+    if(!zg)return;
+    const prim=t.blocks.filter(b=>b.zone===z.id&&vis(b));
+    const echo=t.blocks.filter(b=>b.zone!==z.id&&(b.span||[]).includes(z.id)&&vis(b));
+    if(z.isSiemBar){prim.forEach(b=>{const pos={x:zg.x+ZPAD,y:zg.y+6,w:zg.w-ZPAD*2,h:zg.h-12};blockPos[b.id]=pos;drawItems.push({b,pos,zone:z,echo:false});});return;}
+    const items=[...prim.map(b=>({b,echo:false})),...echo.map(b=>({b,echo:true}))];
+    if(!items.length)return;
     const isH=z.dir==='h';
     if(isH){
-      const bH=BH,avW=z.w-ZPAD*2,bW=Math.min(180,(avW-(ab.length-1)*BGAP)/ab.length);
-      const totW=ab.length*bW+(ab.length-1)*BGAP;
-      let cx=z.x+(z.w-totW)/2;const cy=z.y+ZHDR+ZPAD;
-      ab.forEach((b,i)=>{blockPos[b.id]={x:cx+i*(bW+BGAP),y:cy,w:bW,h:bH};});
+      // A lone block in a horizontal band may render wider so it doesn't float lost in the row.
+      const maxBW=items.length===1?420:180;
+      const bH=BH,avW=zg.w-ZPAD*2,bW=Math.min(maxBW,(avW-(items.length-1)*BGAP)/items.length);
+      const totW=items.length*bW+(items.length-1)*BGAP;
+      let cx=zg.x+(zg.w-totW)/2;const cy=zg.y+ZHDR+ZPAD;
+      items.forEach((it,i)=>{
+        const pos={x:cx+i*(bW+BGAP),y:cy,w:bW,h:bH};
+        if(!it.echo)blockPos[it.b.id]=pos;
+        drawItems.push({b:it.b,pos,zone:z,echo:it.echo});
+      });
     }else{
-      const bW=z.w-ZPAD*2;let cy=z.y+ZHDR+ZPAD;
-      ab.forEach(b=>{blockPos[b.id]={x:z.x+ZPAD,y:cy,w:bW,h:BH};cy+=BH+BGAP;});
+      const bW=zg.w-ZPAD*2;
+      // Fit blocks inside the zone: shrink block height if the stack would overflow.
+      const availH=zg.h-ZHDR-ZPAD*2;
+      const fitH=Math.min(BH,(availH-(items.length-1)*BGAP)/items.length);
+      const bH=Math.max(20,fitH);
+      let cy=zg.y+ZHDR+ZPAD;
+      items.forEach(it=>{
+        const pos={x:zg.x+ZPAD,y:cy,w:bW,h:bH};cy+=bH+BGAP;
+        if(!it.echo)blockPos[it.b.id]=pos;
+        drawItems.push({b:it.b,pos,zone:z,echo:it.echo});
+      });
     }
   });
 
-  const mz=t.zones.filter(z=>!z.overlay&&!z.isServices&&!z.isSiemBar);
-  for(let i=0;i<mz.length-1;i++){
-    const a=mz[i],b=mz[i+1];
-    if(Math.abs(a.y-b.y)<20){
-      const ax=a.x+a.w+1,ay=a.y+a.h/2;
-      svg.appendChild(el('path',{d:`M${ax+2},${ay-5} L${ax+7},${ay} L${ax+2},${ay+5}`,fill:'none',stroke:'#c3ccd6','stroke-width':'1.2','stroke-linecap':'round'}));
+  if(!t.noFlowArrows){
+    const mz=t.zones.filter(z=>geom[z.id]&&!z.overlay&&!z.isServices&&!z.isSiemBar);
+    for(let i=0;i<mz.length-1;i++){
+      const a=geom[mz[i].id],b=geom[mz[i+1].id];
+      if(Math.abs(a.y-b.y)<20){
+        const ax=a.x+a.w+1,ay=a.y+a.h/2;
+        svg.appendChild(el('path',{d:`M${ax+2},${ay-5} L${ax+7},${ay} L${ax+2},${ay+5}`,fill:'none',stroke:'#c3ccd6','stroke-width':'1.2','stroke-linecap':'round'}));
+      }
     }
   }
 
@@ -612,18 +908,33 @@ function renderAlliance(){
     const type=conn.type||'ops',ct=CONN_TYPES[type];
     const path=routeConnection(conn.from,conn.to,blockPos,t);
     if(!path)return;
-    connLayer.appendChild(el('path',{d:path,fill:'none',stroke:ct.stroke,'stroke-width':ct.width,
+    connLayer.appendChild(el('path',{d:path,fill:'none',stroke:C(ct.stroke),'stroke-width':ct.width,
       'stroke-dasharray':ct.dash,'marker-end':`url(#ah-${type})`,'data-conn':`${conn.from}→${conn.to}`,'data-type':type}));
   });
   svg.appendChild(connLayer);
 
-  t.blocks.forEach(b=>{
-    const pos=blockPos[b.id];if(!pos)return;
-    const isA=st[b.id],c=isA?(COV[b.cov]||COV.NATIVE):GHOST;
-    const isSB=t.zones.find(z=>z.id===b.zone)?.isSiemBar;
+  drawItems.forEach(({b,pos,zone,echo})=>{
+    const isA=st[b.id],c=isA?covC(b.cov):ghostC();
+    const isSB=!!zone.isSiemBar;
     const g=el('g',{'data-block':b.id});
-    if(isA)g.setAttribute('filter','url(#bs)');
+    if(echo)g.setAttribute('data-echo','1');
+    if(isA&&!echo)g.setAttribute('filter','url(#bs)');
     g.style.cursor='pointer';
+    if(echo){
+      // Secondary placement: dashed outline in the host zone's colour, no fill.
+      g.appendChild(el('rect',{x:pos.x,y:pos.y,width:pos.w,height:pos.h,rx:5,
+        fill:'none',stroke:isA?C(zone.bc):C('#c3ccd6'),'stroke-width':0.8,
+        'stroke-dasharray':'3 2',opacity:isA?0.75:0.4}));
+      const maxC=Math.floor(pos.w/6.2);let label=b.label;
+      if(label.length>maxC)label=label.substring(0,maxC-1)+'…';
+      g.appendChild(txt(label,pos.x+8,pos.y+14,{
+        'font-family':FONT_SANS,'font-size':'8','font-weight':'500','font-style':'italic',fill:isA?C('#44546a'):C('#9aa4b2')}));
+      g.appendChild(txt('⇄ '+zone.label,pos.x+8,pos.y+25,{
+        'font-family':FONT_MONO,'font-size':'5.5',fill:isA?C(zone.bc):'#cbd5e1','letter-spacing':'0.02em'}));
+      if(!isA)g.appendChild(txt('GAP',pos.x+pos.w-20,pos.y+12,{'font-family':FONT_MONO,'font-size':'5.5','font-weight':'700',fill:C('#c3ccd6')}));
+      svg.appendChild(g);
+      return;
+    }
     g.appendChild(el('rect',{x:pos.x,y:pos.y,width:pos.w,height:pos.h,rx:isSB?6:5,
       fill:isA?'#fff':'none',stroke:c.stroke,'stroke-width':isA?(isSB?1.4:0.8):0.7,
       'stroke-dasharray':isA?'none':'4 3',opacity:isA?1:0.55}));
@@ -631,42 +942,45 @@ function renderAlliance(){
     const maxC=Math.floor(pos.w/5.8);let label=b.label;
     if(label.length>maxC)label=label.substring(0,maxC-1)+'…';
     g.appendChild(txt(label,pos.x+(isSB?12:9),pos.y+(isSB?16:14),{
-      'font-family':'Inter,sans-serif','font-size':isSB?'10':'8.5','font-weight':isA?(isSB?'700':'600'):'400',fill:isA?'#172B4D':'#9aa4b2'}));
+      'font-family':FONT_SANS,'font-size':isSB?'10':'8.5','font-weight':isA?(isSB?'700':'600'):'400',fill:isA?C('#172B4D'):C('#9aa4b2')}));
     if(b.sub){
       const subMax=Math.floor(pos.w/4.2);let sub=b.sub;
       if(sub.length>subMax)sub=sub.substring(0,subMax-1)+'…';
       g.appendChild(txt(sub,pos.x+(isSB?12:9),pos.y+(isSB?28:25),{
-        'font-family':'Space Mono,monospace','font-size':isSB?'7':'6.5',fill:isA?c.text:'#cbd5e1','letter-spacing':'0.01em'}));
+        'font-family':FONT_MONO,'font-size':isSB?'7':'6.5',fill:isA?c.text:'#cbd5e1','letter-spacing':'0.01em'}));
     }
     if(isA){
       g.appendChild(el('circle',{cx:pos.x+pos.w-10,cy:pos.y+10,r:3.5,fill:c.accent,opacity:'0.85'}));
     }else{
-      g.appendChild(txt('GAP',pos.x+pos.w-20,pos.y+12,{'font-family':'Space Mono,monospace','font-size':'5.5','font-weight':'700',fill:'#c3ccd6'}));
+      g.appendChild(txt('GAP',pos.x+pos.w-20,pos.y+12,{'font-family':FONT_MONO,'font-size':'5.5','font-weight':'700',fill:C('#c3ccd6')}));
     }
     svg.appendChild(g);
   });
 
   const sb=t.zones.find(z=>z.isSiemBar);
-  if(sb){
-    const ay=sb.y-3,techW=sb.w;
+  const sbg=sb&&geom[sb.id];
+  if(sbg && !t.noSiemAnnotation){
+    const ay=sbg.y-3,techW=sbg.w;
     const pts=[0.12,0.28,0.44,0.6,0.76,0.92];
     pts.forEach(p=>{
-      const ax=sb.x+techW*p;
+      const ax=sbg.x+techW*p;
       svg.appendChild(el('path',{d:`M${ax-3},${ay-4} L${ax},${ay} L${ax+3},${ay-4}`,fill:'none',stroke:'#c9d2dc','stroke-width':'0.8','stroke-linecap':'round'}));
     });
-    svg.appendChild(txt('▼ TELEMETRY INGESTION',sb.x+techW/2,ay-7,{
-      'text-anchor':'middle','font-family':'Space Mono,monospace','font-size':'5.5','font-weight':'700',fill:'#b6bfca','letter-spacing':'0.1em'}));
+    svg.appendChild(txt('▼ TELEMETRY INGESTION',sbg.x+techW/2,ay-7,{
+      'text-anchor':'middle','font-family':FONT_MONO,'font-size':'5.5','font-weight':'700',fill:'#b6bfca','letter-spacing':'0.1em'}));
   }
 }
 
 /* ── RENDER: telemetry template ── */
 const VOL_H = { low:4, med:9, high:16 };
 function telemetrySources(){ return tpl().sources.map(s => REG.source(s.id)).filter(Boolean); }
-function activeSources(){ const st=blockStates[tpl().id]; return telemetrySources().filter(s => st[s.id]); }
+function activeSources(){ return telemetrySources().filter(s => blockStates[s.id]); }
 
 function renderTelemetry(){
-  const t=tpl(), st=blockStates[t.id];
+  const t=tpl(), st=blockStates;
   const svg=document.getElementById('diagramSvg');
+  // Palette-mapped colours
+  const ACC=C('#00BFCF'), NVY=C('#0D1F3C'), INKC=C('#172B4D'), MUTC=C('#6B778C'), FNT=C('#9aa4b2');
   const srcs=telemetrySources();
   const on=srcs.filter(s=>st[s.id]);
   // Layout metrics
@@ -686,21 +1000,23 @@ function renderTelemetry(){
   const oRows=Math.max(1,Math.ceil(onOutcomeCount/oPerRow));
   const outH=Math.max(56, 22 + oRows*oChipH + (oRows-1)*oGap + 10);
   const laneGap=34; // room for arrows
-  const H = pad*2 + srcH + pathH + pipeH + destH + outH + laneGap*4;
+  const H = HEADER_H + pad + srcH + pathH + pipeH + destH + outH + laneGap*4;
   svg.innerHTML='';
   svg.setAttribute('width',W); svg.setAttribute('height',H);
   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
   svg.appendChild(Object.assign(el('style'),{textContent:'[data-src]{transition:opacity .15s ease;cursor:pointer}'}));
   const defs=el('defs');
   const mk=(id,color)=>{const m=el('marker',{id,viewBox:'0 0 10 10',refX:'9',refY:'5',markerWidth:'6',markerHeight:'6',orient:'auto'});m.appendChild(el('path',{d:'M0 1.5 L10 5 L0 8.5 z',fill:color}));defs.appendChild(m);};
-  mk('ah-acc','#00BFCF'); mk('ah-navy','#0D1F3C'); mk('ah-mut','#9aa4b2');
+  mk('ah-acc',ACC); mk('ah-navy',NVY); mk('ah-mut',FNT);
   svg.appendChild(defs);
   svg.appendChild(el('rect',{x:0,y:0,width:W,height:H,fill:'#ffffff',rx:8}));
-  svg.appendChild(txt('thinkinfosec.org',W-14,H-10,{'text-anchor':'end','font-family':'Space Mono,monospace','font-size':'7',fill:'#c3ccd6','letter-spacing':'0.04em'}));
-  svg.appendChild(txt('Telemetry ingestion — collection path per source',20,H-10,{'font-family':'Inter,sans-serif','font-size':'6.5',fill:'#b6bfca'}));
+  drawHeader(svg,t,W);
+  svg.appendChild(txt('thinkinfosec.org',W-14,H-8,{'text-anchor':'end','font-family':FONT_MONO,'font-size':'7',fill:'#c3ccd6','letter-spacing':'0.04em'}));
+  if(t.badge) svg.appendChild(txt(t.badge,W-14-t.name.length*4.9-10,H-18,{'text-anchor':'end','font-family':FONT_MONO,'font-size':'7','font-weight':'700',fill:C('#FF8B00'),'letter-spacing':'0.08em'}));
+  svg.appendChild(txt('Visual reference only — not a recommendation or assurance of architectural validity.',20,H-8,{'font-family':FONT_SANS,'font-size':'6.5',fill:'#b6bfca'}));
 
   // Lane Y positions
-  let y=pad;
+  let y=HEADER_H;
   const ySrc=y; y+=srcH+laneGap;
   const yPath=y; y+=pathH+laneGap;
   const yPipe=y; y+=pipeH+laneGap;
@@ -708,13 +1024,13 @@ function renderTelemetry(){
   const yOut=y;
 
   const lane=(ly,lh,label,accent,fill)=>{
-    svg.appendChild(el('rect',{x:laneX,y:ly,width:laneW,height:lh,rx:8,fill:fill,stroke:'#DFE1E6','stroke-width':0.8,'stroke-dasharray':'none'}));
+    svg.appendChild(el('rect',{x:laneX,y:ly,width:laneW,height:lh,rx:6,fill:C(fill),stroke:C(accent),'stroke-width':0.7,'stroke-opacity':0.55}));
     const lx=pad+10, lcy=ly+lh/2;
-    svg.appendChild(txt(label.toUpperCase(),lx,lcy,{'font-family':'Space Mono,monospace','font-size':'8','font-weight':'700',fill:accent,'letter-spacing':'0.08em','text-anchor':'start'}));
+    svg.appendChild(txt(label.toUpperCase(),lx,lcy,{'font-family':FONT_MONO,'font-size':'8','font-weight':'700',fill:C(accent),'letter-spacing':'0.05em','text-anchor':'start',opacity:'0.85'}));
   };
 
   // ── SOURCES lane ──
-  lane(ySrc,srcH,'Sources','#0D1F3C','#FAFBFC');
+  lane(ySrc,srcH,'Sources',NVY,'#FAFBFC');
   const pos={};
   const cw=(innerW-(perRow-1)*chipGap)/perRow;
   on.forEach((s,i)=>{
@@ -723,7 +1039,7 @@ function renderTelemetry(){
     pos[s.id]={x,y:cy,w:cw,h:chipH};
   });
   // ── PATH lane ──
-  lane(yPath,pathH,'Collection','#00BFCF','rgba(0,191,207,0.05)');
+  lane(yPath,pathH,'Collection',ACC,'rgba(0,191,207,0.05)');
   // path nodes: distinct active paths in play
   const activePathIds=[...new Set(on.map(s=>resolveActivePath(s.id,pathOverrides)))];
   const directPaths=activePathIds.filter(p=>PATHS[p].via==='direct');
@@ -740,13 +1056,13 @@ function renderTelemetry(){
     pathPos[p]={x,y:yPath+12,w:pw,h:pathNodeH};
   });
   // ── PIPELINE lane ──
-  lane(yPipe,pipeH,'Pipeline','#00BFCF','rgba(0,191,207,0.05)');
+  lane(yPipe,pipeH,'Pipeline',ACC,'rgba(0,191,207,0.05)');
   const onumPos={x:laneX+laneW/2-190,y:yPipe+16,w:380,h:32};
   // ── DESTINATION lane ──
-  lane(yDest,destH,'Destination','#0D1F3C','rgba(23,43,77,0.04)');
+  lane(yDest,destH,'Destination',NVY,'rgba(23,43,77,0.04)');
   const destPos={x:laneX+laneW/2-190,y:yDest+11,w:380,h:32};
   // ── OUTCOMES lane ──
-  lane(yOut,outH,'Outcomes','#0D1F3C','#FAFBFC');
+  lane(yOut,outH,'Outcomes',NVY,'#FAFBFC');
 
   // ── CONNECTIONS ──
   const connG=el('g',{opacity:'0.8'});
@@ -761,15 +1077,15 @@ function renderTelemetry(){
       const tx=destPos.x+destPos.w/2, ty=destPos.y;
       const midY=(sy+ty)/2;
       connG.appendChild(el('path',{d:`M${sx},${sy} C${sx},${midY} ${tx},${midY} ${tx},${ty}`,fill:'none',
-        stroke:'#00BFCF','stroke-width':sw*2,opacity:'0.28','data-src-conn':s.id,stroke_linecap:'round'}));
+        stroke:ACC,'stroke-width':sw*2,opacity:'0.28','data-src-conn':s.id,stroke_linecap:'round'}));
     } else if(pv==='direct'){
       const pp=pathPos[p]; if(!pp)return;
       const px=pp.x+pp.w/2, py=pp.y;
-      connG.appendChild(el('path',{d:`M${sx},${sy} L${sx},${py-6} L${px},${py-6} L${px},${py}`,fill:'none',stroke:'#0D1F3C','stroke-width':1.2,'data-src-conn':s.id}));
+      connG.appendChild(el('path',{d:`M${sx},${sy} L${sx},${py-6} L${px},${py-6} L${px},${py}`,fill:'none',stroke:NVY,'stroke-width':1.2,'data-src-conn':s.id}));
     } else {
       const pp=pathPos[p]; if(!pp)return;
       const px=pp.x+pp.w/2, py=pp.y;
-      connG.appendChild(el('path',{d:`M${sx},${sy} L${sx},${py-6} L${px},${py-6} L${px},${py}`,fill:'none',stroke:'#00BFCF','stroke-width':1.2,'data-src-conn':s.id}));
+      connG.appendChild(el('path',{d:`M${sx},${sy} L${sx},${py-6} L${px},${py-6} L${px},${py}`,fill:'none',stroke:ACC,'stroke-width':1.2,'data-src-conn':s.id}));
     }
   });
   if(!volumeView){
@@ -779,17 +1095,17 @@ function renderTelemetry(){
       const px=pp.x+pp.w/2, py=pp.y+pp.h;
       if(PATHS[p].via==='onum'){
         const ox=onumPos.x+onumPos.w/2, oy=onumPos.y;
-        connG.appendChild(el('path',{d:`M${px},${py} L${px},${oy-8} L${ox},${oy-8} L${ox},${oy}`,fill:'none',stroke:'#00BFCF','stroke-width':1.4,'marker-end':'url(#ah-acc)'}));
+        connG.appendChild(el('path',{d:`M${px},${py} L${px},${oy-8} L${ox},${oy-8} L${ox},${oy}`,fill:'none',stroke:ACC,'stroke-width':1.4,'marker-end':'url(#ah-acc)'}));
       } else {
         const dx=destPos.x+destPos.w/2, dy=destPos.y;
-        connG.appendChild(el('path',{d:`M${px},${py} L${px},${dy-8} L${dx},${dy-8} L${dx},${dy}`,fill:'none',stroke:'#0D1F3C','stroke-width':1.4,'marker-end':'url(#ah-navy)'}));
+        connG.appendChild(el('path',{d:`M${px},${py} L${px},${dy-8} L${dx},${dy-8} L${dx},${dy}`,fill:'none',stroke:NVY,'stroke-width':1.4,'marker-end':'url(#ah-navy)'}));
       }
     });
     // onum → destination
     if(onumNeeded){
       const ox=onumPos.x+onumPos.w/2, oy=onumPos.y+onumPos.h;
       const dx=destPos.x+destPos.w/2, dy=destPos.y;
-      connG.appendChild(el('path',{d:`M${ox},${oy} L${ox},${dy-6} L${dx},${dy-6} L${dx},${dy}`,fill:'none',stroke:'#00BFCF','stroke-width':1.6,'marker-end':'url(#ah-acc)'}));
+        connG.appendChild(el('path',{d:`M${ox},${oy} L${ox},${dy-6} L${dx},${dy-6} L${dx},${dy}`,fill:'none',stroke:ACC,'stroke-width':1.6,'marker-end':'url(#ah-acc)'}));
     }
   }
   // destination → outcomes
@@ -805,7 +1121,7 @@ function renderTelemetry(){
   onOutcomeIds.forEach(oid=>{
     if(!outPos[oid])return;
     const ox=outPos[oid].x+outPos[oid].w/2, oy=outPos[oid].y;
-    connG.appendChild(el('path',{d:`M${dx},${ddy} L${dx},${oy-6} L${ox},${oy-6} L${ox},${oy}`,fill:'none',stroke:'#9aa4b2','stroke-width':0.9,'stroke-dasharray':'3 3'}));
+    connG.appendChild(el('path',{d:`M${dx},${ddy} L${dx},${oy-6} L${ox},${oy-6} L${ox},${oy}`,fill:'none',stroke:FNT,'stroke-width':0.9,'stroke-dasharray':'3 3'}));
   });
   svg.appendChild(connG);
 
@@ -815,19 +1131,19 @@ function renderTelemetry(){
     const ap=resolveActivePath(s.id,pathOverrides), path=PATHS[ap];
     const multi=s.paths.length>1;
     const g=el('g',{'data-src':s.id,'data-kind':'source'});
-    g.appendChild(el('rect',{x:p.x,y:p.y,width:p.w,height:p.h,rx:6,fill:'#fff',stroke:'#00BFCF','stroke-width':1.2}));
-    g.appendChild(el('rect',{x:p.x,y:p.y,width:3,height:p.h,rx:1.5,fill:'#00BFCF'}));
+    g.appendChild(el('rect',{x:p.x,y:p.y,width:p.w,height:p.h,rx:6,fill:'#fff',stroke:ACC,'stroke-width':1.2}));
+    g.appendChild(el('rect',{x:p.x,y:p.y,width:3,height:p.h,rx:1.5,fill:ACC}));
     const maxC=Math.floor(p.w/6.2);let lbl=s.label; if(lbl.length>maxC)lbl=lbl.substring(0,maxC-1)+'…';
-    g.appendChild(txt(lbl,p.x+9,p.y+14,{'font-family':'Inter,sans-serif','font-size':'9','font-weight':'600',fill:'#172B4D'}));
+    g.appendChild(txt(lbl,p.x+9,p.y+14,{'font-family':FONT_SANS,'font-size':'9','font-weight':'600',fill:INKC}));
     // path pill
     const pillW=Math.min(p.w-16, 8+path.label.length*4.6), pillX=p.x+8, pillY=p.y+19;
     const pg=el('g',{'data-pathpill':s.id, style:'cursor:'+(multi?'pointer':'default')});
     pg.appendChild(el('rect',{x:pillX,y:pillY,width:pillW,height:11,rx:2,
-      fill: ap==='sensor-native'?'#0D1F3C':(ap==='falcon-shield'?'rgba(0,191,207,0.15)':'rgba(23,43,77,0.08)'),
-      stroke: ap==='sensor-native'?'#0D1F3C':(ap==='falcon-shield'?'#00BFCF':'#9aa4b2'),'stroke-width':0.7,
+      fill: ap==='sensor-native'?NVY:(ap==='falcon-shield'?C('rgba(0,191,207,0.15)'):C('rgba(23,43,77,0.08)')),
+      stroke: ap==='sensor-native'?NVY:(ap==='falcon-shield'?ACC:FNT),'stroke-width':0.7,
       'stroke-dasharray': ap==='syslog'?'2 2':'none'}));
-    pg.appendChild(txt(path.label+(multi?' ▸':''),pillX+pillW/2,pillY+8,{'text-anchor':'middle','font-family':'Space Mono,monospace','font-size':'6','letter-spacing':'0.04em','font-weight':'700',
-      fill: ap==='sensor-native'?'#00BFCF':'#172B4D'}));
+    pg.appendChild(txt(path.label+(multi?' ▸':''),pillX+pillW/2,pillY+8,{'text-anchor':'middle','font-family':FONT_MONO,'font-size':'6','letter-spacing':'0.04em','font-weight':'700',
+      fill: ap==='sensor-native'?ACC:INKC}));
     g.appendChild(pg);
     svg.appendChild(g);
   });
@@ -838,9 +1154,9 @@ function renderTelemetry(){
       const pp=pathPos[p]; if(!pp)return;
       const path=PATHS[p];
       const g=el('g',{'data-src':p,'data-kind':'pathnode'});
-      g.appendChild(el('rect',{x:pp.x,y:pp.y,width:pp.w,height:pp.h,rx:6,fill:'#fff',stroke:'#00BFCF','stroke-width':1.3}));
-      g.appendChild(txt(path.label,pp.x+pp.w/2,pp.y+13,{'text-anchor':'middle','font-family':'Inter,sans-serif','font-size':'9.5','font-weight':'600',fill:'#0D1F3C'}));
-      g.appendChild(txt(path.via==='direct'?'direct to NG-SIEM':'via Onum',pp.x+pp.w/2,pp.y+23,{'text-anchor':'middle','font-family':'Space Mono,monospace','font-size':'6',fill:'#6B778C'}));
+      g.appendChild(el('rect',{x:pp.x,y:pp.y,width:pp.w,height:pp.h,rx:6,fill:'#fff',stroke:ACC,'stroke-width':1.3}));
+      g.appendChild(txt(path.label,pp.x+pp.w/2,pp.y+13,{'text-anchor':'middle','font-family':FONT_SANS,'font-size':'9.5','font-weight':'600',fill:NVY}));
+      g.appendChild(txt(path.via==='direct'?'direct to NG-SIEM':'via Onum',pp.x+pp.w/2,pp.y+23,{'text-anchor':'middle','font-family':FONT_MONO,'font-size':'6',fill:MUTC}));
       svg.appendChild(g);
     });
   }
@@ -848,19 +1164,19 @@ function renderTelemetry(){
   // ── PIPELINE (Onum) ──
   if(!volumeView && onumNeeded){
     const g=el('g',{'data-src':'onum','data-kind':'pipeline'});
-    g.appendChild(el('rect',{x:onumPos.x,y:onumPos.y,width:onumPos.w,height:onumPos.h,rx:6,fill:'#fff',stroke:'#00BFCF','stroke-width':1.4}));
-    g.appendChild(txt('Falcon Onum',onumPos.x+12,onumPos.y+14,{'font-family':'Inter,sans-serif','font-size':'10','font-weight':'700',fill:'#0D1F3C'}));
+    g.appendChild(el('rect',{x:onumPos.x,y:onumPos.y,width:onumPos.w,height:onumPos.h,rx:6,fill:'#fff',stroke:ACC,'stroke-width':1.4}));
+    g.appendChild(txt('Falcon Onum',onumPos.x+12,onumPos.y+14,{'font-family':FONT_SANS,'font-size':'10','font-weight':'700',fill:NVY}));
     const stages=PIPELINES[0].stages;
-    g.appendChild(txt(stages.join(' → '),onumPos.x+12,onumPos.y+25,{'font-family':'Space Mono,monospace','font-size':'6.5',fill:'#6B778C'}));
+    g.appendChild(txt(stages.join(' → '),onumPos.x+12,onumPos.y+25,{'font-family':FONT_MONO,'font-size':'6.5',fill:MUTC}));
     svg.appendChild(g);
   }
 
   // ── DESTINATION ──
   {
     const g=el('g',{'data-src':'ngsiem','data-kind':'destination'});
-    g.appendChild(el('rect',{x:destPos.x,y:destPos.y,width:destPos.w,height:destPos.h,rx:6,fill:'#0D1F3C',stroke:'#0D1F3C','stroke-width':1.4}));
-    g.appendChild(txt('NG-SIEM (LogScale)',destPos.x+destPos.w/2,destPos.y+15,{'text-anchor':'middle','font-family':'Inter,sans-serif','font-size':'10.5','font-weight':'700',fill:'#00BFCF'}));
-    g.appendChild(txt(volumeView?'ingest volume ∝ band width':'unified data platform',destPos.x+destPos.w/2,destPos.y+25,{'text-anchor':'middle','font-family':'Space Mono,monospace','font-size':'6.5',fill:'#9fb2c8'}));
+    g.appendChild(el('rect',{x:destPos.x,y:destPos.y,width:destPos.w,height:destPos.h,rx:6,fill:NVY,stroke:NVY,'stroke-width':1.4}));
+    g.appendChild(txt('NG-SIEM (LogScale)',destPos.x+destPos.w/2,destPos.y+15,{'text-anchor':'middle','font-family':FONT_SANS,'font-size':'10.5','font-weight':'700',fill:ACC}));
+    g.appendChild(txt(volumeView?'ingest volume ∝ band width':'unified data platform',destPos.x+destPos.w/2,destPos.y+25,{'text-anchor':'middle','font-family':FONT_MONO,'font-size':'6.5',fill:C('#9fb2c8')}));
     svg.appendChild(g);
   }
 
@@ -868,9 +1184,9 @@ function renderTelemetry(){
   onOutcomeIds.forEach(oid=>{
     const o=REG.outcome(oid), p=outPos[oid]; if(!o||!p)return;
     const g=el('g',{'data-src':oid,'data-kind':'outcome'});
-    g.appendChild(el('rect',{x:p.x,y:p.y,width:p.w,height:p.h,rx:6,fill:'rgba(0,191,207,0.08)',stroke:'#00BFCF','stroke-width':0.9}));
+    g.appendChild(el('rect',{x:p.x,y:p.y,width:p.w,height:p.h,rx:6,fill:C('rgba(0,191,207,0.08)'),stroke:ACC,'stroke-width':0.9}));
     const maxC=Math.floor(p.w/5.6);let lbl=o.label; if(lbl.length>maxC)lbl=lbl.substring(0,maxC-1)+'…';
-    g.appendChild(txt(lbl,p.x+p.w/2,p.y+p.h/2+3,{'text-anchor':'middle','font-family':'Inter,sans-serif','font-size':'8.5','font-weight':'600',fill:'#0D1F3C'}));
+    g.appendChild(txt(lbl,p.x+p.w/2,p.y+p.h/2+3,{'text-anchor':'middle','font-family':FONT_SANS,'font-size':'8.5','font-weight':'600',fill:NVY}));
     svg.appendChild(g);
   });
 }
@@ -924,7 +1240,7 @@ function onTelemetryHover(id,ev){
     s.outcomes.forEach(o=>rel.add(o));
   } else if(REG.outcome(id)){
     rel.add('ngsiem');
-    REG.outcome(id).sources.forEach(sid=>{ if(blockStates[tpl().id][sid]){ rel.add(sid); rel.add(resolveActivePath(sid,pathOverrides)); } });
+    REG.outcome(id).sources.forEach(sid=>{ if(blockStates[sid]){ rel.add(sid); rel.add(resolveActivePath(sid,pathOverrides)); } });
   } else { rel.add('ngsiem'); }
   svg.querySelectorAll('[data-src]').forEach(g=>{ g.style.opacity=rel.has(g.dataset.src)?'1':'0.15'; });
   svg.querySelectorAll('[data-src-conn]').forEach(p=>{ p.style.opacity=(s&&p.dataset.srcConn===id)?'0.6':'0.08'; });
@@ -959,7 +1275,7 @@ function showTelemetryTip(id,ev){
   tip.style.left=lx+'px';tip.style.top=ly+'px';
 }
 function onHover(bid,ev){
-  const t=tpl(),st=blockStates[t.id],svg=document.getElementById('diagramSvg');
+  const t=tpl(),st=blockStates,svg=document.getElementById('diagramSvg');
   const conn=new Set([bid]),cKeys=new Set();
   t.connections.forEach(c=>{
     if(!st[c.from]||!st[c.to])return;
@@ -988,7 +1304,7 @@ function clearHL(){
 }
 function showTip(bid,ev){
   const b=tpl().blocks.find(bl=>bl.id===bid);if(!b)return;
-  const c=COV[b.cov]||COV.NATIVE;
+  const c=covC(b.cov);
   const tip=document.getElementById('tooltip');
   tip.innerHTML=`<div class="tip-name">${b.label}</div><div class="tip-sub">${b.sub}</div><span class="tip-badge" style="background:${c.fill};color:${c.text}">${b.cov}</span>`;
   tip.style.display='block';
@@ -1000,70 +1316,112 @@ function showTip(bid,ev){
 }
 
 /* ── Sidebar ── */
+const CHEV='<span class="collapse-chev">▾</span>';
+function isCollapsed(key,def){ const k=tpl().id+':'+key; return collapsedSections[k]===undefined?def:collapsedSections[k]; }
+function secOpen(key,label,defCollapsed){
+  return `<div class="sidebar-section ${isCollapsed(key,defCollapsed)?'collapsed':''}">`
+    +`<div class="sidebar-section-title" data-collapsible="${key}" data-def="${defCollapsed?1:0}">${CHEV}${label}</div>`
+    +`<div class="sidebar-section-body">`;
+}
+function grpOpen(key,label,defCollapsed,count){
+  return `<div class="zone-group ${isCollapsed(key,defCollapsed)?'collapsed':''}">`
+    +`<div class="zone-group-title" data-collapsible="${key}" data-def="${defCollapsed?1:0}">${CHEV}${label}${count?`<span class="zone-group-count">${count}</span>`:''}</div>`
+    +`<div class="zone-group-body">`;
+}
+function wireCollapsibles(sb){
+  sb.querySelectorAll('[data-collapsible]').forEach(titleEl=>{
+    titleEl.addEventListener('click',()=>{
+      const k=tpl().id+':'+titleEl.dataset.collapsible;
+      const def=titleEl.dataset.def==='1';
+      collapsedSections[k]=!(collapsedSections[k]===undefined?def:collapsedSections[k]);
+      titleEl.closest('.sidebar-section, .zone-group').classList.toggle('collapsed',collapsedSections[k]);
+    });
+  });
+}
+const COLLAPSE_ALL_ROW=`<div class="sidebar-util"><button type="button" class="sidebar-util-btn" id="collapseAllBtn"></button></div>`;
+function wireCollapseAll(sb){
+  const btn=sb.querySelector('#collapseAllBtn'); if(!btn)return;
+  const titles=[...sb.querySelectorAll('[data-collapsible]')];
+  const anyOpen=()=>titles.some(el=>!el.closest('.sidebar-section, .zone-group').classList.contains('collapsed'));
+  btn.textContent=anyOpen()?'Collapse all':'Expand all';
+  btn.addEventListener('click',()=>{
+    const target=anyOpen(); // anything open → collapse everything, else expand
+    titles.forEach(el=>{ collapsedSections[tpl().id+':'+el.dataset.collapsible]=target; });
+    renderSidebar();
+  });
+}
 function renderSidebar(){
-  const t=tpl(),st=blockStates[t.id],sb=document.getElementById('sidebar');
+  const t=tpl(),st=blockStates,sb=document.getElementById('sidebar');
   if(t.telemetry){
     let h=`<div class="template-desc">${t.desc}</div>`;
-    h+=`<div class="sidebar-section"><div class="sidebar-section-title">Sources — toggle to add/remove</div>`;
+    h+=COLLAPSE_ALL_ROW;
+    h+=secOpen('sources','Sources — toggle to add/remove',false);
     const groups={}; telemetrySources().forEach(s=>{ (groups[s.category]=groups[s.category]||[]).push(s); });
     Object.keys(groups).forEach(cat=>{
-      h+=`<div class="zone-group"><div class="zone-group-title">${cat}</div>`;
+      const n=groups[cat].filter(s=>st[s.id]).length;
+      h+=grpOpen('src-'+cat,cat,false,`${n}/${groups[cat].length}`);
       groups[cat].forEach(s=>{
         h+=`<label class="block-toggle"><input type="checkbox" data-block="${s.id}" ${st[s.id]?'checked':''}><span class="cov-dot" style="background:#00BFCF"></span><span><span class="block-toggle-label">${s.label}</span><br><span class="block-toggle-sub">${s.volume} vol · ${s.paths.map(p=>PATHS[p].label).join(' / ')}</span></span></label>`;
       });
-      h+=`</div>`;
+      h+=`</div></div>`;
     });
-    h+=`</div>`;
-    h+=`<div class="sidebar-section"><div class="sidebar-section-title">Collection paths</div>`;
+    h+=`</div></div>`;
+    h+=secOpen('paths','Collection paths',true);
     Object.values(PATHS).forEach(p=>{
       h+=`<div style="font-size:0.6rem;margin-bottom:2px"><b style="color:#0D1F3C">${p.label}</b> <span style="color:#6B778C">— ${p.desc}</span></div>`;
     });
-    h+=`</div>`;
+    h+=`</div></div>`;
     h+=`<div class="disclaimer">${DISCLAIMER}</div>`;
     sb.innerHTML=h;
     sb.querySelectorAll('input[data-block]').forEach(cb=>{
       cb.addEventListener('change',()=>{st[cb.dataset.block]=cb.checked;pinnedBlock=null;render();});
     });
+    wireCollapsibles(sb);
+    wireCollapseAll(sb);
     return;
   }
   let h=`<div class="template-desc">${t.desc}</div>`;
+  h+=COLLAPSE_ALL_ROW;
   const groups={};t.blocks.forEach(b=>{if(!groups[b.zone])groups[b.zone]=[];groups[b.zone].push(b);});
-  h+=`<div class="sidebar-section"><div class="sidebar-section-title">Domains — toggle to add/remove</div>`;
+  h+=secOpen('domains','Modules — toggle to add/remove',false);
   const tz=t.zones.filter(z=>!z.isServices),sz=t.zones.filter(z=>z.isServices);
   [...tz,...sz].forEach(z=>{
     if(!groups[z.id])return;
-    h+=`<div class="zone-group"><div class="zone-group-title">${z.isServices?'⚙ ':z.isSiemBar?'▬ ':''}${z.label}</div>`;
+    const n=groups[z.id].filter(b=>st[b.id]).length;
+    h+=grpOpen('zone-'+z.id,(z.isServices?'⚙ ':z.isSiemBar?'▬ ':'')+z.label,false,`${n}/${groups[z.id].length}`);
     groups[z.id].forEach(b=>{
-      const c=COV[b.cov]||COV.NATIVE;
+      const c=covC(b.cov);
       h+=`<label class="block-toggle"><input type="checkbox" data-block="${b.id}" ${st[b.id]?'checked':''}><span class="cov-dot" style="background:${c.accent}"></span><span><span class="block-toggle-label">${b.label}</span><br><span class="block-toggle-sub">${b.sub}</span></span></label>`;
     });
-    h+=`</div>`;
+    h+=`</div></div>`;
   });
-  h+=`</div>`;
-  h+=`<div class="sidebar-section"><div class="sidebar-section-title">Coverage</div>`;
-  [['NATIVE','Native Module','#00BFCF'],['HYBRID','CS + Partner','#FF8B00'],['PARTNER','Partner-Led','#7C3AED'],['SERVICES','Managed Service','#FF2D78']].forEach(([k,l,c])=>{
-    h+=`<div style="display:flex;align-items:center;gap:4px;margin-bottom:1px;font-size:0.6rem"><span class="cov-dot" style="background:${c}"></span>${l}</div>`;
-  });
-  h+=`<div style="display:flex;align-items:center;gap:4px;margin-top:3px;font-size:0.6rem;color:#9aa4b2"><span style="width:16px;height:1px;border-top:2px dashed #c3ccd6;display:inline-block"></span>Gap / upsell</div>`;
-  h+=`</div>`;
-  h+=`<div class="sidebar-section"><div class="sidebar-section-title">Connections</div>`;
-  h+=`<div style="font-size:0.58rem;display:flex;flex-direction:column;gap:2px">`;
-  h+=`<div style="display:flex;align-items:center;gap:5px"><span style="width:18px;height:2px;background:#00BFCF;display:inline-block;border-radius:1px"></span>Operational chain</div>`;
-  h+=`<div style="display:flex;align-items:center;gap:5px"><span style="width:18px;height:0;border-top:2px dashed #FF2D78;display:inline-block"></span>Response action</div>`;
-  h+=`<div style="display:flex;align-items:center;gap:5px"><span style="width:18px;height:0;border-top:2px dotted #7C3AED;display:inline-block"></span>Data flow</div>`;
-  h+=`<div style="display:flex;align-items:center;gap:5px;color:#9aa4b2"><span style="font-size:0.7rem">▼▼</span>Telemetry ingestion</div>`;
   h+=`</div></div>`;
+  h+=secOpen('coverage','Coverage',true);
+  [['NATIVE','Native Module','#00BFCF'],['HYBRID','CS + Partner','#FF8B00'],['PARTNER','Partner-Led','#7C3AED'],['SERVICES','Managed Service','#FF2D78']].forEach(([k,l,c])=>{
+    h+=`<div style="display:flex;align-items:center;gap:4px;margin-bottom:1px;font-size:0.6rem"><span class="cov-dot" style="background:${C(c)}"></span>${l}</div>`;
+  });
+  h+=`<div style="display:flex;align-items:center;gap:4px;margin-top:3px;font-size:0.6rem;color:#9aa4b2"><span style="width:16px;height:1px;border-top:2px dashed ${C('#c3ccd6')};display:inline-block"></span>Gap / upsell</div>`;
+  h+=`</div></div>`;
+  h+=secOpen('connections','Connections',true);
+  h+=`<div style="font-size:0.58rem;display:flex;flex-direction:column;gap:2px">`;
+  h+=`<div style="display:flex;align-items:center;gap:5px"><span style="width:18px;height:2px;background:${C('#00BFCF')};display:inline-block;border-radius:1px"></span>Operational chain</div>`;
+  h+=`<div style="display:flex;align-items:center;gap:5px"><span style="width:18px;height:0;border-top:2px dashed ${C('#FF2D78')};display:inline-block"></span>Response action</div>`;
+  h+=`<div style="display:flex;align-items:center;gap:5px"><span style="width:18px;height:0;border-top:2px dotted ${C('#7C3AED')};display:inline-block"></span>Data flow</div>`;
+  h+=`<div style="display:flex;align-items:center;gap:5px;color:#9aa4b2"><span style="font-size:0.7rem">▼▼</span>Telemetry ingestion</div>`;
+  h+=`</div></div></div>`;
   h+=`<div class="disclaimer">${DISCLAIMER}</div>`;
   sb.innerHTML=h;
   sb.querySelectorAll('input[data-block]').forEach(cb=>{
     cb.addEventListener('change',()=>{st[cb.dataset.block]=cb.checked;pinnedBlock=null;render();});
   });
+  wireCollapsibles(sb);
+  wireCollapseAll(sb);
 }
 
 /* ── Tabs ── */
 function renderTabs(){
   const c=document.getElementById('templateTabs');
-  c.innerHTML=TEMPLATES.map(t=>`<button class="template-tab ${t.id===activeTemplateId?'active':''}" data-tpl="${t.id}">${t.name}</button>`).join('');
+  c.innerHTML=TEMPLATES.map(t=>`<button class="template-tab ${t.id===activeTemplateId?'active':''}" data-tpl="${t.id}">${t.name}${t.badge?`<span class="tab-badge">${t.badge}</span>`:''}</button>`).join('');
   c.querySelectorAll('.template-tab').forEach(btn=>{
     btn.addEventListener('click',()=>{activeTemplateId=btn.dataset.tpl;pinnedBlock=null;volumeView=false;syncViewToggle();renderTabs();renderSidebar();render();});
   });
@@ -1072,8 +1430,12 @@ function syncViewToggle(){
   const vt=document.getElementById('viewToggle');
   if(isTelemetry()){ vt.style.display=''; vt.textContent=volumeView?'Path view':'Volume view'; vt.classList.toggle('active',volumeView); }
   else vt.style.display='none';
+  const gt=document.getElementById('gapToggle');
+  if(!isTelemetry()){ gt.style.display=''; gt.textContent=showGaps?'Hide gaps':'Show gaps'; gt.classList.toggle('active',!showGaps); }
+  else gt.style.display='none';
 }
 function toggleVolumeView(){ volumeView=!volumeView; syncViewToggle(); renderTelemetry(); }
+function toggleGapView(){ showGaps=!showGaps; pinnedBlock=null; syncViewToggle(); render(); }
 
 /* ── Save / Load ── */
 function saveConfig(){
@@ -1083,8 +1445,11 @@ function saveConfig(){
     template:t.id,
     theme:currentTheme(),
     pathOverrides: t.telemetry ? pathOverrides : {},
-    blockStates: blockStates[t.id],
+    blockStates,
     volumeView: t.telemetry ? volumeView : undefined,
+    showGaps: t.telemetry ? undefined : showGaps,
+    palette,
+    author: authorName || undefined,
     nodes:[], edges:[],
   };
   const d=new Date(), ymd=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
@@ -1102,10 +1467,13 @@ function loadConfig(ev){
     const c=res.config;
     if(!TEMPLATES.find(t=>t.id===c.template)){ showErr([`Unknown template "${c.template}".`]); return; }
     activeTemplateId=c.template;
-    if(c.blockStates){ blockStates[c.template]=Object.assign({}, blockStates[c.template], c.blockStates); }
+    if(c.blockStates){ Object.assign(blockStates, c.blockStates); }
     if(c.pathOverrides) pathOverrides=Object.assign({}, c.pathOverrides);
     volumeView = !!c.volumeView;
+    showGaps = c.showGaps !== false;
     if(c.theme) applyTheme(c.theme);
+    if(c.palette) applyPalette(c.palette);
+    if(c.author){ authorName=c.author; const inp=document.getElementById('authorInput'); if(inp) inp.value=authorName; try{ localStorage.setItem('tih-db-author',authorName); }catch(e){} }
     if(res.errors.length) showErr(res.errors); // non-fatal notices
     pinnedBlock=null; renderTabs(); renderSidebar(); syncViewToggle(); render();
   };
@@ -1142,7 +1510,7 @@ function exportPNG(){
   img.src=url;
 }
 function generateMermaid(){
-  const t=tpl(),st=blockStates[t.id];
+  const t=tpl(),st=blockStates;
   if(t.telemetry){
     // Simplified flow — swimlanes & volume don't map to Mermaid.
     const lines=['graph LR','  %% Simplified telemetry flow (swimlanes/volume not representable)'];
@@ -1166,7 +1534,7 @@ function generateMermaid(){
   t.blocks.forEach(b=>{if(st[b.id])lines.push(`  class ${sid(b.id)} ${b.cov.toLowerCase()}`);});return lines.join('\n');
 }
 function generateD2(){
-  const t=tpl(),st=blockStates[t.id];
+  const t=tpl(),st=blockStates;
   if(t.telemetry){
     const lines=[`# ${t.name}`,`# Simplified telemetry flow — ThinkInfoSec Diagram Builder`,''];
     activeSources().forEach(s=>{
@@ -1223,6 +1591,9 @@ function selfTest(){
 
 /* ── INIT ── */
 initTheme();
+initPalette();
+initAuthor();
+initHero();
 renderTabs(); renderSidebar(); syncViewToggle(); render();
 if(/[?&]test=1/.test(location.search)) selfTest();
 </script>
