@@ -212,8 +212,7 @@ body { font-family:var(--sans); background:var(--bg); color:var(--text); transit
     <span class="hf-arrow">→</span>
     <span class="hf-lenses">
       <span class="hf-lens" style="--lens:#00BFCF"><b>Falcon Core Stack</b>technology-aligned</span>
-      <span class="hf-lens" style="--lens:#FF2D78"><b>Managed Services</b>services-aligned</span>
-      <span class="hf-lens" style="--lens:#7C3AED"><b>Data Protection</b>outcome-aligned</span>
+      <span class="hf-lens" style="--lens:#FF8B00"><b>Telemetry Ingest</b>source-to-SIEM · alpha</span>
     </span>
     <span class="hf-arrow">→</span>
     <span class="hf-node">Gap assessment</span>
@@ -282,6 +281,7 @@ const PATHS = {
   'sensor-native': { id:'sensor-native', label:'Sensor-native', via:'direct',   desc:'Falcon sensor on the asset' },
   'falcon-shield': { id:'falcon-shield', label:'Falcon Shield', via:'direct',   desc:'Native SaaS / SSPM integration' },
   'connector':     { id:'connector',     label:'Connector',     via:'direct',   desc:'Native NG-SIEM / LogScale connector' },
+  'logscale-collector': { id:'logscale-collector', label:'LogScale Collector', via:'direct', desc:'Falcon LogScale Collector — agent log shipping direct into LogScale' },
   'onum':          { id:'onum',          label:'Via Onum',      via:'onum',     desc:'Falcon Onum pipeline — parse/enrich/route' },
   'syslog':        { id:'syslog',        label:'Syslog',        via:'onum',     desc:'Syslog collector into Onum/LogScale' },
   'api-pull':      { id:'api-pull',      label:'API pull',      via:'direct',   desc:'Direct API ingestion' },
@@ -290,15 +290,16 @@ const PATHS = {
 /** Telemetry sources. paths[] lists supported paths; defaultPath is recommended. */
 const SOURCES = [
   { id:'endpoints',   label:'Endpoints',            category:'endpoint', volume:'high', paths:['sensor-native'],                 defaultPath:'sensor-native', ocsfClasses:['Process Activity','File System Activity','Network Activity'], outcomes:['edr-detect','insight'] },
-  { id:'identity',    label:'Identity (AD / Entra)',category:'identity', volume:'high', paths:['sensor-native'],                 defaultPath:'sensor-native', ocsfClasses:['Authentication','Account Change'], outcomes:['itdr','insight'] },
+  { id:'identity',    label:'Active Directory (on-prem)', category:'identity', volume:'high', paths:['sensor-native'],          defaultPath:'sensor-native', ocsfClasses:['Authentication','Account Change'], outcomes:['itdr','insight'] },
+  { id:'entra',       label:'Microsoft Entra ID',   category:'identity', volume:'med',  paths:['api-pull','onum'],               defaultPath:'api-pull',      ocsfClasses:['Authentication','Account Change'], outcomes:['itdr'] },
   { id:'cloud-work',  label:'Cloud workloads',      category:'cloud',    volume:'med',  paths:['sensor-native'],                 defaultPath:'sensor-native', ocsfClasses:['Process Activity','Network Activity'], outcomes:['cdr','insight'] },
   { id:'cloudtrail',  label:'AWS CloudTrail',       category:'cloud',    volume:'med',  paths:['api-pull','onum'],               defaultPath:'api-pull',      ocsfClasses:['API Activity'], outcomes:['cdr','cloud-posture'] },
   { id:'okta',        label:'Okta / IdP logs',      category:'identity', volume:'med',  paths:['api-pull','onum'],               defaultPath:'api-pull',      ocsfClasses:['Authentication','User Access'], outcomes:['itdr'] },
   { id:'m365',        label:'Microsoft 365',        category:'saas',     volume:'med',  paths:['falcon-shield','connector','onum'], defaultPath:'falcon-shield', ocsfClasses:['Email Activity','File Hosting Activity'], outcomes:['saas-posture','dlp'] },
   { id:'saas-apps',   label:'SaaS apps (generic)',  category:'saas',     volume:'low',  paths:['falcon-shield'],                 defaultPath:'falcon-shield', ocsfClasses:['Application Lifecycle','Config State'], outcomes:['saas-posture'] },
-  { id:'firewall',    label:'Firewall / Netflow',   category:'network',  volume:'high', paths:['syslog','onum'],                 defaultPath:'onum',          ocsfClasses:['Network Activity'], outcomes:['network-vis'] },
-  { id:'dns',         label:'DNS resolver',         category:'network',  volume:'med',  paths:['syslog','onum'],                 defaultPath:'onum',          ocsfClasses:['DNS Activity'], outcomes:['network-vis'] },
-  { id:'ot',          label:'OT / ICS',             category:'ot',       volume:'low',  paths:['syslog','onum'],                 defaultPath:'onum',          ocsfClasses:['Network Activity'], outcomes:['ot-vis'] },
+  { id:'firewall',    label:'Firewall / Netflow',   category:'network',  volume:'high', paths:['syslog','logscale-collector','onum'], defaultPath:'onum',     ocsfClasses:['Network Activity'], outcomes:['network-vis'] },
+  { id:'dns',         label:'DNS resolver',         category:'network',  volume:'med',  paths:['syslog','logscale-collector','onum'], defaultPath:'onum',     ocsfClasses:['DNS Activity'], outcomes:['network-vis'] },
+  { id:'ot',          label:'OT / ICS',             category:'ot',       volume:'low',  paths:['syslog','logscale-collector','onum'], defaultPath:'onum',     ocsfClasses:['Network Activity'], outcomes:['ot-vis'] },
 ];
 
 /** Pipeline stages (Onum). */
@@ -316,7 +317,7 @@ const DESTINATIONS = [
 /** Outcomes — what the telemetry enables. sources[] references Source ids. */
 const OUTCOMES = [
   { id:'edr-detect',   label:'Endpoint detection (EDR/XDR)', sources:['endpoints'] },
-  { id:'itdr',         label:'Identity threat detection',    sources:['identity','okta'] },
+  { id:'itdr',         label:'Identity threat detection',    sources:['identity','entra','okta'] },
   { id:'cdr',          label:'Cloud detection & response',   sources:['cloud-work','cloudtrail'] },
   { id:'cloud-posture',label:'Cloud posture / API activity', sources:['cloudtrail'] },
   { id:'saas-posture', label:'SaaS security posture (SSPM)', sources:['m365','saas-apps'] },
@@ -436,8 +437,7 @@ const TEMPLATES = [
     {id:'dlp',label:'Falcon Data Security for Endpoint',sub:'DLP — data in motion',zone:'data',cov:'NATIVE',on:true,span:['endpoints']},
     {id:'ds-cloud',label:'Falcon Data Security for Cloud',sub:'Runtime DSPM',zone:'data',cov:'NATIVE',on:true,span:['cloud']},
     {id:'seb',label:'Falcon Secure Access',sub:'Secure enterprise browser',zone:'data',cov:'NATIVE',on:false,span:['endpoints']},
-    // AI Security — Falcon AIDR ships as two modules (native, built into the Falcon sensor);
-    // ids match the Data Protection lens so toggle state carries over
+    // AI Security — Falcon AIDR ships as two modules (native, built into the Falcon sensor)
     {id:'aidr-wf',label:'Falcon AIDR for Workforce',sub:'AI traffic — endpoints',zone:'aisec',cov:'NATIVE',on:true,span:['endpoints']},
     {id:'aidr-ag',label:'Falcon AIDR for Agents',sub:'AI workloads — cloud',zone:'aisec',cov:'NATIVE',on:true,span:['cloud']},
     // Exposure Management (Surface = EASM, Spotlight = VM; Discover + IT hygiene fold in here)
@@ -472,105 +472,11 @@ const TEMPLATES = [
     {from:'siem',to:'soar',type:'ops'},{from:'soar',to:'charlotte',type:'ops'},{from:'charlotte',to:'agentworks',type:'ops'},
   ]
 },
-// ─── MANAGED SERVICES ───
-{
-  id:'managed-services', name:'Managed Services',
-  desc:'Technology capability columns on top, telemetry pipeline and NG-SIEM backbone in the middle, and service delivery options — CrowdStrike-managed, MSSP-delivered, or professional services — as equal columns at the bottom.',
-  canvas:{w:1440,h:510},
-  layout:{tracks:[{w:1400,rows:[['detect','protect','platform'],['pipeline'],['siem-bar'],['cs-managed','partner-managed','pro-services']]}]},
-  zones:[
-    {id:'detect',label:'Detection & Visibility',x:20,y:15,w:455,h:230,color:'rgba(0,191,207,0.06)',bc:'#00BFCF'},
-    {id:'protect',label:'Protection & Prevention',x:485,y:15,w:455,h:230,color:'rgba(124,58,237,0.06)',bc:'#7C3AED'},
-    {id:'platform',label:'Falcon Platform',x:950,y:15,w:470,h:230,color:'rgba(0,191,207,0.08)',bc:'#00BFCF'},
-    {id:'pipeline',label:'Telemetry Pipeline',x:20,y:255,w:1400,h:68,color:'rgba(0,191,207,0.05)',bc:'#00BFCF',dir:'h'},
-    {id:'siem-bar',label:'NG-SIEM',x:20,y:333,w:1400,h:48,color:'rgba(23,43,77,0.06)',bc:'#0D1F3C',isSiemBar:true},
-    {id:'cs-managed',label:'CrowdStrike Managed',x:20,y:391,w:455,h:190,color:'rgba(255,45,120,0.06)',bc:'#FF2D78',isServices:true},
-    {id:'partner-managed',label:'MSSP / Partner Delivered',x:485,y:391,w:455,h:190,color:'rgba(255,139,0,0.06)',bc:'#FF8B00',isServices:true},
-    {id:'pro-services',label:'Professional Services',x:950,y:391,w:470,h:190,color:'rgba(23,43,77,0.03)',bc:'#6B778C',isServices:true},
-  ],
-  blocks:[
-    {id:'siem',label:'Falcon Next-Gen SIEM',sub:'LogScale',zone:'siem-bar',cov:'NATIVE',on:true},
-    {id:'edr',label:'Falcon Insight XDR',sub:'EDR / XDR',zone:'detect',cov:'NATIVE',on:true},
-    {id:'cti',label:'Falcon Adversary Intelligence',sub:'CTI',zone:'detect',cov:'NATIVE',on:true},
-    {id:'onum',label:'Falcon Onum',sub:'Real-time data control plane — parse · enrich · filter · route',zone:'pipeline',cov:'NATIVE',on:false},
-    {id:'ctem',label:'Falcon Exposure Management',sub:'CTEM / EASM',zone:'detect',cov:'NATIVE',on:false},
-    {id:'drp',label:'Falcon Intelligence Recon',sub:'DRP',zone:'detect',cov:'NATIVE',on:false},
-    {id:'epp',label:'Falcon Prevent',sub:'EPP / NGAV',zone:'protect',cov:'NATIVE',on:true},
-    {id:'itdr',label:'Falcon Identity Protection',sub:'ITDR',zone:'protect',cov:'NATIVE',on:true},
-    {id:'cnapp',label:'Falcon Cloud Security',sub:'CNAPP',zone:'protect',cov:'NATIVE',on:true},
-    {id:'dlp',label:'Falcon Data Security',sub:'DLP',zone:'protect',cov:'NATIVE',on:false},
-    {id:'seb',label:'Falcon Secure Access',sub:'Secure Browser',zone:'protect',cov:'NATIVE',on:false},
-    {id:'soar',label:'Falcon Fusion SOAR',sub:'Playbook Automation',zone:'platform',cov:'NATIVE',on:true},
-    {id:'charlotte',label:'Charlotte AI',sub:'Agentic SOC',zone:'platform',cov:'NATIVE',on:true},
-    {id:'agentworks',label:'Charlotte AI AgentWorks',sub:'Agentic Ecosystem',zone:'platform',cov:'NATIVE',on:true},
-    {id:'foundry',label:'Falcon Foundry',sub:'Custom Apps',zone:'platform',cov:'NATIVE',on:false},
-    {id:'complete',label:'Falcon Complete',sub:'Agentic MDR',zone:'cs-managed',cov:'SERVICES',on:true},
-    {id:'overwatch',label:'Falcon Adversary OverWatch',sub:'Managed Threat Hunting',zone:'cs-managed',cov:'SERVICES',on:true},
-    {id:'complete-sp',label:'Falcon Complete for SPs',sub:'Service Provider MDR',zone:'cs-managed',cov:'SERVICES',on:false},
-    {id:'ir',label:'CrowdStrike IR Services',sub:'Incident Response Retainer',zone:'cs-managed',cov:'SERVICES',on:false},
-    {id:'mssp-soc',label:'MSSP SOC Service',sub:'24/7 Partner-Run SOC',zone:'partner-managed',cov:'PARTNER',on:true},
-    {id:'mssp-mdr',label:'MSSP Managed Detection',sub:'Partner MDR on Falcon',zone:'partner-managed',cov:'PARTNER',on:true},
-    {id:'mssp-cloud',label:'MSSP Cloud Security Ops',sub:'Partner Cloud SOC',zone:'partner-managed',cov:'PARTNER',on:false},
-    {id:'mssp-identity',label:'MSSP Identity Ops',sub:'Partner Identity Monitoring',zone:'partner-managed',cov:'PARTNER',on:false},
-    {id:'ps-deploy',label:'Platform Deployment',sub:'CrowdStrike Pro Services',zone:'pro-services',cov:'SERVICES',on:true},
-    {id:'ps-arch',label:'Architecture Review',sub:'CrowdStrike Services',zone:'pro-services',cov:'SERVICES',on:true},
-    {id:'gsi',label:'Professional Services Delivery',sub:'SI / integrator delivery',zone:'pro-services',cov:'PARTNER',on:false},
-    {id:'ps-transform',label:'Security Transformation',sub:'CrowdStrike Services',zone:'pro-services',cov:'SERVICES',on:false},
-  ],
-  connections:[
-    {from:'onum',to:'siem',type:'data'},
-    {from:'siem',to:'soar',type:'ops'},{from:'soar',to:'charlotte',type:'ops'},{from:'charlotte',to:'agentworks',type:'ops'},
-  ]
-},
-// ─── DATA PROTECTION ───
-{
-  id:'data-protection', name:'Data Protection',
-  desc:'End-to-end data protection across endpoints, SaaS, cloud, and AI workloads — AIDR for Workforce and AIDR for Agents. AI security spans the top, operations and pipeline sit above the NG-SIEM backbone, services at the bottom.',
-  canvas:{w:1440,h:410},
-  layout:{tracks:[{w:1400,rows:[['ai-overlay'],['browser','saas','clouddata'],['visibility'],['pipeline'],['siem-bar'],['services']]}]},
-  zones:[
-    {id:'ai-overlay',label:'AI Security — Falcon AIDR',x:20,y:15,w:1400,h:68,color:'rgba(124,58,237,0.08)',bc:'#7C3AED',overlay:true,dir:'h'},
-    {id:'browser',label:'Browser & Endpoints',x:20,y:93,w:455,h:150,color:'rgba(0,191,207,0.06)',bc:'#00BFCF'},
-    {id:'saas',label:'SaaS & Email',x:485,y:93,w:455,h:150,color:'rgba(124,58,237,0.06)',bc:'#7C3AED'},
-    {id:'clouddata',label:'Cloud & Data Stores',x:950,y:93,w:470,h:150,color:'rgba(255,45,120,0.06)',bc:'#FF2D78'},
-    {id:'visibility',label:'Visibility & Operations',x:20,y:253,w:1400,h:68,color:'rgba(23,43,77,0.05)',bc:'#0D1F3C',overlay:true,dir:'h'},
-    {id:'pipeline',label:'Telemetry Pipeline',x:20,y:331,w:1400,h:68,color:'rgba(0,191,207,0.05)',bc:'#00BFCF',dir:'h'},
-    {id:'siem-bar',label:'NG-SIEM',x:20,y:409,w:1400,h:48,color:'rgba(23,43,77,0.06)',bc:'#0D1F3C',isSiemBar:true},
-    {id:'services',label:'Services & Partners',x:20,y:467,w:1400,h:68,color:'rgba(23,43,77,0.03)',bc:'#6B778C',isServices:true,dir:'h'},
-  ],
-  blocks:[
-    {id:'aidr-wf',label:'AIDR for Workforce',sub:'AI Traffic — Endpoints',zone:'ai-overlay',cov:'HYBRID',on:true},
-    {id:'aidr-ag',label:'AIDR for Agents',sub:'AI Workloads — Cloud',zone:'ai-overlay',cov:'HYBRID',on:true},
-    {id:'seb',label:'Falcon Secure Access',sub:'Secure Enterprise Browser',zone:'browser',cov:'NATIVE',on:false},
-    {id:'dlp',label:'Falcon Data Security for Endpoint',sub:'Endpoint DLP',zone:'browser',cov:'NATIVE',on:true},
-    {id:'devctl',label:'Falcon Device Control',sub:'USB / Peripheral DLP',zone:'browser',cov:'NATIVE',on:false},
-    {id:'shield',label:'Falcon Shield',sub:'SSPM',zone:'saas',cov:'NATIVE',on:true},
-    {id:'email',label:'Email Security',sub:'Proofpoint / Abnormal',zone:'saas',cov:'PARTNER',on:true},
-    {id:'ds-cloud',label:'Falcon Data Security for Cloud',sub:'Runtime DSPM',zone:'clouddata',cov:'NATIVE',on:true},
-    {id:'dc',label:'AI Data Classification',sub:'Falcon Data Security feature',zone:'clouddata',cov:'NATIVE',on:true},
-    {id:'cnapp',label:'Falcon Cloud Security',sub:'Workload Protection',zone:'clouddata',cov:'NATIVE',on:false},
-    {id:'charlotte',label:'Charlotte AI',sub:'Data Investigation',zone:'visibility',cov:'NATIVE',on:true},
-    {id:'soar',label:'Falcon Fusion SOAR',sub:'DLP Response Playbooks',zone:'visibility',cov:'NATIVE',on:true},
-    {id:'onum',label:'Falcon Onum',sub:'Real-time data control plane — parse · enrich · filter · route',zone:'pipeline',cov:'NATIVE',on:false},
-    {id:'agentworks',label:'Charlotte AI AgentWorks',sub:'Agentic Ecosystem',zone:'visibility',cov:'NATIVE',on:false},
-    {id:'siem',label:'Falcon Next-Gen SIEM',sub:'LogScale — Unified Data Platform',zone:'siem-bar',cov:'NATIVE',on:true},
-    {id:'casb',label:'CASB',sub:'Netskope / Zscaler',zone:'services',cov:'PARTNER',on:true},
-    {id:'purview',label:'Microsoft Purview',sub:'Label Integration',zone:'services',cov:'PARTNER',on:true},
-    {id:'complete',label:'Falcon Complete',sub:'Managed DLP Response',zone:'services',cov:'SERVICES',on:false},
-    {id:'ps-workshop',label:'Data Protection Workshop',sub:'CrowdStrike Pro Services',zone:'services',cov:'SERVICES',on:false},
-    {id:'mssp-dlp',label:'MSSP Data Security Ops',sub:'Partner-Managed DLP',zone:'services',cov:'PARTNER',on:false},
-  ],
-  connections:[
-    {from:'onum',to:'siem',type:'data'},
-    {from:'siem',to:'soar',type:'ops'},{from:'soar',to:'charlotte',type:'ops'},
-    {from:'dc',to:'dlp',type:'data'},
-  ]
-},
 // ─── TELEMETRY INGEST (alpha) ───
 {
   id:'telemetry-ingest', name:'Telemetry Ingest', telemetry:true, badge:'ALPHA',
   desc:'How telemetry reaches NG-SIEM. Each source shows its collection path; sensor-native sources route direct, everything else funnels through Onum or a connector. Toggle sources, click a path pill to change it, or switch to Volume view.',
-  sources: SOURCES.map(s => ({ id:s.id, on:['endpoints','identity','cloud-work','m365','cloudtrail','firewall'].includes(s.id) })),
+  sources: SOURCES.map(s => ({ id:s.id, on:['endpoints','identity','entra','cloud-work','m365','cloudtrail','firewall'].includes(s.id) })),
   destinations:['ngsiem'],
 },
 ];
@@ -713,6 +619,28 @@ function drawHeader(svg,t,W){
 }
 
 /* ── Connection routing (alliance templates) ── */
+/* Smooth S-curve between two points, vertical tangents at both ends — the fluid
+   Sankey-style edge used for lane-to-lane hops where the corridor is guaranteed clear. */
+function scurve(x1,y1,x2,y2){
+  const my=((y1+y2)/2).toFixed(1);
+  return `M${x1},${y1} C${x1},${my} ${x2},${my} ${x2},${y2}`;
+}
+/* Rounded-corner orthogonal path through waypoints — keeps corridor routing
+   (never crosses blocks) but every elbow becomes a soft quadratic bend. */
+function ortho(pts,r=7){
+  let d=`M${pts[0][0]},${pts[0][1]}`;
+  for(let i=1;i<pts.length-1;i++){
+    const [px,py]=pts[i-1],[cx,cy]=pts[i],[nx,ny]=pts[i+1];
+    const inLen=Math.hypot(cx-px,cy-py), outLen=Math.hypot(nx-cx,ny-cy);
+    if(inLen<0.01||outLen<0.01){ d+=` L${cx},${cy}`; continue; }
+    const rr=Math.min(r,inLen/2,outLen/2);
+    const ix=(cx-(cx-px)/inLen*rr).toFixed(1), iy=(cy-(cy-py)/inLen*rr).toFixed(1);
+    const ox=(cx+(nx-cx)/outLen*rr).toFixed(1), oy=(cy+(ny-cy)/outLen*rr).toFixed(1);
+    d+=` L${ix},${iy} Q${cx},${cy} ${ox},${oy}`;
+  }
+  return d+` L${pts[pts.length-1][0]},${pts[pts.length-1][1]}`;
+}
+
 function routeConnection(fromId,toId,bp,template){
   const fp=bp[fromId],tp=bp[toId];
   if(!fp||!tp)return'';
@@ -725,7 +653,7 @@ function routeConnection(fromId,toId,bp,template){
       const x1=fp.x+fp.w+2,y1=fp.y+fp.h/2,x2=tp.x-2,y2=tp.y+tp.h/2;
       if(Math.abs(y1-y2)<4)return`M${x1},${y1} L${x2},${y2}`;
       const mx=(x1+x2)/2;
-      return`M${x1},${y1} L${mx},${y1} L${mx},${y2} L${x2},${y2}`;
+      return ortho([[x1,y1],[mx,y1],[mx,y2],[x2,y2]]);
     }
     const x=fp.x+fp.w/2;
     return`M${x},${fp.y+fp.h+2} L${x},${tp.y-2}`;
@@ -738,32 +666,32 @@ function routeConnection(fromId,toId,bp,template){
   if(hOv>30&&vGd>=0&&vGd<25){
     const ex=fpCx,ey=fp.y+fp.h+2,nx=tpCx,ny=tp.y-2,gy=fz.y+fz.h+vGd/2;
     if(Math.abs(ex-nx)<8)return`M${ex},${ey} L${ex},${ny}`;
-    return`M${ex},${ey} L${ex},${gy} L${nx},${gy} L${nx},${ny}`;
+    return ortho([[ex,ey],[ex,gy],[nx,gy],[nx,ny]]);
   }
   if(hOv>30&&vGu>=0&&vGu<25){
     const ex=fpCx,ey=fp.y-2,nx=tpCx,ny=tp.y+tp.h+2,gy=tz.y+tz.h+vGu/2;
     if(Math.abs(ex-nx)<8)return`M${ex},${ey} L${ex},${ny}`;
-    return`M${ex},${ey} L${ex},${gy} L${nx},${gy} L${nx},${ny}`;
+    return ortho([[ex,ey],[ex,gy],[nx,gy],[nx,ny]]);
   }
   if(vOv>30&&hGr>=0&&hGr<25){
     const ex=fp.x+fp.w+2,ey=fp.y+fp.h/2,nx=tp.x-2,ny=tp.y+tp.h/2,gx=fz.x+fz.w+hGr/2;
     if(Math.abs(ey-ny)<5)return`M${ex},${ey} L${nx},${ny}`;
-    return`M${ex},${ey} L${gx},${ey} L${gx},${ny} L${nx},${ny}`;
+    return ortho([[ex,ey],[gx,ey],[gx,ny],[nx,ny]]);
   }
   if(vOv>30&&hGl>=0&&hGl<25){
     const ex=fp.x-2,ey=fp.y+fp.h/2,nx=tp.x+tp.w+2,ny=tp.y+tp.h/2,gx=tz.x+tz.w+hGl/2;
     if(Math.abs(ey-ny)<5)return`M${ex},${ey} L${nx},${ny}`;
-    return`M${ex},${ey} L${gx},${ey} L${gx},${ny} L${nx},${ny}`;
+    return ortho([[ex,ey],[gx,ey],[gx,ny],[nx,ny]]);
   }
   const goD=tp.y>fp.y;
   if(goD){
     const ex=fpCx,ey=fp.y+fp.h+2,nx=tpCx,ny=tp.y-2,wy=fz.y+fz.h+4;
     if(Math.abs(ex-nx)<8)return`M${ex},${ey} L${ex},${ny}`;
-    return`M${ex},${ey} L${ex},${wy} L${nx},${wy} L${nx},${ny}`;
+    return ortho([[ex,ey],[ex,wy],[nx,wy],[nx,ny]]);
   }else{
     const ex=fpCx,ey=fp.y-2,nx=tpCx,ny=tp.y+tp.h+2,wy=fz.y-4;
     if(Math.abs(ex-nx)<8)return`M${ex},${ey} L${ex},${ny}`;
-    return`M${ex},${ey} L${ex},${wy} L${nx},${wy} L${nx},${ny}`;
+    return ortho([[ex,ey],[ex,wy],[nx,wy],[nx,ny]]);
   }
 }
 
@@ -909,7 +837,7 @@ function renderAlliance(){
     const path=routeConnection(conn.from,conn.to,blockPos,t);
     if(!path)return;
     connLayer.appendChild(el('path',{d:path,fill:'none',stroke:C(ct.stroke),'stroke-width':ct.width,
-      'stroke-dasharray':ct.dash,'marker-end':`url(#ah-${type})`,'data-conn':`${conn.from}→${conn.to}`,'data-type':type}));
+      'stroke-dasharray':ct.dash,'stroke-linecap':'round','stroke-linejoin':'round','marker-end':`url(#ah-${type})`,'data-conn':`${conn.from}→${conn.to}`,'data-type':type}));
   });
   svg.appendChild(connLayer);
 
@@ -1004,7 +932,7 @@ function renderTelemetry(){
   svg.innerHTML='';
   svg.setAttribute('width',W); svg.setAttribute('height',H);
   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
-  svg.appendChild(Object.assign(el('style'),{textContent:'[data-src]{transition:opacity .15s ease;cursor:pointer}'}));
+  svg.appendChild(Object.assign(el('style'),{textContent:'[data-src]{transition:opacity .15s ease;cursor:pointer}[data-edge]{transition:opacity .15s ease}'}));
   const defs=el('defs');
   const mk=(id,color)=>{const m=el('marker',{id,viewBox:'0 0 10 10',refX:'9',refY:'5',markerWidth:'6',markerHeight:'6',orient:'auto'});m.appendChild(el('path',{d:'M0 1.5 L10 5 L0 8.5 z',fill:color}));defs.appendChild(m);};
   mk('ah-acc',ACC); mk('ah-navy',NVY); mk('ah-mut',FNT);
@@ -1026,7 +954,9 @@ function renderTelemetry(){
   const lane=(ly,lh,label,accent,fill)=>{
     svg.appendChild(el('rect',{x:laneX,y:ly,width:laneW,height:lh,rx:6,fill:C(fill),stroke:C(accent),'stroke-width':0.7,'stroke-opacity':0.55}));
     const lx=pad+10, lcy=ly+lh/2;
-    svg.appendChild(txt(label.toUpperCase(),lx,lcy,{'font-family':FONT_MONO,'font-size':'8','font-weight':'700',fill:C(accent),'letter-spacing':'0.05em','text-anchor':'start',opacity:'0.85'}));
+    // Raw cyan fails contrast on near-white lane fills — use the darker teal for label text
+    const labelC = accent===ACC ? C('#0A7C86') : C(accent);
+    svg.appendChild(txt(label.toUpperCase(),lx,lcy,{'font-family':FONT_MONO,'font-size':'8','font-weight':'700',fill:labelC,'letter-spacing':'0.05em','text-anchor':'start',opacity:'0.9'}));
   };
 
   // ── SOURCES lane ──
@@ -1077,15 +1007,18 @@ function renderTelemetry(){
       const tx=destPos.x+destPos.w/2, ty=destPos.y;
       const midY=(sy+ty)/2;
       connG.appendChild(el('path',{d:`M${sx},${sy} C${sx},${midY} ${tx},${midY} ${tx},${ty}`,fill:'none',
-        stroke:ACC,'stroke-width':sw*2,opacity:'0.28','data-src-conn':s.id,stroke_linecap:'round'}));
+        stroke:ACC,'stroke-width':sw*2,opacity:'0.28','stroke-linecap':'round',
+        'data-edge':'1','data-edgekeys':`src:${s.id}`}));
     } else if(pv==='direct'){
       const pp=pathPos[p]; if(!pp)return;
       const px=pp.x+pp.w/2, py=pp.y;
-      connG.appendChild(el('path',{d:`M${sx},${sy} L${sx},${py-6} L${px},${py-6} L${px},${py}`,fill:'none',stroke:NVY,'stroke-width':1.2,'data-src-conn':s.id}));
+      connG.appendChild(el('path',{d:scurve(sx,sy,px,py),fill:'none',stroke:NVY,'stroke-width':1.2,'stroke-linecap':'round',
+        'data-edge':'1','data-edgekeys':`src:${s.id}`}));
     } else {
       const pp=pathPos[p]; if(!pp)return;
       const px=pp.x+pp.w/2, py=pp.y;
-      connG.appendChild(el('path',{d:`M${sx},${sy} L${sx},${py-6} L${px},${py-6} L${px},${py}`,fill:'none',stroke:ACC,'stroke-width':1.2,'data-src-conn':s.id}));
+      connG.appendChild(el('path',{d:scurve(sx,sy,px,py),fill:'none',stroke:ACC,'stroke-width':1.2,'stroke-linecap':'round',
+        'data-edge':'1','data-edgekeys':`src:${s.id}`}));
     }
   });
   if(!volumeView){
@@ -1095,17 +1028,20 @@ function renderTelemetry(){
       const px=pp.x+pp.w/2, py=pp.y+pp.h;
       if(PATHS[p].via==='onum'){
         const ox=onumPos.x+onumPos.w/2, oy=onumPos.y;
-        connG.appendChild(el('path',{d:`M${px},${py} L${px},${oy-8} L${ox},${oy-8} L${ox},${oy}`,fill:'none',stroke:ACC,'stroke-width':1.4,'marker-end':'url(#ah-acc)'}));
+        connG.appendChild(el('path',{d:scurve(px,py,ox,oy),fill:'none',stroke:ACC,'stroke-width':1.4,'stroke-linecap':'round','marker-end':'url(#ah-acc)',
+          'data-edge':'1','data-edgekeys':`path:${p}`}));
       } else {
         const dx=destPos.x+destPos.w/2, dy=destPos.y;
-        connG.appendChild(el('path',{d:`M${px},${py} L${px},${dy-8} L${dx},${dy-8} L${dx},${dy}`,fill:'none',stroke:NVY,'stroke-width':1.4,'marker-end':'url(#ah-navy)'}));
+        connG.appendChild(el('path',{d:scurve(px,py,dx,dy),fill:'none',stroke:NVY,'stroke-width':1.4,'stroke-linecap':'round','marker-end':'url(#ah-navy)',
+          'data-edge':'1','data-edgekeys':`path:${p}`}));
       }
     });
     // onum → destination
     if(onumNeeded){
       const ox=onumPos.x+onumPos.w/2, oy=onumPos.y+onumPos.h;
       const dx=destPos.x+destPos.w/2, dy=destPos.y;
-        connG.appendChild(el('path',{d:`M${ox},${oy} L${ox},${dy-6} L${dx},${dy-6} L${dx},${dy}`,fill:'none',stroke:ACC,'stroke-width':1.6,'marker-end':'url(#ah-acc)'}));
+        connG.appendChild(el('path',{d:scurve(ox,oy,dx,dy),fill:'none',stroke:ACC,'stroke-width':1.6,'stroke-linecap':'round','marker-end':'url(#ah-acc)',
+          'data-edge':'1','data-edgekeys':'pipe:onum'}));
     }
   }
   // destination → outcomes
@@ -1121,7 +1057,8 @@ function renderTelemetry(){
   onOutcomeIds.forEach(oid=>{
     if(!outPos[oid])return;
     const ox=outPos[oid].x+outPos[oid].w/2, oy=outPos[oid].y;
-    connG.appendChild(el('path',{d:`M${dx},${ddy} L${dx},${oy-6} L${ox},${oy-6} L${ox},${oy}`,fill:'none',stroke:FNT,'stroke-width':0.9,'stroke-dasharray':'3 3'}));
+    connG.appendChild(el('path',{d:scurve(dx,ddy,ox,oy),fill:'none',stroke:FNT,'stroke-width':0.9,'stroke-dasharray':'3 3','stroke-linecap':'round',
+      'data-edge':'1','data-edgekeys':`out:${oid}`}));
   });
   svg.appendChild(connG);
 
@@ -1140,10 +1077,10 @@ function renderTelemetry(){
     const pg=el('g',{'data-pathpill':s.id, style:'cursor:'+(multi?'pointer':'default')});
     pg.appendChild(el('rect',{x:pillX,y:pillY,width:pillW,height:11,rx:2,
       fill: ap==='sensor-native'?NVY:(ap==='falcon-shield'?C('rgba(0,191,207,0.15)'):C('rgba(23,43,77,0.08)')),
-      stroke: ap==='sensor-native'?NVY:(ap==='falcon-shield'?ACC:FNT),'stroke-width':0.7,
+      stroke: ap==='sensor-native'?ACC:(ap==='falcon-shield'?ACC:FNT),'stroke-width':0.7,
       'stroke-dasharray': ap==='syslog'?'2 2':'none'}));
     pg.appendChild(txt(path.label+(multi?' ▸':''),pillX+pillW/2,pillY+8,{'text-anchor':'middle','font-family':FONT_MONO,'font-size':'6','letter-spacing':'0.04em','font-weight':'700',
-      fill: ap==='sensor-native'?ACC:INKC}));
+      fill: ap==='sensor-native'?'#FFFFFF':INKC}));
     g.appendChild(pg);
     svg.appendChild(g);
   });
@@ -1175,8 +1112,8 @@ function renderTelemetry(){
   {
     const g=el('g',{'data-src':'ngsiem','data-kind':'destination'});
     g.appendChild(el('rect',{x:destPos.x,y:destPos.y,width:destPos.w,height:destPos.h,rx:6,fill:NVY,stroke:NVY,'stroke-width':1.4}));
-    g.appendChild(txt('NG-SIEM (LogScale)',destPos.x+destPos.w/2,destPos.y+15,{'text-anchor':'middle','font-family':FONT_SANS,'font-size':'10.5','font-weight':'700',fill:ACC}));
-    g.appendChild(txt(volumeView?'ingest volume ∝ band width':'unified data platform',destPos.x+destPos.w/2,destPos.y+25,{'text-anchor':'middle','font-family':FONT_MONO,'font-size':'6.5',fill:C('#9fb2c8')}));
+    g.appendChild(txt('NG-SIEM (LogScale)',destPos.x+destPos.w/2,destPos.y+15,{'text-anchor':'middle','font-family':FONT_SANS,'font-size':'10.5','font-weight':'700',fill:'#FFFFFF'}));
+    g.appendChild(txt(volumeView?'ingest volume ∝ band width':'unified data platform',destPos.x+destPos.w/2,destPos.y+25,{'text-anchor':'middle','font-family':FONT_MONO,'font-size':'6.5',fill:C('#C3CCD6')}));
     svg.appendChild(g);
   }
 
@@ -1230,20 +1167,44 @@ function setupHover(){
 }
 function onTelemetryHover(id,ev){
   const svg=document.getElementById('diagramSvg');
-  const s=REG.source(id);
-  // build related set: for a source → its route + outcomes; for an outcome → contributing sources
-  const rel=new Set([id]);
+  const s=REG.source(id), o=REG.outcome(id), pth=PATHS[id];
+  // rel = node ids to keep lit; ekeys = edge keys (src:/path:/pipe:/out:) that stay lit.
+  // Every rope carries data-edgekeys, so unrelated ropes always fade.
+  const rel=new Set([id]), ekeys=new Set();
+  const onumRoute=sid=>PATHS[resolveActivePath(sid,pathOverrides)].via==='onum';
   if(s){
-    rel.add(resolveActivePath(id,pathOverrides));
-    if(PATHS[resolveActivePath(id,pathOverrides)].via==='onum')rel.add('onum');
-    rel.add('ngsiem');
-    s.outcomes.forEach(o=>rel.add(o));
-  } else if(REG.outcome(id)){
-    rel.add('ngsiem');
-    REG.outcome(id).sources.forEach(sid=>{ if(blockStates[sid]){ rel.add(sid); rel.add(resolveActivePath(sid,pathOverrides)); } });
-  } else { rel.add('ngsiem'); }
-  svg.querySelectorAll('[data-src]').forEach(g=>{ g.style.opacity=rel.has(g.dataset.src)?'1':'0.15'; });
-  svg.querySelectorAll('[data-src-conn]').forEach(p=>{ p.style.opacity=(s&&p.dataset.srcConn===id)?'0.6':'0.08'; });
+    const ap=resolveActivePath(id,pathOverrides);
+    rel.add(ap); if(PATHS[ap].via==='onum')rel.add('onum'); rel.add('ngsiem');
+    s.outcomes.forEach(x=>rel.add(x));
+    ekeys.add('src:'+id); ekeys.add('path:'+ap);
+    if(PATHS[ap].via==='onum')ekeys.add('pipe:onum');
+    s.outcomes.forEach(x=>ekeys.add('out:'+x));
+  }else if(o){
+    rel.add('ngsiem'); ekeys.add('out:'+id);
+    o.sources.forEach(sid=>{ if(!blockStates[sid])return;
+      const ap=resolveActivePath(sid,pathOverrides);
+      rel.add(sid); rel.add(ap); if(PATHS[ap].via==='onum')rel.add('onum');
+      ekeys.add('src:'+sid); ekeys.add('path:'+ap); if(PATHS[ap].via==='onum')ekeys.add('pipe:onum');
+    });
+  }else if(id==='onum'){
+    // NB: 'onum' is also a PATHS key, so this branch must precede the path branch.
+    // The Onum block represents the whole onum-routed funnel (any path with via==='onum').
+    rel.add('ngsiem'); ekeys.add('pipe:onum');
+    activeSources().forEach(s2=>{ if(!onumRoute(s2.id))return;
+      const ap=resolveActivePath(s2.id,pathOverrides);
+      rel.add(s2.id); rel.add(ap); ekeys.add('src:'+s2.id); ekeys.add('path:'+ap);
+    });
+  }else if(pth){
+    rel.add('ngsiem'); if(pth.via==='onum')rel.add('onum');
+    ekeys.add('path:'+id); if(pth.via==='onum')ekeys.add('pipe:onum');
+    activeSources().forEach(s2=>{ if(resolveActivePath(s2.id,pathOverrides)===id){ rel.add(s2.id); ekeys.add('src:'+s2.id); } });
+  }else{ rel.add('ngsiem'); }
+  const hlAll=(id==='ngsiem'); // every rope terminates at the destination — nothing unrelated
+  svg.querySelectorAll('[data-src]').forEach(g=>{ g.style.opacity=(hlAll||rel.has(g.dataset.src))?'1':'0.15'; });
+  svg.querySelectorAll('[data-edge]').forEach(p=>{
+    const hit=hlAll||p.dataset.edgekeys.split(',').some(k=>ekeys.has(k));
+    p.style.opacity=hit?'0.6':'0.05';
+  });
   showTelemetryTip(id,ev);
 }
 function showTelemetryTip(id,ev){
@@ -1295,7 +1256,7 @@ function clearHL(){
   const svg=document.getElementById('diagramSvg');
   svg.querySelectorAll('[data-block]').forEach(g=>{g.style.opacity='';});
   svg.querySelectorAll('[data-src]').forEach(g=>{g.style.opacity='';});
-  svg.querySelectorAll('[data-src-conn]').forEach(p=>{p.style.opacity='';});
+  svg.querySelectorAll('[data-edge]').forEach(p=>{p.style.opacity='';});
   svg.querySelectorAll('[data-conn]').forEach(p=>{
     p.style.opacity='';p.setAttribute('stroke-width',String(CONN_TYPES[p.dataset.type||'ops'].width));
   });
@@ -1572,17 +1533,38 @@ function dl(blob,fn){const a=document.createElement('a');a.href=URL.createObject
 /* ── selfTest (dev: append ?test=1) ── */
 function selfTest(){
   const problems=[];
+  // Full referential integrity over the SCHEMA layer + template content.
+  SOURCES.forEach(s=>{
+    if(!s.paths.includes(s.defaultPath)) problems.push(`${s.id}: defaultPath not in paths[]`);
+    s.paths.forEach(p=>{ if(!PATHS[p]) problems.push(`${s.id}: unknown path ${p}`); });
+    s.outcomes.forEach(o=>{
+      if(!REG.outcome(o)) problems.push(`${s.id}: unknown outcome ${o}`);
+      else if(!REG.outcome(o).sources.includes(s.id)) problems.push(`${s.id}→${o}: outcome missing back-reference`);
+    });
+  });
+  OUTCOMES.forEach(o=>o.sources.forEach(sid=>{
+    if(!REG.source(sid)) problems.push(`outcome ${o.id}: unknown source ${sid}`);
+    else if(!REG.source(sid).outcomes.includes(o.id)) problems.push(`${o.id}→${sid}: source missing back-reference`);
+  }));
+  Object.values(PATHS).forEach(p=>{ if(p.via!=='direct'&&p.via!=='onum') problems.push(`path ${p.id}: bad via "${p.via}"`); });
   TEMPLATES.forEach(t=>{
     if(t.telemetry){
-      telemetrySources().forEach(s=>{
-        if(!s.paths.includes(s.defaultPath)) problems.push(`${s.id}: defaultPath not in paths[]`);
-        s.outcomes.forEach(o=>{ if(!REG.outcome(o)) problems.push(`${s.id}: unknown outcome ${o}`); });
-        s.paths.forEach(p=>{ if(!PATHS[p]) problems.push(`${s.id}: unknown path ${p}`); });
-      });
-      OUTCOMES.forEach(o=>o.sources.forEach(sid=>{ if(!REG.source(sid)) problems.push(`outcome ${o.id}: unknown source ${sid}`); }));
-    } else {
-      (t.blocks||[]).forEach(b=>{ if(!t.zones.find(z=>z.id===b.zone)) problems.push(`${t.id}/${b.id}: bad zone`); });
+      t.sources.forEach(s=>{ if(!REG.source(s.id)) problems.push(`${t.id}: unknown source ${s.id}`); });
+      (t.destinations||[]).forEach(d=>{ if(!REG.destination(d)) problems.push(`${t.id}: unknown destination ${d}`); });
+      return;
     }
+    const zIds=new Set(t.zones.map(z=>z.id)), bIds=new Set(t.blocks.map(b=>b.id));
+    t.blocks.forEach(b=>{
+      if(!zIds.has(b.zone)) problems.push(`${t.id}/${b.id}: bad zone`);
+      (b.span||[]).forEach(z=>{ if(!zIds.has(z)) problems.push(`${t.id}/${b.id}: bad span zone ${z}`); });
+      if(!COV[b.cov]) problems.push(`${t.id}/${b.id}: bad coverage ${b.cov}`);
+    });
+    (t.connections||[]).forEach(c=>{
+      if(!bIds.has(c.from)) problems.push(`${t.id}: connection from unknown ${c.from}`);
+      if(!bIds.has(c.to)) problems.push(`${t.id}: connection to unknown ${c.to}`);
+      if(!CONN_TYPES[c.type]) problems.push(`${t.id}: connection ${c.from}→${c.to} bad type ${c.type}`);
+    });
+    (t.layout?.tracks||[]).forEach(tr=>tr.rows.flat().forEach(z=>{ if(!zIds.has(z)) problems.push(`${t.id}: layout references unknown zone ${z}`); }));
   });
   if(problems.length){ console.error('[diagram-builder selfTest]', problems); }
   else console.log('[diagram-builder selfTest] OK');
