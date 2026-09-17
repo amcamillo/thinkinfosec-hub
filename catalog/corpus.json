@@ -1,5 +1,5 @@
 {
-  "version": "2026-08-24",
+  "version": "2026-09-18",
   "note": "Medium activity feed is login-walled; this list is public RSS plus pinned profile posts. Add missing URLs over time.",
   "items": [
     {
@@ -183,6 +183,18 @@
       "tech": [57],
       "link": "Research/ncsc-critical-controls/",
       "description": "NCSC Top 10 controls mapped to Falcon alliances."
+    },
+    {
+      "id": "learn-helpful-links",
+      "title": "CrowdStrike Public Resource Library",
+      "kind": "learn",
+      "origin": "hub",
+      "pillar": "people",
+      "people": ["teaching"],
+      "processes": ["enable-certify", "channel-mssp"],
+      "tech": [64],
+      "link": "Learn/helpful-links/",
+      "description": "Updated public CrowdStrike datasheets and helpful links grouped by the 14 GTM pillars."
     },
     {
       "id": "video-falcon-skills",
