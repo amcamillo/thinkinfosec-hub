@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Unofficial CrowdStrike public resource library — datasheets mapped to the 14 GTM pillars, plus community tools, demos, and how-tos.">
+    <meta name="author" content="Andre Camillo">
+    <title>CrowdStrike Public Resource Library — Thinkinfosec Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <a class="skip-link" href="#datasheets">Skip to datasheets</a>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="../../assets/learning-hub-logo.png" alt="Thinkinfosec Hub logo">
+            </div>
+            <h1>CrowdStrike Public Resource Library</h1>
+            <p>An updated ThinkInfoSec edition of the public CrowdStrike helpful-links library — datasheets grouped to the 14 GTM pillars, plus still-useful public how-tos, demos, and community tools.</p>
+        </div>
+    </header>
+    <nav class="nav" aria-label="Page">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="../../index.html#research">Hub</a></li>
+                <li><a href="#datasheets" class="active">Datasheets</a></li>
+                <li><a href="#renames">Renames</a></li>
+                <li><a href="#intro">Intro</a></li>
+                <li><a href="#deploy">Deploy</a></li>
+                <li><a href="#demos">Demos</a></li>
+                <li><a href="#howto">How-tos</a></li>
+                <li><a href="#tools">Community tools</a></li>
+                <li><a href="#more">More</a></li>
+            </ul>
+        </div>
+    </nav>
+    <main class="main">
+        <div class="container">
+            <section class="hero" aria-labelledby="hero-heading">
+                <span class="hero-eyebrow">Research · September 2026</span>
+                <h2 id="hero-heading">14 CrowdStrike GTM pillars, current public datasheets</h2>
+                <p>Product names come from the CyberDoc GTM catalogue (April 2026 landscape — native coverage, not technical documentation). Datasheet links are live public CrowdStrike Resource Center pages. This is unofficial ThinkInfoSec research and is not affiliated with or endorsed by CrowdStrike.</p>
+                <div class="hero-meta">
+                    <span>14 GTM categories</span>
+                    <span>31 native coverage rows</span>
+                    <span>Public datasheets only</span>
+                    <span>Source: CrowdStrike/helpful-links</span>
+                </div>
+            </section>
+            <section id="datasheets" class="section">
+                <h2>Datasheets by GTM pillar</h2>
+                <p class="section-lead">Filter by the 14 technology categories used in the ThinkInfoSec / CyberDoc landscape. Native Falcon SKUs are listed first; partner-led pillars are labelled as such.</p>
+                <div class="toolbar">
+                    <input class="search" id="search" type="search" placeholder="Search products, domains, or topics" aria-label="Search resources">
+                </div>
+                <div class="chips" id="chips" role="group" aria-label="Filter by GTM pillar"></div>
+                <div id="datasheetMount"></div>
+            </section>
+            <section id="renames" class="section">
+                <h2>What changed since the original library</h2>
+                <p class="section-lead">The CrowdStrike/helpful-links datasheet table still uses retired GTM names. Use these current names instead.</p>
+                <div class="rename">
+                    <table>
+                        <thead>
+                            <tr><th>Original helpful-links name</th><th>Current GTM name</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><del>Falcon Horizon / CSPM</del></td><td>Falcon Cloud Security (CNAPP, CSPM, CWPP, CDR)</td></tr>
+                            <tr><td><del>Falcon X Premium</del></td><td>Falcon Adversary Intelligence</td></tr>
+                            <tr><td><del>Falcon Insight</del> (EDR only)</td><td>Falcon Insight XDR</td></tr>
+                            <tr><td><del>Falcon LogScale</del> as the SIEM SKU</td><td>Falcon Next-Gen SIEM (LogScale remains a related datasheet)</td></tr>
+                            <tr><td><del>Falcon Connect</del></td><td>Platform integrations / Falcon Next-Gen SIEM connectors</td></tr>
+                            <tr><td>Falcon Prevent / Spotlight / Discover / Complete</td><td>Still current — now sit inside broader pillars (endpoint, exposure, IT hygiene, MDR)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <section id="intro" class="section">
+                <h2>Falcon platform introduction</h2>
+                <p class="section-lead">Public primers carried forward from the original library. Some videos are older; they are still useful on-ramps.</p>
+                <div class="grid" id="introMount"></div>
+            </section>
+            <section id="deploy" class="section">
+                <h2>Deployment and operation</h2>
+                <p class="section-lead">Sensor install, policy, firewall, and API starting points that remain publicly available.</p>
+                <div class="grid" id="deployMount"></div>
+            </section>
+            <section id="demos" class="section">
+                <h2>Demos and use cases</h2>
+                <div class="grid" id="demosMount"></div>
+            </section>
+            <section id="howto" class="section">
+                <h2>How-tos</h2>
+                <div class="grid" id="howtoMount"></div>
+            </section>
+            <section id="tools" class="section">
+                <h2>Free community tools</h2>
+                <p class="section-lead">Official CrowdStrike GitHub SDKs and public community utilities.</p>
+                <div class="grid" id="toolsMount"></div>
+            </section>
+            <section id="more" class="section">
+                <h2>More public libraries</h2>
+                <div class="grid" id="moreMount"></div>
+            </section>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="container">
+            <p><a href="../../index.html#research">Back to Thinkinfosec Hub research</a> · <a href="https://github.com/CrowdStrike/helpful-links" target="_blank" rel="noopener noreferrer">Original helpful-links</a></p>
+            <p>&copy; 2021-2026 Thinkinfosec Hub. Unofficial public compilation. Not affiliated with CrowdStrike.</p>
+        </div>
+    </footer>
+<script src="catalog.js"></script>
+<script src="datasheets.js"></script>
+<script src="other.js"></script>
+<script>
+let activePillar = "all";
+let query = "";
+function coverageClass(kind) {
+    return kind === "native" ? "coverage-native" : kind === "hybrid" ? "coverage-hybrid" : "coverage-partner";
+}
+function cardHTML(item) {
+    const extra = item.url.startsWith("http") ? " target=\"_blank\" rel=\"noopener noreferrer\"" : "";
+    return `<article class="card"><div class="type">${item.domain || item.type || "Resource"}</div><h4>${item.title}</h4><p>${item.blurb}</p><a class="btn" href="${item.url}"${extra}>Open</a></article>`;
+}
+function matchesQuery(item) {
+    if (!query) return true;
+    return [item.title, item.domain, item.type, item.blurb].join(" ").toLowerCase().includes(query);
+}
+function renderChips() {
+    const chips = document.getElementById("chips");
+    const items = [{ id: "all", label: "All pillars" }, ...PILLARS];
+    chips.innerHTML = items.map(p => `<button type="button" class="chip" data-pillar="${p.id}" aria-pressed="${p.id === activePillar}">${p.label}</button>`).join("");
+    chips.querySelectorAll(".chip").forEach(btn => {
+        btn.addEventListener("click", () => {
+            activePillar = btn.getAttribute("data-pillar");
+            renderChips();
+            renderDatasheets();
+        });
+    });
+}
+function renderDatasheets() {
+    const mount = document.getElementById("datasheetMount");
+    const pillars = PILLARS.filter(p => activePillar === "all" || p.id === activePillar);
+    const html = pillars.map(pillar => {
+        const items = DATASHEETS.filter(d => d.pillar === pillar.id && matchesQuery(d));
+        if (!items.length) return "";
+        return `<div class="pillar-block" id="pillar-${pillar.id}"><h3>${pillar.label} <span class="coverage ${coverageClass(pillar.coverage)}">${pillar.coverage}</span></h3><p class="pillar-note">${pillar.note}</p><div class="grid">${items.map(cardHTML).join("")}</div></div>`;
+    }).join("");
+    mount.innerHTML = html || `<p class="empty">No datasheets match that filter.</p>`;
+}
+function renderList(id, items) {
+    const filtered = items.filter(matchesQuery);
+    document.getElementById(id).innerHTML = filtered.length ? filtered.map(cardHTML).join("") : `<p class="empty">No items match that search.</p>`;
+}
+function renderAll() {
+    renderDatasheets();
+    renderList("introMount", OTHER.intro);
+    renderList("deployMount", OTHER.deploy);
+    renderList("demosMount", OTHER.demos);
+    renderList("howtoMount", OTHER.howto);
+    renderList("toolsMount", OTHER.tools);
+    renderList("moreMount", OTHER.more);
+}
+document.getElementById("search").addEventListener("input", (event) => {
+    query = event.target.value.trim().toLowerCase();
+    renderAll();
+});
+renderChips();
+renderAll();
+</script>
+</body>
+</html>
