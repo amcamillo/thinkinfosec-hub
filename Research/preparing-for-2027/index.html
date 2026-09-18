@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preparing for 2027 — Cybersecurity &amp; Compliance Briefing | Thinkinfosec Hub</title>
+<meta name="description" content="A ThinkInfoSec synthesis of twelve 2025/26 cybersecurity benchmark reports against Australia’s 2026–27 regulatory spine — threat velocity, evidence burden, AI governance, and the mid-market path to proof.">
+<meta name="author" content="Andre Camillo">
+<link rel="canonical" href="https://amcamillo.github.io/thinkinfosec-hub/Research/preparing-for-2027/">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0D1F3C;
+  --navy-light: #1A3358;
+  --navy-faint: #EDF0F5;
+  --teal: #00BFCF;
+  --teal-dark: #009DAA;
+  --teal-faint: rgba(0,191,207,0.10);
+  --pink: #FF2D78;
+  --pink-faint: rgba(255,45,120,0.08);
+  --green: #00875A;
+  --green-faint: rgba(0,135,90,0.08);
+  --amber: #FF8B00;
+  --amber-faint: rgba(255,139,0,0.10);
+  --red: #DE350B;
+  --page: #F6F7FA;
+  --surface: #FFFFFF;
+  --raised: #F0F2F5;
+  --border: #DFE1E6;
+  --text: #172B4D;
+  --text-2: #5E6C84;
+  --muted: #97A0AF;
+  --radius: 10px;
+  --focus: 2px solid var(--teal);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .sc, .clock, .tier, .find { animation: none !important; transform: none !important; }
+}
+body {
+  background: var(--page);
+  color: var(--text);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--teal-dark); }
+a:hover { text-decoration: underline; }
+a:focus-visible, button:focus-visible, summary:focus-visible {
+  outline: var(--focus);
+  outline-offset: 3px;
+}
+.skip {
+  position: absolute; left: 0.75rem; top: -3rem;
+  background: var(--navy); color: #fff; padding: 0.5rem 0.85rem;
+  border-radius: 6px; z-index: 400; text-decoration: none;
+}
+.skip:focus { top: 0.75rem; }
+.mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+
+.hero {
+  position: relative;
+  background: var(--navy);
+  color: #fff;
+  padding: 40px 48px 36px;
+  overflow: hidden;
+}
+.hero::after {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0v30m0 20v30M0 40h30m20 0h30' stroke='%2300BFCF' stroke-width='0.4' opacity='0.06'/%3E%3Ccircle cx='40' cy='40' r='2' fill='%2300BFCF' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+.hero-inner { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; }
+.brand { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; text-decoration: none; color: inherit; width: fit-content; }
+.brand img { width: 52px; height: 52px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.15); object-fit: cover; }
+.brand-name { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+.brand-sub { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 1.5px; color: var(--teal); }
+.eyebrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase;
+  color: var(--teal); margin-bottom: 10px;
+}
+.hero h1 {
+  font-size: clamp(26px, 3.4vw, 40px);
+  font-weight: 800; letter-spacing: -0.6px; line-height: 1.15;
+  max-width: 18ch; margin-bottom: 12px;
+}
+.hero h1 em { font-style: normal; color: var(--teal); }
+.lede { max-width: 680px; color: rgba(255,255,255,0.68); font-size: 15px; line-height: 1.7; margin-bottom: 18px; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+.htag {
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px;
+  padding: 5px 12px; border-radius: 4px; border: 1px solid rgba(0,191,207,0.3);
+  color: var(--teal); background: rgba(0,191,207,0.1);
+}
+.htag.pink { color: var(--pink); border-color: rgba(255,45,120,0.3); background: rgba(255,45,120,0.1); }
+.htag.green { color: #36B37E; border-color: rgba(54,179,126,0.3); background: rgba(54,179,126,0.1); }
+.hero-stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
+.hstat {
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+}
+.hstat .val { font-family: "JetBrains Mono", monospace; font-size: 22px; font-weight: 700; color: var(--teal); display: block; white-space: nowrap; }
+.hstat .lbl { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px; color: rgba(255,255,255,0.42); margin-top: 4px; display: block; }
+
+.crumb {
+  padding: 10px 48px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  font-size: 12px; color: var(--muted);
+}
+.crumb a { color: var(--teal-dark); text-decoration: none; font-weight: 500; }
+.crumb a:hover { text-decoration: underline; }
+.sep { margin: 0 8px; color: var(--border); }
+
+.toc {
+  position: sticky; top: 0; z-index: 200;
+  display: flex; gap: 4px; overflow-x: auto;
+  padding: 10px 48px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  scrollbar-width: none;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.toc::-webkit-scrollbar { display: none; }
+.toc a {
+  flex-shrink: 0;
+  padding: 8px 14px; min-height: 44px;
+  display: inline-flex; align-items: center;
+  border-radius: 7px; border: 1px solid transparent;
+  color: var(--muted); text-decoration: none;
+  font-size: 12px; font-weight: 500; white-space: nowrap;
+}
+.toc a:hover { color: var(--text); background: var(--teal-faint); border-color: rgba(0,191,207,0.25); }
+.toc a.on { color: var(--navy); font-weight: 600; background: var(--teal-faint); border-color: var(--teal); }
+
+.wrap { max-width: 1100px; margin: 0 auto; padding: 40px 48px 72px; }
+section { margin-bottom: 56px; scroll-margin-top: 72px; }
+.kicker {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase;
+  color: var(--teal-dark);
+}
+h2 { font-size: clamp(22px, 2.4vw, 28px); font-weight: 800; letter-spacing: -0.4px; color: var(--navy); margin: 6px 0 12px; }
+h3 { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+.blurb { color: var(--text-2); font-size: 15px; max-width: 720px; margin-bottom: 20px; }
+.note { font-size: 13px; color: var(--text-2); }
+
+.thesis {
+  background: var(--navy);
+  color: #fff;
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin-bottom: 28px;
+}
+.thesis p { font-size: 18px; font-weight: 600; line-height: 1.45; letter-spacing: -0.2px; max-width: 46rem; }
+.thesis span { color: var(--teal); }
+
+.moves { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+.move {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 20px 18px;
+  position: relative; overflow: hidden;
+}
+.move::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.move:nth-child(1)::before { background: var(--teal); }
+.move:nth-child(2)::before { background: var(--amber); }
+.move:nth-child(3)::before { background: var(--pink); }
+.move .n {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px; font-weight: 600; letter-spacing: 1px;
+  color: var(--muted); margin-bottom: 8px; display: block;
+}
+.move p { font-size: 13.5px; color: var(--text-2); }
+
+.clocks { display: grid; grid-template-columns: 1.15fr 0.95fr 0.9fr; gap: 12px; }
+.clock {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px 22px 18px;
+}
+.clock .when {
+  font-family: "JetBrains Mono", monospace;
+  font-size: clamp(28px, 3vw, 36px);
+  font-weight: 700; letter-spacing: -1px; line-height: 1;
+}
+.clock.adv .when { color: var(--teal-dark); }
+.clock.ran .when { color: var(--amber); }
+.clock.ndb .when { color: var(--navy); }
+.clock .who { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; margin: 8px 0 6px; color: var(--navy); }
+.clock p { font-size: 13px; color: var(--text-2); }
+.callout {
+  margin-top: 14px;
+  padding: 14px 18px;
+  background: var(--navy);
+  color: #fff;
+  border-radius: 8px;
+  font-size: 14px;
+}
+.callout strong { color: var(--teal); }
+.callout.pink { background: var(--navy); }
+.warn {
+  margin-top: 14px;
+  padding: 14px 18px;
+  background: var(--amber-faint);
+  border-left: 3px solid var(--amber);
+  border-radius: 0 8px 8px 0;
+  font-size: 13.5px; color: var(--text-2);
+}
+.warn strong { color: var(--navy); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+}
+.card h3 { margin-bottom: 6px; }
+.card p, .card li { font-size: 13.5px; color: var(--text-2); }
+.card ul { margin: 8px 0 0 1.1rem; display: grid; gap: 6px; }
+.src {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px; color: var(--muted); margin-top: 10px;
+}
+.src a { color: var(--teal-dark); }
+sup.cite, .cite {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px; font-weight: 600;
+  line-height: 0; vertical-align: super;
+}
+.cite { color: var(--teal-dark); text-decoration: none; margin-left: 1px; }
+.cite:hover { text-decoration: underline; }
+.hstat .src-mini {
+  display: block; margin-top: 6px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px; color: rgba(255,255,255,0.4); font-weight: 500;
+  text-transform: none; letter-spacing: 0; line-height: 1.35;
+}
+.hstat .src-mini a { color: var(--teal); text-decoration: none; }
+.hstat .src-mini a:hover { text-decoration: underline; }
+.sourcelist { list-style: none; display: grid; gap: 12px; }
+.sourcelist li {
+  font-size: 13px; color: var(--text-2);
+  padding-left: 2.4rem; position: relative;
+  line-height: 1.55;
+}
+.sourcelist li > .n {
+  position: absolute; left: 0; top: 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px; font-weight: 600; color: var(--navy);
+}
+.sourcelist a { word-break: break-word; }
+.sourcelist .meta {
+  display: block; margin-top: 2px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px; color: var(--muted);
+}
+.group-lbl {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px; font-weight: 600; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--teal-dark);
+  margin: 22px 0 10px;
+}
+.sourcelist li { scroll-margin-top: 80px; }
+.sourcelist li:target {
+  background: var(--teal-faint);
+  outline: 1px solid rgba(0,191,207,0.35);
+  border-radius: 6px;
+}
+
+.badge {
+  display: inline-flex; align-items: center;
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px;
+  padding: 3px 8px; border-radius: 4px; border: 1px solid;
+}
+.badge.con { color: var(--teal-dark); background: var(--teal-faint); border-color: rgba(0,157,170,0.25); }
+.badge.one { color: #974F00; background: var(--amber-faint); border-color: rgba(255,139,0,0.28); }
+.badge.law { color: var(--navy); background: var(--navy-faint); border-color: rgba(13,31,60,0.18); }
+.badge.guide { color: var(--text-2); background: var(--raised); border-color: var(--border); }
+
+.finds { display: grid; gap: 10px; }
+.find {
+  display: grid; grid-template-columns: 52px 1fr; gap: 14px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px 18px;
+}
+.find .n {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 20px; font-weight: 700; color: var(--navy-faint);
+  line-height: 1;
+}
+.find p { font-size: 14px; color: var(--text); margin: 6px 0 0; }
+
+.timeline { display: grid; gap: 0; border-left: 2px solid var(--border); margin-left: 8px; }
+.tl {
+  position: relative;
+  padding: 0 0 22px 22px;
+}
+.tl::before {
+  content: "";
+  position: absolute; left: -6px; top: 6px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--surface); border: 2px solid var(--teal-dark);
+}
+.tl.focal::before { background: var(--teal); border-color: var(--teal); }
+.tl .when {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px; font-weight: 600; color: var(--teal-dark);
+}
+.tl h3 { font-size: 15px; margin: 2px 0 4px; }
+.tl p { font-size: 13.5px; color: var(--text-2); }
+
+.bars { display: grid; gap: 12px; }
+.bar-row { display: grid; grid-template-columns: 110px 1fr 92px; gap: 10px; align-items: center; }
+.bar-lbl { font-size: 12px; font-weight: 600; color: var(--navy); }
+.bar-track { height: 10px; background: var(--raised); border-radius: 99px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 99px; background: var(--teal-dark); }
+.bar-fill.amber { background: var(--amber); }
+.bar-fill.pink { background: var(--pink); }
+.bar-val { font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 600; color: var(--navy); text-align: right; }
+
+.tiers { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 8px; }
+.tier {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 12px;
+  text-align: center;
+}
+.tier .lvl {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase;
+  color: var(--muted);
+}
+.tier h3 { font-size: 14px; margin: 4px 0 6px; }
+.tier p { font-size: 12px; color: var(--text-2); }
+.tier.gold { border-color: var(--teal); background: var(--teal-faint); }
+.tier.audit { border-color: var(--navy); }
+
+.recs { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+.rec { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+.rec .stage {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+  margin-bottom: 8px; display: block;
+}
+.rec:nth-child(1) .stage { color: var(--teal-dark); }
+.rec:nth-child(2) .stage { color: var(--amber); }
+.rec:nth-child(3) .stage { color: var(--pink); }
+.rec ul { margin: 8px 0 0 1.05rem; display: grid; gap: 7px; }
+.rec li { font-size: 13.5px; color: var(--text-2); }
+
+details.caveat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0;
+  margin-bottom: 8px;
+}
+details.caveat summary {
+  cursor: pointer; list-style: none;
+  padding: 14px 18px;
+  font-weight: 600; font-size: 14px; color: var(--navy);
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  min-height: 44px;
+}
+details.caveat summary::-webkit-details-marker { display: none; }
+details.caveat summary::after {
+  content: "›"; color: var(--teal-dark); font-size: 18px; transition: transform 0.2s ease;
+}
+details.caveat[open] summary::after { transform: rotate(90deg); }
+details.caveat p { padding: 0 18px 16px; font-size: 13.5px; color: var(--text-2); }
+
+.sources { display: grid; gap: 8px; }
+.sources a { word-break: break-word; }
+.chiprow { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.chip {
+  font-size: 11px; font-weight: 600;
+  padding: 5px 10px; border-radius: 99px;
+  background: var(--navy-faint); color: var(--navy); border: 1px solid var(--border);
+}
+
+footer {
+  padding: 28px 48px;
+  background: var(--navy);
+  text-align: center;
+}
+footer .ft-main { font-size: 13px; color: rgba(255,255,255,0.55); }
+footer .ft-main a { color: var(--teal); text-decoration: none; }
+footer .ft-main a:hover { text-decoration: underline; }
+footer .ft-sub { margin-top: 6px; font-size: 11px; color: rgba(255,255,255,0.32); max-width: 640px; margin-left: auto; margin-right: auto; }
+
+@media (max-width: 900px) {
+  .hero, .wrap, .crumb, .toc, footer { padding-left: 20px; padding-right: 20px; }
+  .hero-stats, .moves, .clocks, .grid-2, .grid-3, .recs, .tiers { grid-template-columns: 1fr; }
+  .find { grid-template-columns: 1fr; }
+  .bar-row { grid-template-columns: 1fr; gap: 4px; }
+  .bar-val { text-align: left; }
+  .hero h1 { max-width: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="hero">
+  <div class="hero-inner">
+    <a class="brand" href="../../index.html">
+      <img src="../../assets/learning-hub-logo.png" alt="Thinkinfosec Hub logo" width="52" height="52" onerror="this.style.display='none'">
+      <span>
+        <span class="brand-name">Thinkinfosec</span><br>
+        <span class="brand-sub">Research</span>
+      </span>
+    </a>
+    <p class="eyebrow">Briefing · Subnet Cyber Summit 2026 · Adelaide · 1 October</p>
+    <h1>Preparing for <em>2027</em></h1>
+    <p class="lede">Compliance has stopped asking whether you had controls. It is asking whether you can evidence they were proportionate to the current threat — and prove it in the time you actually have. This briefing cross-reads twelve 2025/26 benchmark reports against Australia’s 2026–27 regulatory spine.</p>
+    <div class="tags">
+      <span class="htag">12-report corpus</span>
+      <span class="htag pink">ANZ / mid-market</span>
+      <span class="htag green">Board evidence</span>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><span class="val">29 min</span><span class="lbl">Avg eCrime breakout</span><span class="src-mini"><a href="#fn1">CrowdStrike 2026 GTR</a></span></div>
+      <div class="hstat"><span class="val">1,205</span><span class="lbl">OAIC NDBs in 2025</span><span class="src-mini"><a href="#fn20">OAIC, 6 Jul 2026</a></span></div>
+      <div class="hstat"><span class="val">$2.5m</span><span class="lbl">FIIG civil penalty</span><span class="src-mini"><a href="#fn27">ASIC v FIIG [2026] FCA 92</a></span></div>
+      <div class="hstat"><span class="val">EOY 26</span><span class="lbl">PQC plan milestone</span><span class="src-mini"><a href="#fn31">ASD / cyber.gov.au</a></span></div>
+    </div>
+  </div>
+</header>
+
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../../index.html">Hub</a><span class="sep">›</span>
+  <a href="../../index.html#research">Research</a><span class="sep">›</span>
+  Preparing for 2027
+</nav>
+
+<nav class="toc" aria-label="On this page">
+  <a href="#thesis">Thesis</a>
+  <a href="#clock">The clock</a>
+  <a href="#findings">Findings</a>
+  <a href="#threats">Threats</a>
+  <a href="#ai">AI</a>
+  <a href="#spine">Regulation</a>
+  <a href="#enforce">Enforcement</a>
+  <a href="#anz">ANZ</a>
+  <a href="#smb1001">SMB1001</a>
+  <a href="#recs">Actions</a>
+  <a href="#method">Method</a>
+  <a href="#sources">Sources</a>
+</nav>
+
+<main id="main" class="wrap">
+
+  <section id="thesis">
+    <p class="kicker">The argument</p>
+    <h2>Three movements, in this order</h2>
+    <div class="thesis">
+      <p>The adversary clock is now shorter than every statutory clock. Regulators want <span>dated evidence</span>, not policy documents. AI is simultaneously the threat, the target, and the next compliance artefact.</p>
+    </div>
+    <div class="moves">
+      <article class="move">
+        <span class="n">01 · Velocity</span>
+        <h3>29 minutes vs 72 hours vs 30 days</h3>
+        <p>Average eCrime breakout is 29 minutes; the fastest observed is 27 seconds.<a class="cite" href="#fn1">1</a> Australia’s ransomware-payment report is due in 72 hours.<a class="cite" href="#fn24">24</a> The NDB assessment window is 30 days.<a class="cite" href="#fn20">20</a> Every legal timeline assumes you noticed.</p>
+      </article>
+      <article class="move">
+        <span class="n">02 · Evidence</span>
+        <h3>Boards must show the last twelve months</h3>
+        <p>FIIG<a class="cite" href="#fn27">27</a> plus ASIC’s 8 May 2026 letter<a class="cite" href="#fn26">26</a> means a board paper showing controls recalibrated against the current threat picture. For most mid-market organisations, the provider’s qualifications become the board’s exhibit.</p>
+      </article>
+      <article class="move">
+        <span class="n">03 · AI artefact</span>
+        <h3>Shadow AI is a 2027 filing, not IT hygiene</h3>
+        <p>ADM transparency lands 10 December 2026.<a class="cite" href="#fn44">44</a> Australian Standards for AI are slated for early 2027.<a class="cite" href="#fn33">33</a> APRA’s finding — adoption outpacing controls — is the sentence that belongs on a slide.<a class="cite" href="#fn30">30</a></p>
+      </article>
+    </div>
+  </section>
+
+  <section id="clock">
+    <p class="kicker">Theme 1</p>
+    <h2>The adversary clock vs the statutory clock</h2>
+    <p class="blurb">CrowdStrike’s 29-minute figure is already in circulation — Subnet ran a webinar on it.<a class="cite" href="#fn36">36</a> The useful move is not to reveal the number. It is to set it against the clocks Australian law actually uses.</p>
+    <div class="clocks">
+      <article class="clock adv">
+        <div class="when">29 min</div>
+        <div class="who">Adversary breakout</div>
+        <p>CrowdStrike 2026 GTR. Fastest observed: 27 seconds. One intrusion began exfiltration within four minutes of initial access. 82% of detections were malware-free.<a class="cite" href="#fn1">1</a><a class="cite" href="#fn2">2</a></p>
+        <p class="src"><a href="#fn1">CrowdStrike 2026 Global Threat Report</a> · pub. 24 Feb 2026, covering calendar 2025</p>
+      </article>
+      <article class="clock ran">
+        <div class="when">72 hrs</div>
+        <div class="who">Ransomware payment report</div>
+        <p>Cyber Security Act 2024. Ransomware-payment reporting rules commenced 30 May 2025. Reporting entities must notify ASD within 72 hours of a ransomware or extortion payment. Civil penalty up to $19,800. Runs alongside SOCI Part 2B, not instead of it.<a class="cite" href="#fn24">24</a><a class="cite" href="#fn25">25</a></p>
+        <p class="src"><a href="#fn24">Home Affairs, Cyber Security Act 2024</a> · <a href="#fn25">Cyber Security Act 2024 (Cth)</a></p>
+      </article>
+      <article class="clock ndb">
+        <div class="when">30 days</div>
+        <div class="who">NDB assessment</div>
+        <p>Eligible data breaches still run on a 30-day assessment clock. OAIC recorded 1,205 notifications in calendar 2025 — the highest since the scheme began.<a class="cite" href="#fn20">20</a><a class="cite" href="#fn43">43</a></p>
+        <p class="src"><a href="#fn20">OAIC media release, 6 Jul 2026</a> · <a href="#fn43">OAIC NDB scheme</a></p>
+      </article>
+    </div>
+    <p class="callout">A 72-hour reporting window contains roughly <strong>149 average breakouts</strong> (4,320 ÷ 29).<a class="cite" href="#fn1">1</a><a class="cite" href="#fn24">24</a> Detect-and-respond that measures MTTD in hours is already late for the legal clock, not just the adversary’s.</p>
+  </section>
+
+  <section id="findings">
+    <p class="kicker">12-report corpus</p>
+    <h2>What the 2025/26 benchmarks actually agree on</h2>
+    <p class="blurb">Wavestone,<a class="cite" href="#fn15">15</a> CrowdStrike,<a class="cite" href="#fn1">1</a> Mandiant,<a class="cite" href="#fn6">6</a> IBM/Ponemon,<a class="cite" href="#fn12">12</a> Verizon DBIR,<a class="cite" href="#fn4">4</a> WEF,<a class="cite" href="#fn17">17</a> PwC,<a class="cite" href="#fn18">18</a> EY,<a class="cite" href="#fn47">47</a> ENISA,<a class="cite" href="#fn7">7</a> Microsoft,<a class="cite" href="#fn9">9</a> ISC2<a class="cite" href="#fn19">19</a> and ASD/ACSC.<a class="cite" href="#fn37">37</a> Statistics below are flagged as established consensus or single-source — they do not average together.</p>
+    <div class="chiprow" style="margin-bottom:18px">
+      <span class="chip">Wavestone</span><span class="chip">CrowdStrike</span><span class="chip">Mandiant</span>
+      <span class="chip">IBM</span><span class="chip">Verizon</span><span class="chip">WEF</span>
+      <span class="chip">PwC</span><span class="chip">EY</span><span class="chip">ENISA</span>
+      <span class="chip">Microsoft</span><span class="chip">ISC2</span><span class="chip">ASD/ACSC</span>
+    </div>
+    <div class="finds">
+      <article class="find">
+        <div class="n">01</div>
+        <div>
+          <span class="badge con">Established consensus</span>
+          <p>AI is the headline in every report, but it is three problems: attack surface, attacker tradecraft, and defender force-multiplier. Conflating them produces the wrong control.<a class="cite" href="#fn15">15</a><a class="cite" href="#fn1">1</a><a class="cite" href="#fn9">9</a><a class="cite" href="#fn12">12</a><a class="cite" href="#fn17">17</a><a class="cite" href="#fn18">18</a><a class="cite" href="#fn47">47</a></p>
+          <p class="src"><a href="#fn15">Wavestone</a> · <a href="#fn1">CrowdStrike</a> · <a href="#fn9">Microsoft</a> · <a href="#fn12">IBM</a> · <a href="#fn17">WEF</a> · <a href="#fn18">PwC</a> · <a href="#fn47">EY</a></p>
+        </div>
+      </article>
+      <article class="find">
+        <div class="n">02</div>
+        <div>
+          <span class="badge con">Established consensus</span>
+          <p>Ransomware remains the most impactful threat, with shifting economics: 44% of breaches (Verizon) alongside a falling median payment (US$115K) and 64% refusal to pay.<a class="cite" href="#fn4">4</a><a class="cite" href="#fn7">7</a><a class="cite" href="#fn9">9</a><a class="cite" href="#fn1">1</a></p>
+          <p class="src"><a href="#fn4">Verizon DBIR 2025</a> · <a href="#fn7">ENISA TL 2025</a> · <a href="#fn9">Microsoft DDR 2025</a> · <a href="#fn1">CrowdStrike 2026 GTR</a></p>
+        </div>
+      </article>
+      <article class="find">
+        <div class="n">03</div>
+        <div>
+          <span class="badge con">Established consensus</span>
+          <p>Identity is the battleground. Microsoft: identity attacks +32%, more than 97% still password spray or brute force.<a class="cite" href="#fn9">9</a> CrowdStrike: 82% malware-free detections.<a class="cite" href="#fn1">1</a></p>
+          <p class="src"><a href="#fn9">Microsoft Digital Defense Report 2025</a> · <a href="#fn1">CrowdStrike 2026 GTR</a></p>
+        </div>
+      </article>
+      <article class="find">
+        <div class="n">04</div>
+        <div>
+          <span class="badge one">Single-source · IBM</span>
+          <p>Global average breach cost fell 9% to US$4.44M — first decline in five years — while the US hit a record US$10.22M.<a class="cite" href="#fn11">11</a> Australia’s USD figure is a currency artefact; use the AUD trend.<a class="cite" href="#fn14">14</a></p>
+          <p class="src"><a href="#fn11">IBM Cost of a Data Breach 2025</a> · <a href="#fn12">IBM 2026</a> · <a href="#fn14">SecurityBrief AU, 31 Jul 2026</a></p>
+        </div>
+      </article>
+      <article class="find">
+        <div class="n">05</div>
+        <div>
+          <span class="badge con">Established consensus</span>
+          <p>Budgets keep rising without transforming outcomes. Gartner: US$213B (2025) → US$239.8B (2026).<a class="cite" href="#fn22">22</a> PwC: 78% plan increases.<a class="cite" href="#fn18">18</a> Wavestone: cyber is 6.7% of IT budget, maturity +1.3 pts — a plateau.<a class="cite" href="#fn15">15</a></p>
+          <p class="src"><a href="#fn22">Gartner, 29 Jul 2025</a> · <a href="#fn18">PwC GDTI 2026</a> · <a href="#fn15">Wavestone Cyber Benchmark 2026</a></p>
+        </div>
+      </article>
+      <article class="find">
+        <div class="n">06</div>
+        <div>
+          <span class="badge con">Established consensus</span>
+          <p>The workforce story shifted from headcount to skills. ISC2 discontinued its 4.8M gap estimate. 59% now report critical or significant skills gaps; managed services are how most close them.<a class="cite" href="#fn19">19</a><a class="cite" href="#fn18">18</a><a class="cite" href="#fn17">17</a></p>
+          <p class="src"><a href="#fn19">ISC2 2025 Workforce Study</a> · <a href="#fn18">PwC</a> · <a href="#fn17">WEF GCO 2026</a></p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="threats">
+    <p class="kicker">Theme 2</p>
+    <h2>Threat landscape — speed, identity, edge</h2>
+    <p class="blurb">Verizon DBIR 2025 (22,052 incidents, 12,195 confirmed breaches) found ransomware in 44% of breaches, vulnerability exploitation as initial vector at 20% (+34% YoY), and third-party involvement doubled to 30%. Edge/VPN exploitation grew nearly eight-fold; only 54% of those vulnerabilities were fully remediated (median 32 days).<a class="cite" href="#fn4">4</a></p>
+    <div class="grid-2">
+      <article class="card">
+        <h3>CrowdStrike 2026 GTR — evasive adversary</h3>
+        <ul>
+          <li>Breakout time 29 minutes (65% faster YoY); fastest 27 seconds<a class="cite" href="#fn1">1</a></li>
+          <li>82% of detections malware-free — valid credentials and native tooling<a class="cite" href="#fn1">1</a></li>
+          <li>AI-enabled adversary operations +89% YoY; prompt injection at 90+ organisations<a class="cite" href="#fn2">2</a></li>
+          <li>42% of vulnerabilities exploited before public disclosure<a class="cite" href="#fn1">1</a></li>
+          <li>Cloud-conscious intrusions +37%; state-nexus cloud +266%; 35% of cloud incidents were valid-account abuse<a class="cite" href="#fn1">1</a></li>
+          <li>ClickFix / fake-CAPTCHA lures +563%; 24 new adversaries named (281+ tracked)<a class="cite" href="#fn1">1</a></li>
+        </ul>
+        <p class="src"><a href="#fn1">CrowdStrike 2026 Global Threat Report</a> · 24 Feb 2026</p>
+      </article>
+      <article class="card">
+        <h3>Mandiant, ENISA, Microsoft — the nuance</h3>
+        <ul>
+          <li>Mandiant: global median dwell rose to 14 days — long-dwell espionage and DPRK IT-worker cases (median 122 days) inflating the external-notification tail. Internal detection improved 10 → 9 days.<a class="cite" href="#fn6">6</a></li>
+          <li>IAB-to-secondary-group hand-off collapsed to 22 seconds median (from more than 8 hours in 2022).<a class="cite" href="#fn6">6</a></li>
+          <li>ENISA: DDoS dominates incident count (77%), ransomware remains most impactful. Threat convergence — hacktivism, crime and state operations blurring. 4,875 incidents, 1 Jul 2024–30 Jun 2025.<a class="cite" href="#fn7">7</a></li>
+          <li>Microsoft: 52% of attacks with known motive were financially driven; BEC (21%) surpassed ransomware (16%) among successful attacks.<a class="cite" href="#fn9">9</a></li>
+        </ul>
+        <p class="src"><a href="#fn6">Mandiant M-Trends 2026</a> · <a href="#fn7">ENISA TL 2025</a> · <a href="#fn9">Microsoft DDR 2025</a></p>
+      </article>
+    </div>
+    <p class="callout" style="margin-top:14px">Implication: at 29-minute breakout and 22-second hand-off, “detect and respond” without pre-emptive identity controls is mathematically late.<a class="cite" href="#fn1">1</a><a class="cite" href="#fn6">6</a> The stack that matches the corpus is identity threat detection, behaviour-based prevention, and automated response.</p>
+  </section>
+
+  <section id="ai">
+    <p class="kicker">Theme 3</p>
+    <h2>AI as surface, tradecraft, and defence</h2>
+    <p class="blurb">The reports that treat “AI risk” as one number are the ones to discount. Wavestone assessed AI security across 17 domains for the first time: 76% have a policy, 62% apply go/no-go validation, 10% have technical prompt-injection defences. AI security maturity: 38%.<a class="cite" href="#fn15">15</a><a class="cite" href="#fn16">16</a></p>
+    <div class="grid-3">
+      <article class="card">
+        <span class="badge one">Surface</span>
+        <h3 style="margin-top:10px">Where the org is exposed</h3>
+        <ul>
+          <li>CrowdStrike: malicious prompts injected at 90+ organisations<a class="cite" href="#fn2">2</a></li>
+          <li>Verizon: 15% of employees routinely use GenAI on corporate devices; 72% via personal email<a class="cite" href="#fn4">4</a></li>
+          <li>IBM: shadow AI added US$670K to average breach cost; 97% of AI-related breaches lacked AI access controls<a class="cite" href="#fn11">11</a></li>
+        </ul>
+      </article>
+      <article class="card">
+        <span class="badge one">Tradecraft</span>
+        <h3 style="margin-top:10px">How attackers use it</h3>
+        <ul>
+          <li>CrowdStrike: AI-enabled operations +89% YoY<a class="cite" href="#fn2">2</a></li>
+          <li>Microsoft: AI-powered phishing 54% click-through (~4× traditional); synthetic identities +195%<a class="cite" href="#fn9">9</a></li>
+          <li>IBM: 1 in 6 breaches involved AI-driven attacks, mainly social engineering<a class="cite" href="#fn12">12</a></li>
+        </ul>
+      </article>
+      <article class="card">
+        <span class="badge con">Defence</span>
+        <h3 style="margin-top:10px">Where it actually pays</h3>
+        <ul>
+          <li>IBM: extensive AI/automation saved US$1.9M per breach<a class="cite" href="#fn11">11</a></li>
+          <li>EY: AI automation cut MTTD/MTTR 28% on average<a class="cite" href="#fn47">47</a></li>
+          <li>CrowdStrike Threat Hunting 2026: AI agent-triggered alerts growing at 2.5× human-triggered — the non-adversarial AI story<a class="cite" href="#fn45">45</a></li>
+        </ul>
+      </article>
+    </div>
+    <p class="warn" style="margin-top:14px"><strong>Governance gap.</strong> Maps to OWASP GenAI/LLM Top 10<a class="cite" href="#fn39">39</a> and MITRE ATLAS.<a class="cite" href="#fn40">40</a> Wavestone’s 76% policy vs 10% control split is the most actionable architect datapoint in the corpus.<a class="cite" href="#fn15">15</a> APRA’s April 2026 letter found the same pattern in the regulated community: AI adoption is outpacing the controls designed to govern it.<a class="cite" href="#fn30">30</a></p>
+  </section>
+
+  <section id="spine">
+    <p class="kicker">Theme 4 · Australia</p>
+    <h2>The 2026–27 regulatory spine</h2>
+    <p class="blurb">This is the calendar a mid-market board can actually use. Privacy Tranche 2 is a government commitment with no Bill and no date — say “proposed.” Dated obligations below are either in force, legislated with delayed commencement, or ASD guidance with a hard milestone.</p>
+    <div class="timeline">
+      <article class="tl">
+        <div class="when">In force now</div>
+        <h3>ISM-1917 — crypto in procurement</h3>
+        <p>Since March 2024, future cryptographic requirements must be considered in all new procurements. <span class="badge guide">ASD guidance</span><a class="cite" href="#fn31">31</a></p>
+      </article>
+      <article class="tl">
+        <div class="when">Already live · 2025–26</div>
+        <h3>Ransomware reporting, SOCI, CPS 230, smart devices, AML/CTF</h3>
+        <p>Ransomware payment reporting (30 May 2025).<a class="cite" href="#fn24">24</a> APRA CPS 230 (1 July 2025).<a class="cite" href="#fn29">29</a> Statutory tort for serious privacy invasions (10 June 2025).<a class="cite" href="#fn42">42</a> Smart-device security standards (4 March 2026).<a class="cite" href="#fn24">24</a> AML/CTF Tranche 2 pulled real estate, lawyers, accountants and others into reporting from 1 July 2026 — Privacy Act applies regardless of the $3m threshold.<a class="cite" href="#fn59">59</a> <span class="badge law">Legislated</span></p>
+      </article>
+      <article class="tl focal">
+        <div class="when">10 December 2026</div>
+        <h3>ADM transparency and the Children’s Online Privacy Code</h3>
+        <p>APP 1.7–1.9: privacy policies must disclose automated decision-making that significantly affects individuals.<a class="cite" href="#fn44">44</a> The Children’s Online Privacy Code must be developed and registered the same day.<a class="cite" href="#fn34">34</a> Commonwealth agencies’ first mandatory AI requirements also fall due. <span class="badge law">Legislated</span></p>
+      </article>
+      <article class="tl focal">
+        <div class="when">End of 2026</div>
+        <h3>Refined PQC transition plan</h3>
+        <p>ASD/ISM milestone: a plan reflecting security goals, risk tolerance, dependencies and data value. End 2028: transition commenced for critical systems and long-lived sensitive data. End 2030: RSA, DH, ECDH, ECDSA retired.<a class="cite" href="#fn31">31</a><a class="cite" href="#fn32">32</a> <span class="badge guide">ASD milestone</span></p>
+      </article>
+      <article class="tl">
+        <div class="when">Early 2027</div>
+        <h3>Australian Standards for AI</h3>
+        <p>Announced 15 July 2026. Office of AI in PM&amp;C. Large data-centre operators to underwrite power and minimise water. Training on Australian books, music, art or news without consent barred.<a class="cite" href="#fn33">33</a> <span class="badge one">Announced</span></p>
+      </article>
+      <article class="tl">
+        <div class="when">Dec 2026 / Dec 2027</div>
+        <h3>SOCI review, then Cyber Security Act review</h3>
+        <p>PJCIS review of the SOCI Act commences by December 2026. Review of the Cyber Security Act 2024 by December 2027.<a class="cite" href="#fn56">56</a><a class="cite" href="#fn25">25</a> <span class="badge law">Legislated reviews</span></p>
+      </article>
+    </div>
+  </section>
+
+  <section id="enforce">
+    <p class="kicker">Theme 5</p>
+    <h2>Enforcement is no longer a hypothetical</h2>
+    <div class="grid-2">
+      <article class="card">
+        <span class="badge law">Federal Court</span>
+        <h3 style="margin-top:10px">ASIC v FIIG Securities [2026] FCA 92</h3>
+        <p>$2.5m civil penalties plus $500k costs. ~385GB exfiltrated, ~18,000 clients, data later on the dark web. First civil penalty for cyber failures under general AFSL obligations — and the first case where cyber deficiency was the sole cause, not a supporting count. Justice Derrington: compliance would have cost far less than the penalty.<a class="cite" href="#fn27">27</a><a class="cite" href="#fn28">28</a></p>
+        <p class="src"><a href="#fn27">ASIC 26-021MR</a> · <a href="#fn28">[2026] FCA 92 judgment</a>. Apply the direction of travel to any board. Do not import AFSL obligations onto non-licensees.</p>
+      </article>
+      <article class="card">
+        <span class="badge law">ASIC 26-092MR · 8 May 2026</span>
+        <h3 style="margin-top:10px">“The clock is at a minute to midnight.”</h3>
+        <p>Commissioner Simone Constant to all AFS licensees and their directors. Twelve-point action list. Four board-level governance expectations. The letter itself is to be tabled at ultimate board and risk committees. Cyber resilience is a licensing obligation, not an IT issue — and ASIC is not asking for novel tools. It is asking for evidence the fundamentals work.<a class="cite" href="#fn26">26</a></p>
+        <p class="src"><a href="#fn26">ASIC 26-092MR, 8 May 2026</a>. Read with APRA’s 30 April 2026 letter on AI governance gaps.<a class="cite" href="#fn30">30</a></p>
+      </article>
+    </div>
+  </section>
+
+  <section id="anz">
+    <p class="kicker">Theme 6 · Priority</p>
+    <h2>ANZ numbers that survive a board challenge</h2>
+    <p class="blurb">Adelaide mid-market sits mostly in ASD’s medium-business band, where average self-reported cybercrime cost rose 55% to $97,200 in FY2024–25.<a class="cite" href="#fn37">37</a> India, Australia and Japan are CrowdStrike’s top APJ ransomware targets.<a class="cite" href="#fn46">46</a></p>
+    <div class="card" style="margin-bottom:14px">
+      <h3>ASD / ACSC — self-reported cybercrime cost</h3>
+      <div class="bars" style="margin-top:14px">
+        <div class="bar-row">
+          <span class="bar-lbl">Small</span>
+          <div class="bar-track"><div class="bar-fill" style="width:28%"></div></div>
+          <span class="bar-val">$56,600</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-lbl">Medium</span>
+          <div class="bar-track"><div class="bar-fill amber" style="width:48%"></div></div>
+          <span class="bar-val">$97,200</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-lbl">Large</span>
+          <div class="bar-track"><div class="bar-fill pink" style="width:100%"></div></div>
+          <span class="bar-val">$202,700</span>
+        </div>
+      </div>
+      <p class="src"><a href="#fn37">ASD Annual Cyber Threat Report 2024–25</a>. Small +14%, medium +55%, large +219%, overall +50% to $80,850. 84,700 reports — one every six minutes. Healthcare ransomware doubled; malicious actors succeeded in 95% of health/social assistance incidents.<a class="cite" href="#fn38">38</a></p>
+    </div>
+    <div class="grid-2">
+      <article class="card">
+        <h3>IBM — do not quote Australia in USD</h3>
+        <p>2025 edition: US$2.55M, below the US$4.44M global average — a currency artefact, not lower risk.<a class="cite" href="#fn11">11</a> 2026 edition: AUD$4.22M, +38% since 2019.<a class="cite" href="#fn14">14</a> 32% of Australian malicious attacks involved AI-generated elements. AI-secure organisations spent AUD$3.46M vs AUD$5.21M without — a $1.75M delta.<a class="cite" href="#fn14">14</a></p>
+        <p class="src"><a href="#fn11">IBM Cost of a Data Breach 2025</a> · <a href="#fn12">IBM 2026</a> · <a href="#fn14">SecurityBrief AU, 31 Jul 2026</a></p>
+      </article>
+      <article class="card">
+        <h3>PwC Australia · CrowdStrike APJ</h3>
+        <p>74% of Australian leaders predict a 2026 cyber budget increase; 62% rank cyber a top-3 strategic priority; only 21% spend significantly more on proactive than reactive measures.<a class="cite" href="#fn18">18</a> CrowdStrike APJ: 763 leak-site victims (Jan 2024–Apr 2025). Technology Threat Landscape 2026: China-linked actors hit technology harder than any other sector; DPRK IT operatives are embedded in AU/NZ outsourcing chains — a supplier question, including of your own MSP.<a class="cite" href="#fn46">46</a></p>
+        <p class="src"><a href="#fn18">PwC Global Digital Trust Insights 2026</a> · <a href="#fn46">CrowdStrike APJ / TTL 2026</a></p>
+      </article>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <h3>Worldwide security spend is still climbing</h3>
+      <div class="bars" style="margin-top:14px">
+        <div class="bar-row">
+          <span class="bar-lbl">2025</span>
+          <div class="bar-track"><div class="bar-fill" style="width:66%"></div></div>
+          <span class="bar-val">US$213B</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-lbl">2026</span>
+          <div class="bar-track"><div class="bar-fill" style="width:75%"></div></div>
+          <span class="bar-val">US$240B</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-lbl">2029</span>
+          <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+          <span class="bar-val">US$322B</span>
+        </div>
+      </div>
+      <p class="src"><a href="#fn22">Gartner forecast, 29 Jul 2025</a> (2025–26) · <a href="#fn23">Gartner 3Q25 update</a> (2029 US$322B). Cross-source tension: spend rises, Wavestone maturity plateaus.<a class="cite" href="#fn15">15</a> Efficiency, not volume, is the binding constraint.</p>
+    </div>
+  </section>
+
+  <section id="smb1001">
+    <p class="kicker">Practical path · SMBs</p>
+    <h2>SMB1001 — the certificate mid-market actually fits</h2>
+    <p class="blurb">ISO 27001 is an ISMS. Essential Eight is free and has no certificate. Insurers, enterprise procurement and government supply chains want something they can verify. SMB1001 sits in that gap: five cumulative tiers, director attestation through Gold, independent audit at Platinum and Diamond. It is a private Dynamic Standards International scheme, not Australian law — and “not mandatory” is no longer the same as “will not be asked for.”<a class="cite" href="#fn48">48</a></p>
+    <div class="tiers">
+      <article class="tier">
+        <span class="lvl">Level 1</span>
+        <h3>Bronze</h3>
+        <p>Foundational hygiene. Director self-attestation. No external auditor.</p>
+      </article>
+      <article class="tier">
+        <span class="lvl">Level 2</span>
+        <h3>Silver</h3>
+        <p>MFA on email, unique accounts, password managers, invoice-fraud controls.</p>
+      </article>
+      <article class="tier gold">
+        <span class="lvl">Level 3 · 2026</span>
+        <h3>Gold</h3>
+        <p>EDR, IR plan, cyber insurance, and a responsible AI-use policy. Still director-attested.</p>
+      </article>
+      <article class="tier audit">
+        <span class="lvl">Level 4</span>
+        <h3>Platinum</h3>
+        <p>Third-party audit, ongoing monitoring, regular vulnerability assessment.</p>
+      </article>
+      <article class="tier audit">
+        <span class="lvl">Level 5</span>
+        <h3>Diamond</h3>
+        <p>SIEM/SOC-style analytics and continuous compliance monitoring.</p>
+      </article>
+    </div>
+    <p class="warn"><strong>Use with care.</strong> Control counts (Silver ~17, Gold ~27 in 2026 reporting) come from consistent third-party/MSP guides, not a direct read of DSI’s primary document.<a class="cite" href="#fn48">48</a> Gold’s new AI-use policy is the control most SMBs will not already have a template for. DSI sets the standard; CyberCert issues the certificate — an MSP can implement, not certify.</p>
+  </section>
+
+  <section id="recs">
+    <p class="kicker">What to do</p>
+    <h2>Actions a solutions architect can take</h2>
+    <div class="recs">
+      <article class="rec">
+        <span class="stage">Stage 1 · This quarter</span>
+        <h3>Treat identity as the perimeter</h3>
+        <ul>
+          <li>Phishing-resistant MFA — Microsoft: modern MFA cuts identity-compromise risk &gt;99%; &gt;97% of identity attacks are still password spray/brute force.<a class="cite" href="#fn9">9</a></li>
+          <li>Close the shadow-AI gap: SSO-integrated GenAI, DLP on prompts.<a class="cite" href="#fn11">11</a></li>
+          <li>Benchmark MTTD against a 29-minute breakout. Hours means automated response is overdue.<a class="cite" href="#fn1">1</a></li>
+        </ul>
+      </article>
+      <article class="rec">
+        <span class="stage">Stage 2 · This budget cycle</span>
+        <h3>Close policy / control gaps</h3>
+        <ul>
+          <li>Technical LLM controls mapped to OWASP GenAI Top 10 and MITRE ATLAS — not another policy.<a class="cite" href="#fn39">39</a><a class="cite" href="#fn40">40</a></li>
+          <li>Dated board evidence against the current threat picture; SOCI-aligned where it applies.<a class="cite" href="#fn26">26</a></li>
+          <li>Prioritise Recover. Wavestone’s Recover pillar sits at 44% — the structural laggard.<a class="cite" href="#fn16">16</a></li>
+          <li>Ask for the PQC plan. ISM-1917 already makes crypto a live procurement obligation.<a class="cite" href="#fn31">31</a></li>
+        </ul>
+      </article>
+      <article class="rec">
+        <span class="stage">Stage 3 · 12–18 months</span>
+        <h3>Platformise, then instrument AI</h3>
+        <ul>
+          <li>Rationalise tool sprawl (EY: 44 poorly integrated products) toward a platform / XDR model.<a class="cite" href="#fn47">47</a></li>
+          <li>Deploy agentic SOC capability where EY projects adoption doubling — after governance exists. Only ~20% of organisations have embedded AI-governance frameworks.<a class="cite" href="#fn47">47</a></li>
+          <li>For SMBs, treat SMB1001 Gold as the evidence artefact insurers and procurement will actually accept.<a class="cite" href="#fn48">48</a></li>
+        </ul>
+      </article>
+    </div>
+    <p class="warn" style="margin-top:14px"><strong>What would change this advice.</strong> If breakout time stabilises or dwell resumes falling, the automation-ROI case weakens.<a class="cite" href="#fn1">1</a><a class="cite" href="#fn6">6</a> If IBM’s global breach cost reverses upward, “AI containment saves money” needs re-examination.<a class="cite" href="#fn12">12</a> If ISC2 reintroduces a workforce-gap number, talent strategy shifts back toward hiring over upskilling.<a class="cite" href="#fn19">19</a> Check the FY2025–26 ASD report the week before relying on these ASD figures — it typically publishes in October.<a class="cite" href="#fn37">37</a></p>
+  </section>
+
+  <section id="method">
+    <p class="kicker">How to read this</p>
+    <h2>Caveats and methodology</h2>
+    <p class="blurb">Independent ThinkInfoSec briefing prepared for Subnet Cyber Summit 2026.<a class="cite" href="#fn36">36</a> Not an official CrowdStrike, Subnet, or Progress publication. The thesis is synthesis; numbered citations map to the source list below.</p>
+    <details class="caveat">
+      <summary>Sample types are not comparable</summary>
+      <p>IBM/Ponemon interviews 600 breached organisations.<a class="cite" href="#fn11">11</a> Verizon is telemetry and casework (22,052 incidents).<a class="cite" href="#fn4">4</a> CrowdStrike, Mandiant and Microsoft are vendor telemetry plus IR.<a class="cite" href="#fn1">1</a><a class="cite" href="#fn6">6</a><a class="cite" href="#fn9">9</a> WEF, PwC, EY and ISC2 are executive surveys.<a class="cite" href="#fn17">17</a><a class="cite" href="#fn18">18</a><a class="cite" href="#fn47">47</a><a class="cite" href="#fn19">19</a> ENISA is EU OSINT and reporting (4,875 incidents).<a class="cite" href="#fn7">7</a> Wavestone is a Europe-weighted consulting maturity interview (200+ organisations).<a class="cite" href="#fn15">15</a> Never average 55.3% “maturity” with a 29-minute breakout time.</p>
+    </details>
+    <details class="caveat">
+      <summary>Collection windows differ</summary>
+      <p>ENISA and Microsoft cover roughly July 2024–June 2025.<a class="cite" href="#fn7">7</a><a class="cite" href="#fn10">10</a> IBM 2025 covers March 2024–February 2025.<a class="cite" href="#fn11">11</a> CrowdStrike 2026 and Mandiant 2026 cover calendar 2025.<a class="cite" href="#fn1">1</a><a class="cite" href="#fn6">6</a> DBIR 2025 is roughly November 2023–October 2024.<a class="cite" href="#fn4">4</a> Always check the underlying period before comparing “2025” figures.</p>
+    </details>
+    <details class="caveat">
+      <summary>Geography and currency distort headlines</summary>
+      <p>DBIR skews North America.<a class="cite" href="#fn4">4</a> ENISA is EU-only.<a class="cite" href="#fn7">7</a> Wavestone is Europe-heavy.<a class="cite" href="#fn15">15</a> IBM’s USD Australia figure understates local-currency trajectory.<a class="cite" href="#fn11">11</a><a class="cite" href="#fn14">14</a> CrowdStrike APJ and ASD are the region-native sources to lead with in an Adelaide room.<a class="cite" href="#fn46">46</a><a class="cite" href="#fn37">37</a></p>
+    </details>
+    <details class="caveat">
+      <summary>Vendor incentive and contested figures</summary>
+      <p>CrowdStrike, Microsoft, IBM and Mandiant sell the relevant solutions. Directionally reliable at this data scale; framings such as “AI saves US$1.9M” align with commercial narratives and should be cited as such.<a class="cite" href="#fn11">11</a> ISC2’s former 4.8M workforce gap (reused by WEF) was disputed as perceived need rather than vacancies — ISC2’s retreat from it is the story.<a class="cite" href="#fn19">19</a></p>
+    </details>
+    <details class="caveat">
+      <summary>Legal and SMB1001 limits</summary>
+      <p>FIIG and the ASIC letter are financial-services-specific in strict application.<a class="cite" href="#fn27">27</a><a class="cite" href="#fn26">26</a> Tranche 2 of the Privacy Act is a commitment, not law. SMB1001 control counts and the 200 vs 250 employee ceiling vary slightly across MSP guides; DSI’s own page did not return a usable primary read at time of writing.<a class="cite" href="#fn48">48</a></p>
+    </details>
+  </section>
+
+  <section id="sources">
+    <p class="kicker">Bibliography</p>
+    <h2>Sources</h2>
+    <p class="blurb">Inline numbers map to this list. Prefer the official report, primary legal instrument, or regulator publication. News and law-firm notes are labelled as commentary. Accessed September 2026.</p>
+
+    <p class="group-lbl">Threat and incident reports</p>
+    <ol class="sourcelist">
+      <li id="fn1"><span class="n">[1]</span> CrowdStrike, <em>2026 Global Threat Report</em>. Landing page.<span class="meta"><a href="https://www.crowdstrike.com/en-us/global-threat-report/" target="_blank" rel="noopener">crowdstrike.com/en-us/global-threat-report</a></span></li>
+      <li id="fn2"><span class="n">[2]</span> CrowdStrike, “2026 CrowdStrike Global Threat Report: AI Accelerates Adversaries and Reshapes the Attack Surface,” 24 February 2026.<span class="meta"><a href="https://www.crowdstrike.com/en-us/press-releases/2026-crowdstrike-global-threat-report/" target="_blank" rel="noopener">crowdstrike.com/…/2026-crowdstrike-global-threat-report</a></span></li>
+      <li id="fn3"><span class="n">[3]</span> CrowdStrike, <em>2026 Global Threat Report</em> (PDF). 29-minute average eCrime breakout; 27-second fastest; 82% malware-free detections.<span class="meta"><a href="https://ir.crowdstrike.com/node/15996/pdf" target="_blank" rel="noopener">ir.crowdstrike.com/node/15996/pdf</a></span></li>
+      <li id="fn4"><span class="n">[4]</span> Verizon, <em>2025 Data Breach Investigations Report</em>. 22,052 incidents; 12,195 confirmed breaches. Archive on the DBIR hub.<span class="meta"><a href="https://www.verizon.com/business/resources/reports/dbir/" target="_blank" rel="noopener">verizon.com/business/resources/reports/dbir</a></span></li>
+      <li id="fn5"><span class="n">[5]</span> Verizon, <em>Data Breach Investigations Report</em> methodology note: in-scope incidents run 1 November–31 October each year.<span class="meta"><a href="https://www.verizon.com/business/resources/reports/dbir/" target="_blank" rel="noopener">verizon.com/…/dbir</a></span></li>
+      <li id="fn6"><span class="n">[6]</span> Mandiant (Google Cloud), “M-Trends 2026: Data, Insights, and Strategies From the Frontlines,” 2026. Median dwell 14 days; IAB hand-off 22 seconds.<span class="meta"><a href="https://cloud.google.com/blog/topics/threat-intelligence/m-trends-2026" target="_blank" rel="noopener">cloud.google.com/blog/…/m-trends-2026</a></span></li>
+      <li id="fn7"><span class="n">[7]</span> ENISA, <em>ENISA Threat Landscape 2025</em>. 4,875 incidents, 1 July 2024–30 June 2025.<span class="meta"><a href="https://www.enisa.europa.eu/publications/enisa-threat-landscape-2025" target="_blank" rel="noopener">enisa.europa.eu/publications/enisa-threat-landscape-2025</a></span></li>
+      <li id="fn8"><span class="n">[8]</span> ENISA, <em>ENISA Threat Landscape 2025</em>, v1.2 PDF, 9 January 2026.<span class="meta"><a href="https://www.enisa.europa.eu/sites/default/files/2026-01/ENISA%20Threat%20Landscape%202025_v1.2.pdf" target="_blank" rel="noopener">enisa.europa.eu/…/ENISA Threat Landscape 2025_v1.2.pdf</a></span></li>
+      <li id="fn9"><span class="n">[9]</span> Microsoft, <em>Digital Defense Report 2025</em>. Report hub.<span class="meta"><a href="https://www.microsoft.com/mddr" target="_blank" rel="noopener">microsoft.com/mddr</a></span></li>
+      <li id="fn10"><span class="n">[10]</span> Microsoft, <em>Digital Defense Report 2025</em> (PDF). Scope: FY2025, 1 July 2024–30 June 2025.<span class="meta"><a href="https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/bade/documents/products-and-services/en-us/security/Microsoft-Digital-Defense-Report-2025.pdf" target="_blank" rel="noopener">cdn-dynmedia-1.microsoft.com/…/Microsoft-Digital-Defense-Report-2025.pdf</a></span></li>
+      <li id="fn45"><span class="n">[45]</span> CrowdStrike, “CrowdStrike 2026 Threat Hunting Report,” 3 August 2026. AI agent-triggered alerts at 2.5× human-triggered.<span class="meta"><a href="https://www.crowdstrike.com/en-us/press-releases/crowdstrike-2026-threat-hunting-report/" target="_blank" rel="noopener">crowdstrike.com/…/crowdstrike-2026-threat-hunting-report</a></span></li>
+      <li id="fn46"><span class="n">[46]</span> CrowdStrike, <em>Technology Threat Landscape 2026</em> (APJ). India, Australia and Japan as top APJ ransomware targets; China-linked technology targeting; DPRK IT-worker embedding. Read with [1].</li>
+    </ol>
+
+    <p class="group-lbl">Economics, maturity and workforce</p>
+    <ol class="sourcelist" start="11">
+      <li id="fn11"><span class="n">[11]</span> IBM / Ponemon Institute, <em>Cost of a Data Breach Report 2025</em>. Global average US$4.44M (first decline in five years); US record US$10.22M; Australia US$2.55M; shadow-AI and AI/automation cost deltas.<span class="meta"><a href="https://www.ibm.com/reports/data-breach" target="_blank" rel="noopener">ibm.com/reports/data-breach</a> (2025 edition)</span></li>
+      <li id="fn12"><span class="n">[12]</span> IBM / Ponemon Institute, <em>Cost of a Data Breach Report 2026</em>. The AI tipping point. 602 organisations, March 2025–February 2026.<span class="meta"><a href="https://www.ibm.com/reports/data-breach" target="_blank" rel="noopener">ibm.com/reports/data-breach</a></span></li>
+      <li id="fn13"><span class="n">[13]</span> IBM, <em>Cost of a Data Breach Report 2026</em> (PDF).<span class="meta"><a href="https://www-api.ibm.com/adobe/assets/urn:aaid:aem:21111142-1251-4369-86fb-57b82f5bb108/original/as/Cost-of-a-Data-Breach-Report-2026.pdf" target="_blank" rel="noopener">ibm.com … Cost-of-a-Data-Breach-Report-2026.pdf</a></span></li>
+      <li id="fn14"><span class="n">[14]</span> Sean Mitchell, “Australia breach costs hit AUD $4.22 million, IBM says,” <em>SecurityBrief Australia</em>, 31 July 2026. AUD$4.22M (+38% since 2019); AI-secure AUD$3.46M vs AUD$5.21M.<span class="meta"><a href="https://securitybrief.com.au/story/australia-breach-costs-hit-aud-4-22-million-ibm-says" target="_blank" rel="noopener">securitybrief.com.au/…/australia-breach-costs-hit-aud-4-22-million-ibm-says</a></span></li>
+      <li id="fn15"><span class="n">[15]</span> Wavestone, “Cyber Benchmark 2026: Progress slows as complexity rises,” 15 June 2026. 200+ organisations; AI security 17 domains; 76% policy / 10% prompt-injection controls.<span class="meta"><a href="https://www.wavestone.com/en/insight/cyber-benchmark-2026-progress-slows-as-complexity-rises-1/" target="_blank" rel="noopener">wavestone.com/en/insight/cyber-benchmark-2026-…</a></span></li>
+      <li id="fn16"><span class="n">[16]</span> Wavestone, <em>Cyber Benchmark 2026 Edition</em> (PDF). Recover pillar the structural laggard (cited in-text at 44%).<span class="meta"><a href="https://www.wavestone.com/wp-content/uploads/2026/06/2026-cyber-benchmark.pdf" target="_blank" rel="noopener">wavestone.com/wp-content/uploads/2026/06/2026-cyber-benchmark.pdf</a></span></li>
+      <li id="fn17"><span class="n">[17]</span> World Economic Forum, <em>Global Cybersecurity Outlook 2026</em>.<span class="meta"><a href="https://www.weforum.org/publications/global-cybersecurity-outlook-2026/digest/" target="_blank" rel="noopener">weforum.org/publications/global-cybersecurity-outlook-2026</a></span></li>
+      <li id="fn18"><span class="n">[18]</span> PwC, <em>2026 Global Digital Trust Insights</em>. 3,887 executives, 72 countries, May–July 2025 fielding.<span class="meta"><a href="https://www.pwc.com/us/en/services/consulting/cybersecurity-data-tech-risk/library/global-digital-trust-insights.html" target="_blank" rel="noopener">pwc.com/…/global-digital-trust-insights</a></span></li>
+      <li id="fn19"><span class="n">[19]</span> ISC2, <em>2025 Cybersecurity Workforce Study</em>. 16,029 practitioners, July–August 2025; 59% report critical or significant skills gaps; prior 4.8M gap estimate discontinued.<span class="meta"><a href="https://www.isc2.org/Insights/2025/12/2025-ISC2-Cybersecurity-Workforce-Study" target="_blank" rel="noopener">isc2.org/Insights/2025/12/2025-ISC2-Cybersecurity-Workforce-Study</a></span></li>
+      <li id="fn22"><span class="n">[22]</span> Gartner, “Gartner Forecasts Worldwide End-User Spending on Information Security to Total $213 Billion in 2025,” 29 July 2025. 2026 forecast US$240 billion (+12.5%).<span class="meta"><a href="https://www.gartner.com/en/newsroom/press-releases/2025-07-29-gartner-forecasts-worldwide-end-user-spending-on-information-security-to-total-213-billion-us-dollars-in-2025" target="_blank" rel="noopener">gartner.com/en/newsroom/press-releases/2025-07-29-…</a></span></li>
+      <li id="fn23"><span class="n">[23]</span> Gartner, <em>Forecast: Information Security, Worldwide, 2023–2029, 3Q25 Update</em>, 26 September 2025. 2026 US$244B; 2029 US$322B.<span class="meta"><a href="https://www.gartner.com/en/documents/6998666" target="_blank" rel="noopener">gartner.com/en/documents/6998666</a></span></li>
+      <li id="fn47"><span class="n">[47]</span> EY, Global Cybersecurity Leadership Insights / 2026 Cybersecurity Roadmap Study. Source of MTTD/MTTR −28%, tool-sprawl (44 products) and ~20% embedded AI-governance figures in this briefing. Executive survey; not vendor telemetry.</li>
+    </ol>
+
+    <p class="group-lbl">Australia — threat, privacy, cyber law</p>
+    <ol class="sourcelist" start="20">
+      <li id="fn20"><span class="n">[20]</span> OAIC, “Data breach notifications increase to all-time high in 2025, new NDB stats show,” 6 July 2026. 1,205 notifications in calendar 2025.<span class="meta"><a href="https://www.oaic.gov.au/news/media-centre/data-breach-notifications-increase-to-all-time-high-in-2025,-new-ndb-stats-show" target="_blank" rel="noopener">oaic.gov.au/news/media-centre/…new-ndb-stats-show</a></span></li>
+      <li id="fn21"><span class="n">[21]</span> OAIC, Notifiable Data Breaches publications and statistics (including January–June 2025).<span class="meta"><a href="https://www.oaic.gov.au/privacy/notifiable-data-breaches/notifiable-data-breaches-publications" target="_blank" rel="noopener">oaic.gov.au/privacy/notifiable-data-breaches/…</a></span></li>
+      <li id="fn24"><span class="n">[24]</span> Department of Home Affairs, Cyber Security Act 2024. Ransomware-payment reporting rules from 30 May 2025; smart-device standards.<span class="meta"><a href="https://www.homeaffairs.gov.au/cyber-security-subsite/Pages/cyber-security-act.aspx" target="_blank" rel="noopener">homeaffairs.gov.au/…/cyber-security-act.aspx</a></span></li>
+      <li id="fn25"><span class="n">[25]</span> <em>Cyber Security Act 2024</em> (Cth). Primary legislation, including the statutory review by December 2027.<span class="meta"><a href="https://www.legislation.gov.au/C2024A00108/latest/text" target="_blank" rel="noopener">legislation.gov.au/C2024A00108</a></span></li>
+      <li id="fn37"><span class="n">[37]</span> Australian Signals Directorate, <em>Annual Cyber Threat Report 2024–2025</em>. Landing page.<span class="meta"><a href="https://www.cyber.gov.au/about-us/view-all-content/reports-and-statistics/annual-cyber-threat-report-2024-2025" target="_blank" rel="noopener">cyber.gov.au/…/annual-cyber-threat-report-2024-2025</a></span></li>
+      <li id="fn38"><span class="n">[38]</span> ASD, <em>Annual Cyber Threat Report 2024–25</em> (PDF). Medium-business cost $97,200 (+55%); overall $80,850; 84,700 ReportCyber reports.<span class="meta"><a href="https://www.cyber.gov.au/sites/default/files/2025-10/Annual%20Cyber%20Threat%20Report%202024-25.pdf" target="_blank" rel="noopener">cyber.gov.au/…/Annual Cyber Threat Report 2024-25.pdf</a></span></li>
+      <li id="fn31"><span class="n">[31]</span> ASD, “Planning for post-quantum cryptography.” End-2026 plan; end-2028 commence critical transition; end-2030 retire RSA/DH/ECDH/ECDSA. ISM-1917 crypto-in-procurement from March 2024.<span class="meta"><a href="https://www.cyber.gov.au/business-government/secure-design/quantum/planning-for-post-quantum-cryptography" target="_blank" rel="noopener">cyber.gov.au/…/planning-for-post-quantum-cryptography</a></span></li>
+      <li id="fn32"><span class="n">[32]</span> ASD, <em>Planning for Post-Quantum Cryptography</em> (September 2025 PDF).<span class="meta"><a href="https://www.cyber.gov.au/sites/default/files/2025-09/Planning%20for%20post-quantum%20cryptography%20%28September%202025%29.pdf" target="_blank" rel="noopener">cyber.gov.au/…/Planning for post-quantum cryptography (September 2025).pdf</a></span></li>
+      <li id="fn42"><span class="n">[42]</span> <em>Privacy and Other Legislation Amendment Act 2024</em> (Cth). Statutory tort for serious invasions of privacy (10 June 2025); ADM transparency and Children’s Online Privacy Code mandate (10 December 2026).<span class="meta"><a href="https://www.legislation.gov.au/C2024A00124/latest/text" target="_blank" rel="noopener">legislation.gov.au/C2024A00124</a></span></li>
+      <li id="fn43"><span class="n">[43]</span> OAIC, Notifiable Data Breaches scheme — 30-day assessment of suspected eligible data breaches.<span class="meta"><a href="https://www.oaic.gov.au/privacy/notifiable-data-breaches/about-the-notifiable-data-breaches-scheme" target="_blank" rel="noopener">oaic.gov.au/privacy/notifiable-data-breaches/about-the-notifiable-data-breaches-scheme</a></span></li>
+      <li id="fn44"><span class="n">[44]</span> OAIC, APP 1 guidelines — automated decision-making transparency (APPs 1.7–1.9) from 10 December 2026.<span class="meta"><a href="https://www.oaic.gov.au/privacy/australian-privacy-principles/australian-privacy-principles-guidelines/chapter-1-app-1-open-and-transparent-management-of-personal-information" target="_blank" rel="noopener">oaic.gov.au/…/chapter-1-app-1-…</a></span></li>
+      <li id="fn34"><span class="n">[34]</span> OAIC, Children’s Online Privacy Code. Must be registered by 10 December 2026.<span class="meta"><a href="https://www.oaic.gov.au/privacy/privacy-registers/privacy-codes/childrens-online-privacy-code" target="_blank" rel="noopener">oaic.gov.au/…/childrens-online-privacy-code</a></span></li>
+      <li id="fn56"><span class="n">[56]</span> Department of Home Affairs, Security of Critical Infrastructure Act 2018. PJCIS review of the SOCI Act is legislated to commence by December 2026.<span class="meta"><a href="https://www.homeaffairs.gov.au/about-us/our-portfolios/national-security/security-of-critical-infrastructure-act-2018" target="_blank" rel="noopener">homeaffairs.gov.au/…/security-of-critical-infrastructure-act-2018</a></span></li>
+      <li id="fn59"><span class="n">[59]</span> AUSTRAC, “Newly regulated businesses: get ready for the reforms,” 26 March 2026. AML/CTF Tranche 2 from 1 July 2026.<span class="meta"><a href="https://www.austrac.gov.au/news-and-media/article/newly-regulated-businesses-get-ready-reforms" target="_blank" rel="noopener">austrac.gov.au/…/newly-regulated-businesses-get-ready-reforms</a></span></li>
+      <li id="fn33"><span class="n">[33]</span> ABC News, “Labor aims to shape AI revolution with new data centre and AI copyright rules,” 15 July 2026. Australian Standards for AI; Office of AI in PM&amp;C; data-centre power and water rules; legislation slated early 2027.<span class="meta"><a href="https://www.abc.net.au/news/2026-07-15/labor-to-set-standards-for-ai-data-centres-and-copyright/106918380" target="_blank" rel="noopener">abc.net.au/news/2026-07-15/labor-to-set-standards-for-ai-…</a></span></li>
+      <li id="fn35"><span class="n">[35]</span> ABC News, “Anthony Albanese maps out AI future with new national framework,” 14 July 2026.<span class="meta"><a href="https://www.abc.net.au/news/2026-07-14/albanese-maps-out-ai-future-introducing-national-framework/106915094" target="_blank" rel="noopener">abc.net.au/news/2026-07-14/albanese-maps-out-ai-future-…</a></span></li>
+    </ol>
+
+    <p class="group-lbl">Enforcement, prudential and board evidence</p>
+    <ol class="sourcelist" start="26">
+      <li id="fn26"><span class="n">[26]</span> ASIC, 26-092MR open letter to AFS licensees and market participants, 8 May 2026. “The clock is at a minute to midnight.”<span class="meta"><a href="https://download.asic.gov.au/media/xhrf1w0e/26-092mr-open-letter-to-afs-licensees-and-market-participants.pdf" target="_blank" rel="noopener">download.asic.gov.au/…/26-092mr-open-letter-….pdf</a></span></li>
+      <li id="fn27"><span class="n">[27]</span> ASIC, 26-021MR, “ASIC action sees FIIG Securities ordered to pay $2.5 million over cyber security failures.” $2.5m penalty plus $500k costs; ~385GB; ~18,000 clients.<span class="meta"><a href="https://www.asic.gov.au/about-asic/news-centre/find-a-media-release/2026-releases/26-021mr-asic-action-sees-fiig-securities-ordered-to-pay-25-million-over-cyber-security-failures" target="_blank" rel="noopener">asic.gov.au/…/26-021mr-…</a></span></li>
+      <li id="fn28"><span class="n">[28]</span> <em>ASIC v FIIG Securities Limited</em> [2026] FCA 92, judgment 13 February 2026.<span class="meta"><a href="https://download.asic.gov.au/media/o02h30dd/26-021mr-asic-v-fiig-securities-limited-judgment-13-feb-2026.pdf" target="_blank" rel="noopener">download.asic.gov.au/…/26-021mr-asic-v-fiig-…-13-feb-2026.pdf</a></span></li>
+      <li id="fn29"><span class="n">[29]</span> APRA, Prudential Standard CPS 230 <em>Operational Risk Management</em>. Commenced 1 July 2025.<span class="meta"><a href="https://www.apra.gov.au/system/files/2026-05/Prudential%20Standard%20-%20CPS%20230%20Operational%20Risk%20Management%20-%20clean.pdf" target="_blank" rel="noopener">apra.gov.au/…/CPS 230 Operational Risk Management</a></span></li>
+      <li id="fn30"><span class="n">[30]</span> APRA, “APRA Letter to Industry on Artificial Intelligence (AI),” 30 April 2026. Governance, risk, assurance and operational resilience not keeping pace with AI adoption.<span class="meta"><a href="https://www.apra.gov.au/news-and-publications/apra-letter-industry-artificial-intelligence-ai" target="_blank" rel="noopener">apra.gov.au/…/apra-letter-industry-artificial-intelligence-ai</a></span></li>
+      <li id="fn51"><span class="n">[51]</span> APRA, Prudential Practice Guide CPG 230 <em>Operational Risk Management</em>.<span class="meta"><a href="https://www.apra.gov.au/practice-guides/cpg-230" target="_blank" rel="noopener">apra.gov.au/practice-guides/cpg-230</a></span></li>
+    </ol>
+
+    <p class="group-lbl">Controls, certification and event</p>
+    <ol class="sourcelist" start="36">
+      <li id="fn36"><span class="n">[36]</span> Subnet, Cyber Summit 2026, Adelaide, 1 October 2026.<span class="meta"><a href="https://content.subnet.net.au/cyber-summit-2026" target="_blank" rel="noopener">content.subnet.net.au/cyber-summit-2026</a></span></li>
+      <li id="fn39"><span class="n">[39]</span> OWASP, GenAI / LLM Top 10.<span class="meta"><a href="https://genai.owasp.org/llm-top-10/" target="_blank" rel="noopener">genai.owasp.org/llm-top-10</a></span></li>
+      <li id="fn40"><span class="n">[40]</span> MITRE, ATLAS (Adversarial Threat Landscape for Artificial-Intelligence Systems).<span class="meta"><a href="https://atlas.mitre.org/" target="_blank" rel="noopener">atlas.mitre.org</a></span></li>
+      <li id="fn48"><span class="n">[48]</span> CyberCert / Dynamic Standards International, SMB1001. Private scheme, not Australian law. Control-count figures in this briefing are from consistent third-party/MSP guides, not a direct DSI primary read. See also Barracuda–CyberCert collaboration, 19 May 2026.<span class="meta"><a href="https://www.barracuda.com/company/news/2026/barracuda-cybercert-compliance-certification-australian-businesses" target="_blank" rel="noopener">barracuda.com/…/barracuda-cybercert-compliance-certification-australian-businesses</a></span></li>
+    </ol>
+  </section>
+</main>
+
+<footer>
+  <p class="ft-main">ThinkInfoSec 2026 — <a href="https://www.linkedin.com/in/andrecamillo/" target="_blank" rel="noopener">Andre Camillo</a> · <a href="../../index.html#research">Back to Research</a></p>
+  <p class="ft-sub">Independent briefing for Subnet Cyber Summit 2026. Educational use. Numbered citations map to the source list; the three-movement thesis is ThinkInfoSec synthesis.</p>
+</footer>
+
+<script>
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll(".toc a"));
+  var sections = links.map(function (a) {
+    return document.querySelector(a.getAttribute("href"));
+  }).filter(Boolean);
+  if (!("IntersectionObserver" in window) || !sections.length) return;
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      links.forEach(function (l) { l.classList.remove("on"); l.removeAttribute("aria-current"); });
+      var active = document.querySelector('.toc a[href="#' + e.target.id + '"]');
+      if (active) { active.classList.add("on"); active.setAttribute("aria-current", "location"); }
+    });
+  }, { rootMargin: "-45% 0px -50% 0px" });
+  sections.forEach(function (s) { spy.observe(s); });
+})();
+</script>
+</body>
+</html>
