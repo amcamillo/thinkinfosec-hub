@@ -149,6 +149,18 @@
       "description": "Educational web games."
     },
     {
+      "id": "research-preparing-2027",
+      "title": "Preparing for 2027",
+      "kind": "research",
+      "origin": "hub",
+      "pillar": "process",
+      "people": ["thought-leadership"],
+      "processes": ["govern-assure", "threat-model", "channel-mssp"],
+      "tech": [57, 62, 43],
+      "link": "Research/preparing-for-2027/",
+      "description": "Twelve 2025/26 benchmark reports against Australia’s 2026–27 regulatory spine."
+    },
+    {
       "id": "research-anz-mssp",
       "title": "ANZ MSSP Landscape",
       "kind": "research",
