@@ -7,445 +7,370 @@
 <meta name="description" content="A ThinkInfoSec synthesis of twelve 2025/26 cybersecurity benchmark reports against Australia’s 2026–27 regulatory spine — threat velocity, evidence burden, AI governance, and the mid-market path to proof.">
 <meta name="author" content="Andre Camillo">
 <link rel="canonical" href="https://amcamillo.github.io/thinkinfosec-hub/Research/preparing-for-2027/">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
 <style>
 :root {
   --navy: #0D1F3C;
-  --navy-light: #1A3358;
-  --navy-faint: #EDF0F5;
   --teal: #00BFCF;
-  --teal-dark: #009DAA;
-  --teal-faint: rgba(0,191,207,0.10);
+  --teal-dark: #008A96;
   --pink: #FF2D78;
-  --pink-faint: rgba(255,45,120,0.08);
   --green: #00875A;
-  --green-faint: rgba(0,135,90,0.08);
-  --amber: #FF8B00;
-  --amber-faint: rgba(255,139,0,0.10);
-  --red: #DE350B;
-  --page: #F6F7FA;
-  --surface: #FFFFFF;
-  --raised: #F0F2F5;
-  --border: #DFE1E6;
-  --text: #172B4D;
-  --text-2: #5E6C84;
-  --muted: #97A0AF;
-  --radius: 10px;
+  --bg: #f4f7f6;
+  --card: #ffffff;
+  --ink: #333333;
+  --mute: #555555;
+  --faint: #777777;
+  --line: #dddddd;
+  --radius: 8px;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
   --focus: 2px solid var(--teal);
+  --col: 1040px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .sc, .clock, .tier, .find { animation: none !important; transform: none !important; }
-}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
-  background: var(--page);
-  color: var(--text);
+  background: var(--bg);
+  color: var(--ink);
   font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  line-height: 1.6;
+  font-size: 16px;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
 }
 a { color: var(--teal-dark); }
 a:hover { text-decoration: underline; }
 a:focus-visible, button:focus-visible, summary:focus-visible {
-  outline: var(--focus);
-  outline-offset: 3px;
+  outline: var(--focus); outline-offset: 3px;
 }
 .skip {
   position: absolute; left: 0.75rem; top: -3rem;
   background: var(--navy); color: #fff; padding: 0.5rem 0.85rem;
-  border-radius: 6px; z-index: 400; text-decoration: none;
+  border-radius: var(--radius); z-index: 400; text-decoration: none;
 }
 .skip:focus { top: 0.75rem; }
-.mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
 
-.hero {
-  position: relative;
+.topbar {
   background: var(--navy);
   color: #fff;
-  padding: 40px 48px 36px;
-  overflow: hidden;
 }
-.hero::after {
-  content: "";
-  position: absolute; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0v30m0 20v30M0 40h30m20 0h30' stroke='%2300BFCF' stroke-width='0.4' opacity='0.06'/%3E%3Ccircle cx='40' cy='40' r='2' fill='%2300BFCF' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none;
+.topbar-inner {
+  max-width: var(--col); margin: 0 auto;
+  min-height: 52px;
+  padding: 8px 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
-.hero-inner { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; }
-.brand { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; text-decoration: none; color: inherit; width: fit-content; }
-.brand img { width: 52px; height: 52px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.15); object-fit: cover; }
-.brand-name { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
-.brand-sub { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 1.5px; color: var(--teal); }
-.eyebrow {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 11px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase;
-  color: var(--teal); margin-bottom: 10px;
-}
-.hero h1 {
-  font-size: clamp(26px, 3.4vw, 40px);
-  font-weight: 800; letter-spacing: -0.6px; line-height: 1.15;
-  max-width: 18ch; margin-bottom: 12px;
-}
-.hero h1 em { font-style: normal; color: var(--teal); }
-.lede { max-width: 680px; color: rgba(255,255,255,0.68); font-size: 15px; line-height: 1.7; margin-bottom: 18px; }
-.tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
-.htag {
-  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px;
-  padding: 5px 12px; border-radius: 4px; border: 1px solid rgba(0,191,207,0.3);
-  color: var(--teal); background: rgba(0,191,207,0.1);
-}
-.htag.pink { color: var(--pink); border-color: rgba(255,45,120,0.3); background: rgba(255,45,120,0.1); }
-.htag.green { color: #36B37E; border-color: rgba(54,179,126,0.3); background: rgba(54,179,126,0.1); }
-.hero-stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
-.hstat {
-  padding: 14px 16px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 8px;
-}
-.hstat .val { font-family: "JetBrains Mono", monospace; font-size: 22px; font-weight: 700; color: var(--teal); display: block; white-space: nowrap; }
-.hstat .lbl { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px; color: rgba(255,255,255,0.42); margin-top: 4px; display: block; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+.brand img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.brand-name { font-size: 15px; font-weight: 700; display: block; line-height: 1.15; }
+.brand-sub { font-size: 12px; color: var(--teal); font-weight: 500; }
+.topbar-meta { font-size: 13px; color: rgba(255,255,255,0.62); }
 
-.crumb {
-  padding: 10px 48px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  font-size: 12px; color: var(--muted);
-}
+.mast { background: var(--card); border-bottom: 1px solid var(--line); }
+.mast-inner { max-width: var(--col); margin: 0 auto; padding: 28px 24px 22px; }
+.crumb { font-size: 13px; color: var(--faint); margin-bottom: 18px; }
 .crumb a { color: var(--teal-dark); text-decoration: none; font-weight: 500; }
 .crumb a:hover { text-decoration: underline; }
-.sep { margin: 0 8px; color: var(--border); }
+.sep { margin: 0 8px; color: var(--line); }
+.dateline { font-size: 13px; color: var(--teal-dark); font-weight: 600; margin-bottom: 8px; }
+.mast h1 {
+  font-size: clamp(28px, 3.6vw, 38px);
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.mast h1 em { font-style: normal; color: var(--teal-dark); }
+.lede { max-width: 42rem; color: var(--mute); margin-bottom: 10px; }
+.meta-line { font-size: 14px; color: var(--faint); margin-bottom: 18px; }
+
+.facts {
+  display: flex; flex-wrap: wrap; gap: 10px 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 14px; color: var(--mute);
+}
+.facts b { color: var(--navy); font-weight: 700; margin-right: 5px; }
+.facts a { text-decoration: none; font-size: 13px; }
+.facts a:hover { text-decoration: underline; }
 
 .toc {
   position: sticky; top: 0; z-index: 200;
-  display: flex; gap: 4px; overflow-x: auto;
-  padding: 10px 48px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  scrollbar-width: none;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+  padding: 8px 0;
 }
-.toc::-webkit-scrollbar { display: none; }
-.toc a {
+.toc-inner {
+  max-width: var(--col); margin: 0 auto;
+  padding: 0 24px;
+  display: flex; gap: 4px; overflow-x: auto; width: 100%;
+}
+.toc a, .toc-inner a {
   flex-shrink: 0;
-  padding: 8px 14px; min-height: 44px;
+  color: var(--faint); text-decoration: none;
+  font-size: 13px; font-weight: 500;
+  min-height: 40px; padding: 0 12px;
   display: inline-flex; align-items: center;
-  border-radius: 7px; border: 1px solid transparent;
-  color: var(--muted); text-decoration: none;
-  font-size: 12px; font-weight: 500; white-space: nowrap;
+  border-radius: 6px;
 }
-.toc a:hover { color: var(--text); background: var(--teal-faint); border-color: rgba(0,191,207,0.25); }
-.toc a.on { color: var(--navy); font-weight: 600; background: var(--teal-faint); border-color: var(--teal); }
+.toc a:hover, .toc-inner a:hover { color: var(--navy); background: var(--bg); }
+.toc a.on, .toc-inner a.on { color: var(--navy); background: var(--bg); font-weight: 600; }
 
-.wrap { max-width: 1100px; margin: 0 auto; padding: 40px 48px 72px; }
-section { margin-bottom: 56px; scroll-margin-top: 72px; }
-.kicker {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 11px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase;
-  color: var(--teal-dark);
+.wrap { max-width: var(--col); margin: 0 auto; padding: 20px 24px 64px; display: grid; gap: 16px; }
+section {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px 28px 24px;
+  scroll-margin-top: 64px;
 }
-h2 { font-size: clamp(22px, 2.4vw, 28px); font-weight: 800; letter-spacing: -0.4px; color: var(--navy); margin: 6px 0 12px; }
-h3 { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
-.blurb { color: var(--text-2); font-size: 15px; max-width: 720px; margin-bottom: 20px; }
-.note { font-size: 13px; color: var(--text-2); }
+.kicker {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--teal-dark); margin-bottom: 6px;
+}
+h2 {
+  font-size: 1.45rem; font-weight: 700; color: var(--navy);
+  margin: 0 0 10px; letter-spacing: -0.02em; line-height: 1.25;
+}
+h3 { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.blurb { color: var(--mute); margin-bottom: 18px; max-width: 44rem; }
+.note { font-size: 14px; color: var(--mute); }
 
 .thesis {
-  background: var(--navy);
-  color: #fff;
-  border-radius: 12px;
-  padding: 28px 32px;
-  margin-bottom: 28px;
-}
-.thesis p { font-size: 18px; font-weight: 600; line-height: 1.45; letter-spacing: -0.2px; max-width: 46rem; }
-.thesis span { color: var(--teal); }
-
-.moves { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
-.move {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--bg);
   border-radius: var(--radius);
-  padding: 20px 20px 18px;
-  position: relative; overflow: hidden;
+  padding: 16px 18px;
+  margin: 0 0 20px;
 }
-.move::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-.move:nth-child(1)::before { background: var(--teal); }
-.move:nth-child(2)::before { background: var(--amber); }
-.move:nth-child(3)::before { background: var(--pink); }
-.move .n {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 11px; font-weight: 600; letter-spacing: 1px;
-  color: var(--muted); margin-bottom: 8px; display: block;
-}
-.move p { font-size: 13.5px; color: var(--text-2); }
+.thesis p { font-size: 1.05rem; font-weight: 600; color: var(--navy); line-height: 1.5; max-width: 46rem; }
+.thesis span { color: var(--teal-dark); }
 
-.clocks { display: grid; grid-template-columns: 1.15fr 0.95fr 0.9fr; gap: 12px; }
-.clock {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 22px 22px 18px;
+.moves { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
+.move .n { font-size: 12px; font-weight: 700; color: var(--teal-dark); display: block; margin-bottom: 6px; }
+.move:nth-child(2) .n { color: var(--navy); }
+.move:nth-child(3) .n { color: var(--pink); }
+.move p { font-size: 14.5px; color: var(--mute); }
+
+.clock-table {
+  width: 100%; border-collapse: collapse; font-size: 14.5px; margin-bottom: 8px;
 }
-.clock .when {
-  font-family: "JetBrains Mono", monospace;
-  font-size: clamp(28px, 3vw, 36px);
-  font-weight: 700; letter-spacing: -1px; line-height: 1;
+.clock-table th {
+  text-align: left; font-size: 12px; font-weight: 700; color: var(--faint);
+  padding: 0 12px 10px 0; border-bottom: 2px solid var(--navy);
 }
-.clock.adv .when { color: var(--teal-dark); }
-.clock.ran .when { color: var(--amber); }
-.clock.ndb .when { color: var(--navy); }
-.clock .who { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; margin: 8px 0 6px; color: var(--navy); }
-.clock p { font-size: 13px; color: var(--text-2); }
+.clock-table td {
+  padding: 12px 12px 12px 0; border-bottom: 1px solid var(--line); vertical-align: top;
+}
+.clock-table .t { font-weight: 700; color: var(--navy); white-space: nowrap; }
+
+.clocks { display: grid; gap: 0; }
+.clock { padding: 16px 0; border-top: 1px solid var(--line); }
+.clock .when { font-size: 13px; font-weight: 700; color: var(--teal-dark); }
+.clock .who { font-size: 1.02rem; font-weight: 700; margin: 2px 0 6px; color: var(--navy); }
+.clock p { font-size: 14.5px; color: var(--mute); }
+
 .callout {
-  margin-top: 14px;
-  padding: 14px 18px;
-  background: var(--navy);
-  color: #fff;
-  border-radius: 8px;
-  font-size: 14px;
+  margin-top: 16px; padding: 14px 16px;
+  background: var(--navy); color: #fff;
+  border-radius: var(--radius); font-size: 14.5px;
 }
 .callout strong { color: var(--teal); }
-.callout.pink { background: var(--navy); }
 .warn {
-  margin-top: 14px;
-  padding: 14px 18px;
-  background: var(--amber-faint);
-  border-left: 3px solid var(--amber);
-  border-radius: 0 8px 8px 0;
-  font-size: 13.5px; color: var(--text-2);
+  margin-top: 14px; padding: 12px 14px;
+  background: #fff8f0; border-left: 3px solid #FF8B00;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 14.5px; color: var(--mute);
 }
 .warn strong { color: var(--navy); }
 
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px 20px;
+.grid-2, .grid-3 { display: grid; gap: 16px; }
+@media (min-width: 800px) {
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
 }
+.card { padding: 0; }
 .card h3 { margin-bottom: 6px; }
-.card p, .card li { font-size: 13.5px; color: var(--text-2); }
+.card p, .card li { font-size: 14.5px; color: var(--mute); }
 .card ul { margin: 8px 0 0 1.1rem; display: grid; gap: 6px; }
-.src {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 11px; color: var(--muted); margin-top: 10px;
-}
+.src { font-size: 12px; color: var(--faint); margin-top: 10px; }
 .src a { color: var(--teal-dark); }
 sup.cite, .cite {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 10px; font-weight: 600;
-  line-height: 0; vertical-align: super;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10px; font-weight: 500; line-height: 0; vertical-align: super;
 }
 .cite { color: var(--teal-dark); text-decoration: none; margin-left: 1px; }
 .cite:hover { text-decoration: underline; }
-.hstat .src-mini {
-  display: block; margin-top: 6px;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 9px; color: rgba(255,255,255,0.4); font-weight: 500;
-  text-transform: none; letter-spacing: 0; line-height: 1.35;
-}
-.hstat .src-mini a { color: var(--teal); text-decoration: none; }
-.hstat .src-mini a:hover { text-decoration: underline; }
+
 .sourcelist { list-style: none; display: grid; gap: 12px; }
 .sourcelist li {
-  font-size: 13px; color: var(--text-2);
-  padding-left: 2.4rem; position: relative;
-  line-height: 1.55;
+  font-size: 14px; color: var(--mute);
+  padding-left: 2.4rem; position: relative; line-height: 1.55; scroll-margin-top: 72px;
 }
 .sourcelist li > .n {
   position: absolute; left: 0; top: 0;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 11px; font-weight: 600; color: var(--navy);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px; font-weight: 600; color: var(--navy);
 }
 .sourcelist a { word-break: break-word; }
 .sourcelist .meta {
   display: block; margin-top: 2px;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 11px; color: var(--muted);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px; color: var(--faint);
 }
 .group-lbl {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 11px; font-weight: 600; letter-spacing: 1.2px;
-  text-transform: uppercase; color: var(--teal-dark);
-  margin: 22px 0 10px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--teal-dark); margin: 22px 0 10px;
 }
-.sourcelist li { scroll-margin-top: 80px; }
-.sourcelist li:target {
-  background: var(--teal-faint);
-  outline: 1px solid rgba(0,191,207,0.35);
-  border-radius: 6px;
-}
+.sourcelist li:target { background: #eef8f9; border-radius: 6px; }
 
 .badge {
-  display: inline-flex; align-items: center;
-  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px;
-  padding: 3px 8px; border-radius: 4px; border: 1px solid;
+  display: inline; font-size: 12px; font-weight: 600; font-style: italic;
+  border: 0; background: none; color: var(--faint); padding: 0; text-transform: none;
 }
-.badge.con { color: var(--teal-dark); background: var(--teal-faint); border-color: rgba(0,157,170,0.25); }
-.badge.one { color: #974F00; background: var(--amber-faint); border-color: rgba(255,139,0,0.28); }
-.badge.law { color: var(--navy); background: var(--navy-faint); border-color: rgba(13,31,60,0.18); }
-.badge.guide { color: var(--text-2); background: var(--raised); border-color: var(--border); }
 
-.finds { display: grid; gap: 10px; }
+.finds { display: grid; gap: 0; }
 .find {
-  display: grid; grid-template-columns: 52px 1fr; gap: 14px;
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 16px 18px;
+  display: grid; grid-template-columns: 2.2rem 1fr; gap: 8px;
+  padding: 16px 0; border-top: 1px solid var(--line);
 }
-.find .n {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 20px; font-weight: 700; color: var(--navy-faint);
-  line-height: 1;
-}
-.find p { font-size: 14px; color: var(--text); margin: 6px 0 0; }
+.find .n { font-size: 14px; font-weight: 700; color: var(--teal-dark); padding-top: 2px; }
+.find p { font-size: 15px; color: var(--ink); margin: 6px 0 0; }
 
-.timeline { display: grid; gap: 0; border-left: 2px solid var(--border); margin-left: 8px; }
-.tl {
-  position: relative;
-  padding: 0 0 22px 22px;
-}
+.timeline { display: grid; gap: 0; border-left: 2px solid var(--line); margin-left: 6px; }
+.tl { position: relative; padding: 0 0 20px 20px; }
 .tl::before {
-  content: "";
-  position: absolute; left: -6px; top: 6px;
-  width: 10px; height: 10px; border-radius: 50%;
-  background: var(--surface); border: 2px solid var(--teal-dark);
+  content: ""; position: absolute; left: -5px; top: 7px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--card); border: 2px solid var(--teal-dark);
 }
 .tl.focal::before { background: var(--teal); border-color: var(--teal); }
-.tl .when {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 12px; font-weight: 600; color: var(--teal-dark);
-}
+.tl .when { font-size: 12px; font-weight: 700; color: var(--teal-dark); }
 .tl h3 { font-size: 15px; margin: 2px 0 4px; }
-.tl p { font-size: 13.5px; color: var(--text-2); }
+.tl p { font-size: 14.5px; color: var(--mute); }
 
 .bars { display: grid; gap: 12px; }
-.bar-row { display: grid; grid-template-columns: 110px 1fr 92px; gap: 10px; align-items: center; }
-.bar-lbl { font-size: 12px; font-weight: 600; color: var(--navy); }
-.bar-track { height: 10px; background: var(--raised); border-radius: 99px; overflow: hidden; }
-.bar-fill { height: 100%; border-radius: 99px; background: var(--teal-dark); }
-.bar-fill.amber { background: var(--amber); }
+.bar-row { display: grid; grid-template-columns: 90px 1fr 88px; gap: 10px; align-items: center; }
+.bar-lbl { font-size: 13px; font-weight: 600; color: var(--navy); }
+.bar-track { height: 8px; background: var(--bg); border-radius: 99px; overflow: hidden; }
+.bar-fill { height: 100%; background: var(--teal-dark); }
+.bar-fill.amber { background: #FF8B00; }
 .bar-fill.pink { background: var(--pink); }
-.bar-val { font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 600; color: var(--navy); text-align: right; }
+.bar-val { font-size: 13px; font-weight: 600; color: var(--navy); text-align: right; }
 
-.tiers { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 8px; }
+.smb-groups { display: grid; gap: 16px; }
+@media (min-width: 800px) {
+  .smb-groups { grid-template-columns: 1.15fr 0.85fr; align-items: start; }
+}
+.smb-group { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--card); }
+.smb-head {
+  margin: 0;
+  padding: 10px 14px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--navy);
+}
+.smb-group.teal .smb-head { background: var(--teal); color: var(--navy); }
+.smb-group.magenta .smb-head { background: var(--pink); color: #fff; }
+.smb-group .tiers { display: grid; gap: 0; }
+@media (min-width: 800px) {
+  .smb-group.teal .tiers { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .smb-group.magenta .tiers { grid-template-columns: 1fr 1fr; }
+}
 .tier {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 14px 12px;
-  text-align: center;
+  display: block;
+  padding: 14px 14px 16px;
+  border-top: 1px solid var(--line);
 }
-.tier .lvl {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 10px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase;
-  color: var(--muted);
+@media (min-width: 800px) {
+  .smb-group .tier { border-top: none; border-left: 1px solid var(--line); }
+  .smb-group .tier:first-child { border-left: none; }
 }
-.tier h3 { font-size: 14px; margin: 4px 0 6px; }
-.tier p { font-size: 12px; color: var(--text-2); }
-.tier.gold { border-color: var(--teal); background: var(--teal-faint); }
-.tier.audit { border-color: var(--navy); }
+.tier .lvl { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--faint); margin-bottom: 4px; }
+.tier h3 { font-size: 16px; margin: 0 0 6px; }
+.smb-group.teal .tier h3 { color: var(--teal-dark); }
+.smb-group.magenta .tier h3 { color: var(--pink); }
+.tier p { font-size: 13.5px; color: var(--mute); margin: 0; }
+.tier.gold { background: rgba(0,191,207,0.10); }
 
-.recs { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
-.rec { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
-.rec .stage {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
-  margin-bottom: 8px; display: block;
-}
-.rec:nth-child(1) .stage { color: var(--teal-dark); }
-.rec:nth-child(2) .stage { color: var(--amber); }
+.recs { display: grid; gap: 16px; }
+@media (min-width: 800px) { .recs { grid-template-columns: 1fr 1fr 1fr; } }
+.rec .stage { font-size: 12px; font-weight: 700; color: var(--teal-dark); margin-bottom: 6px; display: block; }
+.rec:nth-child(2) .stage { color: var(--navy); }
 .rec:nth-child(3) .stage { color: var(--pink); }
 .rec ul { margin: 8px 0 0 1.05rem; display: grid; gap: 7px; }
-.rec li { font-size: 13.5px; color: var(--text-2); }
+.rec li { font-size: 14.5px; color: var(--mute); }
 
-details.caveat {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 0;
-  margin-bottom: 8px;
-}
+details.caveat { border-top: 1px solid var(--line); }
 details.caveat summary {
-  cursor: pointer; list-style: none;
-  padding: 14px 18px;
-  font-weight: 600; font-size: 14px; color: var(--navy);
-  display: flex; justify-content: space-between; align-items: center; gap: 12px;
-  min-height: 44px;
+  cursor: pointer; list-style: none; padding: 12px 0;
+  font-weight: 600; font-size: 15px; color: var(--navy);
+  display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px;
 }
 details.caveat summary::-webkit-details-marker { display: none; }
-details.caveat summary::after {
-  content: "›"; color: var(--teal-dark); font-size: 18px; transition: transform 0.2s ease;
-}
-details.caveat[open] summary::after { transform: rotate(90deg); }
-details.caveat p { padding: 0 18px 16px; font-size: 13.5px; color: var(--text-2); }
+details.caveat summary::after { content: "+"; color: var(--teal-dark); }
+details.caveat[open] summary::after { content: "–"; }
+details.caveat p { padding: 0 0 14px; font-size: 14.5px; color: var(--mute); }
 
-.sources { display: grid; gap: 8px; }
-.sources a { word-break: break-word; }
-.chiprow { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-.chip {
-  font-size: 11px; font-weight: 600;
-  padding: 5px 10px; border-radius: 99px;
-  background: var(--navy-faint); color: var(--navy); border: 1px solid var(--border);
-}
+.chiprow { font-size: 14px; color: var(--faint); margin-bottom: 8px; }
 
 footer {
-  padding: 28px 48px;
-  background: var(--navy);
+  background: var(--navy); color: rgba(255,255,255,0.65);
+  padding: 24px;
   text-align: center;
 }
-footer .ft-main { font-size: 13px; color: rgba(255,255,255,0.55); }
+footer .ft-main { font-size: 14px; max-width: var(--col); margin: 0 auto; }
 footer .ft-main a { color: var(--teal); text-decoration: none; }
 footer .ft-main a:hover { text-decoration: underline; }
-footer .ft-sub { margin-top: 6px; font-size: 11px; color: rgba(255,255,255,0.32); max-width: 640px; margin-left: auto; margin-right: auto; }
+footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.4); max-width: 40rem; }
 
-@media (max-width: 900px) {
-  .hero, .wrap, .crumb, .toc, footer { padding-left: 20px; padding-right: 20px; }
-  .hero-stats, .moves, .clocks, .grid-2, .grid-3, .recs, .tiers { grid-template-columns: 1fr; }
+@media (max-width: 800px) {
+  .topbar-meta { display: none; }
+  .moves, .recs, .grid-2, .grid-3 { grid-template-columns: 1fr; }
   .find { grid-template-columns: 1fr; }
-  .bar-row { grid-template-columns: 1fr; gap: 4px; }
+  .bar-row { grid-template-columns: 1fr; }
   .bar-val { text-align: left; }
-  .hero h1 { max-width: none; }
+  section { padding: 20px 18px 18px; }
 }
+
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
-<header class="hero">
-  <div class="hero-inner">
+<header class="topbar">
+  <div class="topbar-inner">
     <a class="brand" href="../../index.html">
-      <img src="../../assets/learning-hub-logo.png" alt="Thinkinfosec Hub logo" width="52" height="52" onerror="this.style.display='none'">
+      <img src="../../assets/learning-hub-logo.png" alt="Thinkinfosec Hub logo" width="28" height="28" onerror="this.style.display='none'">
       <span>
-        <span class="brand-name">Thinkinfosec</span><br>
-        <span class="brand-sub">Research</span>
+        <span class="brand-name">Thinkinfosec</span>
+        <span class="brand-sub">Research briefing</span>
       </span>
     </a>
-    <p class="eyebrow">Briefing · Subnet Cyber Summit 2026 · Adelaide · 1 October</p>
-    <h1>Preparing for <em>2027</em></h1>
-    <p class="lede">Compliance has stopped asking whether you had controls. It is asking whether you can evidence they were proportionate to the current threat — and prove it in the time you actually have. This briefing cross-reads twelve 2025/26 benchmark reports against Australia’s 2026–27 regulatory spine.</p>
-    <div class="tags">
-      <span class="htag">12-report corpus</span>
-      <span class="htag pink">ANZ / mid-market</span>
-      <span class="htag green">Board evidence</span>
-    </div>
-    <div class="hero-stats">
-      <div class="hstat"><span class="val">29 min</span><span class="lbl">Avg eCrime breakout</span><span class="src-mini"><a href="#fn1">CrowdStrike 2026 GTR</a></span></div>
-      <div class="hstat"><span class="val">1,205</span><span class="lbl">OAIC NDBs in 2025</span><span class="src-mini"><a href="#fn20">OAIC, 6 Jul 2026</a></span></div>
-      <div class="hstat"><span class="val">$2.5m</span><span class="lbl">FIIG civil penalty</span><span class="src-mini"><a href="#fn27">ASIC v FIIG [2026] FCA 92</a></span></div>
-      <div class="hstat"><span class="val">EOY 26</span><span class="lbl">PQC plan milestone</span><span class="src-mini"><a href="#fn31">ASD / cyber.gov.au</a></span></div>
-    </div>
+    <p class="topbar-meta">1 October 2026 · Adelaide</p>
   </div>
 </header>
 
-<nav class="crumb" aria-label="Breadcrumb">
-  <a href="../../index.html">Hub</a><span class="sep">›</span>
-  <a href="../../index.html#research">Research</a><span class="sep">›</span>
-  Preparing for 2027
-</nav>
+<div class="mast">
+  <div class="mast-inner">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="../../index.html">Hub</a><span class="sep">/</span>
+      <a href="../../index.html#research">Research</a><span class="sep">/</span>
+      Preparing for 2027
+    </nav>
+    <p class="dateline">Subnet Cyber Summit 2026 · Adelaide · 1 October</p>
+    <h1>Preparing for <em>2027</em></h1>
+    <p class="lede">Compliance has stopped asking whether you had controls. It is asking whether you can evidence they were proportionate to the current threat — and prove it in the time you actually have. This briefing cross-reads twelve 2025/26 benchmark reports against Australia’s 2026–27 regulatory spine.</p>
+    <p class="meta-line">Twelve-report corpus · Australia / mid-market · board evidence</p>
+    <p class="facts">
+      <span><b>29 min</b> eCrime breakout · <a href="#fn1">CrowdStrike 2026 GTR</a></span>
+      <span><b>1,205</b> OAIC NDBs in 2025 · <a href="#fn20">OAIC, 6 Jul 2026</a></span>
+      <span><b>$2.5m</b> FIIG penalty · <a href="#fn27">ASIC v FIIG [2026] FCA 92</a></span>
+      <span><b>EOY 2026</b> PQC plan · <a href="#fn31">ASD / cyber.gov.au</a></span>
+    </p>
+  </div>
+</div>
 
-<nav class="toc" aria-label="On this page">
+<nav class="toc" aria-label="On this page"><div class="toc-inner">
   <a href="#thesis">Thesis</a>
   <a href="#clock">The clock</a>
   <a href="#findings">Findings</a>
@@ -458,7 +383,7 @@ footer .ft-sub { margin-top: 6px; font-size: 11px; color: rgba(255,255,255,0.32)
   <a href="#recs">Actions</a>
   <a href="#method">Method</a>
   <a href="#sources">Sources</a>
-</nav>
+</div></nav>
 
 <main id="main" class="wrap">
 
@@ -491,6 +416,16 @@ footer .ft-sub { margin-top: 6px; font-size: 11px; color: rgba(255,255,255,0.32)
     <p class="kicker">Theme 1</p>
     <h2>The adversary clock vs the statutory clock</h2>
     <p class="blurb">CrowdStrike’s 29-minute figure is already in circulation — Subnet ran a webinar on it.<a class="cite" href="#fn36">36</a> The useful move is not to reveal the number. It is to set it against the clocks Australian law actually uses.</p>
+    <table class="clock-table">
+      <thead>
+        <tr><th>Clock</th><th>Window</th><th>Source of the clock</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Adversary breakout</td><td class="t">29 min</td><td>CrowdStrike 2026 GTR<a class="cite" href="#fn1">1</a></td></tr>
+        <tr><td>Ransomware payment report</td><td class="t">72 hours</td><td>Cyber Security Act 2024<a class="cite" href="#fn24">24</a></td></tr>
+        <tr><td>NDB assessment</td><td class="t">30 days</td><td>OAIC NDB scheme<a class="cite" href="#fn20">20</a></td></tr>
+      </tbody>
+    </table>
     <div class="clocks">
       <article class="clock adv">
         <div class="when">29 min</div>
@@ -518,12 +453,7 @@ footer .ft-sub { margin-top: 6px; font-size: 11px; color: rgba(255,255,255,0.32)
     <p class="kicker">12-report corpus</p>
     <h2>What the 2025/26 benchmarks actually agree on</h2>
     <p class="blurb">Wavestone,<a class="cite" href="#fn15">15</a> CrowdStrike,<a class="cite" href="#fn1">1</a> Mandiant,<a class="cite" href="#fn6">6</a> IBM/Ponemon,<a class="cite" href="#fn12">12</a> Verizon DBIR,<a class="cite" href="#fn4">4</a> WEF,<a class="cite" href="#fn17">17</a> PwC,<a class="cite" href="#fn18">18</a> EY,<a class="cite" href="#fn47">47</a> ENISA,<a class="cite" href="#fn7">7</a> Microsoft,<a class="cite" href="#fn9">9</a> ISC2<a class="cite" href="#fn19">19</a> and ASD/ACSC.<a class="cite" href="#fn37">37</a> Statistics below are flagged as established consensus or single-source — they do not average together.</p>
-    <div class="chiprow" style="margin-bottom:18px">
-      <span class="chip">Wavestone</span><span class="chip">CrowdStrike</span><span class="chip">Mandiant</span>
-      <span class="chip">IBM</span><span class="chip">Verizon</span><span class="chip">WEF</span>
-      <span class="chip">PwC</span><span class="chip">EY</span><span class="chip">ENISA</span>
-      <span class="chip">Microsoft</span><span class="chip">ISC2</span><span class="chip">ASD/ACSC</span>
-    </div>
+    <p class="chiprow">Wavestone · CrowdStrike · Mandiant · IBM · Verizon · WEF · PwC · EY · ENISA · Microsoft · ISC2 · ASD/ACSC</p>
     <div class="finds">
       <article class="find">
         <div class="n">01</div>
@@ -764,32 +694,42 @@ footer .ft-sub { margin-top: 6px; font-size: 11px; color: rgba(255,255,255,0.32)
     <p class="kicker">Practical path · SMBs</p>
     <h2>SMB1001 — the certificate mid-market actually fits</h2>
     <p class="blurb">ISO 27001 is an ISMS. Essential Eight is free and has no certificate. Insurers, enterprise procurement and government supply chains want something they can verify. SMB1001 sits in that gap: five cumulative tiers, director attestation through Gold, independent audit at Platinum and Diamond. It is a private Dynamic Standards International scheme, not Australian law — and “not mandatory” is no longer the same as “will not be asked for.”<a class="cite" href="#fn48">48</a></p>
-    <div class="tiers">
-      <article class="tier">
-        <span class="lvl">Level 1</span>
-        <h3>Bronze</h3>
-        <p>Foundational hygiene. Director self-attestation. No external auditor.</p>
-      </article>
-      <article class="tier">
-        <span class="lvl">Level 2</span>
-        <h3>Silver</h3>
-        <p>MFA on email, unique accounts, password managers, invoice-fraud controls.</p>
-      </article>
-      <article class="tier gold">
-        <span class="lvl">Level 3 · 2026</span>
-        <h3>Gold</h3>
-        <p>EDR, IR plan, cyber insurance, and a responsible AI-use policy. Still director-attested.</p>
-      </article>
-      <article class="tier audit">
-        <span class="lvl">Level 4</span>
-        <h3>Platinum</h3>
-        <p>Third-party audit, ongoing monitoring, regular vulnerability assessment.</p>
-      </article>
-      <article class="tier audit">
-        <span class="lvl">Level 5</span>
-        <h3>Diamond</h3>
-        <p>SIEM/SOC-style analytics and continuous compliance monitoring.</p>
-      </article>
+    <div class="smb-groups">
+      <div class="smb-group teal">
+        <p class="smb-head">Director-attested</p>
+        <div class="tiers">
+          <article class="tier">
+            <span class="lvl">Level 1</span>
+            <h3>Bronze</h3>
+            <p>Foundational hygiene. Director self-attestation. No external auditor.</p>
+          </article>
+          <article class="tier">
+            <span class="lvl">Level 2</span>
+            <h3>Silver</h3>
+            <p>MFA on email, unique accounts, password managers, invoice-fraud controls.</p>
+          </article>
+          <article class="tier gold">
+            <span class="lvl">Level 3 · 2026</span>
+            <h3>Gold</h3>
+            <p>EDR, IR plan, cyber insurance, and a responsible AI-use policy. Still director-attested.</p>
+          </article>
+        </div>
+      </div>
+      <div class="smb-group magenta">
+        <p class="smb-head">Independent audit</p>
+        <div class="tiers">
+          <article class="tier audit">
+            <span class="lvl">Level 4</span>
+            <h3>Platinum</h3>
+            <p>Third-party audit, ongoing monitoring, regular vulnerability assessment.</p>
+          </article>
+          <article class="tier audit">
+            <span class="lvl">Level 5</span>
+            <h3>Diamond</h3>
+            <p>SIEM/SOC-style analytics and continuous compliance monitoring.</p>
+          </article>
+        </div>
+      </div>
     </div>
     <p class="warn"><strong>Use with care.</strong> Control counts (Silver ~17, Gold ~27 in 2026 reporting) come from consistent third-party/MSP guides, not a direct read of DSI’s primary document.<a class="cite" href="#fn48">48</a> Gold’s new AI-use policy is the control most SMBs will not already have a template for. DSI sets the standard; CyberCert issues the certificate — an MSP can implement, not certify.</p>
   </section>
@@ -952,7 +892,7 @@ footer .ft-sub { margin-top: 6px; font-size: 11px; color: rgba(255,255,255,0.32)
       var active = document.querySelector('.toc a[href="#' + e.target.id + '"]');
       if (active) { active.classList.add("on"); active.setAttribute("aria-current", "location"); }
     });
-  }, { rootMargin: "-45% 0px -50% 0px" });
+  }, { rootMargin: "-40% 0px -55% 0px" });
   sections.forEach(function (s) { spy.observe(s); });
 })();
 </script>
