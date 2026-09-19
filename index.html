@@ -13,11 +13,11 @@
     <style>
         /* Modern, Light Color Scheme */
         :root {
-            --primary-color: #0077b5;
+            --primary-color: #0077b5; /* Professional Blue Accent */
             --primary-dark: #005a8c;
-            --background-color: #f4f7f6;
-            --card-color: #ffffff;
-            --text-primary: #333333;
+            --background-color: #f4f7f6; /* Light Gray Background */
+            --card-color: #ffffff;       /* White Card */
+            --text-primary: #333333;       /* Dark Gray Text */
             --text-secondary: #555555;
             --text-muted: #777777;
             --border-color: #dddddd;
@@ -26,105 +26,765 @@
             --border-radius: 8px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .skip-link { position: absolute; left: 0.75rem; top: -3rem; background: var(--primary-color); color: #fff; padding: 0.5rem 0.85rem; border-radius: var(--border-radius); z-index: 200; text-decoration: none; }
-        .skip-link:focus { top: 0.75rem; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: var(--text-primary); background-color: var(--background-color); }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
-        .header { background: var(--card-color); color: var(--text-primary); padding: 5.25rem 0 4rem; text-align: center; border-bottom: 1px solid var(--border-color); overflow: visible; }
-        .logo-stage { position: relative; width: 80px; height: 80px; margin: 0 auto 1.5rem; }
-        .logo { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: bold; overflow: hidden; position: relative; z-index: 1; }
-        .logo img { width: 100%; height: 100%; object-fit: cover; }
-        .think-link { position: absolute; left: 78px; top: -70px; width: 118px; height: 108px; z-index: 2; text-decoration: none; color: inherit; }
-        .think-link:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 3px; border-radius: 18px; }
-        .think-trail { position: absolute; border-radius: 50%; background: #fff; border: 1.75px solid rgba(0, 119, 181, 0.38); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06); animation: think-pulse 4.2s ease-in-out infinite; }
-        .think-trail-1 { width: 8px; height: 8px; left: 0; bottom: 20px; animation-delay: 0s; }
-        .think-trail-2 { width: 15px; height: 15px; left: 12px; bottom: 38px; animation-delay: 0.55s; }
-        .think-cloud { position: absolute; right: 0; top: 0; width: 96px; height: 72px; display: flex; align-items: center; justify-content: center; animation: think-pulse 3.6s ease-in-out infinite; animation-delay: 0.9s; }
-        .think-cloud svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 3px 6px rgba(0, 119, 181, 0.14)); }
-        .think-mark { position: relative; z-index: 1; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 2rem; font-weight: 700; line-height: 1; color: var(--text-primary); opacity: 0; transform: scale(0.65); transition: opacity 0.22s ease, transform 0.22s ease; pointer-events: none; }
-        .think-link:hover .think-mark, .think-link:focus-visible .think-mark { opacity: 1; transform: scale(1); }
-        @keyframes think-pulse { 0%, 100% { opacity: 0.42; } 50% { opacity: 1; } }
-        @media (prefers-reduced-motion: reduce) { .think-trail, .think-cloud { animation: none; opacity: 0.88; } }
-        .header h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
-        .header p { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
-        .nav { background: rgba(255, 255, 255, 0.85); padding: 1rem 0; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-        .nav-container { display: flex; justify-content: space-between; align-items: center; }
-        .nav-links { display: flex; flex-wrap: wrap; justify-content: center; list-style: none; gap: 0.35rem; }
-        .nav-links a { text-decoration: none; color: var(--text-secondary); font-weight: 500; transition: var(--transition); padding: 0.5rem 1rem; border-radius: var(--border-radius); }
-        .nav-links a:hover, .nav-links a.active { color: var(--primary-color); background: rgba(0, 119, 181, 0.1); }
-        .main { padding: 3rem 0; }
-        .section { margin-bottom: 4rem; }
-        .section h2 { font-size: 2.2rem; margin-bottom: 0.75rem; text-align: center; color: var(--text-primary); font-weight: 600; }
-        .section-lead { text-align: center; color: var(--text-secondary); max-width: 640px; margin: 0 auto 1.5rem; }
-        .featured-section { margin-bottom: 4.5rem; }
-        .featured-section h2, .featured-section .section-lead { text-align: left; margin-left: 0; max-width: 40rem; }
-        .featured-kicker { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #00BFCF; margin-bottom: 0.5rem; }
-        .featured-grid { display: grid; gap: 1rem; }
-        .featured-card { --glow-x: 78%; --glow-y: 22%; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr); gap: 1.75rem; align-items: stretch; background: #0D1F3C; color: #fff; border-radius: 12px; padding: 1.75rem 1.85rem; box-shadow: var(--shadow-lg); overflow: hidden; position: relative; isolation: isolate; transition: transform 0.35s ease, box-shadow 0.35s ease; }
-        .featured-card::before { content: ""; position: absolute; width: 360px; height: 360px; left: var(--glow-x); top: var(--glow-y); transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(255, 45, 120, 0.38), rgba(255, 45, 120, 0.08) 42%, transparent 68%); opacity: 0; pointer-events: none; z-index: 0; transition: opacity 0.4s ease; }
-        .featured-card::after { content: ""; position: absolute; right: -8%; top: -30%; width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, rgba(0, 191, 207, 0.22), transparent 68%); pointer-events: none; z-index: 0; transition: opacity 0.4s ease, transform 0.55s ease; }
-        .featured-card:hover, .featured-card:focus-within { transform: translateY(-4px); box-shadow: 0 16px 36px rgba(13, 31, 60, 0.28), 0 0 48px rgba(255, 45, 120, 0.22); }
-        .featured-card:hover::before, .featured-card:focus-within::before { opacity: 1; }
-        .featured-card:hover::after, .featured-card:focus-within::after { opacity: 0.95; transform: scale(1.12); }
-        .featured-copy, .featured-aside { position: relative; z-index: 1; min-width: 0; }
-        .featured-eyebrow { display: inline-block; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #0D1F3C; background: #00BFCF; border-radius: 999px; padding: 0.25rem 0.7rem; margin-bottom: 0.85rem; }
-        .featured-copy h3 { font-size: 1.65rem; font-weight: 700; margin-bottom: 0.65rem; line-height: 1.25; }
-        .featured-copy p { color: rgba(255, 255, 255, 0.78); margin-bottom: 1.25rem; max-width: 38rem; }
-        .featured-actions { display: flex; flex-wrap: wrap; gap: 0.65rem; }
-        .btn-featured { background: #00BFCF; color: #0D1F3C; min-height: 44px; }
-        .btn-featured:hover { background: #5ee0ea; color: #0D1F3C; }
-        .btn-featured-ghost { background: transparent; color: #fff; border: 1px solid rgba(255, 255, 255, 0.28); min-height: 44px; }
-        .btn-featured-ghost:hover { border-color: #00BFCF; color: #00BFCF; }
-        .featured-aside { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 10px; padding: 1.15rem 1.2rem; }
-        .featured-aside h4 { font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: #00BFCF; margin-bottom: 0.75rem; }
-        .featured-aside ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
-        .featured-aside li { display: flex; gap: 0.65rem; align-items: flex-start; color: rgba(255, 255, 255, 0.88); font-size: 0.95rem; }
-        .featured-aside li i { color: #00BFCF; margin-top: 0.2rem; flex-shrink: 0; }
-        .btn-featured:focus-visible, .btn-featured-ghost:focus-visible { outline: 2px solid #00BFCF; outline-offset: 3px; }
-        @media (prefers-reduced-motion: reduce) { .featured-card, .featured-card::before, .featured-card::after { transition: none; } .featured-card:hover, .featured-card:focus-within { transform: none; } }
-        .origin-filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-bottom: 1.75rem; }
-        .origin-filters button { font: inherit; font-size: 0.85rem; font-weight: 500; padding: 0.45rem 0.9rem; min-height: 44px; border-radius: 999px; border: 1px solid var(--border-color); background: var(--card-color); color: var(--text-secondary); cursor: pointer; transition: var(--transition); }
-        .origin-filters button:hover, .origin-filters button[aria-pressed="true"] { color: var(--primary-color); border-color: var(--primary-color); background: rgba(0, 119, 181, 0.08); }
-        .origin-filters button:focus-visible, .nav-links a:focus-visible, .btn:focus-visible, .connect-link:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
-        .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.75rem; }
-        .badge { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; padding: 0.25rem 0.55rem; border-radius: 999px; white-space: nowrap; border: 1px solid transparent; }
-        .badge-hub { color: #0b5a3c; background: #e6f6ee; border-color: #b7e4cc; }
-        .badge-elsewhere { color: #005a8c; background: #e8f4fb; border-color: #b5d8ee; }
-        .badge-source { color: #4a3c14; background: #f7f1dc; border-color: #e4d6a2; }
-        .badge-note { color: var(--text-muted); background: #f3f3f3; border-color: var(--border-color); text-transform: none; letter-spacing: 0; }
-        .connect { margin-bottom: 0; }
-        .connect-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
-        .connect-link { display: flex; align-items: center; gap: 0.85rem; padding: 1rem 1.1rem; min-height: 44px; background: var(--card-color); border: 1px solid var(--border-color); border-radius: var(--border-radius); text-decoration: none; color: var(--text-primary); box-shadow: var(--shadow); transition: var(--transition); }
-        .connect-link:hover { border-color: var(--primary-color); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-        .connect-link i { color: var(--primary-color); width: 1.25rem; text-align: center; }
-        .connect-link span { display: block; font-size: 0.8rem; color: var(--text-muted); font-weight: 400; }
-        .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem 1.25rem; margin-bottom: 0.75rem; }
-        .footer-links a { color: var(--text-secondary); text-decoration: none; }
-        .footer-links a:hover { color: var(--primary-color); }
-        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; } .card:hover, .connect-link:hover { transform: none; } }
-        .card { background: var(--card-color); border-radius: var(--border-radius); box-shadow: var(--shadow); overflow: hidden; transition: var(--transition); border: 1px solid var(--border-color); display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--primary-color); }
-        .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
-        .project-card .card-content { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; }
-        .project-icon { font-size: 1.5rem; margin-bottom: 1rem; color: var(--primary-color); }
-        .project-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary); }
-        .project-description { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem; flex-grow: 1; }
-        .project-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
-        .btn { padding: 0.6rem 1.2rem; border-radius: var(--border-radius); text-decoration: none; font-weight: 500; transition: var(--transition); border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
-        .btn-primary { background: var(--primary-color); color: white; }
-        .btn-primary:hover { background: var(--primary-dark); }
-        .about { background: var(--card-color); padding: 4rem 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); }
-        .about-content { display: grid; grid-template-columns: 250px 1fr; gap: 3rem; align-items: center; }
-        .about-image { width: 200px; height: 200px; border-radius: 50%; object-fit: cover; box-shadow: var(--shadow-lg); }
-        .about-text h3 { font-size: 2rem; margin-bottom: 1rem; color: var(--text-primary); }
-        .about-text p { color: var(--text-secondary); margin-bottom: 1.5rem; }
-        .footer { background: var(--background-color); color: var(--text-muted); padding: 2rem 0; text-align: center; }
-        @media (max-width: 768px) { .nav-container { flex-direction: column; gap: 1rem; } .about-content { grid-template-columns: 1fr; text-align: center; } .about-image { margin: 0 auto; } .featured-card { grid-template-columns: 1fr; } }
+
+        .skip-link {
+            position: absolute;
+            left: 0.75rem;
+            top: -3rem;
+            background: var(--primary-color);
+            color: #fff;
+            padding: 0.5rem 0.85rem;
+            border-radius: var(--border-radius);
+            z-index: 200;
+            text-decoration: none;
+        }
+
+        .skip-link:focus {
+            top: 0.75rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--background-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
+        .header {
+            background: var(--card-color);
+            color: var(--text-primary);
+            padding: 5.25rem 0 4rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            overflow: visible;
+        }
+
+        .logo-stage {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .think-link {
+            position: absolute;
+            left: 78px;
+            top: -70px;
+            width: 118px;
+            height: 108px;
+            z-index: 2;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .think-link:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 3px;
+            border-radius: 18px;
+        }
+
+        .think-trail {
+            position: absolute;
+            border-radius: 50%;
+            background: #fff;
+            border: 1.75px solid rgba(0, 119, 181, 0.38);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            animation: think-pulse 4.2s ease-in-out infinite;
+        }
+
+        .think-trail-1 {
+            width: 8px;
+            height: 8px;
+            left: 0;
+            bottom: 20px;
+            animation-delay: 0s;
+        }
+
+        .think-trail-2 {
+            width: 15px;
+            height: 15px;
+            left: 12px;
+            bottom: 38px;
+            animation-delay: 0.55s;
+        }
+
+        .think-cloud {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 96px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: think-pulse 3.6s ease-in-out infinite;
+            animation-delay: 0.9s;
+        }
+
+        .think-cloud svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            filter: drop-shadow(0 3px 6px rgba(0, 119, 181, 0.14));
+        }
+
+        .think-mark {
+            position: relative;
+            z-index: 1;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+            color: var(--text-primary);
+            opacity: 0;
+            transform: scale(0.65);
+            transition: opacity 0.22s ease, transform 0.22s ease;
+            pointer-events: none;
+        }
+
+        .think-link:hover .think-mark,
+        .think-link:focus-visible .think-mark {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        @keyframes think-pulse {
+            0%, 100% { opacity: 0.42; }
+            50% { opacity: 1; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .think-trail,
+            .think-cloud {
+                animation: none;
+                opacity: 0.88;
+            }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Navigation */
+        .nav {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            list-style: none;
+            gap: 0.35rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-color);
+            background: rgba(0, 119, 181, 0.1);
+        }
+        
+        /* Main Content & Sections */
+        .main {
+            padding: 3rem 0;
+        }
+
+        .section {
+            margin-bottom: 4rem;
+        }
+
+        .section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 0.75rem;
+            text-align: center;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .section-lead {
+            text-align: center;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .featured-section {
+            margin-bottom: 4.5rem;
+        }
+
+        .featured-section h2,
+        .featured-section .section-lead {
+            text-align: left;
+            margin-left: 0;
+            max-width: 40rem;
+        }
+
+        .featured-kicker {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #00BFCF;
+            margin-bottom: 0.5rem;
+        }
+
+        .featured-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .featured-card {
+            --glow-x: 78%;
+            --glow-y: 22%;
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
+            gap: 1.75rem;
+            align-items: stretch;
+            background: #0D1F3C;
+            color: #fff;
+            border-radius: 12px;
+            padding: 1.75rem 1.85rem;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            position: relative;
+            isolation: isolate;
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .featured-card::before {
+            content: "";
+            position: absolute;
+            width: 360px;
+            height: 360px;
+            left: var(--glow-x);
+            top: var(--glow-y);
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 45, 120, 0.38), rgba(255, 45, 120, 0.08) 42%, transparent 68%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .featured-card::after {
+            content: "";
+            position: absolute;
+            right: -8%;
+            top: -30%;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 191, 207, 0.22), transparent 68%);
+            pointer-events: none;
+            z-index: 0;
+            transition: opacity 0.4s ease, transform 0.55s ease;
+        }
+
+        .featured-card:hover,
+        .featured-card:focus-within {
+            transform: translateY(-4px);
+            box-shadow:
+                0 16px 36px rgba(13, 31, 60, 0.28),
+                0 0 48px rgba(255, 45, 120, 0.22);
+        }
+
+        .featured-card:hover::before,
+        .featured-card:focus-within::before {
+            opacity: 1;
+        }
+
+        .featured-card:hover::after,
+        .featured-card:focus-within::after {
+            opacity: 0.95;
+            transform: scale(1.12);
+        }
+
+        .featured-copy,
+        .featured-aside {
+            position: relative;
+            z-index: 1;
+            min-width: 0;
+        }
+
+        .featured-eyebrow {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #0D1F3C;
+            background: #00BFCF;
+            border-radius: 999px;
+            padding: 0.25rem 0.7rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .featured-copy h3 {
+            font-size: 1.65rem;
+            font-weight: 700;
+            margin-bottom: 0.65rem;
+            line-height: 1.25;
+        }
+
+        .featured-copy p {
+            color: rgba(255, 255, 255, 0.78);
+            margin-bottom: 1.25rem;
+            max-width: 38rem;
+        }
+
+        .featured-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+        }
+
+        .btn-featured {
+            background: #00BFCF;
+            color: #0D1F3C;
+            min-height: 44px;
+        }
+
+        .btn-featured:hover {
+            background: #5ee0ea;
+            color: #0D1F3C;
+        }
+
+        .btn-featured-ghost {
+            background: transparent;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            min-height: 44px;
+        }
+
+        .btn-featured-ghost:hover {
+            border-color: #00BFCF;
+            color: #00BFCF;
+        }
+
+        .featured-aside {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            padding: 1.15rem 1.2rem;
+        }
+
+        .featured-aside h4 {
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #00BFCF;
+            margin-bottom: 0.75rem;
+        }
+
+        .featured-aside ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .featured-aside li {
+            display: flex;
+            gap: 0.65rem;
+            align-items: flex-start;
+            color: rgba(255, 255, 255, 0.88);
+            font-size: 0.95rem;
+        }
+
+        .featured-aside li i {
+            color: #00BFCF;
+            margin-top: 0.2rem;
+            flex-shrink: 0;
+        }
+
+        .btn-featured:focus-visible,
+        .btn-featured-ghost:focus-visible {
+            outline: 2px solid #00BFCF;
+            outline-offset: 3px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .featured-card,
+            .featured-card::before,
+            .featured-card::after {
+                transition: none;
+            }
+            .featured-card:hover,
+            .featured-card:focus-within {
+                transform: none;
+            }
+        }
+
+        .origin-filters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1.75rem;
+        }
+
+        .origin-filters button {
+            font: inherit;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 0.45rem 0.9rem;
+            min-height: 44px;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+            background: var(--card-color);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .origin-filters button:hover,
+        .origin-filters button[aria-pressed="true"] {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            background: rgba(0, 119, 181, 0.08);
+        }
+
+        .origin-filters button:focus-visible,
+        .nav-links a:focus-visible,
+        .btn:focus-visible,
+        .connect-link:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            padding: 0.25rem 0.55rem;
+            border-radius: 999px;
+            white-space: nowrap;
+            border: 1px solid transparent;
+        }
+
+        .badge-hub {
+            color: #0b5a3c;
+            background: #e6f6ee;
+            border-color: #b7e4cc;
+        }
+
+        .badge-elsewhere {
+            color: #005a8c;
+            background: #e8f4fb;
+            border-color: #b5d8ee;
+        }
+
+        .badge-source {
+            color: #4a3c14;
+            background: #f7f1dc;
+            border-color: #e4d6a2;
+        }
+
+        .badge-note {
+            color: var(--text-muted);
+            background: #f3f3f3;
+            border-color: var(--border-color);
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .connect {
+            margin-bottom: 0;
+        }
+
+        .connect-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .connect-link {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            padding: 1rem 1.1rem;
+            min-height: 44px;
+            background: var(--card-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            color: var(--text-primary);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .connect-link:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .connect-link i {
+            color: var(--primary-color);
+            width: 1.25rem;
+            text-align: center;
+        }
+
+        .connect-link span {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.75rem 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                transition: none !important;
+                scroll-behavior: auto !important;
+            }
+            .card:hover,
+            .connect-link:hover {
+                transform: none;
+            }
+        }
+        
+        /* General Card Style */
+        .card {
+            background: var(--card-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .project-card .card-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-icon {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .project-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .project-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .project-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+        
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        /* About Section */
+        .about {
+            background: var(--card-color);
+            padding: 4rem 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .about-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .about-text h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .about-text p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--background-color);
+            color: var(--text-muted);
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .about-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .about-image {
+                margin: 0 auto;
+            }
+            .featured-card {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
     <a class="skip-link" href="#outcomes">Skip to featured outcomes</a>
+    <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="header-content">
@@ -159,6 +819,8 @@
             </div>
         </div>
     </header>
+
+    <!-- Navigation -->
     <nav class="nav">
         <div class="container">
             <div class="nav-container">
@@ -173,14 +835,18 @@
             </div>
         </div>
     </nav>
+
+    <!-- Main Content -->
     <main class="main">
         <div class="container">
+            
             <section id="outcomes" class="section featured-section" aria-labelledby="outcomes-heading">
                 <p class="featured-kicker">Cybersecurity value</p>
                 <h2 id="outcomes-heading">Outcomes-driven tools</h2>
                 <p class="section-lead">Security work that shows its value — program outcomes, framework coverage, and decisions boards can use. More tools join this set over time.</p>
                 <div class="featured-grid" id="featuredGrid"></div>
             </section>
+
             <section id="tools" class="section">
                 <h2>Tools</h2>
                 <p class="section-lead">Work I built — on this hub, hosted live elsewhere, or as source on GitHub.</p>
@@ -192,10 +858,25 @@
                 </div>
                 <div class="projects-grid" id="projectsGrid"></div>
             </section>
+
+            <!-- Research Section -->
             <section id="research" class="section">
                 <h2>Research & Publications</h2>
                 <div class="projects-grid">
                      <div class="card project-card">
+                        <div class="card-content">
+                            <div class="card-top">
+                                <div class="project-icon"><i class="fas fa-clock"></i></div>
+                                <span class="badge badge-hub">On this site</span>
+                            </div>
+                            <h3 class="project-title">Preparing for 2027 — Cybersecurity &amp; Compliance Briefing</h3>
+                            <p class="project-description">Twelve 2025/26 benchmark reports cross-read against Australia’s 2026–27 regulatory spine: 29-minute breakout vs 72-hour reporting, ASIC/FIIG evidence burden, AI as a compliance artefact, and the SMB1001 path for mid-market proof.</p>
+                            <div class="project-footer">
+                                <a href="Research/preparing-for-2027/" class="btn btn-primary">Read Briefing</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card project-card">
                         <div class="card-content">
                             <div class="card-top">
                                 <div class="project-icon"><i class="fas fa-file-alt"></i></div>
@@ -236,11 +917,13 @@
                     </div>
                 </div>
             </section>
+
             <section id="learn" class="section">
                 <h2>Learn</h2>
                 <p class="section-lead">On-site libraries plus lessons hosted on YouTube. The channel itself is under Connect.</p>
                 <div class="projects-grid" id="videosGrid"></div>
             </section>
+
             <section id="connect" class="section connect">
                 <h2>Connect</h2>
                 <p class="section-lead">Where I publish and talk — these are follow links, not tools in this repo.</p>
@@ -269,6 +952,8 @@
             </section>
         </div>
     </main>
+
+    <!-- About Section -->
     <section id="about" class="about">
         <div class="container">
             <div class="about-content">
@@ -281,6 +966,8 @@
             </div>
         </div>
     </section>
+
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-links">
@@ -292,15 +979,32 @@
             <p>&copy; 2021-2026 Thinkinfosec Hub. All Rights Reserved.</p>
         </div>
     </footer>
+
     <script>
         const ORIGIN = {
             hub: { label: 'On this site', badge: 'badge-hub', button: 'Open tool', external: false },
             elsewhere: { label: 'Hosted elsewhere', badge: 'badge-elsewhere', button: 'Open live site', external: true },
             source: { label: 'Source on GitHub', badge: 'badge-source', button: 'View repository', external: true }
         };
+
         const HASH_ALIASES = { '#projects': '#tools', '#videos': '#learn' };
+
         const contentData = {
-            featured: [{ id: 'thinkinfosec-outcomes', title: 'ThinkInfoSec Outcomes', eyebrow: 'Lead feature', description: 'Map cybersecurity program work to outcomes and framework coverage — so security spend, controls, and delivery show their value to boards, customers, and operators.', points: ['Track program outcomes against the work actually delivered', 'Visualise framework and control coverage in one place', 'Brief stakeholders on security value, not a tool inventory'], origin: 'elsewhere', link: 'https://cyber-roadmap.acrmai.org' }],
+            featured: [
+                {
+                    id: 'thinkinfosec-outcomes',
+                    title: 'ThinkInfoSec Outcomes',
+                    eyebrow: 'Lead feature',
+                    description: 'Map cybersecurity program work to outcomes and framework coverage — so security spend, controls, and delivery show their value to boards, customers, and operators.',
+                    points: [
+                        'Track program outcomes against the work actually delivered',
+                        'Visualise framework and control coverage in one place',
+                        'Brief stakeholders on security value, not a tool inventory'
+                    ],
+                    origin: 'elsewhere',
+                    link: 'https://cyber-roadmap.acrmai.org'
+                }
+            ],
             projects: [
                 { id: 'thinkinfosec-outcomes', title: 'ThinkInfosec Outcomes', description: 'An interactive mapping and visualization tool designed to track cybersecurity program outcomes and framework compliance metrics.', icon: 'fas fa-bullseye', origin: 'elsewhere', link: 'https://cyber-roadmap.acrmai.org' },
                 { id: 'promptInjectiontechniques', title: 'Prompt Inj. Techniques', description: 'A reference tool for exploring Prompt Injection common techniques.', icon: 'fas fa-list-check', origin: 'hub', link: 'tools/prompt-injection/' },
@@ -323,21 +1027,53 @@
                 { id: 'ciso-mindmap-tool', title: 'The CISO Mindmap Tool', description: 'A strategic cybersecurity planning tool for CISOs and security leaders using mindmapping techniques.', link: 'https://www.youtube.com/watch?v=oiizHlYcbsw' }
             ]
         };
+
         const featuredContainer = document.getElementById('featuredGrid');
         const projectsContainer = document.getElementById('projectsGrid');
         const videosContainer = document.getElementById('videosGrid');
         let activeOrigin = 'all';
-        function init() { renderFeatured(); bindFeaturedGlow(); renderProjects(); renderVideos(); setupFilters(); setupNavigation(); scrollToHash(); }
-        function originMeta(origin) { return ORIGIN[origin] || ORIGIN.elsewhere; }
+
+        function init() {
+            renderFeatured();
+            bindFeaturedGlow();
+            renderProjects();
+            renderVideos();
+            setupFilters();
+            setupNavigation();
+            scrollToHash();
+        }
+
+        function originMeta(origin) {
+            return ORIGIN[origin] || ORIGIN.elsewhere;
+        }
+
         function renderFeatured() {
             const items = contentData.featured || [];
             featuredContainer.innerHTML = items.map(item => {
                 const meta = originMeta(item.origin);
                 const extra = meta.external ? ' target="_blank" rel="noopener noreferrer"' : '';
-                const points = (item.points || []).map(point => `<li><i class="fas fa-check" aria-hidden="true"></i><span>${point}</span></li>`).join('');
-                return `<article class="featured-card"><div class="featured-copy"><span class="featured-eyebrow">${item.eyebrow}</span><h3>${item.title}</h3><p>${item.description}</p><div class="featured-actions"><a href="${item.link}" class="btn btn-featured"${extra}>Open live tool</a><a href="#tools" class="btn btn-featured-ghost nav-link">See all tools</a></div></div><div class="featured-aside"><h4>Why it matters</h4><ul>${points}</ul></div></article>`;
+                const points = (item.points || []).map(point =>
+                    `<li><i class="fas fa-check" aria-hidden="true"></i><span>${point}</span></li>`
+                ).join('');
+                return `
+                <article class="featured-card">
+                    <div class="featured-copy">
+                        <span class="featured-eyebrow">${item.eyebrow}</span>
+                        <h3>${item.title}</h3>
+                        <p>${item.description}</p>
+                        <div class="featured-actions">
+                            <a href="${item.link}" class="btn btn-featured"${extra}>Open live tool</a>
+                            <a href="#tools" class="btn btn-featured-ghost nav-link">See all tools</a>
+                        </div>
+                    </div>
+                    <div class="featured-aside">
+                        <h4>Why it matters</h4>
+                        <ul>${points}</ul>
+                    </div>
+                </article>`;
             }).join('');
         }
+
         function bindFeaturedGlow() {
             const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
             featuredContainer.querySelectorAll(".featured-card").forEach((card) => {
@@ -349,32 +1085,94 @@
                 });
             });
         }
+
         function renderProjects() {
             const items = contentData.projects.filter(project => activeOrigin === 'all' || project.origin === activeOrigin);
-            if (!items.length) { projectsContainer.innerHTML = '<p class="section-lead">No tools in this group.</p>'; return; }
+            if (!items.length) {
+                projectsContainer.innerHTML = '<p class="section-lead">No tools in this group.</p>';
+                return;
+            }
             projectsContainer.innerHTML = items.map(project => {
                 const meta = originMeta(project.origin);
                 const extra = meta.external ? ' target="_blank" rel="noopener noreferrer"' : '';
                 const note = project.note ? `<span class="badge badge-note">${project.note}</span>` : '';
-                return `<div class="card project-card" data-origin="${project.origin}"><div class="card-content"><div class="card-top"><div class="project-icon"><i class="${project.icon}" aria-hidden="true"></i></div><div><span class="badge ${meta.badge}">${meta.label}</span>${note}</div></div><h3 class="project-title">${project.title}</h3><p class="project-description">${project.description}</p><div class="project-footer"><a href="${project.link}" class="btn btn-primary"${extra}>${meta.button}</a></div></div></div>`;
+                return `
+                <div class="card project-card" data-origin="${project.origin}">
+                    <div class="card-content">
+                        <div class="card-top">
+                            <div class="project-icon"><i class="${project.icon}" aria-hidden="true"></i></div>
+                            <div>
+                                <span class="badge ${meta.badge}">${meta.label}</span>
+                                ${note}
+                            </div>
+                        </div>
+                        <h3 class="project-title">${project.title}</h3>
+                        <p class="project-description">${project.description}</p>
+                        <div class="project-footer">
+                           <a href="${project.link}" class="btn btn-primary"${extra}>${meta.button}</a>
+                        </div>
+                    </div>
+                </div>`;
             }).join('');
         }
+
         function renderVideos() {
-            const libraryCard = `<div class="card project-card"><div class="card-content"><div class="card-top"><div class="project-icon"><i class="fas fa-book-open" aria-hidden="true"></i></div><span class="badge badge-hub">On this site</span></div><h3 class="project-title">CrowdStrike Public Resource Library — September 2026</h3><p class="project-description">An updated public library in the spirit of CrowdStrike/helpful-links. Datasheets are grouped to the 14 CrowdStrike GTM pillars from the current product catalogue, replacing retired names such as Falcon Horizon and Falcon X.</p><div class="project-footer"><a href="Learn/helpful-links/" class="btn btn-primary">Open Library</a></div></div></div>`;
-            const videoCards = contentData.videos.map(video => `<div class="card project-card"><div class="card-content"><div class="card-top"><div class="project-icon"><i class="fab fa-youtube" aria-hidden="true"></i></div><span class="badge badge-elsewhere">Hosted elsewhere</span></div><h3 class="project-title">${video.title}</h3><p class="project-description">${video.description}</p><div class="project-footer"><a href="${video.link}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Watch on YouTube</a></div></div></div>`).join('');
+            const libraryCard = `
+                <div class="card project-card">
+                    <div class="card-content">
+                        <div class="card-top">
+                            <div class="project-icon"><i class="fas fa-book-open" aria-hidden="true"></i></div>
+                            <span class="badge badge-hub">On this site</span>
+                        </div>
+                        <h3 class="project-title">CrowdStrike Public Resource Library — September 2026</h3>
+                        <p class="project-description">An updated public library in the spirit of CrowdStrike/helpful-links. Datasheets are grouped to the 14 CrowdStrike GTM pillars from the current product catalogue, replacing retired names such as Falcon Horizon and Falcon X.</p>
+                        <div class="project-footer">
+                           <a href="Learn/helpful-links/" class="btn btn-primary">Open Library</a>
+                        </div>
+                    </div>
+                </div>`;
+            const videoCards = contentData.videos.map(video => `
+                <div class="card project-card">
+                     <div class="card-content">
+                        <div class="card-top">
+                            <div class="project-icon"><i class="fab fa-youtube" aria-hidden="true"></i></div>
+                            <span class="badge badge-elsewhere">Hosted elsewhere</span>
+                        </div>
+                        <h3 class="project-title">${video.title}</h3>
+                        <p class="project-description">${video.description}</p>
+                        <div class="project-footer">
+                           <a href="${video.link}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Watch on YouTube</a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
             videosContainer.innerHTML = libraryCard + videoCards;
         }
+
         function setupFilters() {
             document.querySelectorAll('.origin-filters button').forEach(button => {
                 button.addEventListener('click', () => {
                     activeOrigin = button.getAttribute('data-origin');
-                    document.querySelectorAll('.origin-filters button').forEach(other => { other.setAttribute('aria-pressed', other === button ? 'true' : 'false'); });
+                    document.querySelectorAll('.origin-filters button').forEach(other => {
+                        other.setAttribute('aria-pressed', other === button ? 'true' : 'false');
+                    });
                     renderProjects();
                 });
             });
         }
-        function resolveHash(hash) { return HASH_ALIASES[hash] || hash; }
-        function scrollToHash() { const hash = resolveHash(window.location.hash); const target = hash && document.querySelector(hash); if (target) { window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' }); } }
+
+        function resolveHash(hash) {
+            return HASH_ALIASES[hash] || hash;
+        }
+
+        function scrollToHash() {
+            const hash = resolveHash(window.location.hash);
+            const target = hash && document.querySelector(hash);
+            if (target) {
+                window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+            }
+        }
+
         function setupNavigation() {
             const navLinks = document.querySelectorAll('.nav-link');
             navLinks.forEach(link => {
@@ -385,12 +1183,16 @@
                     if (targetElement) {
                         history.replaceState(null, '', targetId);
                         navLinks.forEach(other => other.classList.toggle('active', other === link));
-                        window.scrollTo({ top: targetElement.offsetTop - 80, behavior: 'smooth' });
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
                     }
                 });
             });
             window.addEventListener('hashchange', scrollToHash);
         }
+
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
