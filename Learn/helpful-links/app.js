@@ -2,14 +2,18 @@
     const LIST_MOUNTS = {
         intro: "introMount",
         deploy: "deployMount",
-        demos: "demosMount",
-        howto: "howtoMount",
         tools: "toolsMount",
         more: "moreMount"
+    };
+    const GROUPED = {
+        demos: { mount: "demosMount", empty: "No public CrowdStrike demo for this pillar yet." },
+        howto: { mount: "howtoMount", empty: "No public how-to for this pillar yet. Console steps often sit behind Falcon docs." }
     };
 
     let activePillar = "all";
     let query = "";
+    let productFocus = "";
+    let selectedModule = "";
 
     function coverageClass(kind) {
         if (kind === "native") return "coverage-native";
@@ -17,9 +21,29 @@
         return "coverage-partner";
     }
 
+    function matchesProduct(item) {
+        if (!productFocus) return true;
+        return [item.title, item.domain].join(" ").toLowerCase().includes(productFocus.toLowerCase());
+    }
+
+    function matchesQuery(item) {
+        if (!query) return true;
+        return [item.title, item.domain, item.type, item.blurb, pillarLabel(item.pillar)]
+            .join(" ")
+            .toLowerCase()
+            .includes(query);
+    }
+
+    function itemVisible(item) {
+        if (!matchesQuery(item) || !matchesProduct(item)) return false;
+        if (productFocus) return true;
+        return activePillar === "all" || item.pillar === activePillar;
+    }
+
     function cardHTML(item) {
         const extra = item.url.startsWith("http") ? ' target="_blank" rel="noopener noreferrer"' : "";
-        return `<article class="card">
+        const focused = productFocus && matchesProduct(item);
+        return `<article class="card${focused ? " is-focus" : ""}">
             <div class="type">${item.domain || item.type || "Resource"}</div>
             <h3>${item.title}</h3>
             <p>${item.blurb}</p>
@@ -27,47 +51,89 @@
         </article>`;
     }
 
-    function matchesQuery(item) {
-        if (!query) return true;
-        return [item.title, item.domain, item.type, item.blurb].join(" ").toLowerCase().includes(query);
+    function pillarLabel(id) {
+        const pillar = PILLARS.find((item) => item.id === id);
+        return pillar ? pillar.label : "";
     }
 
     function filteredDatasheets() {
-        return DATASHEETS.filter((item) => {
-            const pillarOk = activePillar === "all" || item.pillar === activePillar;
-            return pillarOk && matchesQuery(item);
-        });
+        return DATASHEETS.filter(itemVisible);
     }
 
-    function renderChips() {
-        const chips = document.getElementById("chips");
-        const items = [{ id: "all", label: "All pillars" }, ...PILLARS];
-        chips.innerHTML = items.map((pillar) =>
-            `<button type="button" class="chip" data-pillar="${pillar.id}" aria-pressed="${pillar.id === activePillar}">${pillar.label}</button>`
+    function filteredGrouped(items) {
+        return items.filter(itemVisible);
+    }
+
+    function visiblePillars(sourceItems) {
+        if (productFocus) {
+            const hits = PILLARS.filter((pillar) => sourceItems.some((item) => item.pillar === pillar.id && itemVisible(item)));
+            if (hits.length) return hits;
+            return PILLARS.filter((pillar) => pillar.id === activePillar);
+        }
+        return PILLARS.filter((pillar) => activePillar === "all" || pillar.id === activePillar);
+    }
+
+    function renderTiles() {
+        const mount = document.getElementById("pillarTiles");
+        const items = [{ id: "all", label: "All pillars", coverage: "native" }, ...PILLARS];
+        mount.innerHTML = items.map((pillar) =>
+            `<button type="button" class="pillar-tile" data-pillar="${pillar.id}" aria-pressed="${pillar.id === activePillar}">
+                <span class="tile-label">${pillar.label}</span>
+                ${pillar.id !== "all" ? `<span class="tile-cov coverage ${coverageClass(pillar.coverage)}">${pillar.coverage}</span>` : ""}
+            </button>`
         ).join("");
-        chips.querySelectorAll(".chip").forEach((btn) => {
+        mount.querySelectorAll(".pillar-tile").forEach((btn) => {
             btn.addEventListener("click", () => {
                 activePillar = btn.getAttribute("data-pillar");
-                renderChips();
-                renderDatasheets();
+                productFocus = "";
+                selectedModule = "";
+                renderTiles();
+                renderCore();
+                renderPillarSections();
                 updateCounts();
             });
         });
     }
 
+    function renderCore() {
+        const svg = document.getElementById("coreStackSvg");
+        if (!svg || typeof CoreStack === "undefined") return;
+        CoreStack.render(svg, selectedModule);
+    }
+
+    function renderPillarBlock(prefix, pillar, items, emptyLine) {
+        const matched = items.filter((item) => item.pillar === pillar.id && itemVisible(item));
+        if (!matched.length && (query || productFocus)) return "";
+        const body = matched.length
+            ? `<div class="grid">${matched.map(cardHTML).join("")}</div>`
+            : `<p class="empty">${emptyLine}</p>`;
+        return `<div class="pillar-block" id="${prefix}-${pillar.id}">
+            <h3>${pillar.label} <span class="coverage ${coverageClass(pillar.coverage)}">${pillar.coverage}</span></h3>
+            <p class="pillar-note">${pillar.note}</p>
+            ${body}
+        </div>`;
+    }
+
     function renderDatasheets() {
         const mount = document.getElementById("datasheetMount");
-        const pillars = PILLARS.filter((pillar) => activePillar === "all" || pillar.id === activePillar);
-        const html = pillars.map((pillar) => {
-            const items = DATASHEETS.filter((item) => item.pillar === pillar.id && matchesQuery(item));
+        const html = visiblePillars(DATASHEETS).map((pillar) => {
+            const items = DATASHEETS.filter((item) => item.pillar === pillar.id && itemVisible(item));
             if (!items.length) return "";
-            return `<div class="pillar-block" id="pillar-${pillar.id}">
+            return `<div class="pillar-block" id="datasheet-${pillar.id}">
                 <h3>${pillar.label} <span class="coverage ${coverageClass(pillar.coverage)}">${pillar.coverage}</span></h3>
                 <p class="pillar-note">${pillar.note}</p>
                 <div class="grid">${items.map(cardHTML).join("")}</div>
             </div>`;
         }).join("");
         mount.innerHTML = html || `<p class="empty">No datasheets match that filter.</p>`;
+    }
+
+    function renderGrouped(key) {
+        const { mount, empty } = GROUPED[key];
+        const html = visiblePillars(OTHER[key])
+            .map((pillar) => renderPillarBlock(key, pillar, OTHER[key], empty))
+            .join("");
+        document.getElementById(mount).innerHTML = html || `<p class="empty">No items match that filter.</p>`;
     }
 
     function renderList(id, items) {
@@ -79,13 +145,18 @@
         return filtered.length;
     }
 
+    function renderPillarSections() {
+        renderDatasheets();
+        Object.keys(GROUPED).forEach(renderGrouped);
+    }
+
     function updateCounts() {
         const counts = {
             datasheets: filteredDatasheets().length,
             intro: OTHER.intro.filter(matchesQuery).length,
             deploy: OTHER.deploy.filter(matchesQuery).length,
-            demos: OTHER.demos.filter(matchesQuery).length,
-            howto: OTHER.howto.filter(matchesQuery).length,
+            demos: filteredGrouped(OTHER.demos).length,
+            howto: filteredGrouped(OTHER.howto).length,
             tools: OTHER.tools.filter(matchesQuery).length,
             more: OTHER.more.filter(matchesQuery).length
         };
@@ -99,11 +170,28 @@
     }
 
     function renderAll() {
-        renderDatasheets();
+        renderTiles();
+        renderCore();
+        renderPillarSections();
         Object.entries(LIST_MOUNTS).forEach(([key, mountId]) => {
             renderList(mountId, OTHER[key]);
         });
         updateCounts();
+    }
+
+    function selectModule(id) {
+        const mapped = CoreStack.map[id];
+        if (!mapped) return;
+        selectedModule = id;
+        activePillar = mapped.pillar;
+        productFocus = mapped.match || "";
+        const details = document.getElementById("coreStack");
+        if (details) details.open = true;
+        renderTiles();
+        renderCore();
+        renderPillarSections();
+        updateCounts();
+        document.getElementById("datasheets").scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     function setActiveNav(id) {
@@ -137,7 +225,16 @@
         renderAll();
     });
 
-    renderChips();
+    const details = document.getElementById("coreStack");
+    if (details) {
+        details.addEventListener("toggle", () => {
+            if (details.open) renderCore();
+            syncStickyOffset();
+        });
+    }
+
+    CoreStack.bind(document.getElementById("coreStackSvg"), selectModule);
+
     renderAll();
     observeSections();
     syncStickyOffset();

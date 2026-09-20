@@ -44,6 +44,7 @@ const DATASHEETS = [
     { pillar: "grc", title: "Falcon Discover", domain: "IT hygiene / CMDB", blurb: "Real-time inventory of systems, applications, and accounts for IT and security.", url: "https://www.crowdstrike.com/en-us/resources/data-sheets/falcon-discover/" },
     { pillar: "grc", title: "Falcon for IT", domain: "Endpoint operations", blurb: "Real-time osquery, posture checks, and guarded remediation on the Falcon sensor.", url: "https://www.crowdstrike.com/en-us/resources/data-sheets/crowdstrike-falcon-for-it/" },
 
+    { pillar: "ai", title: "Falcon Guardian", domain: "AIDR", blurb: "CrowdStrike’s flagship AI detection and response SKU: shadow-AI discovery, prompt and data controls, and runtime protection for agents on the endpoint.", url: "https://www.crowdstrike.com/en-us/resources/data-sheets/crowdstrike-falcon-guardian/" },
     { pillar: "ai", title: "Charlotte AI", domain: "AI-SecOps", blurb: "Agentic security for Falcon users — triage, malware analysis, and custom agents.", url: "https://www.crowdstrike.com/en-us/resources/data-sheets/charlotte-ai/" },
     { pillar: "ai", title: "Falcon Next-Gen Identity Security", domain: "AI identities", blurb: "Continuous Identity now explicitly covers AI-agent identities alongside humans and NHIs.", url: "https://www.crowdstrike.com/en-us/resources/data-sheets/falcon-next-gen-identity-security/" },
 

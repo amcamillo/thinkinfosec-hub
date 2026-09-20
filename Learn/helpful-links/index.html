@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -26,7 +26,7 @@
         <div class="container tis-intro">
             <p class="tis-kicker">Learn</p>
             <h1>CrowdStrike Public Resource Library</h1>
-            <p class="tis-lead">A ThinkInfoSec edition of the public helpful-links library. Datasheets are grouped to the 14 CrowdStrike GTM pillars, then intro, deploy, demos, how-tos, and community tools follow as numbered sections.</p>
+            <p class="tis-lead">A ThinkInfoSec edition of the public helpful-links library. Datasheets, demos, and how-tos share the 14 CrowdStrike GTM pillars. Intro, deploy, tools, and more follow as numbered sections.</p>
         </div>
     </header>
 
@@ -68,15 +68,26 @@
         </div>
 
         <main id="main" class="container cs-main">
+            <section class="platform-map" aria-labelledby="map-label">
+                <p class="map-label" id="map-label">Filter datasheets, demos, and how-tos</p>
+                <div class="pillar-tiles" id="pillarTiles" role="group" aria-labelledby="map-label"></div>
+                <details class="core-stack" id="coreStack">
+                    <summary>Show Falcon Core Stack</summary>
+                    <p class="core-stack-note">Same template as the ThinkInfoSec diagram builder. Click a module to jump to its library cards.</p>
+                    <div class="core-stack-scroll">
+                        <svg id="coreStackSvg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Falcon Core Stack"></svg>
+                    </div>
+                </details>
+            </section>
+
             <section id="datasheets" class="cs-section" data-section="datasheets" aria-labelledby="datasheets-title">
                 <header class="section-head">
                     <span class="section-num" aria-hidden="true">01</span>
                     <div>
                         <h2 id="datasheets-title">Datasheets</h2>
-                        <p class="section-lead">Current public Falcon datasheets, grouped to the 14 GTM pillars from the CyberDoc product catalogue. Filter by pillar or search the whole library.</p>
+                        <p class="section-lead">Current public Falcon datasheets, grouped to the 14 GTM pillars from the CyberDoc product catalogue. Use the platform map above to filter this section plus Demos and How-tos.</p>
                     </div>
                 </header>
-                <div class="chips" id="chips" role="group" aria-label="Filter by GTM pillar"></div>
                 <div id="datasheetMount"></div>
             </section>
 
@@ -107,10 +118,10 @@
                     <span class="section-num" aria-hidden="true">04</span>
                     <div>
                         <h2 id="demos-title">Demos</h2>
-                        <p class="section-lead">Public product demonstrations and visibility use cases.</p>
+                        <p class="section-lead">Public CrowdStrike YouTube and Resource Center demos, grouped to the same 14 pillars as the datasheets. Partner pillars stay honest when there is no native demo.</p>
                     </div>
                 </header>
-                <div class="grid" id="demosMount"></div>
+                <div id="demosMount"></div>
             </section>
 
             <section id="howto" class="cs-section" data-section="howto" aria-labelledby="howto-title">
@@ -118,10 +129,10 @@
                     <span class="section-num" aria-hidden="true">05</span>
                     <div>
                         <h2 id="howto-title">How-tos</h2>
-                        <p class="section-lead">Containment, Real Time Response, device control, and hunting walkthroughs.</p>
+                        <p class="section-lead">Public how-tos inventoried from CyberDoc CrowdStrike records. Cards open tech-hub, Resource Center, developer, or YouTube links — not gated Falcon docs.</p>
                     </div>
                 </header>
-                <div class="grid" id="howtoMount"></div>
+                <div id="howtoMount"></div>
             </section>
 
             <section id="tools" class="cs-section" data-section="tools" aria-labelledby="tools-title">
@@ -155,9 +166,10 @@
         </div>
     </footer>
 
-    <script src="catalog.js"></script>
-    <script src="datasheets.js"></script>
-    <script src="other.js"></script>
-    <script src="app.js"></script>
+    <script src="catalog.js?v=20260921b"></script>
+    <script src="datasheets.js?v=20260921b"></script>
+    <script src="other.js?v=20260921b"></script>
+    <script src="core-stack.js?v=20260921b"></script>
+    <script src="app.js?v=20260921b"></script>
 </body>
 </html>
