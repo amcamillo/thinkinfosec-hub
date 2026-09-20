@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="772.2 171.3 678.2 573.9" role="img" aria-labelledby="tt-au-title tt-au-desc" class="tt-ne-map">
+<title id="tt-au-title">Where 2026 reports put Australia</title>
+<desc id="tt-au-desc">CrowdStrike names Australia in HOLLOW PANDA’s Check Point VPN victim set. Recorded Future includes Australia among countries targeted by eleven Russian groups. Kibu records Jasper Sleet operators identified in Australia. Green fill is a named victim geography; blue rings mark China and Russia as the origin those reports assign; amber on the DPRK is identification, not a targeting claim. Curves are schematic, not observed traffic.</desc>
+<defs><clipPath id="tt-crop"><rect x="772.2" y="171.3" width="678.2" height="573.9"/></clipPath></defs>
+<rect x="772.2" y="171.3" width="678.2" height="573.9" fill="#eef4f7"/>
+<g clip-path="url(#tt-crop)">
+<g fill="none" stroke="#d7e2e8" stroke-width="0.7" stroke-dasharray="2 6">
+<line x1="873.3" y1="171.3" x2="873.3" y2="745.2"/>
+<line x1="986.7" y1="171.3" x2="986.7" y2="745.2"/>
+<line x1="1100.0" y1="171.3" x2="1100.0" y2="745.2"/>
+<line x1="1213.3" y1="171.3" x2="1213.3" y2="745.2"/>
+<line x1="1326.7" y1="171.3" x2="1326.7" y2="745.2"/>
+<line x1="1440.0" y1="171.3" x2="1440.0" y2="745.2"/>
+<line x1="772.2" y1="655.5" x2="1450.4" y2="655.5"/>
+<line x1="772.2" y1="521.0" x2="1450.4" y2="521.0"/>
+<line x1="772.2" y1="386.6" x2="1450.4" y2="386.6"/>
+<line x1="772.2" y1="252.1" x2="1450.4" y2="252.1"/>
+</g>
+<!-- PATH_OMITTED_TOO_LARGE -->
+</g>
+</svg>
