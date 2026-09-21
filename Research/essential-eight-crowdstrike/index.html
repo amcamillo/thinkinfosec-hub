@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Essential 8 and CrowdStrike Falcon Ecosystem | Thinkinfosec Hub</title>
+<meta name="description" content="An independent ThinkInfoSec crosswalk of CrowdStrike capability against Australia’s Essential Eight, November 2023: native scope, ecosystem dependencies, and residual obligations.">
+<meta name="author" content="Andre Camillo">
+<link rel="canonical" href="https://amcamillo.github.io/thinkinfosec-hub/Research/essential-eight-crowdstrike/">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0D1F3C;
+  --teal: #00BFCF;
+  --teal-dark: #008A96;
+  --pink: #FF2D78;
+  --green: #00875A;
+  --bg: #f4f7f6;
+  --card: #ffffff;
+  --ink: #333333;
+  --mute: #555555;
+  --faint: #777777;
+  --line: #dddddd;
+  --radius: 8px;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
+  --focus: 2px solid var(--teal);
+  --col: 1040px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--teal-dark); }
+a:hover { text-decoration: underline; }
+a:focus-visible, button:focus-visible, summary:focus-visible {
+  outline: var(--focus); outline-offset: 3px;
+}
+.skip {
+  position: absolute; left: 0.75rem; top: -3rem;
+  background: var(--navy); color: #fff; padding: 0.5rem 0.85rem;
+  border-radius: var(--radius); z-index: 400; text-decoration: none;
+}
+.skip:focus { top: 0.75rem; }
+.topbar { background: var(--navy); color: #fff; }
+.topbar-inner {
+  max-width: var(--col); margin: 0 auto;
+  min-height: 52px; padding: 8px 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+.brand img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.brand-name { font-size: 15px; font-weight: 700; display: block; line-height: 1.15; }
+.brand-sub { font-size: 12px; color: var(--teal); font-weight: 500; }
+.topbar-meta { font-size: 13px; color: rgba(255,255,255,0.62); }
+.mast { background: var(--card); border-bottom: 1px solid var(--line); }
+.mast-inner { max-width: var(--col); margin: 0 auto; padding: 28px 24px 22px; }
+.crumb { font-size: 13px; color: var(--faint); margin-bottom: 18px; }
+.crumb a { color: var(--teal-dark); text-decoration: none; font-weight: 500; }
+.crumb a:hover { text-decoration: underline; }
+.sep { margin: 0 8px; color: var(--line); }
+.dateline { font-size: 13px; color: var(--teal-dark); font-weight: 600; margin-bottom: 8px; }
+.mast h1 {
+  font-size: clamp(28px, 3.6vw, 38px);
+  font-weight: 700; color: var(--navy);
+  letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 12px;
+}
+.mast h1 em { font-style: normal; color: var(--teal-dark); }
+.lede { max-width: 42rem; color: var(--mute); margin-bottom: 10px; }
+.meta-line { font-size: 14px; color: var(--faint); margin-bottom: 18px; }
+.facts {
+  display: flex; flex-wrap: wrap; gap: 10px 32px;
+  padding-top: 16px; border-top: 1px solid var(--line);
+  font-size: 14px; color: var(--mute);
+}
+.facts b { color: var(--navy); font-weight: 700; margin-right: 5px; }
+.facts a { text-decoration: none; font-size: 13px; }
+.facts a:hover { text-decoration: underline; }
+.toc {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--card); border-bottom: 1px solid var(--line); padding: 8px 0;
+}
+.toc-inner {
+  max-width: var(--col); margin: 0 auto; padding: 0 24px;
+  display: flex; gap: 4px; overflow-x: auto; width: 100%;
+}
+.toc a {
+  flex-shrink: 0; color: var(--faint); text-decoration: none;
+  font-size: 13px; font-weight: 500; min-height: 40px; padding: 0 12px;
+  display: inline-flex; align-items: center; border-radius: 6px;
+}
+.toc a:hover { color: var(--navy); background: var(--bg); }
+.toc a.on { color: var(--navy); background: var(--bg); font-weight: 600; }
+.wrap { max-width: var(--col); margin: 0 auto; padding: 20px 24px 64px; display: grid; gap: 16px; }
+section {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 28px 28px 24px; scroll-margin-top: 64px;
+}
+.kicker {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--teal-dark); margin-bottom: 6px;
+}
+h2 {
+  font-size: 1.45rem; font-weight: 700; color: var(--navy);
+  margin: 0 0 10px; letter-spacing: -0.02em; line-height: 1.25;
+}
+h3 { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.blurb { color: var(--mute); margin-bottom: 18px; max-width: 44rem; }
+.prose { font-size: 14.5px; color: var(--mute); margin-top: 8px; }
+.note { font-size: 14px; color: var(--mute); margin-top: 12px; }
+.thesis {
+  background: var(--bg); border-radius: var(--radius); padding: 16px 18px; margin: 0 0 20px;
+}
+.thesis p { font-size: 1.05rem; font-weight: 600; color: var(--navy); line-height: 1.5; max-width: 46rem; }
+.thesis span { color: var(--teal-dark); }
+.moves { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
+.move .n { font-size: 12px; font-weight: 700; color: var(--teal-dark); display: block; margin-bottom: 6px; }
+.move:nth-child(2) .n { color: var(--navy); }
+.move:nth-child(3) .n { color: var(--pink); }
+.move p { font-size: 14.5px; color: var(--mute); }
+.callout {
+  margin-top: 16px; padding: 14px 16px; background: var(--navy); color: #fff;
+  border-radius: var(--radius); font-size: 14.5px;
+}
+.callout strong { color: var(--teal); }
+.callout .cite { color: var(--teal); }
+.warn {
+  margin-top: 14px; padding: 12px 14px; background: #fff8f0;
+  border-left: 3px solid #FF8B00; border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 14.5px; color: var(--mute);
+}
+.warn strong { color: var(--navy); }
+.grid-2 { display: grid; gap: 16px; }
+@media (min-width: 800px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+.mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; }
+sup.cite, .cite {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10px; font-weight: 500; line-height: 0; vertical-align: super;
+}
+.cite { color: var(--teal-dark); text-decoration: none; margin-left: 1px; }
+.cite:hover { text-decoration: underline; }
+.sourcelist { list-style: none; display: grid; gap: 12px; }
+.sourcelist li {
+  font-size: 14px; color: var(--mute); padding-left: 2.6rem; position: relative;
+  line-height: 1.55; scroll-margin-top: 72px;
+}
+.sourcelist li > .n {
+  position: absolute; left: 0; top: 0;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px; font-weight: 600; color: var(--navy);
+}
+.sourcelist a { word-break: break-word; }
+.sourcelist .meta {
+  display: block; margin-top: 2px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px; color: var(--faint);
+}
+.group-lbl {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--teal-dark); margin: 22px 0 10px;
+}
+.group-lbl:first-child { margin-top: 0; }
+.sourcelist li:target { background: #eef8f9; border-radius: 6px; }
+.badge {
+  display: inline; font-size: 12px; font-weight: 600; font-style: italic;
+  border: 0; background: none; color: var(--faint); padding: 0; text-transform: none;
+}
+.finds { display: grid; gap: 0; }
+.find {
+  display: grid; grid-template-columns: 2.2rem 1fr; gap: 8px;
+  padding: 16px 0; border-top: 1px solid var(--line);
+}
+.find .n { font-size: 14px; font-weight: 700; color: var(--teal-dark); padding-top: 2px; }
+.find.proof .n { color: var(--pink); }
+.find p { font-size: 15px; color: var(--ink); margin: 6px 0 0; }
+.find h3 { margin: 0; }
+details.caveat { border-top: 1px solid var(--line); }
+details.caveat summary {
+  cursor: pointer; list-style: none; padding: 12px 0;
+  font-weight: 600; font-size: 15px; color: var(--navy);
+  display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px;
+}
+details.caveat summary::-webkit-details-marker { display: none; }
+details.caveat summary::after { content: "+"; color: var(--teal-dark); font-weight: 500; }
+details.caveat[open] summary::after { content: "–"; }
+details.caveat p { padding: 0 0 14px; font-size: 14.5px; color: var(--mute); }
+.chiprow { font-size: 14px; color: var(--faint); margin-bottom: 8px; }
+.threat { padding: 14px 0; border-top: 1px solid var(--line); font-size: 15px; color: var(--ink); }
+.limits { margin: 14px 0 0 1.1rem; display: grid; gap: 8px; }
+.limits li { font-size: 14.5px; color: var(--mute); }
+.mx {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1.05fr) minmax(0, 1.35fr);
+  gap: 4px 16px; align-items: baseline;
+  padding: 14px 8px; margin: 0 -8px;
+  border-top: 1px solid var(--line);
+  text-decoration: none; color: inherit; border-radius: 6px; min-height: 44px;
+}
+.mx:hover { background: var(--bg); }
+.mx .n { font-size: 13px; font-weight: 700; color: var(--teal-dark); }
+.mx .name { display: block; font-weight: 700; color: var(--navy); }
+.mx .pos { display: block; font-size: 13px; color: var(--faint); font-weight: 600; margin-top: 2px; }
+.mx .sub { font-size: 14px; color: var(--mute); }
+.lanes { display: grid; gap: 18px; margin-top: 18px; }
+@media (min-width: 800px) { .lanes { grid-template-columns: 1fr 1fr 1fr; } }
+.lane .role {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--teal-dark); margin-bottom: 4px;
+}
+.lane.residual .role { color: var(--pink); }
+.lane h3 { font-size: 1.02rem; }
+.lane ul { margin: 8px 0 0 1.05rem; display: grid; gap: 6px; }
+.lane li { font-size: 14px; color: var(--mute); }
+.rec-label {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--faint); margin-top: 12px;
+}
+.pager { display: flex; justify-content: space-between; gap: 12px; }
+.pager a {
+  display: inline-flex; align-items: center; min-height: 44px;
+  font-size: 14px; font-weight: 600; text-decoration: none; max-width: 48%;
+}
+.pager a.next { margin-left: auto; text-align: right; }
+.toc a { transition: background-color 160ms ease, color 160ms ease; }
+.band-navy { border-top: 4px solid var(--navy); }
+.band-teal { border-top: 4px solid var(--teal); }
+.band-amber { border-top: 4px solid #FF8B00; }
+.band-pink { border-top: 4px solid var(--pink); }
+.panel {
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 14px 16px 12px; margin-top: 14px;
+}
+.panel.teal { background: #f3fbfc; border-top: 3px solid var(--teal); }
+.panel.navy { background: #f4f7fb; border-top: 3px solid var(--navy); }
+.panel.amber { background: #fff8f0; border-top: 3px solid #FF8B00; }
+.panel.pink { background: #fff5f8; border-top: 3px solid var(--pink); }
+.panel h3 { margin-bottom: 8px; }
+.profile { display: grid; gap: 8px; }
+.profile-head, .profile-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 1.35fr) repeat(4, minmax(108px, 1fr));
+  gap: 8px; align-items: center;
+}
+.profile-head {
+  background: var(--navy); color: #fff; border-radius: 8px;
+  padding: 10px 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.01em;
+}
+.profile-row {
+  text-decoration: none; color: inherit; background: #f6f8fb;
+  border-radius: 8px; padding: 10px 12px; min-height: 48px;
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+.profile-row:hover { background: #e7eef6; }
+.profile-row .who { font-weight: 700; color: var(--navy); }
+.profile-row .who small {
+  display: block; font-weight: 600; color: var(--teal-dark);
+  font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px;
+}
+.plab { display: none; }
+.chipstrip {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px; margin: 12px 0 4px;
+}
+.chipstrip .plab { display: block; }
+.pill {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 28px; padding: 2px 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 700; line-height: 1.2; color: var(--navy);
+  white-space: nowrap;
+}
+.pill.none { background: #e8edf4; }
+.pill.yes { background: #c9f0dc; }
+.pill.strong { background: #cfe5ff; }
+.pill.support { background: #dcecff; }
+.pill.req { background: #ffe1b8; }
+.pill.owner { background: #ffd49a; }
+.pill.material { background: #ffd1d1; }
+.pill.watch { background: #ffe8b8; }
+.scroll { overflow-x: auto; margin-top: 8px; }
+.cmp { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.cmp th {
+  text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--faint);
+  padding: 0 10px 8px 0; border-bottom: 2px solid var(--navy); white-space: nowrap;
+}
+.cmp td {
+  padding: 9px 10px 9px 0; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--mute);
+}
+.cmp .mod { font-weight: 700; color: var(--navy); }
+.xwalk { min-width: 720px; }
+.xwalk th, .xwalk td { text-align: center; }
+.xwalk th:first-child, .xwalk td:first-child { text-align: left; }
+.xwalk th a { color: #fff; text-decoration: none; }
+.xwalk thead th { background: var(--navy); color: #fff; padding: 8px; border-bottom: 0; }
+.xwalk thead th:first-child { border-radius: 8px 0 0 0; }
+.xwalk thead th:last-child { border-radius: 0 8px 0 0; }
+.mark {
+  display: inline-flex; min-width: 2.4rem; justify-content: center;
+  border-radius: 999px; padding: 2px 6px; font-size: 12px; font-weight: 700; color: var(--navy);
+}
+.mark.s { background: #dcecff; }
+.mark.d { background: #c9f0dc; }
+.mark.ds { background: #b7e4c7; }
+.mark.none { background: transparent; color: var(--faint); font-weight: 500; }
+#main > section.view-in { animation: rise 260ms ease both; }
+#main > section.view-in:nth-child(2) { animation-delay: 50ms; }
+#main > section.view-in:nth-child(3) { animation-delay: 100ms; }
+.view-in .panel { animation: rise 280ms ease both; }
+.view-in .panel:nth-of-type(2) { animation-delay: 40ms; }
+.view-in .panel:nth-of-type(3) { animation-delay: 80ms; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .toc a, .profile-row { transition: none; }
+  #main > section.view-in, .view-in .panel { animation: none; }
+}
+footer {
+  background: var(--navy); color: rgba(255,255,255,0.65);
+  padding: 24px; text-align: center;
+}
+footer .ft-main { font-size: 14px; max-width: var(--col); margin: 0 auto; }
+footer .ft-main a { color: var(--teal); text-decoration: none; }
+footer .ft-main a:hover { text-decoration: underline; }
+footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.4); max-width: 40rem; }
+@media (max-width: 800px) {
+  .topbar-meta { display: none; }
+  .moves { grid-template-columns: 1fr; }
+  .find { grid-template-columns: 1fr; }
+  .mx { grid-template-columns: 2.4rem minmax(0, 1fr); }
+  .mx .sub { grid-column: 2; }
+  section { padding: 20px 18px 18px; }
+  .pager { flex-direction: column; }
+  .pager a, .pager a.next { max-width: none; text-align: left; margin-left: 0; }
+  .profile-head { display: none; }
+  .profile-row { grid-template-columns: 1fr 1fr; align-items: start; }
+  .profile-row .who { grid-column: 1 / -1; }
+  .chipstrip { grid-template-columns: 1fr 1fr; }
+  .plab {
+    display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--faint); margin-bottom: 4px;
+  }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../../index.html">
+      <img src="../../assets/learning-hub-logo.png" alt="Thinkinfosec Hub logo" width="32" height="32" onerror="this.style.display='none'">
+      <span>
+        <span class="brand-name">Thinkinfosec</span>
+        <span class="brand-sub">Research briefing</span>
+      </span>
+    </a>
+    <p class="topbar-meta">September 2026</p>
+  </div>
+</header>
+
+<div class="mast">
+  <div class="mast-inner">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="../../index.html">Hub</a><span class="sep">/</span>
+      <a href="../../index.html#research">Research</a><span class="sep">/</span>
+      Essential 8 and CrowdStrike Falcon Ecosystem
+    </nav>
+    <p class="dateline">Independent research briefing · September 2026</p>
+    <h1>Essential 8 and CrowdStrike Falcon <em>Ecosystem</em></h1>
+    <p class="lede">CrowdStrike can materially help an organisation implement the Essential Eight. A licence, a sensor or a detection does not prove a strategy is in place. This briefing walks each strategy as native capability, dependency and residual obligation.</p>
+    <p class="meta-line">Analyst draft · as at 22 September 2026 · Essential Eight, November 2023 · Australia</p>
+    <p class="facts" id="facts">
+      <span><b>8</b> strategies, one target level · <a href="#fn1">ASD Essential Eight</a></span>
+      <span><b>0</b> control mappings · <a href="#fn2">capability mapping</a></span>
+      <span><b>Windows</b> patch scope evidenced · <a href="#fn3">Falcon for IT</a></span>
+      <span><b>Pending</b> threat context · <a href="#fn4">ThinkThreats slice</a></span>
+    </p>
+  </div>
+</div>
+
+<nav class="toc" aria-label="On this page"><div class="toc-inner" id="toc"></div></nav>
+
+<main id="main" class="wrap">
+  <section>
+    <p class="kicker">The argument</p>
+    <h2>A licence does not establish Essential Eight conformance</h2>
+    <div class="thesis">
+      <p>CrowdStrike provides control capability and evidence. <span>The organisation remains responsible for control design, scope, operation, exceptions and effectiveness.</span></p>
+    </div>
+    <p class="blurb">Open this briefing over a local web server to load the strategy navigator. The eight strategies, the control architecture, the method and the sources are separate views.</p>
+  </section>
+</main>
+
+<noscript>
+  <div class="wrap">
+    <section>
+      <p class="kicker">How to read this</p>
+      <h2>JavaScript is required for the strategy navigator</h2>
+      <p class="prose">The argument above still stands. CrowdStrike is not treated here as an Essential Eight compliance product. Maturity is an organisational assessment against the Australian Signals Directorate model, not a reading of a licence.</p>
+    </section>
+  </div>
+</noscript>
+
+<footer>
+  <p class="ft-main">ThinkInfoSec 2026 — <a href="https://www.linkedin.com/in/andrecamillo/" target="_blank" rel="noopener">Andre Camillo</a> · <a href="../../index.html#research">Back to Research</a></p>
+  <p class="ft-sub">Independent briefing. Educational use. Not an ASD, ACSC or CrowdStrike publication. Numbered citations map to the source list. The thesis is ThinkInfoSec synthesis of the 22 September 2026 assessment.</p>
+</footer>
+
+<script>
+(function () {
+  /* Mast links assume these four ids are numbered 1–4. Do not reorder them. */
+  var ORDER = [
+    "ASD-E8", "OUT-E8-REG", "CD-FOR-IT", "TT-CORPUS",
+    "ASD-FAQ", "ASD-ASSESS",
+    "TT-IA-03", "TT-IA-09", "TT-IA-02", "TT-IA-14", "TT-STAT-21",
+    "TT-REC-24", "TT-REC-26", "TT-REC-27", "TT-BACKUP-01",
+    "CD-PREVENT", "OUT-CS-PREVENT", "ECO-AIRLOCK",
+    "CD-SPOTLIGHT", "OUT-CS-SPOTLIGHT", "OUT-CS-FOR-IT",
+    "CS-MACRO-POLICY", "TT-REC-06", "OUT-CS-SECURE-ACCESS",
+    "OUT-CS-FPA", "CD-IDENTITY", "CD-CIEM", "CD-SHIELD",
+    "CD-FALCON-ID", "OUT-CS-FALCON-ID", "TT-REC-05", "OUT-BDR"
+  ];
+  var POSITION = {
+    "ecosystem-led": "Ecosystem-led",
+    "partial": "Partial",
+    "supporting-only": "Supporting only",
+    "partial-supporting": "Partial / supporting",
+    "strong-partial": "Strong partial",
+    "ecosystem-only": "Ecosystem-only"
+  };
+  var LEVEL = {
+    native_direct: "Native-direct",
+    native_supporting: "Native supporting",
+    native_direct_bounded: "Native-direct, bounded scope",
+    native_supporting_and_partial_enforcement: "Supporting, with partial enforcement",
+    native_direct_windows: "Native-direct for Windows"
+  };
+  var SHORT = {
+    "E8-01": "App control",
+    "E8-02": "Patch apps",
+    "E8-03": "Macros",
+    "E8-04": "Hardening",
+    "E8-05": "Admin rights",
+    "E8-06": "Patch OS",
+    "E8-07": "MFA",
+    "E8-08": "Backups"
+  };
+  var COMMENTARY = {
+    controls: {
+      "E8-01": {
+        headline: "Prevention is not an approved execution set",
+        objective: "Restrict executables, software libraries, scripts, installers, compiled HTML, HTML applications and control panel applets to an organisation-approved set. Higher maturity expands scope to servers and drivers, blocklists, ruleset review, central logging and timely analysis.",
+        objectiveRefs: ["ASD-E8"],
+        why: "The pending recommendation to keep pre-approved, centrally stored tools describes a practical ransomware problem. Uncontrolled software and scripts widen the expected-execution baseline, create more opportunities for opportunistic infection, and make abnormal execution harder to distinguish.",
+        whyRefs: ["TT-REC-24"],
+        whyBadge: "Single-source · pending",
+        native: "Falcon Prevent provides machine-learning prevention, behavioural indicators of attack, exploit mitigation, script control, custom indicators, quarantine and malicious-file blocking. Falcon Insight XDR records process activity and supports investigation and containment. These are useful compensating and detective controls. They are not evidence of an ASD-style organisation-approved execution set.",
+        nativeRefs: ["CD-PREVENT", "OUT-CS-PREVENT"],
+        ecosystem: "The CrowdStrike Marketplace documents an Airlock Digital integration for deny-by-default application allowlisting, deployable through the Falcon console. Microsoft WDAC, AppLocker, or another application-control product can hold the authoritative enforcement role, with events forwarded to Falcon NG-SIEM.",
+        ecosystemRefs: ["ECO-AIRLOCK"],
+        residual: "The consulted CrowdStrike corpus does not evidence native allowlisting across all ASD file classes, directories, server scopes and drivers, nor annual validation of the allowlist. Blocking malicious or suspicious execution must not be reported as equivalent to permitting only an approved set.",
+        residualRefs: ["CD-PREVENT", "ASD-E8"],
+        assessment: "Ecosystem-led. Native capability is supporting only."
+      },
+      "E8-02": {
+        headline: "Windows patching is direct. The rest of the estate is not.",
+        objective: "Discover assets, scan at prescribed frequencies, patch critical or exploited online-service vulnerabilities within 48 hours, patch common user applications within the required timeframes, and remove unsupported applications.",
+        objectiveRefs: ["ASD-E8"],
+        why: "The pending extraction identifies exploitation as the leading initial-access vector, and records financially motivated actors exploiting public-facing software before ransomware deployment. Delayed application patching is a direct compromise and operational-loss driver.",
+        whyRefs: ["TT-IA-03", "TT-IA-09"],
+        whyBadge: "Single-source · pending",
+        native: "Falcon Spotlight and Falcon Exposure Management provide vulnerability discovery, exploit-aware prioritisation and remediation tracking. Falcon Discover contributes asset visibility. Falcon for IT Patch Management for Windows became generally available on 6 August 2026 and supports scanning, scheduled or recurring deployment, pre-staging, reboot options and host-level deployment status. That is direct support where the application and the host sit in the documented Windows patch catalogue. The assessment records a 24-hour scan cadence. The organisation still has to demonstrate ASD timeframes from release or detection through to production deployment.",
+        nativeRefs: ["CD-SPOTLIGHT", "CD-FOR-IT", "OUT-CS-SPOTLIGHT", "OUT-CS-FOR-IT"],
+        ecosystem: "UEM or RMM, vendor update channels, cloud and SaaS administration, ITSM and change management remain necessary for non-Windows platforms, internet-facing appliances, bespoke applications and products outside the Falcon patch catalogue.",
+        ecosystemRefs: ["CD-FOR-IT"],
+        residual: "CyberDoc records patch management as Windows-scoped. macOS and Linux patch deployment is not proven. Asset coverage, unsupported-software removal, emergency change authority, rollback, exception approval and independent remediation evidence remain organisational controls. Exposure Management and IT Automation may recommend different patches, and deployment-log retention is not documented.",
+        residualRefs: ["CD-FOR-IT", "ASD-E8"],
+        assessment: "Native-direct for a bounded Windows scope. Complete coverage still depends on other mechanisms."
+      },
+      "E8-03": {
+        headline: "Macro detection is not macro policy",
+        objective: "Disable macros without a business need, block macros that originate from the internet, enable macro antivirus scanning, and prevent users from changing macro security. Higher maturity adds trusted locations and publishers, code checking, V3 signatures and Win32 API restrictions.",
+        objectiveRefs: ["ASD-E8"],
+        why: "Macros provide a trusted-document path into script and memory execution. The ThinkThreats corpus does not yet contain an approved macro-specific claim, so the driver here is ASD’s control rationale together with the broader pending evidence that initial access is handed on quickly. That limit should stay visible in any downstream use of this briefing.",
+        whyRefs: ["ASD-E8", "TT-CORPUS"],
+        whyBadge: "No approved macro-specific claim",
+        native: "Falcon Prevent can inspect script-based execution and identify potentially malicious Office macros. With prevention enabled it can quarantine the file or remove a suspicious macro, and it detects exploit and post-execution behaviour. That is material defence-in-depth. It is not authoritative Office macro governance.",
+        nativeRefs: ["CD-PREVENT", "CS-MACRO-POLICY"],
+        ecosystem: "Microsoft 365 Apps policy, Group Policy, Intune or an equivalent configuration system has to enforce business-need groups, internet-origin blocking, trusted locations and publishers, signature requirements, Win32 API restrictions and user-setting lockout.",
+        ecosystemRefs: ["ASD-E8"],
+        residual: "Falcon does not establish who has a demonstrated macro requirement, administer trusted publishers, require V3 signatures, or prove that Office settings cannot be changed. A malicious-macro detection shows attempted abuse. It does not show that the preventive control conforms.",
+        residualRefs: ["CD-PREVENT", "CS-MACRO-POLICY"],
+        assessment: "Native supporting detection and prevention. Policy enforcement stays with the Office and endpoint configuration stack."
+      },
+      "E8-04": {
+        headline: "Queries and drift checks still need a baseline owner",
+        objective: "Remove or disable obsolete components, constrain browser content, enforce ASD and vendor hardening guidance, prevent risky Office and PDF child-process and code-injection behaviour, constrain PowerShell, and centralise protected event logs.",
+        objectiveRefs: ["ASD-E8"],
+        why: "Exploitation remains the dominant initial-access driver in the pending evidence. Hardening reduces exploitable functionality and constrains post-exploitation tools where a patch, on its own, is not enough.",
+        whyRefs: ["TT-IA-03", "TT-REC-06"],
+        whyBadge: "Single-source · pending",
+        native: "Falcon Prevent supplies exploit mitigation and script and command prevention. Falcon for IT can query configuration state across Windows, macOS and Linux, detect drift, run scripts and enforce baselines. Falcon NG-SIEM can collect and analyse PowerShell, command-line and security telemetry when those sources are configured. Falcon Secure Access adds a browser-layer control plane. None of that is evidence that the organisation’s standard browsers, Office suite and PDF software meet ASD hardening settings.",
+        nativeRefs: ["CD-PREVENT", "CD-FOR-IT", "OUT-CS-SECURE-ACCESS"],
+        ecosystem: "Group Policy, Intune or UEM, browser enterprise policy, Microsoft security baselines, ASD hardening guidance, and PDF or application-specific controls remain the authoritative configuration mechanisms.",
+        ecosystemRefs: ["ASD-E8"],
+        residual: "The organisation has to define the baseline, resolve conflicts using the most restrictive ASD or vendor setting, lock user changes, remove unsupported components, verify Office and PDF attack-surface-reduction settings, and prove logging and retention. Scripted remediation is not a tested, continuously enforced Essential Eight baseline unless coverage and drift expectations are evidenced.",
+        residualRefs: ["CD-FOR-IT", "ASD-E8"],
+        assessment: "Partial native enforcement and strong telemetry, with a substantial configuration-management dependency."
+      },
+      "E8-05": {
+        headline: "Privilege tools do not prove separated administration",
+        objective: "Validate privileged-access requests, use dedicated privileged accounts and operating environments, restrict internet and email access, separate privileged and unprivileged logons, revalidate access periodically, and analyse privileged events centrally.",
+        objectiveRefs: ["ASD-E8"],
+        why: "The pending extraction records stolen credentials as an initial-access vector, and describes destructive actors changing permissions to impede recovery. Standing privilege turns one credential or one endpoint into an enterprise-wide impact.",
+        whyRefs: ["TT-IA-14", "TT-BACKUP-01"],
+        whyBadge: "Single-source · pending",
+        native: "Capability mapping used for this assessment lists Falcon Privileged Access for just-in-time, just-enough privilege and privileged-session control. Current CrowdStrike identity material also describes zero-standing-privilege enforcement. Falcon Identity Protection contributes identity threat detection, identity risk and conditional enforcement. Falcon Cloud Security CIEM surfaces excessive cloud entitlement. Falcon Shield applies privileged-access governance in connected SaaS.",
+        nativeRefs: ["OUT-CS-FPA", "CD-IDENTITY", "CD-CIEM", "CD-SHIELD"],
+        ecosystem: "That mapping records CyberArk and BeyondTrust as hybrid privileged-access integrations. Existing identity providers, directory services, endpoint policy, secure admin workstations, vaulting, and ticket or approval workflows remain necessary for complete coverage.",
+        ecosystemRefs: ["OUT-CS-FPA", "CD-IDENTITY"],
+        residual: "The Falcon Privileged Access capability is not yet corroborated by a dedicated document in the current CyberDoc corpus, so entitlement, platform scope and evidence exports need validation before they are asserted. CrowdStrike does not, by itself, prove dedicated admin identities, separated operating environments, internet restrictions, 12-month revalidation, inactivity disablement, or coverage of every application and data repository.",
+        residualRefs: ["OUT-CS-FPA", "ASD-E8"],
+        assessment: "Meaningful native identity and privilege capability, with only partial control coverage."
+      },
+      "E8-06": {
+        headline: "The Windows patch scope stays Windows",
+        objective: "Discover and scan workstations, servers and network devices. Remediate critical or exploited internet-facing vulnerabilities within 48 hours. Patch other operating-system, driver and firmware vulnerabilities within the required periods, and replace unsupported operating systems.",
+        objectiveRefs: ["ASD-E8"],
+        why: "Exploits are recorded as 32 percent of identified initial-access vectors in the pending M-Trends extraction. Operating-system and edge-device flaws give attackers high-leverage entry and privilege paths, so patch latency is a measurable business exposure.",
+        whyRefs: ["TT-IA-09", "TT-REC-06"],
+        whyBadge: "Single-source · pending",
+        native: "Falcon Spotlight and Exposure Management identify and prioritise host vulnerabilities. Falcon Discover supports inventory. Falcon for IT performs documented Windows patch deployment. Sensor queries can verify state across supported Windows, macOS and Linux endpoints.",
+        nativeRefs: ["CD-SPOTLIGHT", "CD-FOR-IT", "OUT-CS-SPOTLIGHT"],
+        ecosystem: "macOS and Linux deployment, network-device operating systems, drivers, firmware, and unsupported or sensorless assets need vendor tooling, UEM or RMM, network management and a formal change process, unless the customer’s Falcon entitlement and patch catalogue explicitly prove otherwise.",
+        ecosystemRefs: ["CD-FOR-IT"],
+        residual: "Windows patch management must not be extrapolated to every operating system. Internet-facing device discovery, 48-hour emergency deployment, driver and firmware coverage, unsupported-operating-system replacement and exception governance require additional controls and evidence.",
+        residualRefs: ["CD-FOR-IT", "ASD-E8"],
+        assessment: "Native-direct for Windows. Partial visibility, and a dependency elsewhere."
+      },
+      "E8-07": {
+        headline: "Phishing-resistant MFA is real, and still path by path",
+        objective: "Apply multi-factor authentication across sensitive organisational and third-party services and customer services, and at higher maturity across privileged and unprivileged system access and data repositories, using phishing-resistant methods and central event logging.",
+        objectiveRefs: ["ASD-E8"],
+        why: "Pending claims record stolen credentials in 9 percent of investigations and vishing as the second-most common initial vector. The same pending corpus recommends phishing-resistant MFA for critical administration.",
+        whyRefs: ["TT-IA-02", "TT-IA-14", "TT-REC-26"],
+        whyBadge: "Single-source · pending",
+        native: "FalconID is a native phishing-resistant, passwordless MFA capability based on FIDO2 passkeys and proximity validation. Falcon Identity Protection adds real-time risk and conditional enforcement, and its policy audit log can provide authentication evidence. The mapping used here associates FalconID with phishing-resistant authentication.",
+        nativeRefs: ["CD-FALCON-ID", "CD-IDENTITY", "OUT-CS-FALCON-ID"],
+        ecosystem: "Existing identity providers, single sign-on and federation, application connectors and customer-identity platforms remain necessary to reach every authentication path the Essential Eight requires. The broader identity domain is treated as hybrid, not as a standalone CrowdStrike replacement.",
+        ecosystemRefs: ["CD-IDENTITY", "OUT-CS-FALCON-ID"],
+        residual: "The organisation has to keep an authoritative inventory of authentication paths, remove bypasses, cover break-glass and service accounts appropriately, manage enrolment and recovery, and reconcile successful and failed events centrally. CyberDoc records mobile-platform prerequisites for FalconID. Unsupported users and services need another phishing-resistant method.",
+        residualRefs: ["CD-FALCON-ID", "ASD-E8"],
+        assessment: "Strong native control for supported flows. Universal coverage remains an architecture question."
+      },
+      "E8-08": {
+        headline: "Detection around backups is not a backup",
+        objective: "Back up and synchronise data, applications and settings to business requirements. Retain backups securely and resiliently, test restoration to a common point in time, and prevent unauthorised access, modification and deletion.",
+        objectiveRefs: ["ASD-E8"],
+        why: "The pending recommendations are to decouple backup environments from production identity, use phishing-resistant MFA, keep immutable write-once storage, and hold offsite or air-gapped copies. A pending extracted case describes attackers deleting backup routines and changing permissions to hinder recovery.",
+        whyRefs: ["TT-REC-27", "TT-REC-05", "TT-BACKUP-01"],
+        whyBadge: "Single-source · pending",
+        native: "Falcon Prevent, Insight XDR, Identity Protection and NG-SIEM can detect ransomware, suspicious access and destructive activity around backup infrastructure. They do not create backups, provide immutable retention, or run restore tests.",
+        nativeRefs: ["CD-PREVENT", "CD-IDENTITY"],
+        ecosystem: "The mapping used here associates managed backup and cyber recovery with Rubrik, Cohesity and Veeam as alliance technologies. Those platforms, or an equivalent, have to supply backup, immutability, isolation, retention, replication and restoration evidence.",
+        ecosystemRefs: ["OUT-BDR"],
+        residual: "Backup scope, recovery point and recovery time, segregation from production identity, privileged recovery access, immutable or offline copies, restore testing and business acceptance sit outside the native Falcon control set. A Falcon detection cannot stand in for recoverability.",
+        residualRefs: ["OUT-BDR", "ASD-E8"],
+        assessment: "Ecosystem-only for the control objective. CrowdStrike is a supporting detection layer."
+      }
+    },
+    threats: [
+      {
+        text: "The pending M-Trends 2026 extraction records exploits as the most common initial-access vector for a sixth consecutive year, and as 32 percent of investigations where a vector was identified. That drives both patching strategies and user-application hardening.",
+        refs: ["TT-IA-03", "TT-IA-09"],
+        badge: "Single-source · pending"
+      },
+      {
+        text: "Stolen credentials are recorded as 9 percent of 2025 investigations, while vishing rose to the second-most common vector. That drives phishing-resistant MFA, controlled privilege and identity-aware response.",
+        refs: ["TT-IA-02", "TT-IA-14"],
+        badge: "Single-source · pending"
+      },
+      {
+        text: "Ransomware-related intrusions are recorded as 13 percent of 2025 investigations, with prior compromise the leading ransomware initial vector at 30 percent. Layered prevention, least privilege and recoverability are business-resilience issues, not isolated endpoint settings.",
+        refs: ["TT-STAT-21"],
+        badge: "Single-source · pending"
+      },
+      {
+        text: "The same pending extraction recommends pre-approved, centrally stored tools. That is the practical case for application control.",
+        refs: ["TT-REC-24"],
+        badge: "Single-source · pending"
+      },
+      {
+        text: "It also recommends phishing-resistant MFA for critical administration, and backup environments that are decoupled, immutable and offline.",
+        refs: ["TT-REC-26", "TT-REC-27"],
+        badge: "Single-source · pending"
+      },
+      {
+        text: "A pending Google Threat Horizons extraction describes ransomware operators deleting cloud backup routines and modifying permissions to impede recovery.",
+        refs: ["TT-BACKUP-01"],
+        badge: "Single-source · pending"
+      }
+    ],
+    architecture: [
+      { title: "Bound the patch tools", body: "Use Falcon Spotlight and Exposure Management for prioritisation, and Falcon for IT only inside its evidenced patch scope. Keep UEM, RMM and vendor tooling for the rest of the estate." },
+      { title: "Add a real allowlist", body: "Pair Falcon Prevent and Insight XDR with a deny-by-default application-control engine. In the CrowdStrike catalogue reviewed here, Airlock Digital is the clearest Essential Eight-specific option identified." },
+      { title: "Enforce Office and application policy outside Falcon", body: "Set macro and user-application controls through Microsoft and application-native policy. Feed policy state and events into Falcon for monitoring and investigation." },
+      { title: "Keep identity lifecycle authoritative", body: "Use FalconID, Identity Protection and privileged-access capability as an identity-security layer. Retain authoritative identity lifecycle, approval, secure-admin-workstation and repository controls." },
+      { title: "Keep recovery independent", body: "Use a separate backup and cyber-recovery platform with immutable and isolated copies. Integrate its telemetry into Falcon without placing recovery control solely inside the production identity and security plane." },
+      { title: "Evidence the operation", body: "Build evidence around the control assertion: configuration exports, scoped asset inventories, exception registers, deployment success, authentication coverage, privileged-access reviews and tested restoration. Product ownership is not that evidence.", proof: true }
+    ]
+  };
+
+  var DATA = null;
+  var NUM = {};
+  var main = document.getElementById("main");
+  var toc = document.getElementById("toc");
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function motion() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+  }
+  function cites(refs) {
+    if (!refs || !refs.length) return "";
+    return refs.map(function (id) {
+      var n = NUM[id];
+      return n ? "<a class=\"cite\" href=\"#fn" + n + "\">" + n + "</a>" : "";
+    }).join("");
+  }
+  function badge(label) {
+    return label ? " <span class=\"badge one\">" + esc(label) + "</span>" : "";
+  }
+  function joinList(items) {
+    if (items.length === 1) return items[0];
+    if (items.length === 2) return items[0] + " and " + items[1];
+    return items.slice(0, -1).join(", ") + ", and " + items[items.length - 1];
+  }
+  function marks(controls) {
+    var order = [];
+    var seen = {};
+    controls.forEach(function (c) {
+      var label = POSITION[c.position] || c.position;
+      if (!seen[label]) { seen[label] = []; order.push(label); }
+      seen[label].push(c.title);
+    });
+    var bits = order.map(function (label) {
+      return joinList(seen[label]) + " as " + label.toLowerCase();
+    });
+    return "The assessment marks " + bits.join("; ") + ".";
+  }
+  function shortUrl(url) {
+    var clean = String(url).replace(/^https?:\/\/(www\.)?/, "");
+    return clean.length > 72 ? clean.slice(0, 69) + "…" : clean;
+  }
+  function bullets(items) {
+    if (!items || !items.length) return "";
+    return "<p class=\"rec-label\">Assessment record</p><ul>" +
+      items.map(function (item) { return "<li>" + esc(item) + "</li>"; }).join("") +
+      "</ul>";
+  }
+  function indexSources(data) {
+    var byId = {};
+    ["official", "cyberdoc", "capability", "thinkthreats", "supplemental"].forEach(function (key) {
+      (data.sources[key] || []).forEach(function (src) {
+        src._group = key;
+        byId[src.id] = src;
+      });
+    });
+    byId["OUT-E8-REG"] = { id: "OUT-E8-REG", _group: "capability", synthetic: "register" };
+    byId["TT-CORPUS"] = { id: "TT-CORPUS", _group: "thinkthreats", synthetic: "corpus" };
+    ORDER.forEach(function (id) {
+      if (!byId[id]) throw new Error("Missing source " + id);
+    });
+    var ordered = ORDER.map(function (id) { return byId[id]; });
+    Object.keys(byId).forEach(function (id) {
+      if (ORDER.indexOf(id) === -1) ordered.push(byId[id]);
+    });
+    ordered.forEach(function (src, i) {
+      src._n = i + 1;
+      NUM[src.id] = src._n;
+    });
+    return ordered;
+  }
+  function sourceBody(s) {
+    if (s.synthetic === "register") {
+      return "Capability mapping consulted for this assessment on 22 September 2026. The Essential Eight record is metadata only: zero detailed controls and zero control mappings. Technology relationships in that mapping are not control-to-technology compliance mappings. This page did not re-query it.";
+    }
+    if (s.synthetic === "corpus") {
+      return "ThinkThreats corpus, as cited by this assessment on 22 September 2026. The assessment records 748 sources and 114 structured claims, all 114 pending review. Pending claims are directional scene-setting, not approved intelligence findings. This page did not re-query the corpus.";
+    }
+    if (s._group === "official") {
+      var edition = s.id === "ASD-E8" ? ", November 2023" : (s.id === "ASD-FAQ" || s.id === "ASD-ASSESS" ? ", October 2024" : "");
+      return "Australian Signals Directorate, <em>" + esc(s.title) + "</em>" + edition + ".";
+    }
+    if (s._group === "cyberdoc") {
+      var extra = "";
+      if (s.id === "CD-FOR-IT") {
+        extra = " The assessment treats Windows patch deployment as the evidenced scope and dates Falcon for IT Patch Management for Windows general availability to 6 August 2026. It also records a 24-hour scan cadence, undocumented deployment-log retention, and the possibility that Exposure Management and IT Automation recommend different patches.";
+      }
+      return "Product notes consulted for this assessment, <em>" + esc(s.title) + "</em>. Working material used for the crosswalk, not an independently verified product assurance." + extra;
+    }
+    if (s._group === "supplemental") return esc(s.title) + ".";
+    if (s._group === "capability") {
+      return "Capability relationship consulted for this assessment, <em>" + esc(s.title) + "</em>. A capability relationship, not a control-compliance assertion.";
+    }
+    var pending = "ThinkThreats pending claim <span class=\"mono\">" + esc(s.claim_id) + "</span>. " + esc(s.title) + ". Review status " + esc(s.review_status) + " on 22 September 2026. Not an approved intelligence finding.";
+    if (s.id === "TT-IA-09") pending += " The assessment records exploits as 32 percent of investigations where a vector was identified.";
+    if (s.id === "TT-IA-02") pending += " The assessment records vishing as the second-most common initial-access vector in that pending extraction.";
+    if (s.id === "TT-IA-14") pending += " The assessment records stolen credentials as 9 percent of 2025 investigations.";
+    if (s.id === "TT-STAT-21") pending += " The assessment records ransomware-related intrusions as 13 percent of 2025 investigations, with prior compromise the leading ransomware initial vector at 30 percent.";
+    return pending;
+  }
+  function sourceItem(s) {
+    var meta = s.url ? "<span class=\"meta\"><a href=\"" + esc(s.url) + "\" target=\"_blank\" rel=\"noopener\">" + esc(shortUrl(s.url)) + "</a></span>" : "";
+    return "<li id=\"fn" + s._n + "\"><span class=\"n\">[" + s._n + "]</span> " + sourceBody(s) + meta + "</li>";
+  }
+  function parseRoute() {
+    var hash = "";
+    try { hash = decodeURIComponent(location.hash.replace(/^#/, "")); } catch (e) { hash = ""; }
+    if (!hash || hash === "overview") return { id: "overview" };
+    if (hash === "architecture" || hash === "method" || hash === "sources") return { id: hash };
+    if (/^fn\d+$/.test(hash)) return { id: "sources", focusId: hash };
+    var control = DATA.controls.find(function (c) { return c.slug === hash; });
+    if (control) return { id: "control", control: control };
+    return { id: "overview" };
+  }
+  function paintToc(route) {
+    var items = [{ href: "#overview", id: "overview", label: "Overview" }];
+    DATA.controls.forEach(function (c) {
+      items.push({ href: "#" + c.slug, id: c.slug, label: pad(c.order) + " " + SHORT[c.id] });
+    });
+    items.push({ href: "#architecture", id: "architecture", label: "Architecture" });
+    items.push({ href: "#method", id: "method", label: "Method" });
+    items.push({ href: "#sources", id: "sources", label: "Sources" });
+    var current = route.id === "control" ? route.control.slug : route.id;
+    toc.innerHTML = items.map(function (item) {
+      var on = item.id === current;
+      return "<a href=\"" + item.href + "\"" + (on ? " class=\"on\" aria-current=\"location\"" : "") + ">" + esc(item.label) + "</a>";
+    }).join("");
+    var active = toc.querySelector("a.on");
+    if (active) active.scrollIntoView({ inline: "nearest", block: "nearest" });
+  }
+  function paintFacts() {
+    document.getElementById("facts").innerHTML =
+      "<span><b>8</b> strategies, one target level · <a href=\"#fn" + NUM["ASD-E8"] + "\">ASD Essential Eight</a></span>" +
+      "<span><b>0</b> control mappings · <a href=\"#fn" + NUM["OUT-E8-REG"] + "\">capability mapping</a></span>" +
+      "<span><b>Windows</b> patch scope evidenced · <a href=\"#fn" + NUM["CD-FOR-IT"] + "\">Falcon for IT</a></span>" +
+      "<span><b>Pending</b> threat context · <a href=\"#fn" + NUM["TT-CORPUS"] + "\">ThinkThreats slice</a></span>";
+  }
+  var PROFILE = {
+    "E8-01": { control: "None evidenced", controlKind: "none", support: "Strong", supportKind: "strong", eco: "Required", ecoKind: "req", residual: "Material", residualKind: "material" },
+    "E8-02": { control: "Bounded", controlKind: "yes", support: "Strong", supportKind: "strong", eco: "Required", ecoKind: "req", residual: "Scope/time", residualKind: "watch" },
+    "E8-03": { control: "None evidenced", controlKind: "none", support: "Supporting", supportKind: "support", eco: "Required", ecoKind: "req", residual: "Material", residualKind: "material" },
+    "E8-04": { control: "Bounded", controlKind: "yes", support: "Strong", supportKind: "strong", eco: "Required", ecoKind: "req", residual: "Baseline", residualKind: "watch" },
+    "E8-05": { control: "Bounded", controlKind: "yes", support: "Strong", supportKind: "strong", eco: "Required", ecoKind: "req", residual: "Coverage", residualKind: "watch" },
+    "E8-06": { control: "Windows", controlKind: "yes", support: "Strong", supportKind: "strong", eco: "Required", ecoKind: "req", residual: "Non-Windows", residualKind: "watch" },
+    "E8-07": { control: "Supported flows", controlKind: "yes", support: "Strong", supportKind: "strong", eco: "Required", ecoKind: "req", residual: "Coverage", residualKind: "watch" },
+    "E8-08": { control: "None", controlKind: "none", support: "Supporting", supportKind: "support", eco: "Control owner", ecoKind: "owner", residual: "Material", residualKind: "material" }
+  };
+  var MODULES = [
+    ["Falcon Prevent", ["S", "—", "S", "S", "—", "—", "—", "S"]],
+    ["Falcon Insight XDR", ["S", "—", "S", "S", "S", "—", "—", "S"]],
+    ["Falcon Exposure Management / Spotlight", ["—", "S", "—", "—", "—", "S", "—", "—"]],
+    ["Falcon Discover", ["—", "S", "—", "—", "—", "S", "—", "—"]],
+    ["Falcon for IT", ["—", "D*", "—", "D*", "—", "D*", "—", "—"]],
+    ["Falcon Privileged Access", ["—", "—", "—", "—", "D*", "—", "—", "—"]],
+    ["Falcon Identity Protection", ["—", "—", "—", "—", "D*/S", "—", "S", "S"]],
+    ["Falcon Cloud Security CIEM / Falcon Shield", ["—", "—", "—", "—", "D*/S", "—", "—", "—"]],
+    ["FalconID", ["—", "—", "—", "—", "—", "—", "D*", "—"]],
+    ["Falcon Secure Access", ["—", "—", "—", "S", "—", "—", "—", "—"]],
+    ["Falcon NG-SIEM", ["S", "S", "S", "S", "S", "S", "S", "S"]]
+  ];
+  var ROLE = {
+    supporting: ["Supporting", "support"],
+    evidence: ["Evidence", "strong"],
+    direct_bounded: ["Direct · bounded", "yes"],
+    direct_supporting: ["Direct / supporting", "yes"]
+  };
+  function pill(label, kind, lab) {
+    return "<span class=\"pcell\"><span class=\"plab\">" + esc(lab) + "</span><span class=\"pill " + kind + "\">" + esc(label) + "</span></span>";
+  }
+  function markCell(mark) {
+    var kind = mark === "S" ? "s" : mark === "D*" ? "d" : mark === "D*/S" ? "ds" : "none";
+    var title = mark === "D*" ? "Direct, bounded to documented scope" : mark === "S" ? "Supporting prevention, visibility, response or evidence" : mark === "D*/S" ? "Direct bounded and supporting" : "No material contribution evidenced";
+    return "<span class=\"mark " + kind + "\" title=\"" + esc(title) + "\">" + esc(mark) + "</span>";
+  }
+  function profileHtml() {
+    var head = "<div class=\"profile-head\"><span>Essential Eight strategy</span><span>Native control</span><span>Native support</span><span>Ecosystem control</span><span>Residual obligation</span></div>";
+    var rows = DATA.controls.map(function (c) {
+      var p = PROFILE[c.id];
+      if (!p) return "";
+      return "<a class=\"profile-row\" href=\"#" + esc(c.slug) + "\">" +
+        "<span class=\"who\"><small>" + esc(c.id) + "</small>" + esc(c.title) + "</span>" +
+        pill(p.control, p.controlKind, "Native control") +
+        pill(p.support, p.supportKind, "Native support") +
+        pill(p.eco, p.ecoKind, "Ecosystem control") +
+        pill(p.residual, p.residualKind, "Residual obligation") +
+        "</a>";
+    }).join("");
+    return "<div class=\"profile\">" + head + rows + "</div>";
+  }
+  function moduleCrosswalk() {
+    var head = "<tr><th>CrowdStrike module</th>" + DATA.controls.map(function (c) {
+      return "<th><a href=\"#" + esc(c.slug) + "\">" + esc(c.id) + "</a></th>";
+    }).join("") + "</tr>";
+    var body = MODULES.map(function (row) {
+      return "<tr><td class=\"mod\">" + esc(row[0]) + "</td>" + row[1].map(markCell).map(function (cell) {
+        return "<td>" + cell + "</td>";
+      }).join("") + "</tr>";
+    }).join("");
+    return "<div class=\"scroll\"><table class=\"cmp xwalk\"><thead>" + head + "</thead><tbody>" + body + "</tbody></table></div>";
+  }
+  function overviewHtml() {
+    var threats = COMMENTARY.threats.map(function (item) {
+      return "<p class=\"threat\">" + esc(item.text) + badge(item.badge) + cites(item.refs) + "</p>";
+    }).join("");
+    return "" +
+      "<section id=\"overview\" class=\"view-in band-navy\">" +
+        "<p class=\"kicker\">The argument</p>" +
+        "<h2>A licence does not establish Essential Eight conformance</h2>" +
+        "<div class=\"thesis\"><p>CrowdStrike provides control capability and evidence. <span>The organisation remains responsible for control design, scope, operation, exceptions and effectiveness.</span></p></div>" +
+        "<p class=\"prose\">" + esc(DATA.overall_conclusion) + cites(["ASD-E8"]) + "</p>" +
+      "</section>" +
+      "<section class=\"view-in band-teal\">" +
+        "<p class=\"kicker\">Comparison</p>" +
+        "<h2>CrowdStrike contribution profile across the Essential Eight</h2>" +
+        "<p class=\"blurb\">Qualitative control architecture. Select a row to open that strategy. These labels are not an ASD maturity score." + cites(["ASD-E8"]) + "</p>" +
+        profileHtml() +
+        "<p class=\"note\">“Bounded” means the capability directly performs part of the control only within a documented platform, workload or authentication scope. Residual labels name the principal obligation left with the organisation. They are not risk ratings.</p>" +
+        "<div class=\"panel teal\">" +
+          "<h3>Where each Falcon module shows up</h3>" +
+          "<p class=\"prose\"><span class=\"mark d\">D*</span> direct, bounded to documented scope. <span class=\"mark s\">S</span> supporting prevention, visibility, response or evidence. <span class=\"mark none\">—</span> no material contribution evidenced. Capability classes, not maturity ratings.</p>" +
+          moduleCrosswalk() +
+        "</div>" +
+      "</section>" +
+      "<section class=\"view-in band-amber\">" +
+        "<p class=\"kicker\">Directional only</p>" +
+        "<h2>Why the eight strategies sit on one path</h2>" +
+        "<p class=\"blurb\">ThinkThreats, as used here, reports 748 sources and 114 structured claims. All 114 were pending on 22 September 2026." + badge("Single-source · pending") + cites(["TT-CORPUS"]) + "</p>" +
+        "<details class=\"caveat\"><summary>Pending threat drivers</summary><div>" + threats + "</div></details>" +
+        "<div class=\"callout\"><strong>Layered model.</strong> The eight strategies reduce different stages of the same attack path. One strategy does not stand in for another." + cites(["ASD-E8"]) + "</div>" +
+      "</section>";
+  }
+  function controlHtml(c) {
+    var note = COMMENTARY.controls[c.id] || {};
+    var map = c.structured_mapping || {};
+    var prof = PROFILE[c.id];
+    var i = DATA.controls.findIndex(function (item) { return item.id === c.id; });
+    var prev = DATA.controls[i - 1];
+    var next = DATA.controls[i + 1];
+    var chips = prof
+      ? "<div class=\"chipstrip\">" +
+          pill(prof.control, prof.controlKind, "Native control") +
+          pill(prof.support, prof.supportKind, "Native support") +
+          pill(prof.eco, prof.ecoKind, "Ecosystem control") +
+          pill(prof.residual, prof.residualKind, "Residual obligation") +
+        "</div>"
+      : "";
+    var modules = (map.native_modules || []).map(function (m) {
+      var role = ROLE[m.role] || [m.role, "none"];
+      return "<tr><td class=\"mod\">" + esc(m.module) + "</td><td><span class=\"pill " + role[1] + "\">" + esc(role[0]) + "</span></td><td>" + esc(m.how) + "</td><td>" + esc(m.boundary) + "</td></tr>";
+    }).join("");
+    var eco = (map.ecosystem_controls || []).map(function (row) {
+      return "<tr><td class=\"mod\">" + esc(row.component) + "</td><td>" + esc(row.how) + "</td></tr>";
+    }).join("");
+    var gaps = (map.gaps_and_residual || []).map(function (row) {
+      return "<tr><td>" + esc(row.gap) + "</td><td>" + esc(row.residual) + "</td></tr>";
+    }).join("");
+    var asks = (map.asd_requirements || []).map(function (row) {
+      return "<li>" + esc(row) + "</li>";
+    }).join("");
+    var pager = "<nav class=\"pager\" aria-label=\"Adjacent strategies\">" +
+      (prev ? "<a class=\"prev\" href=\"#" + prev.slug + "\">Previous: " + esc(prev.title) + "</a>" : "<span></span>") +
+      (next ? "<a class=\"next\" href=\"#" + next.slug + "\">Next: " + esc(next.title) + "</a>" : "<span></span>") +
+      "</nav>";
+    return "<section id=\"" + esc(c.slug) + "\" class=\"view-in band-teal\">" +
+      "<p class=\"kicker\">" + esc(c.id) + " · Strategy " + pad(c.order) + "</p>" +
+      "<h2>" + esc(note.headline || c.title) + "</h2>" +
+      "<div class=\"callout\"><strong>Assessment.</strong> " + esc(note.assessment || c.position) + "</div>" +
+      chips +
+      (note.why ? "<p class=\"prose\">" + esc(note.why) + badge(note.whyBadge) + cites(note.whyRefs) + "</p>" : "") +
+      "<div class=\"panel teal\">" +
+        "<h3>CrowdStrike modules</h3>" +
+        "<div class=\"scroll\"><table class=\"cmp\"><thead><tr><th>Module</th><th>Role</th><th>How it supports</th><th>Boundary</th></tr></thead><tbody>" + modules + "</tbody></table></div>" +
+        "<p class=\"note\">Sources recorded against this strategy." + cites(c.source_refs) + "</p>" +
+      "</div>" +
+      "<div class=\"grid-2\">" +
+        "<div class=\"panel amber\"><h3>What else has to enforce it</h3><table class=\"cmp\"><thead><tr><th>Ecosystem control</th><th>How it completes the requirement</th></tr></thead><tbody>" + eco + "</tbody></table></div>" +
+        "<div class=\"panel pink\"><h3>Residual obligation</h3><table class=\"cmp\"><thead><tr><th>Gap</th><th>Left with the organisation</th></tr></thead><tbody>" + gaps + "</tbody></table></div>" +
+      "</div>" +
+      "<div class=\"panel navy\"><h3>ASD requirement, in short</h3><ul class=\"limits\">" + asks + "</ul><p class=\"note\">" + cites(["ASD-E8"]) + "</p></div>" +
+      pager +
+    "</section>";
+  }
+  function architectureHtml() {
+    var items = COMMENTARY.architecture.map(function (item, idx) {
+      return "<div class=\"find" + (item.proof ? " proof" : "") + "\"><span class=\"n\">" + pad(idx + 1) + "</span><div><h3>" + esc(item.title) + "</h3><p>" + esc(item.body) + "</p></div></div>";
+    }).join("");
+    return "<section id=\"architecture\" class=\"view-in band-navy\">" +
+      "<p class=\"kicker\">Control architecture</p>" +
+      "<h2>Pair the native layer with the control that actually enforces the requirement</h2>" +
+      "<p class=\"blurb\">Six pairings from the assessment. They are an architecture, not a maturity score and not a 90-day plan.</p>" +
+      "<div class=\"finds\">" + items + "</div>" +
+      "<div class=\"warn\"><strong>What would change this advice.</strong> A later product document that evidences native deny-by-default allowlisting across the ASD file classes would weaken the application-control finding. A contractually proven patch scope beyond Windows would widen the patching findings. If the pending M-Trends figures are withdrawn or materially revised, the threat-driver paragraphs have to be rewritten. If a later Essential Eight control mapping becomes available, redo the crosswalk against those mappings. Confirm entitlements in the tenant before treating any capability as deployed.</div>" +
+    "</section>";
+  }
+  function methodHtml() {
+    var limits = "<ul class=\"limits\">" + (DATA.limitations || []).map(function (item) {
+      var text = /cyberdoc/i.test(item) ? "Some product notes used here are working material rather than finished product assurance." : item;
+      return "<li>" + esc(text) + "</li>";
+    }).join("") + "</ul>";
+    var scale = Object.keys(DATA.assessment_scale || {}).map(function (key) {
+      return "<li><strong>" + esc(key.replace(/_/g, " ")) + ".</strong> " + esc(DATA.assessment_scale[key]) + "</li>";
+    }).join("");
+    return "<section id=\"method\" class=\"view-in band-navy\">" +
+      "<p class=\"kicker\">Method</p>" +
+      "<h2>An analyst crosswalk, not a generated coverage claim</h2>" +
+      "<div class=\"panel navy\"><h3>Evidence classes in the file</h3><ul class=\"limits\">" + scale + "</ul></div>" +
+      "<p class=\"prose\">The structured lists on each strategy are rendered from <a href=\"assessment.json\">assessment.json</a>, report <span class=\"mono\">" + esc(DATA.report_id) + "</span>, status " + esc(DATA.status) + ", as at " + esc(DATA.as_at) + ". The prose around those lists is the analyst commentary from the companion assessment of the same date. This page is ThinkInfoSec synthesis for boards and operators. It is not an ASD, ACSC or CrowdStrike publication, and it is not an assessment of any organisation.</p>" +
+      "<p class=\"prose\">" + esc(DATA.asd_model_alignment.methodology_statement) + " The file records the maturity result as " + esc(String(DATA.maturity_determination).replace(/_/g, " ")) + ". No Essential Eight level is derived from product presence, licensing or configuration." + cites(["ASD-E8"]) + "</p>" +
+      "<p class=\"prose\">Product statements were taken from working product notes. Those notes are not treated as independently verified product assurance. Service relationships were taken from a capability mapping used for this assessment. They are not compliance evidence. The Essential Eight record in that mapping has no detailed controls and no control mappings." + cites(["OUT-E8-REG"]) + "</p>" +
+      "<p class=\"prose\">ThinkThreats material is used only to explain risk drivers. Every cited claim was pending on 22 September 2026." + cites(["TT-CORPUS"]) + "</p>" +
+      limits +
+      "<p class=\"note\">Public URLs in the source list are those recorded in the assessment. This briefing did not re-fetch them, and it did not re-query the product notes, the capability mapping, or ThinkThreats.</p>" +
+    "</section>";
+  }
+  function sourcesHtml() {
+    var groups = [
+      ["official", "Official framework"],
+      ["product", "CrowdStrike product evidence"],
+      ["capability", "Capability and alliance mappings"],
+      ["thinkthreats", "ThinkThreats context — pending"]
+    ];
+    function bucket(s) {
+      if (s._group === "supplemental" || s._group === "cyberdoc") return "product";
+      return s._group;
+    }
+    var html = groups.map(function (pair) {
+      var items = DATA._sources.filter(function (s) { return bucket(s) === pair[0]; })
+        .sort(function (a, b) { return a._n - b._n; });
+      if (!items.length) return "";
+      return "<p class=\"group-lbl\">" + pair[1] + "</p><ol class=\"sourcelist\">" +
+        items.map(sourceItem).join("") + "</ol>";
+    }).join("");
+    return "<section id=\"sources\">" +
+      "<p class=\"kicker\">Bibliography</p>" +
+      "<h2>Sources as recorded on 22 September 2026</h2>" +
+      "<p class=\"blurb\">Numbers follow first use in the briefing. Product notes and capability mappings have no public URL in the assessment, so none is invented here. Pending ThinkThreats claims are labelled as pending.</p>" +
+      html +
+      "<p class=\"note\">Accessed through the 22 September 2026 analyst assessment. Linked pages were not re-read for this publication.</p>" +
+    "</section>";
+  }
+  function viewHtml(route) {
+    if (route.id === "overview") return overviewHtml();
+    if (route.id === "control") return controlHtml(route.control);
+    if (route.id === "architecture") return architectureHtml();
+    if (route.id === "method") return methodHtml();
+    return sourcesHtml();
+  }
+  function render(fromNav) {
+    var route = parseRoute();
+    paintToc(route);
+    main.innerHTML = viewHtml(route);
+    var titleBit = route.control ? route.control.title + " — " : "";
+    document.title = titleBit + "Essential 8 and CrowdStrike Falcon Ecosystem | Thinkinfosec Hub";
+    if (route.focusId) {
+      var el = document.getElementById(route.focusId);
+      if (el) {
+        el.tabIndex = -1;
+        el.focus({ preventScroll: true });
+        el.scrollIntoView({ block: "start", behavior: motion() });
+      }
+      return;
+    }
+    if (fromNav) {
+      var heading = main.querySelector("h2");
+      if (heading) {
+        heading.tabIndex = -1;
+        heading.focus({ preventScroll: true });
+      }
+      main.scrollIntoView({ block: "start", behavior: motion() });
+    }
+  }
+  function fail(message) {
+    main.innerHTML = "<section><p class=\"kicker\">Method</p><h2>The assessment file did not load</h2><p class=\"prose\">" + esc(message) + "</p></section>";
+  }
+  fetch("assessment.json")
+    .then(function (res) {
+      if (!res.ok) throw new Error("Open this briefing over HTTP so assessment.json can load (status " + res.status + ").");
+      return res.json();
+    })
+    .then(function (data) {
+      DATA = data;
+      DATA._sources = indexSources(data);
+      paintFacts();
+      render(location.hash.length > 1);
+      window.addEventListener("hashchange", function () { render(true); });
+    })
+    .catch(function (err) {
+      fail(err && err.message ? err.message : "The assessment file could not be read.");
+    });
+})();
+</script>
+</body>
+</html>

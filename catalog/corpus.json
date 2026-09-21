@@ -413,6 +413,18 @@
       "tech": [43, 49],
       "link": "https://andrecamillo.medium.com/leveraging-mitre-tools-for-effective-threat-informed-archite-99f425567edd",
       "description": "Pinned MITRE-informed architecture post."
+    },
+    {
+      "id": "research-essential-eight-crowdstrike",
+      "title": "Essential 8 and CrowdStrike Falcon Ecosystem",
+      "kind": "research",
+      "origin": "hub",
+      "pillar": "process",
+      "people": ["thought-leadership"],
+      "processes": ["govern-assure", "threat-model", "respond-recover"],
+      "tech": [57, 1, 8, 12, 47, 67],
+      "link": "Research/essential-eight-crowdstrike/",
+      "description": "CrowdStrike capability against the Essential Eight: native scope, dependencies, and residual gaps."
     }
   ]
 }

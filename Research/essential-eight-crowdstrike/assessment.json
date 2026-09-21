@@ -1,0 +1,543 @@
+{
+  "schema_version": 2,
+  "report_id": "e8-crowdstrike-2026-09-22",
+  "title": "Essential 8 and CrowdStrike Falcon Ecosystem",
+  "subtitle": "Native capability, ecosystem dependencies and residual gaps",
+  "as_at": "2026-09-22",
+  "status": "analyst-draft",
+  "framework": {
+    "id": "essential-eight",
+    "edition": "2023-11",
+    "name": "Essential Eight Maturity Model",
+    "publisher": "Australian Signals Directorate"
+  },
+  "vendor": {
+    "id": "crowdstrike",
+    "name": "CrowdStrike"
+  },
+  "assessment_scale": {
+    "native_direct": "CrowdStrike can enforce or perform a material part of the requirement.",
+    "native_direct_bounded": "CrowdStrike directly performs part of the requirement only for documented platforms, workloads, applications or authentication flows; this must not be extrapolated to the full control scope.",
+    "native_supporting": "CrowdStrike supplies discovery, prioritisation, detection, response or evidence but does not implement the preventive control by itself.",
+    "ecosystem": "An integrated or complementary product, operating-system control or service is required.",
+    "gap": "No sufficient native capability is evidenced, or the requirement remains predominantly organisational or procedural."
+  },
+  "asd_model_alignment": {
+    "methodology_statement": "This report follows ASD's model by treating the Essential Eight as a complementary set of mitigation strategies, not as eight independent product capabilities.",
+    "maturity_rule": "No Essential Eight maturity level is derived from the presence, licensing or configuration of any CrowdStrike product.",
+    "assessment_basis": "Maturity must be assessed from organisation-specific evidence of implementation and operating effectiveness across all eight strategies at a common target maturity level.",
+    "exceptions_rule": "Exceptions and compensating controls must be risk-based, documented, approved and regularly reviewed.",
+    "source_ref": "ASD-E8"
+  },
+  "overall_conclusion": "CrowdStrike materially supports all eight strategies but cannot alone establish Essential Eight conformance or maturity. Native strength is concentrated in Windows patching, endpoint prevention, identity security, phishing-resistant MFA and telemetry. Material dependencies remain for application allowlisting, Office and application policy enforcement, non-Windows and infrastructure patching, and cyber-recovery.",
+  "maturity_determination": "not_assessable_from_product_capability",
+  "visualisations": [
+    {
+      "id": "coverage-profile",
+      "type": "qualitative-control-matrix",
+      "path": "coverage-profile.svg",
+      "maturity_score": false
+    }
+  ],
+  "controls": [
+    {
+      "order": 1,
+      "id": "E8-01",
+      "slug": "application-control",
+      "title": "Application control",
+      "position": "ecosystem-led",
+      "native_level": "native_supporting",
+      "structured_mapping": {
+        "asd_requirements": [
+          "Permit only an organisation-approved set of relevant executable content.",
+          "Apply enforcement across the scope required by the target maturity level.",
+          "Maintain, approve and periodically validate rules and exceptions.",
+          "Centrally log, protect and analyse application-control events."
+        ],
+        "native_modules": [
+          { "module": "Falcon Prevent", "role": "supporting", "how": "Blocks known and behaviourally malicious execution and applies script controls, custom IOAs and quarantine.", "boundary": "Threat-based blocking is not a deny-by-default approved execution set." },
+          { "module": "Falcon Insight XDR", "role": "supporting", "how": "Records execution activity and supports investigation and containment.", "boundary": "Does not own allowlist policy." },
+          { "module": "Falcon NG-SIEM", "role": "evidence", "how": "Centralises Falcon and third-party allow/block events.", "boundary": "Requires complete integrations, retention and review procedures." }
+        ],
+        "ecosystem_controls": [
+          { "component": "Airlock Digital", "how": "Provides integrated deny-by-default application allowlisting." },
+          { "component": "Microsoft WDAC/AppLocker or equivalent", "how": "Provides authoritative approved-execution enforcement." },
+          { "component": "Change and exception management", "how": "Governs additions, expiry and periodic validation." }
+        ],
+        "gaps_and_residual": [
+          { "gap": "No native ASD-style allowlisting capability was evidenced.", "residual": "Deploy and operate an authoritative allowlisting engine." },
+          { "gap": "Complete file-class, directory, server and driver coverage is not evidenced.", "residual": "Map enforcement scope to the target maturity level and document exclusions." },
+          { "gap": "Telemetry does not validate business approval of software.", "residual": "The organisation owns approval, ruleset review and exceptions." }
+        ]
+      },
+      "native_capabilities": [
+        "Falcon Prevent behavioural and machine-learning prevention",
+        "Script control and custom IOAs",
+        "Falcon Insight XDR execution telemetry and containment"
+      ],
+      "ecosystem": [
+        "Airlock Digital precision application control",
+        "Microsoft WDAC or AppLocker",
+        "Falcon NG-SIEM ingestion of allow/block events"
+      ],
+      "gaps": [
+        "No evidenced native deny-by-default organisation-approved execution set",
+        "No evidenced coverage of every ASD file class, directory, server scope and driver",
+        "Annual allowlist validation remains an organisational process"
+      ],
+      "threat_driver": "Uncontrolled software and scripts increase opportunistic infection paths and obscure abnormal execution; M-Trends recommends pre-approved centrally stored tools.",
+      "source_refs": ["ASD-E8", "TT-REC-24", "CD-PREVENT", "OUT-CS-PREVENT", "ECO-AIRLOCK"]
+    },
+    {
+      "order": 2,
+      "id": "E8-02",
+      "slug": "patch-applications",
+      "title": "Patch applications",
+      "position": "partial",
+      "native_level": "native_direct_bounded",
+      "structured_mapping": {
+        "asd_requirements": [
+          "Discover applications and identify missing patches at the required frequency.",
+          "Prioritise internet-facing and commonly used applications using exploitation context.",
+          "Remediate within the applicable ASD timeframe.",
+          "Remove unsupported applications and evidence successful remediation across the estate."
+        ],
+        "native_modules": [
+          { "module": "Falcon Exposure Management / Spotlight", "role": "supporting", "how": "Discovers vulnerabilities, prioritises with exploit context and tracks exposure.", "boundary": "Does not deploy every required patch." },
+          { "module": "Falcon Discover", "role": "supporting", "how": "Adds covered-host, software and asset visibility.", "boundary": "Does not establish full SaaS, appliance or unmanaged-asset coverage." },
+          { "module": "Falcon for IT Patch Management", "role": "direct_bounded", "how": "Scans and schedules supported Windows application patches and reports host deployment status.", "boundary": "Limited to supported Windows hosts and the documented patch catalogue." },
+          { "module": "Falcon NG-SIEM", "role": "evidence", "how": "Correlates asset, exposure, change and deployment records.", "boundary": "ASD deadlines and source integrations remain organisation-defined." }
+        ],
+        "ecosystem_controls": [
+          { "component": "UEM/RMM and vendor update services", "how": "Patch non-Windows endpoints and applications outside the Falcon catalogue." },
+          { "component": "SaaS/cloud and appliance administration", "how": "Remediate hosted services, appliances and bespoke applications." },
+          { "component": "ITSM/change management", "how": "Starts the compliance clock and governs emergency work and exceptions." }
+        ],
+        "gaps_and_residual": [
+          { "gap": "macOS/Linux deployment and complete application coverage are not proven.", "residual": "Maintain complementary patch channels and accountable asset owners." },
+          { "gap": "Scanning does not prove remediation within ASD timeframes.", "residual": "Measure release or detection through verified production deployment." },
+          { "gap": "Unsupported-software removal and evidence retention are not established.", "residual": "Operate lifecycle, removal, retention and exception processes." }
+        ]
+      },
+      "native_capabilities": [
+        "Falcon Spotlight and Exposure Management vulnerability discovery and prioritisation",
+        "Falcon Discover asset visibility",
+        "Falcon for IT Patch Management for supported Windows scope"
+      ],
+      "ecosystem": [
+        "UEM/RMM and vendor update channels",
+        "Cloud and SaaS administration",
+        "ITSM and change management"
+      ],
+      "gaps": [
+        "macOS and Linux patch deployment is not proven in CyberDoc",
+        "Internet-facing appliances and bespoke applications require other mechanisms",
+        "ASD timeframes, unsupported-software removal and exception governance require organisational evidence"
+      ],
+      "threat_driver": "Exploitation is the leading initial-access vector in the pending ThinkThreats extraction.",
+      "source_refs": ["ASD-E8", "TT-IA-03", "TT-IA-09", "CD-SPOTLIGHT", "CD-FOR-IT", "OUT-CS-SPOTLIGHT", "OUT-CS-FOR-IT"]
+    },
+    {
+      "order": 3,
+      "id": "E8-03",
+      "slug": "restrict-office-macros",
+      "title": "Restrict Microsoft Office macros",
+      "position": "supporting-only",
+      "native_level": "native_supporting",
+      "structured_mapping": {
+        "asd_requirements": [
+          "Disable macros for users without a demonstrated business requirement.",
+          "Block internet-origin macros and constrain trusted locations and publishers.",
+          "Enable antivirus scanning and the signature and API restrictions required by the target level.",
+          "Prevent users from weakening macro security settings."
+        ],
+        "native_modules": [
+          { "module": "Falcon Prevent", "role": "supporting", "how": "Detects suspicious macro and script activity and can quarantine or remove suspicious content when configured.", "boundary": "Does not configure authoritative Office macro policy." },
+          { "module": "Falcon Insight XDR", "role": "supporting", "how": "Correlates Office child processes, scripts and follow-on behaviour.", "boundary": "Post-execution visibility is not preventive-policy evidence." },
+          { "module": "Falcon NG-SIEM", "role": "evidence", "how": "Centralises Falcon and connected Microsoft security events.", "boundary": "Requires Microsoft audit and policy sources." }
+        ],
+        "ecosystem_controls": [
+          { "component": "Microsoft 365 Apps policy, Group Policy or Intune", "how": "Enforces macro settings and prevents user changes." },
+          { "component": "PKI and trusted-publisher governance", "how": "Controls accepted signing certificates and publishers." },
+          { "component": "Identity and exception workflow", "how": "Restricts macro capability to approved business need." }
+        ],
+        "gaps_and_residual": [
+          { "gap": "CrowdStrike does not determine demonstrated macro need.", "residual": "Operate approval and periodic access review." },
+          { "gap": "Trusted publishers, signatures and setting lockout are not governed natively.", "residual": "Enforce and evidence them through Microsoft and PKI controls." },
+          { "gap": "Malicious-macro detections are reactive.", "residual": "Demonstrate preventive policy coverage separately." }
+        ]
+      },
+      "native_capabilities": [
+        "Falcon Prevent suspicious macro inspection and optional removal/quarantine",
+        "Script and post-execution behavioural prevention"
+      ],
+      "ecosystem": [
+        "Microsoft 365 Apps policy",
+        "Group Policy or Intune",
+        "Trusted publisher and code-signing governance"
+      ],
+      "gaps": [
+        "No native administration of demonstrated business need",
+        "No native governance of trusted locations, publishers or V3 signatures",
+        "Detection does not prove Office policy settings are locked"
+      ],
+      "threat_driver": "Macros provide a trusted-document route to script and memory execution; no approved macro-specific ThinkThreats claim is currently available.",
+      "source_refs": ["ASD-E8", "CD-PREVENT", "CS-MACRO-POLICY"]
+    },
+    {
+      "order": 4,
+      "id": "E8-04",
+      "slug": "user-application-hardening",
+      "title": "User application hardening",
+      "position": "partial-supporting",
+      "native_level": "native_supporting_and_partial_enforcement",
+      "structured_mapping": {
+        "asd_requirements": [
+          "Apply ASD and vendor hardening guidance to browsers and user applications.",
+          "Disable obsolete components and constrain risky content and execution paths.",
+          "Constrain scripting facilities according to maturity and administrative need.",
+          "Centrally log relevant events and prevent users weakening settings."
+        ],
+        "native_modules": [
+          { "module": "Falcon Prevent", "role": "supporting", "how": "Applies exploit mitigation and script or command behavioural prevention.", "boundary": "Does not configure every ASD application setting." },
+          { "module": "Falcon for IT", "role": "direct_bounded", "how": "Queries configuration, detects drift and runs tested remediation scripts.", "boundary": "Direct only for explicitly implemented and monitored settings." },
+          { "module": "Falcon Secure Access", "role": "supporting", "how": "Adds browser-layer access and workspace controls.", "boundary": "Does not prove standard browser and application baseline compliance." },
+          { "module": "Falcon NG-SIEM", "role": "evidence", "how": "Centralises PowerShell, command-line, endpoint and policy telemetry.", "boundary": "Coverage, protected retention and review remain customer-owned." }
+        ],
+        "ecosystem_controls": [
+          { "component": "Group Policy, Intune or UEM", "how": "Authoritatively applies and locks system and application configuration." },
+          { "component": "Browser, Office and PDF enterprise policy", "how": "Enforces application-specific attack-surface settings." },
+          { "component": "Baseline governance", "how": "Reconciles ASD and vendor guidance and controls exceptions." }
+        ],
+        "gaps_and_residual": [
+          { "gap": "Complete ASD setting coverage is not evidenced.", "residual": "Maintain and test a requirement-to-setting baseline." },
+          { "gap": "User lockout and component removal need authoritative configuration management.", "residual": "Enforce through platform policy and verify drift." },
+          { "gap": "Telemetry does not establish secure configuration.", "residual": "Retain effective-policy evidence and operational records." }
+        ]
+      },
+      "native_capabilities": [
+        "Falcon Prevent exploit and script prevention",
+        "Falcon for IT configuration queries, drift detection and scripted remediation",
+        "Falcon NG-SIEM central telemetry",
+        "Falcon Secure Access browser-layer controls"
+      ],
+      "ecosystem": [
+        "Group Policy and Intune/UEM",
+        "Browser, Office and PDF enterprise policy",
+        "ASD, vendor and Microsoft security baselines"
+      ],
+      "gaps": [
+        "Organisation must define and test the authoritative baseline",
+        "No evidence of complete ASD setting coverage across user applications",
+        "Settings lockout, unsupported component removal and logging retention require separate evidence"
+      ],
+      "threat_driver": "Hardening reduces exploitable functionality and post-exploitation paths where patching alone is insufficient.",
+      "source_refs": ["ASD-E8", "TT-IA-03", "TT-REC-06", "CD-PREVENT", "CD-FOR-IT", "OUT-CS-SECURE-ACCESS"]
+    },
+    {
+      "order": 5,
+      "id": "E8-05",
+      "slug": "restrict-administrative-privileges",
+      "title": "Restrict administrative privileges",
+      "position": "partial",
+      "native_level": "native_direct_bounded",
+      "structured_mapping": {
+        "asd_requirements": [
+          "Validate, minimise and periodically revalidate privileged access.",
+          "Separate privileged and unprivileged identities and use.",
+          "Restrict internet and email access from privileged operating environments.",
+          "Centrally log and analyse privileged access and changes."
+        ],
+        "native_modules": [
+          { "module": "Falcon Privileged Access", "role": "direct_bounded", "how": "Provides catalogued just-in-time, just-enough privilege and session control.", "boundary": "Current CyberDoc corpus lacks dedicated corroborating product documentation." },
+          { "module": "Falcon Identity Protection", "role": "direct_supporting", "how": "Assesses identity risk and conditionally enforces supported identity paths.", "boundary": "Does not create separated accounts or admin workstations." },
+          { "module": "Falcon Cloud Security CIEM", "role": "supporting", "how": "Finds excessive cloud permissions and supports least-privilege remediation.", "boundary": "Does not cover every privilege repository." },
+          { "module": "Falcon Shield", "role": "direct_bounded", "how": "Governs privileged access for supported connected SaaS applications.", "boundary": "Limited to supported SaaS integrations." },
+          { "module": "Falcon NG-SIEM", "role": "evidence", "how": "Correlates privileged logons, entitlement changes and detections.", "boundary": "Does not replace access certification or identity lifecycle controls." }
+        ],
+        "ecosystem_controls": [
+          { "component": "Enterprise IdP, directory and IGA", "how": "Owns identity lifecycle, separate accounts, approvals and certification." },
+          { "component": "PAM and vaulting", "how": "Controls credentials and sessions outside native CrowdStrike scope." },
+          { "component": "Secure admin workstations and endpoint policy", "how": "Separates and hardens privileged operating environments." }
+        ],
+        "gaps_and_residual": [
+          { "gap": "Universal platform and repository coverage is not proven.", "residual": "Map every privileged path to an enforcement owner." },
+          { "gap": "Separate accounts and administrative environments are external design controls.", "residual": "Implement and test identity and device separation." },
+          { "gap": "Revalidation and inactivity disablement remain governance processes.", "residual": "Produce periodic review and revocation evidence." }
+        ]
+      },
+      "native_capabilities": [
+        "Falcon Privileged Access catalogue capabilities for JIT/JEA and session control",
+        "Falcon Identity Protection ITDR and conditional enforcement",
+        "Falcon Cloud Security CIEM entitlement analysis",
+        "Falcon Shield SaaS privileged-access governance"
+      ],
+      "ecosystem": [
+        "CyberArk and BeyondTrust hybrid mappings",
+        "Directory and identity lifecycle governance",
+        "Secure admin workstations, vaulting and approval workflows"
+      ],
+      "gaps": [
+        "Dedicated FPA documentation is absent from the current CyberDoc corpus",
+        "Dedicated admin identities and separated operating environments are not established by Falcon alone",
+        "Internet restrictions, periodic revalidation and universal repository coverage need external evidence"
+      ],
+      "threat_driver": "Credential compromise becomes enterprise-wide impact when standing privileges, shared administration paths or backup permissions are exposed.",
+      "source_refs": ["ASD-E8", "TT-IA-14", "TT-BACKUP-01", "OUT-CS-FPA", "CD-IDENTITY", "CD-CIEM", "CD-SHIELD"]
+    },
+    {
+      "order": 6,
+      "id": "E8-06",
+      "slug": "patch-operating-systems",
+      "title": "Patch operating systems",
+      "position": "partial",
+      "native_level": "native_direct_windows",
+      "structured_mapping": {
+        "asd_requirements": [
+          "Discover workstations, servers, network devices and OS, driver and firmware versions.",
+          "Identify missing patches and mitigations at the required frequency.",
+          "Remediate within applicable ASD timeframes.",
+          "Replace unsupported operating systems and evidence remediation across the estate."
+        ],
+        "native_modules": [
+          { "module": "Falcon Exposure Management / Spotlight", "role": "supporting", "how": "Identifies host vulnerabilities and prioritises using exploit context.", "boundary": "Does not deploy all OS, driver or firmware updates." },
+          { "module": "Falcon Discover", "role": "supporting", "how": "Inventories covered hosts and software.", "boundary": "Unmanaged, unsupported and sensorless devices need other discovery." },
+          { "module": "Falcon for IT Patch Management", "role": "direct_bounded", "how": "Deploys supported Windows patches and reports status.", "boundary": "No cited evidence for macOS, Linux, network-device, driver or firmware deployment." },
+          { "module": "Falcon for IT state queries", "role": "evidence", "how": "Queries supported hosts to validate version or configuration state.", "boundary": "Query results do not prove complete discovery or remediation." }
+        ],
+        "ecosystem_controls": [
+          { "component": "macOS/Linux management", "how": "Deploys and verifies non-Windows operating-system updates." },
+          { "component": "Network, appliance and vendor management", "how": "Patches network operating systems, appliances, drivers and firmware." },
+          { "component": "ITSM/change and lifecycle management", "how": "Governs emergency windows, exceptions and unsupported-OS replacement." }
+        ],
+        "gaps_and_residual": [
+          { "gap": "Native deployment is evidenced only for Windows.", "residual": "Assign an external control owner for every other platform." },
+          { "gap": "Internet-facing and sensorless discovery is incomplete by default.", "residual": "Reconcile Falcon with CMDB, network and cloud inventories." },
+          { "gap": "Driver, firmware and unsupported-OS coverage remains material.", "residual": "Operate vendor remediation and replacement processes." }
+        ]
+      },
+      "native_capabilities": [
+        "Falcon Spotlight and Exposure Management vulnerability prioritisation",
+        "Falcon Discover inventory",
+        "Falcon for IT Windows patch deployment",
+        "Cross-platform state queries on supported sensor hosts"
+      ],
+      "ecosystem": [
+        "macOS and Linux management",
+        "Network-device and appliance management",
+        "Driver, firmware and unsupported-asset remediation"
+      ],
+      "gaps": [
+        "Windows capability must not be extrapolated to every operating system",
+        "Internet-facing device discovery and 48-hour deployment require separate proof",
+        "Driver, firmware and unsupported-OS replacement remain material dependencies"
+      ],
+      "threat_driver": "Operating-system and edge-device exploitation provides high-leverage initial access and privilege paths.",
+      "source_refs": ["ASD-E8", "TT-IA-09", "TT-REC-06", "CD-SPOTLIGHT", "CD-FOR-IT", "OUT-CS-SPOTLIGHT"]
+    },
+    {
+      "order": 7,
+      "id": "E8-07",
+      "slug": "multi-factor-authentication",
+      "title": "Multi-factor authentication",
+      "position": "strong-partial",
+      "native_level": "native_direct_bounded",
+      "structured_mapping": {
+        "asd_requirements": [
+          "Apply MFA to required organisational, third-party and customer services.",
+          "Cover privileged and specified unprivileged access.",
+          "Use phishing-resistant methods where required and govern enrolment and recovery.",
+          "Centrally log events and control bypass, break-glass and service-account paths."
+        ],
+        "native_modules": [
+          { "module": "FalconID", "role": "direct_bounded", "how": "Provides passwordless phishing-resistant FIDO2 authentication for supported flows.", "boundary": "Does not automatically cover every service, user type or recovery path." },
+          { "module": "Falcon Identity Protection", "role": "direct_supporting", "how": "Uses identity risk and conditional enforcement to challenge or block supported activity.", "boundary": "Depends on integrated identity paths and the authoritative IdP." },
+          { "module": "Falcon NG-SIEM", "role": "evidence", "how": "Centralises authentication and policy-change events.", "boundary": "Completeness depends on source onboarding, identity correlation and retention." }
+        ],
+        "ecosystem_controls": [
+          { "component": "Enterprise IdP and SSO/federation", "how": "Enforces MFA across workforce, privileged and third-party services." },
+          { "component": "Application connectors and CIAM", "how": "Extends MFA to legacy, non-federated and customer-facing flows." },
+          { "component": "Identity governance and service-account controls", "how": "Governs enrolment, recovery, break-glass and exceptions." }
+        ],
+        "gaps_and_residual": [
+          { "gap": "Universal authentication-path coverage is architecture-dependent.", "residual": "Maintain a service-to-authentication-method register and close bypasses." },
+          { "gap": "Mobile-platform prerequisites can create unsupported populations.", "residual": "Provide an alternative phishing-resistant method." },
+          { "gap": "Recovery, break-glass and service-account governance remain external.", "residual": "Test the processes and centralise their events." }
+        ]
+      },
+      "native_capabilities": [
+        "FalconID FIDO2 phishing-resistant passwordless MFA",
+        "Proximity and domain validation",
+        "Falcon Identity Protection risk-based conditional enforcement",
+        "Authentication policy audit logs"
+      ],
+      "ecosystem": [
+        "Existing IdP and federation",
+        "Application, repository and customer-service integrations",
+        "Alternative phishing-resistant methods for unsupported users and services"
+      ],
+      "gaps": [
+        "Universal authentication-path coverage is architecture-dependent",
+        "Break-glass, service-account, enrolment and recovery governance remain organisational",
+        "FalconID mobile-platform prerequisites may leave coverage exceptions"
+      ],
+      "threat_driver": "Stolen credentials and vishing continue to provide initial access; the corpus recommends phishing-resistant MFA for critical administration.",
+      "source_refs": ["ASD-E8", "TT-IA-02", "TT-IA-14", "TT-REC-26", "CD-FALCON-ID", "CD-IDENTITY", "OUT-CS-FALCON-ID"]
+    },
+    {
+      "order": 8,
+      "id": "E8-08",
+      "slug": "regular-backups",
+      "title": "Regular backups",
+      "position": "ecosystem-only",
+      "native_level": "native_supporting",
+      "structured_mapping": {
+        "asd_requirements": [
+          "Back up data, applications and settings according to business requirements.",
+          "Protect backups from unauthorised access, modification and deletion.",
+          "Test restoration to a required common point in time.",
+          "Govern RPO, RTO, retention, privileged recovery access and business acceptance."
+        ],
+        "native_modules": [
+          { "module": "Falcon Prevent", "role": "supporting", "how": "Prevents or detects ransomware and destructive endpoint behaviour.", "boundary": "Does not create, retain or restore backups." },
+          { "module": "Falcon Insight XDR", "role": "supporting", "how": "Investigates and contains activity affecting backup infrastructure.", "boundary": "Containment is not recoverability." },
+          { "module": "Falcon Identity Protection", "role": "supporting", "how": "Detects identity attacks affecting backup administration.", "boundary": "Does not segregate recovery identity or storage." },
+          { "module": "Falcon NG-SIEM", "role": "evidence", "how": "Correlates backup, identity and endpoint alerts.", "boundary": "Backup assurance depends on source-platform evidence." }
+        ],
+        "ecosystem_controls": [
+          { "component": "Rubrik, Cohesity, Veeam or equivalent", "how": "Creates and retains backups and provides immutability, isolation and restoration." },
+          { "component": "Isolated recovery environment", "how": "Separates recovery identity and clean-room operations from production." },
+          { "component": "Business continuity and application owners", "how": "Define RPO, RTO, dependencies, retention and acceptance." }
+        ],
+        "gaps_and_residual": [
+          { "gap": "No native backup creation, retention or immutable storage capability is evidenced.", "residual": "Deploy and govern a dedicated cyber-recovery platform." },
+          { "gap": "CrowdStrike does not execute or attest restoration tests.", "residual": "Test complete recovery to an agreed common point in time." },
+          { "gap": "Production identity compromise can reach backup administration.", "residual": "Segregate recovery identity and maintain immutable or offline copies." }
+        ]
+      },
+      "native_capabilities": [
+        "Ransomware and destructive-activity detection",
+        "Identity threat detection around backup administration",
+        "SIEM ingestion and investigation"
+      ],
+      "ecosystem": [
+        "Rubrik",
+        "Cohesity",
+        "Veeam",
+        "Equivalent immutable backup and cyber-recovery platforms"
+      ],
+      "gaps": [
+        "No native CrowdStrike backup creation or retention",
+        "No native immutable or offline copy control",
+        "No native restore testing, RPO/RTO validation or common-point-in-time recovery"
+      ],
+      "threat_driver": "Attackers target backup identity and routines to deny recovery; resilient recovery must remain independent of the compromised production plane.",
+      "source_refs": ["ASD-E8", "TT-REC-05", "TT-REC-27", "TT-BACKUP-01", "OUT-BDR"]
+    }
+  ],
+  "sources": {
+    "official": [
+      {
+        "id": "ASD-E8",
+        "title": "Essential Eight maturity model",
+        "url": "https://www.cyber.gov.au/business-government/asds-cyber-security-frameworks/essential-eight/essential-eight-maturity-model"
+      },
+      {
+        "id": "ASD-FAQ",
+        "title": "Essential Eight maturity model FAQ",
+        "url": "https://www.cyber.gov.au/business-government/asds-cyber-security-frameworks/essential-eight/essential-eight-maturity-model-faq"
+      },
+      {
+        "id": "ASD-ASSESS",
+        "title": "Essential Eight assessment process guide",
+        "url": "https://www.cyber.gov.au/business-government/asds-cyber-security-frameworks/essential-eight/essential-eight-assessment-process-guide"
+      }
+    ],
+    "cyberdoc": [
+      {
+        "id": "CD-PREVENT",
+        "doc_ids": ["crowdstrike--falcon-prevent--epp-overview", "crowdstrike--falcon-prevent--epp-deployment"],
+        "title": "Falcon Prevent capability and deployment",
+        "evidence_note": "Working product notes"
+      },
+      {
+        "id": "CD-SPOTLIGHT",
+        "doc_ids": ["crowdstrike--falcon-spotlight--vm-deployment"],
+        "title": "Falcon Spotlight vulnerability management",
+        "evidence_note": "Working product notes"
+      },
+      {
+        "id": "CD-FOR-IT",
+        "doc_ids": ["crowdstrike--falcon-for-it--cmdb-overview", "crowdstrike--falcon-for-it--patch-management-reference"],
+        "title": "Falcon for IT and Patch Management",
+        "evidence_note": "Working product notes"
+      },
+      {
+        "id": "CD-IDENTITY",
+        "doc_ids": ["crowdstrike--falcon-identity-protection--itdr-overview"],
+        "title": "Falcon Identity Protection",
+        "evidence_note": "Working product notes"
+      },
+      {
+        "id": "CD-FALCON-ID",
+        "doc_ids": ["crowdstrike--falcon-id--mfa-overview"],
+        "title": "FalconID phishing-resistant MFA",
+        "evidence_note": "Working product notes"
+      },
+      {
+        "id": "CD-CIEM",
+        "doc_ids": ["crowdstrike--falcon-cloud-security-cnapp-cspm-cwpp-cdr--ciem-deployment"],
+        "title": "Falcon Cloud Security CIEM least-privilege workflow",
+        "evidence_note": "Working product notes"
+      },
+      {
+        "id": "CD-SHIELD",
+        "doc_ids": ["crowdstrike--falcon-shield-saas--governance-and-inventory-reference"],
+        "title": "Falcon Shield privilege governance",
+        "evidence_note": "Working product notes"
+      }
+    ],
+    "capability": [
+      { "id": "OUT-CS-PREVENT", "title": "Falcon Prevent" },
+      { "id": "OUT-CS-SPOTLIGHT", "title": "Falcon Spotlight" },
+      { "id": "OUT-CS-FOR-IT", "title": "Falcon for IT" },
+      { "id": "OUT-CS-FPA", "title": "Falcon Privileged Access" },
+      { "id": "OUT-CS-FALCON-ID", "title": "FalconID" },
+      { "id": "OUT-CS-SECURE-ACCESS", "title": "Falcon Secure Access" },
+      { "id": "OUT-BDR", "title": "Managed backup and cyber recovery" }
+    ],
+    "thinkthreats": [
+      { "id": "TT-IA-02", "claim_id": "mandiant-m-trends-2026:c02", "title": "Vishing initial-access trend", "review_status": "PENDING" },
+      { "id": "TT-IA-03", "claim_id": "mandiant-m-trends-2026:c03", "title": "Exploits remain the leading initial-access vector", "review_status": "PENDING" },
+      { "id": "TT-IA-09", "claim_id": "mandiant-m-trends-2026:c09", "title": "Exploits recorded as 32 percent of identified initial-access vectors", "review_status": "PENDING" },
+      { "id": "TT-IA-14", "claim_id": "mandiant-m-trends-2026:c14", "title": "Stolen credentials recorded as 9 percent", "review_status": "PENDING" },
+      { "id": "TT-STAT-21", "claim_id": "mandiant-m-trends-2026:c21", "title": "Ransomware and prior-compromise statistics", "review_status": "PENDING" },
+      { "id": "TT-REC-05", "claim_id": "mandiant-m-trends-2026:c05", "title": "Prioritise backup, identity and virtualisation infrastructure", "review_status": "PENDING" },
+      { "id": "TT-REC-06", "claim_id": "mandiant-m-trends-2026:c06", "title": "Harden edge and core devices", "review_status": "PENDING" },
+      { "id": "TT-REC-24", "claim_id": "mandiant-m-trends-2026:c24", "title": "Pre-approved centrally stored tools", "review_status": "PENDING" },
+      { "id": "TT-REC-26", "claim_id": "mandiant-m-trends-2026:c26", "title": "Phishing-resistant MFA and monitored break-glass", "review_status": "PENDING" },
+      { "id": "TT-REC-27", "claim_id": "mandiant-m-trends-2026:c27", "title": "Isolated immutable offline backups", "review_status": "PENDING" },
+      { "id": "TT-BACKUP-01", "claim_id": "relation:feb69c6c24c931c8412a9f39:claim", "title": "Backup deletion and permission modification case", "review_status": "PENDING" }
+    ],
+    "supplemental": [
+      {
+        "id": "CS-MACRO-POLICY",
+        "title": "CrowdStrike Windows prevention policy resource",
+        "url": "https://developer.crowdstrike.com/cac/terraform/provider/prevention-policy/resources/prevention-policy-windows/"
+      },
+      {
+        "id": "ECO-AIRLOCK",
+        "title": "Airlock Digital precision application control",
+        "url": "https://marketplace.crowdstrike.com/listings/airlock-digital-precision-application-control/"
+      }
+    ]
+  },
+  "limitations": [
+    "This is a product-capability assessment, not an assessment of an organisation.",
+    "The Essential Eight capability mapping used here has no detailed controls and no control mappings.",
+    "Several CyberDoc artefacts are draft, mixed or synthesis documents.",
+    "All ThinkThreats claims used for context were pending review on 2026-09-22.",
+    "Entitlements, regional availability, platform support and release state require tenant and contract validation.",
+    "No deployment completeness, exception population or operating-effectiveness evidence was supplied."
+  ]
+}
