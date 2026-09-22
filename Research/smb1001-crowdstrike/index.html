@@ -58,7 +58,15 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
 .brand img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
 .brand-name { font-size: 15px; font-weight: 700; display: block; line-height: 1.15; }
 .brand-sub { font-size: 12px; color: var(--teal); font-weight: 500; }
-.topbar-meta { font-size: 13px; color: rgba(255,255,255,0.62); }
+.topbar-side { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; text-align: right; }
+.topbar-meta { font-size: 13px; color: rgba(255,255,255,0.62); margin: 0; }
+.advice-stamp {
+  margin: 0; padding: 3px 8px;
+  border: 1.5px solid #FF8B00; border-radius: 4px;
+  background: #fff8f0; color: #9a4d00;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; line-height: 1.2;
+}
 .mast { background: var(--card); border-bottom: 1px solid var(--line); }
 .mast-inner { max-width: var(--col); margin: 0 auto; padding: 28px 24px 22px; }
 .crumb { font-size: 13px; color: var(--faint); margin-bottom: 18px; }
@@ -66,13 +74,6 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
 .crumb a:hover { text-decoration: underline; }
 .sep { margin: 0 8px; color: var(--line); }
 .dateline { font-size: 13px; color: var(--teal-dark); font-weight: 600; margin-bottom: 8px; }
-.advice-stamp {
-  display: inline-block; margin: 0 0 14px;
-  padding: 6px 12px; border: 2px solid #FF8B00; border-radius: 4px;
-  background: #fff8f0; color: #9a4d00;
-  font-size: 13px; font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
 .mast h1 {
   font-size: clamp(28px, 3.6vw, 38px);
   font-weight: 700; color: var(--navy);
@@ -291,7 +292,6 @@ footer .ft-main a { color: var(--teal); text-decoration: none; }
 footer .ft-main a:hover { text-decoration: underline; }
 footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.4); max-width: 40rem; }
 @media (max-width: 800px) {
-  .topbar-meta { display: none; }
   .find { grid-template-columns: 1fr; }
   section { padding: 20px 18px 18px; }
   .pager { flex-direction: column; }
@@ -319,7 +319,10 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
         <span class="brand-sub">Research briefing</span>
       </span>
     </a>
-    <p class="topbar-meta">September 2026</p>
+    <div class="topbar-side">
+      <p class="topbar-meta">September 2026</p>
+      <p class="advice-stamp">Not legal advice</p>
+    </div>
   </div>
 </header>
 
@@ -331,7 +334,6 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
       SMB1001, short of the catalogue
     </nav>
     <p class="dateline">Independent research briefing · September 2026</p>
-    <p class="advice-stamp">Not legal advice</p>
     <h1>SMB1001, short of the <em>catalogue</em></h1>
     <p class="lede">SMB1001 is Dynamic Standards International’s five-level cybersecurity certification for small and medium-sized businesses. This briefing can describe that public shape. The licensed controls are intentionally empty, and a derivative mapping is not cleared.</p>
     <p class="meta-line">SMB1001:2026 · public architecture · as at 22 September 2026</p>

@@ -58,7 +58,15 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
 .brand img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
 .brand-name { font-size: 15px; font-weight: 700; display: block; line-height: 1.15; }
 .brand-sub { font-size: 12px; color: var(--teal); font-weight: 500; }
-.topbar-meta { font-size: 13px; color: rgba(255,255,255,0.62); }
+.topbar-side { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; text-align: right; }
+.topbar-meta { font-size: 13px; color: rgba(255,255,255,0.62); margin: 0; }
+.advice-stamp {
+  margin: 0; padding: 3px 8px;
+  border: 1.5px solid #FF8B00; border-radius: 4px;
+  background: #fff8f0; color: #9a4d00;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; line-height: 1.2;
+}
 .mast { background: var(--card); border-bottom: 1px solid var(--line); }
 .mast-inner { max-width: var(--col); margin: 0 auto; padding: 28px 24px 22px; }
 .crumb { font-size: 13px; color: var(--faint); margin-bottom: 18px; }
@@ -332,7 +340,6 @@ footer .ft-main a { color: var(--teal); text-decoration: none; }
 footer .ft-main a:hover { text-decoration: underline; }
 footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.4); max-width: 40rem; }
 @media (max-width: 800px) {
-  .topbar-meta { display: none; }
   .moves { grid-template-columns: 1fr; }
   .find { grid-template-columns: 1fr; }
   .mx { grid-template-columns: 2.4rem minmax(0, 1fr); }
@@ -364,7 +371,10 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
         <span class="brand-sub">Research briefing</span>
       </span>
     </a>
-    <p class="topbar-meta">September 2026</p>
+    <div class="topbar-side">
+      <p class="topbar-meta">September 2026</p>
+      <p class="advice-stamp">Not legal advice</p>
+    </div>
   </div>
 </header>
 
@@ -433,7 +443,8 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
     "NCSC-BACKUP", "CD-PREVENT", "OUT-BDR",
     "NCSC-APP", "ECO-AIRLOCK",
     "NCSC-PRIV", "OUT-CS-FPA", "CD-CIEM", "CD-SHIELD",
-    "NCSC-NET", "CD-FIREWALL"
+    "NCSC-NET", "CD-FIREWALL",
+    "APRIL-MAP"
   ];
   var SHORT = {
     "NCSC-01": "Patch",
@@ -581,6 +592,18 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
       { title: "Provide the human controls elsewhere", body: "Provide a dedicated password manager and awareness programme. Use CrowdStrike telemetry to focus adoption and training.", proof: true }
     ]
   };
+  var EXAMPLES = {
+    "NCSC-01": { text: "An April 2026 alliance map named ServiceNow as an example of the change record. Virtual patching and application-composition scanning appeared beside it. They do not replace a patch mechanism for each asset class.", refs: ["APRIL-MAP"] },
+    "NCSC-02": { text: "That map named Okta, Microsoft Entra ID and Duo as examples of the identity provider that has to enforce MFA. FalconID and Identity Protection do not replace that provider.", refs: ["APRIL-MAP"] },
+    "NCSC-03": { text: "That map named 1Password and Bitwarden as examples of the password manager the organisation still has to provide.", refs: ["APRIL-MAP"] },
+    "NCSC-04": { text: "That map named Vectra, Corelight, Darktrace and ExtraHop as examples of network telemetry that still has to be onboarded. A SIEM licence does not make those sources complete.", refs: ["APRIL-MAP"] },
+    "NCSC-05": { text: "That map named KnowBe4, Proofpoint, Mimecast, Abnormal and Cofense as examples of the awareness and email platforms that deliver the programme.", refs: ["APRIL-MAP"] },
+    "NCSC-06": { text: "That map named ServiceNow as a CMDB example, and Claroty and Armis for OT and IoT visibility. Discovery still has to be reconciled into an owned lifecycle record.", refs: ["APRIL-MAP"] },
+    "NCSC-07": { text: "That map named Rubrik as the primary recovery partner, with Cohesity and Veeam as alternatives. The same three are already recorded as alliance technologies for this role.", refs: ["APRIL-MAP", "OUT-BDR"] },
+    "NCSC-08": { text: "That map treated endpoint prevention as the control and did not name an allowlisting engine. Where the design requires deny-by-default, an allowlisting product such as Airlock Digital still sits outside Falcon.", refs: ["APRIL-MAP", "ECO-AIRLOCK"] },
+    "NCSC-09": { text: "That map named CyberArk and BeyondTrust for vaulting and session control, and SailPoint for access reviews. Those names illustrate the identity-governance role. They were not re-verified for this briefing.", refs: ["APRIL-MAP"] },
+    "NCSC-10": { text: "That map named Illumio and Akamai Guardicore for workload isolation, Fortinet and Palo Alto for inter-segment firewalls, and Zscaler and Netskope for identity-aware access. Host firewall management does not replace that zone architecture.", refs: ["APRIL-MAP"] }
+  };
 
   var DATA = null;
   var NUM = {};
@@ -620,6 +643,7 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
     });
     byId["OUT-NCSC-REG"] = { id: "OUT-NCSC-REG", _group: "capability", synthetic: "register" };
     byId["TT-CORPUS"] = { id: "TT-CORPUS", _group: "thinkthreats", synthetic: "corpus" };
+    byId["APRIL-MAP"] = { id: "APRIL-MAP", _group: "prior", synthetic: "prior" };
     ORDER.forEach(function (id) {
       if (!byId[id]) throw new Error("Missing source " + id);
     });
@@ -639,6 +663,9 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
     }
     if (s.synthetic === "corpus") {
       return "ThinkThreats corpus, as cited by this assessment on 22 September 2026. Every selected claim was pending review. Pending claims are directional scene-setting, not approved intelligence findings. Absence of a claim is not treated as absence of threat. This page did not re-query the corpus.";
+    }
+    if (s.synthetic === "prior") {
+      return "ThinkInfoSec alliance map, April 2026. An earlier synthesis that named alliance parties against these ten controls and tallied technology domains as native, hybrid or partner-led. This briefing keeps those party names as examples of the ecosystem role. It does not reuse that map’s coverage counts, maturity language or compliance framing. A named party is not evidence the control is in place, and the list is not complete.";
     }
     if (s._group === "official") {
       var extra = s.id === "NCSC-SUMMARY"
@@ -847,7 +874,9 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
         "<div class=\"scroll\"><table class=\"cmp\"><thead><tr><th>Module</th><th>Role</th><th>How it supports</th><th>Boundary</th></tr></thead><tbody>" + modules + "</tbody></table></div>" +
         "<p class=\"note\">Sources recorded against this control." + cites(c.source_refs) + "</p>" +
       "</div>" +
-      "<div class=\"panel amber\"><h3>What else has to enforce it</h3><div class=\"scroll\"><table class=\"cmp\"><thead><tr><th>Ecosystem control</th><th>How it completes the requirement</th></tr></thead><tbody>" + eco + "</tbody></table></div></div>" +
+      "<div class=\"panel amber\"><h3>What else has to enforce it</h3><div class=\"scroll\"><table class=\"cmp\"><thead><tr><th>Ecosystem control</th><th>How it completes the requirement</th></tr></thead><tbody>" + eco + "</tbody></table></div>" +
+        (EXAMPLES[c.id] ? "<p class=\"note\">" + esc(EXAMPLES[c.id].text) + cites(EXAMPLES[c.id].refs) + "</p>" : "") +
+      "</div>" +
       "<div class=\"panel pink\"><h3>Residual obligation</h3><div class=\"scroll\"><table class=\"cmp\"><thead><tr><th>Gap</th><th>Left with the organisation</th></tr></thead><tbody>" + gaps + "</tbody></table></div></div>" +
       "<div class=\"panel navy\"><h3>NCSC requirement, in short</h3><ul class=\"limits\">" + asks + "</ul><p class=\"note\">" + cites(official ? [official] : []) + "</p></div>" +
       pager +
@@ -880,6 +909,7 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
       "<p class=\"prose\">NCSC describes the ten controls as a current priority list for deciding where to spend time and money. No conformance or maturity level is derived from product presence, licensing or configuration. The file records the result as " + esc(String(DATA.maturity_determination).replace(/_/g, " ")) + "." + cites(["NCSC-SUMMARY"]) + "</p>" +
       "<p class=\"prose\">Product statements were taken from working product notes. Those notes are not treated as independently verified product assurance. Service relationships were taken from a capability mapping used for this assessment. They are not compliance evidence. That mapping’s record for these controls has no detailed controls and no control mappings." + cites(["OUT-NCSC-REG"]) + "</p>" +
       "<p class=\"prose\">ThinkThreats material is used only to explain why a control might be prioritised. Every cited claim was pending on 22 September 2026." + cites(["TT-CORPUS"]) + "</p>" +
+      "<p class=\"prose\">Named parties under each control come from an earlier ThinkInfoSec alliance map. They show who might hold the ecosystem role. They were not re-verified for this publication, and they do not change the capability finding." + cites(["APRIL-MAP"]) + "</p>" +
       limits +
       "<p class=\"note\">Public URLs in the source list are those recorded in the assessment. This briefing did not re-fetch them, and it did not re-query the product notes, the capability mapping, or ThinkThreats.</p>" +
     "</section>";
@@ -889,6 +919,7 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
       ["official", "Official framework"],
       ["product", "CrowdStrike product evidence"],
       ["capability", "Capability and alliance mappings"],
+      ["prior", "Earlier ThinkInfoSec map"],
       ["thinkthreats", "ThinkThreats context — pending"]
     ];
     function bucket(s) {

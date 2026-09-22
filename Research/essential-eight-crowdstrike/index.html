@@ -58,7 +58,15 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
 .brand img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
 .brand-name { font-size: 15px; font-weight: 700; display: block; line-height: 1.15; }
 .brand-sub { font-size: 12px; color: var(--teal); font-weight: 500; }
-.topbar-meta { font-size: 13px; color: rgba(255,255,255,0.62); }
+.topbar-side { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; text-align: right; }
+.topbar-meta { font-size: 13px; color: rgba(255,255,255,0.62); margin: 0; }
+.advice-stamp {
+  margin: 0; padding: 3px 8px;
+  border: 1.5px solid #FF8B00; border-radius: 4px;
+  background: #fff8f0; color: #9a4d00;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; line-height: 1.2;
+}
 .mast { background: var(--card); border-bottom: 1px solid var(--line); }
 .mast-inner { max-width: var(--col); margin: 0 auto; padding: 28px 24px 22px; }
 .crumb { font-size: 13px; color: var(--faint); margin-bottom: 18px; }
@@ -331,7 +339,6 @@ footer .ft-main a { color: var(--teal); text-decoration: none; }
 footer .ft-main a:hover { text-decoration: underline; }
 footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.4); max-width: 40rem; }
 @media (max-width: 800px) {
-  .topbar-meta { display: none; }
   .moves { grid-template-columns: 1fr; }
   .find { grid-template-columns: 1fr; }
   .mx { grid-template-columns: 2.4rem minmax(0, 1fr); }
@@ -362,7 +369,10 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
         <span class="brand-sub">Research briefing</span>
       </span>
     </a>
-    <p class="topbar-meta">September 2026</p>
+    <div class="topbar-side">
+      <p class="topbar-meta">September 2026</p>
+      <p class="advice-stamp">Not legal advice</p>
+    </div>
   </div>
 </header>
 
