@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NCSC Top 10 and the Falcon boundary | Thinkinfosec Hub</title>
+<meta name="description" content="An independent ThinkInfoSec crosswalk of CrowdStrike capability against New Zealand’s NCSC Critical Controls: native scope, dependencies, and residual obligations.">
+<meta name="author" content="Andre Camillo">
+<link rel="canonical" href="https://amcamillo.github.io/thinkinfosec-hub/Research/ncsc-top-10-crowdstrike/">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0D1F3C;
+  --teal: #00BFCF;
+  --teal-dark: #008A96;
+  --pink: #FF2D78;
+  --green: #00875A;
+  --bg: #f4f7f6;
+  --card: #ffffff;
+  --ink: #333333;
+  --mute: #555555;
+  --faint: #777777;
+  --line: #dddddd;
+  --radius: 8px;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
+  --focus: 2px solid var(--teal);
+  --col: 1040px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--teal-dark); }
+a:hover { text-decoration: underline; }
+a:focus-visible, button:focus-visible, summary:focus-visible {
+  outline: var(--focus); outline-offset: 3px;
+}
+.skip {
+  position: absolute; left: 0.75rem; top: -3rem;
+  background: var(--navy); color: #fff; padding: 0.5rem 0.85rem;
+  border-radius: var(--radius); z-index: 400; text-decoration: none;
+}
+.skip:focus { top: 0.75rem; }
+.topbar { background: var(--navy); color: #fff; }
+.topbar-inner {
+  max-width: var(--col); margin: 0 auto;
+  min-height: 52px; padding: 8px 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+.brand img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.brand-name { font-size: 15px; font-weight: 700; display: block; line-height: 1.15; }
+.brand-sub { font-size: 12px; color: var(--teal); font-weight: 500; }
+.topbar-meta { font-size: 13px; color: rgba(255,255,255,0.62); }
+.mast { background: var(--card); border-bottom: 1px solid var(--line); }
+.mast-inner { max-width: var(--col); margin: 0 auto; padding: 28px 24px 22px; }
+.crumb { font-size: 13px; color: var(--faint); margin-bottom: 18px; }
+.crumb a { color: var(--teal-dark); text-decoration: none; font-weight: 500; }
+.crumb a:hover { text-decoration: underline; }
+.sep { margin: 0 8px; color: var(--line); }
+.dateline { font-size: 13px; color: var(--teal-dark); font-weight: 600; margin-bottom: 8px; }
+.mast h1 {
+  font-size: clamp(28px, 3.6vw, 38px);
+  font-weight: 700; color: var(--navy);
+  letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 12px;
+}
+.mast h1 em { font-style: normal; color: var(--teal-dark); }
+.lede { max-width: 42rem; color: var(--mute); margin-bottom: 10px; }
+.meta-line { font-size: 14px; color: var(--faint); margin-bottom: 18px; }
+.facts {
+  display: flex; flex-wrap: wrap; gap: 10px 32px;
+  padding-top: 16px; border-top: 1px solid var(--line);
+  font-size: 14px; color: var(--mute);
+}
+.facts b { color: var(--navy); font-weight: 700; margin-right: 5px; }
+.facts a { text-decoration: none; font-size: 13px; }
+.facts a:hover { text-decoration: underline; }
+.toc {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--card); border-bottom: 1px solid var(--line); padding: 8px 0;
+}
+.toc-inner {
+  max-width: var(--col); margin: 0 auto; padding: 0 24px;
+  display: flex; gap: 4px; overflow-x: auto; width: 100%;
+}
+.toc a {
+  flex-shrink: 0; color: var(--faint); text-decoration: none;
+  font-size: 13px; font-weight: 500; min-height: 40px; padding: 0 12px;
+  display: inline-flex; align-items: center; border-radius: 6px;
+}
+.toc a:hover { color: var(--navy); background: var(--bg); }
+.toc a.on { color: var(--navy); background: var(--bg); font-weight: 600; }
+.wrap { max-width: var(--col); margin: 0 auto; padding: 20px 24px 64px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.wrap > section { min-width: 0; }
+section {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 28px 28px 24px; scroll-margin-top: 64px;
+}
+.kicker {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--teal-dark); margin-bottom: 6px;
+}
+h2 {
+  font-size: 1.45rem; font-weight: 700; color: var(--navy);
+  margin: 0 0 10px; letter-spacing: -0.02em; line-height: 1.25;
+}
+h3 { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.blurb { color: var(--mute); margin-bottom: 18px; max-width: 44rem; }
+.prose { font-size: 14.5px; color: var(--mute); margin-top: 8px; }
+.note { font-size: 14px; color: var(--mute); margin-top: 12px; }
+.thesis {
+  background: var(--bg); border-radius: var(--radius); padding: 16px 18px; margin: 0 0 20px;
+}
+.thesis p { font-size: 1.05rem; font-weight: 600; color: var(--navy); line-height: 1.5; max-width: 46rem; }
+.thesis span { color: var(--teal-dark); }
+.moves { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
+.move .n { font-size: 12px; font-weight: 700; color: var(--teal-dark); display: block; margin-bottom: 6px; }
+.move:nth-child(2) .n { color: var(--navy); }
+.move:nth-child(3) .n { color: var(--pink); }
+.move p { font-size: 14.5px; color: var(--mute); }
+.callout {
+  margin-top: 16px; padding: 14px 16px; background: var(--navy); color: #fff;
+  border-radius: var(--radius); font-size: 14.5px;
+}
+.callout strong { color: var(--teal); }
+.callout .cite { color: var(--teal); }
+.warn {
+  margin-top: 14px; padding: 12px 14px; background: #fff8f0;
+  border-left: 3px solid #FF8B00; border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 14.5px; color: var(--mute);
+}
+.warn strong { color: var(--navy); }
+.grid-2 { display: grid; gap: 16px; }
+@media (min-width: 800px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+.mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; }
+sup.cite, .cite {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10px; font-weight: 500; line-height: 0; vertical-align: super;
+}
+.cite { color: var(--teal-dark); text-decoration: none; margin-left: 1px; }
+.cite:hover { text-decoration: underline; }
+.sourcelist { list-style: none; display: grid; gap: 12px; }
+.sourcelist li {
+  font-size: 14px; color: var(--mute); padding-left: 2.6rem; position: relative;
+  line-height: 1.55; scroll-margin-top: 72px;
+}
+.sourcelist li > .n {
+  position: absolute; left: 0; top: 0;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px; font-weight: 600; color: var(--navy);
+}
+.sourcelist a { word-break: break-word; }
+.sourcelist .meta {
+  display: block; margin-top: 2px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px; color: var(--faint);
+}
+.group-lbl {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--teal-dark); margin: 22px 0 10px;
+}
+.group-lbl:first-child { margin-top: 0; }
+.sourcelist li:target { background: #eef8f9; border-radius: 6px; }
+.badge {
+  display: inline; font-size: 12px; font-weight: 600; font-style: italic;
+  border: 0; background: none; color: var(--faint); padding: 0; text-transform: none;
+}
+.finds { display: grid; gap: 0; }
+.find {
+  display: grid; grid-template-columns: 2.2rem 1fr; gap: 8px;
+  padding: 16px 0; border-top: 1px solid var(--line);
+}
+.find .n { font-size: 14px; font-weight: 700; color: var(--teal-dark); padding-top: 2px; }
+.find.proof .n { color: var(--pink); }
+.find p { font-size: 15px; color: var(--ink); margin: 6px 0 0; }
+.find h3 { margin: 0; }
+details.caveat { border-top: 1px solid var(--line); }
+details.caveat summary {
+  cursor: pointer; list-style: none; padding: 12px 0;
+  font-weight: 600; font-size: 15px; color: var(--navy);
+  display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px;
+}
+details.caveat summary::-webkit-details-marker { display: none; }
+details.caveat summary::after { content: "+"; color: var(--teal-dark); font-weight: 500; }
+details.caveat[open] summary::after { content: "–"; }
+details.caveat p { padding: 0 0 14px; font-size: 14.5px; color: var(--mute); }
+.chiprow { font-size: 14px; color: var(--faint); margin-bottom: 8px; }
+.threat { padding: 14px 0; border-top: 1px solid var(--line); font-size: 15px; color: var(--ink); }
+.limits { margin: 14px 0 0 1.1rem; display: grid; gap: 8px; }
+.limits li { font-size: 14.5px; color: var(--mute); }
+.mx {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1.05fr) minmax(0, 1.35fr);
+  gap: 4px 16px; align-items: baseline;
+  padding: 14px 8px; margin: 0 -8px;
+  border-top: 1px solid var(--line);
+  text-decoration: none; color: inherit; border-radius: 6px; min-height: 44px;
+}
+.mx:hover { background: var(--bg); }
+.mx .n { font-size: 13px; font-weight: 700; color: var(--teal-dark); }
+.mx .name { display: block; font-weight: 700; color: var(--navy); }
+.mx .pos { display: block; font-size: 13px; color: var(--faint); font-weight: 600; margin-top: 2px; }
+.mx .sub { font-size: 14px; color: var(--mute); }
+.lanes { display: grid; gap: 18px; margin-top: 18px; }
+@media (min-width: 800px) { .lanes { grid-template-columns: 1fr 1fr 1fr; } }
+.lane .role {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--teal-dark); margin-bottom: 4px;
+}
+.lane.residual .role { color: var(--pink); }
+.lane h3 { font-size: 1.02rem; }
+.lane ul { margin: 8px 0 0 1.05rem; display: grid; gap: 6px; }
+.lane li { font-size: 14px; color: var(--mute); }
+.rec-label {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--faint); margin-top: 12px;
+}
+.pager { display: flex; justify-content: space-between; gap: 12px; }
+.pager a {
+  display: inline-flex; align-items: center; min-height: 44px;
+  font-size: 14px; font-weight: 600; text-decoration: none; max-width: 48%;
+}
+.pager a.next { margin-left: auto; text-align: right; }
+.toc a { transition: background-color 160ms ease, color 160ms ease; }
+.band-navy { border-top: 4px solid var(--navy); }
+.band-teal { border-top: 4px solid var(--teal); }
+.band-amber { border-top: 4px solid #FF8B00; }
+.band-pink { border-top: 4px solid var(--pink); }
+.panel {
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 14px 16px 12px; margin-top: 14px;
+}
+.panel.teal { background: #f3fbfc; border-top: 3px solid var(--teal); }
+.panel.navy { background: #f4f7fb; border-top: 3px solid var(--navy); }
+.panel.amber { background: #fff8f0; border-top: 3px solid #FF8B00; }
+.panel.pink { background: #fff5f8; border-top: 3px solid var(--pink); }
+.panel h3 { margin-bottom: 8px; }
+.profile { display: grid; gap: 8px; }
+.profile-head, .profile-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 1.35fr) repeat(4, minmax(108px, 1fr));
+  gap: 8px; align-items: center;
+}
+.profile-head {
+  background: var(--navy); color: #fff; border-radius: 8px;
+  padding: 10px 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.01em;
+}
+.profile-row {
+  text-decoration: none; color: inherit; background: #f6f8fb;
+  border-radius: 8px; padding: 10px 12px; min-height: 48px;
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+.profile-row:hover { background: #e7eef6; }
+.profile-row .who { font-weight: 700; color: var(--navy); }
+.profile-row .who small {
+  display: block; font-weight: 600; color: var(--teal-dark);
+  font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px;
+}
+.plab { display: none; }
+.chipstrip {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px; margin: 12px 0 4px;
+}
+.chipstrip .plab { display: block; }
+.pill {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 28px; padding: 2px 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 700; line-height: 1.2; color: var(--navy);
+  white-space: nowrap;
+}
+.pill.none { background: #e8edf4; }
+.pill.yes { background: #c9f0dc; }
+.pill.strong { background: #cfe5ff; }
+.pill.support { background: #dcecff; }
+.pill.req { background: #ffe1b8; }
+.pill.owner { background: #ffd49a; }
+.pill.material { background: #ffd1d1; }
+.pill.watch { background: #ffe8b8; }
+.scroll { overflow-x: auto; margin-top: 8px; max-width: 100%; }
+.cmp { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.cmp th {
+  text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--faint);
+  padding: 0 10px 8px 0; border-bottom: 2px solid var(--navy); white-space: nowrap;
+}
+.cmp td {
+  padding: 9px 10px 9px 0; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--mute);
+}
+.cmp .mod { font-weight: 700; color: var(--navy); }
+.xwalk { min-width: 720px; }
+.xwalk th, .xwalk td { text-align: center; }
+.xwalk th:first-child, .xwalk td:first-child { text-align: left; }
+.xwalk th a { color: #fff; text-decoration: none; }
+.xwalk thead th { background: var(--navy); color: #fff; padding: 8px; border-bottom: 0; }
+.xwalk thead th:first-child { border-radius: 8px 0 0 0; }
+.xwalk thead th:last-child { border-radius: 0 8px 0 0; }
+.mark {
+  display: inline-flex; min-width: 2.4rem; justify-content: center;
+  border-radius: 999px; padding: 2px 6px; font-size: 12px; font-weight: 700; color: var(--navy);
+}
+.mark.s { background: #dcecff; }
+.mark.d { background: #c9f0dc; }
+.mark.ds { background: #b7e4c7; }
+.mark.none { background: transparent; color: var(--faint); font-weight: 500; }
+#main > section.view-in { animation: rise 260ms ease both; }
+#main > section.view-in:nth-child(2) { animation-delay: 50ms; }
+#main > section.view-in:nth-child(3) { animation-delay: 100ms; }
+.view-in .panel { animation: rise 280ms ease both; }
+.view-in .panel:nth-of-type(2) { animation-delay: 40ms; }
+.view-in .panel:nth-of-type(3) { animation-delay: 80ms; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .toc a, .profile-row { transition: none; }
+  #main > section.view-in, .view-in .panel { animation: none; }
+}
+footer {
+  background: var(--navy); color: rgba(255,255,255,0.65);
+  padding: 24px; text-align: center;
+}
+footer .ft-main { font-size: 14px; max-width: var(--col); margin: 0 auto; }
+footer .ft-main a { color: var(--teal); text-decoration: none; }
+footer .ft-main a:hover { text-decoration: underline; }
+footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.4); max-width: 40rem; }
+@media (max-width: 800px) {
+  .topbar-meta { display: none; }
+  .moves { grid-template-columns: 1fr; }
+  .find { grid-template-columns: 1fr; }
+  .mx { grid-template-columns: 2.4rem minmax(0, 1fr); }
+  .mx .sub { grid-column: 2; }
+  section { padding: 20px 18px 18px; }
+  .pager { flex-direction: column; }
+  .pager a, .pager a.next { max-width: none; text-align: left; margin-left: 0; }
+  .profile-head { display: none; }
+  .profile-row, .chipstrip { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .profile-row .who { grid-column: 1 / -1; }
+  .pcell { min-width: 0; }
+  .pill { white-space: normal; text-align: center; }
+  .plab {
+    display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--faint); margin-bottom: 4px;
+  }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../../index.html">
+      <img src="../../assets/learning-hub-logo.png" alt="Thinkinfosec Hub logo" width="32" height="32" onerror="this.style.display='none'">
+      <span>
+        <span class="brand-name">Thinkinfosec</span>
+        <span class="brand-sub">Research briefing</span>
+      </span>
+    </a>
+    <p class="topbar-meta">September 2026</p>
+  </div>
+</header>
+
+<div class="mast">
+  <div class="mast-inner">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="../../index.html">Hub</a><span class="sep">/</span>
+      <a href="../../index.html#research">Research</a><span class="sep">/</span>
+      NCSC Top 10 and the Falcon boundary
+    </nav>
+    <p class="dateline">Independent research briefing · September 2026</p>
+    <h1>NCSC Top 10 and the Falcon <em>boundary</em></h1>
+    <p class="lede">CrowdStrike can carry material parts of several New Zealand NCSC Critical Controls. A licence or a detection does not prove a control is in place. Each control is walked as native capability, dependency and residual obligation.</p>
+    <p class="meta-line">Analyst assessment · as at 22 September 2026 · NCSC Critical Controls, 21 September 2026 snapshot · New Zealand</p>
+    <p class="facts" id="facts">
+      <span><b>10</b> controls, reviewed annually · <a href="#fn1">NCSC Critical Controls</a></span>
+      <span><b>0</b> control mappings · <a href="#fn2">capability mapping</a></span>
+      <span><b>Windows</b> patch scope evidenced · <a href="#fn3">Falcon for IT</a></span>
+      <span><b>Pending</b> threat context · <a href="#fn4">ThinkThreats slice</a></span>
+    </p>
+  </div>
+</div>
+
+<nav class="toc" aria-label="On this page"><div class="toc-inner" id="toc"></div></nav>
+
+<main id="main" class="wrap">
+  <section>
+    <p class="kicker">The argument</p>
+    <h2>A licence does not establish NCSC conformance</h2>
+    <div class="thesis">
+      <p>CrowdStrike provides control capability and evidence. <span>The organisation remains responsible for control design, scope, operation, exceptions and effectiveness.</span></p>
+    </div>
+    <p class="blurb">Open this briefing over a local web server to load the control navigator. The ten controls, the control architecture, the method and the sources are separate views.</p>
+  </section>
+</main>
+
+<noscript>
+  <div class="wrap">
+    <section>
+      <p class="kicker">How to read this</p>
+      <h2>JavaScript is required for the control navigator</h2>
+      <p class="prose">The argument above still stands. CrowdStrike is not treated here as an NCSC compliance product. Conformance is an organisational assessment against the control, not a reading of a licence.</p>
+    </section>
+  </div>
+</noscript>
+
+<footer>
+  <p class="ft-main">ThinkInfoSec 2026 — <a href="https://www.linkedin.com/in/andrecamillo/" target="_blank" rel="noopener">Andre Camillo</a> · <a href="../../index.html#research">Back to Research</a></p>
+  <p class="ft-sub">Independent briefing. Educational use. Not an NCSC or CrowdStrike publication. Numbered citations map to the source list. The thesis is ThinkInfoSec synthesis of the 22 September 2026 assessment.</p>
+</footer>
+
+<script>
+(function () {
+  /* Mast links assume these four ids are numbered 1–4. Do not reorder them. */
+  var ORDER = [
+    "NCSC-SUMMARY", "OUT-NCSC-REG", "CD-PATCH", "TT-CORPUS",
+    "TT-PATCH-01", "TT-PATCH-02", "TT-CRED-01", "TT-AWARE-01", "TT-PASSWORD-01",
+    "TT-AWARE-02", "TT-LOG-01", "TT-ASSET-01", "TT-BACKUP-02", "TT-BACKUP-01",
+    "TT-APP-01", "TT-HANDOFF-01", "TT-PRIV-01", "TT-NET-01",
+    "NCSC-PATCH", "CD-EXPOSURE", "CD-DISCOVER",
+    "NCSC-MFA", "CD-FALCONID", "CD-IDENTITY", "CD-NGSIEM",
+    "NCSC-PASSWORD",
+    "NCSC-LOG", "CD-ONUM", "CD-INSIGHT", "CD-CDR",
+    "NCSC-AWARE",
+    "NCSC-ASSET", "CD-SURFACE", "CD-XIOT",
+    "NCSC-BACKUP", "CD-PREVENT", "OUT-BDR",
+    "NCSC-APP", "ECO-AIRLOCK",
+    "NCSC-PRIV", "OUT-CS-FPA", "CD-CIEM", "CD-SHIELD",
+    "NCSC-NET", "CD-FIREWALL"
+  ];
+  var SHORT = {
+    "NCSC-01": "Patch",
+    "NCSC-02": "MFA",
+    "NCSC-03": "Passwords",
+    "NCSC-04": "Logging",
+    "NCSC-05": "Awareness",
+    "NCSC-06": "Assets",
+    "NCSC-07": "Backups",
+    "NCSC-08": "Apps",
+    "NCSC-09": "Privilege",
+    "NCSC-10": "Network"
+  };
+  var OFFICIAL = {
+    "NCSC-01": "NCSC-PATCH",
+    "NCSC-02": "NCSC-MFA",
+    "NCSC-03": "NCSC-PASSWORD",
+    "NCSC-04": "NCSC-LOG",
+    "NCSC-05": "NCSC-AWARE",
+    "NCSC-06": "NCSC-ASSET",
+    "NCSC-07": "NCSC-BACKUP",
+    "NCSC-08": "NCSC-APP",
+    "NCSC-09": "NCSC-PRIV",
+    "NCSC-10": "NCSC-NET"
+  };
+  var COMMENTARY = {
+    controls: {
+      "NCSC-01": {
+        headline: "Windows patching does not cover the NCSC estate",
+        why: "A pending extraction records exploitation as the leading initial-access vector, and as 32 percent of investigations where a vector was identified. Delayed patching leaves that path open. An incomplete inventory makes the exposure hard to measure.",
+        whyRefs: ["TT-PATCH-01", "TT-PATCH-02"],
+        whyBadge: "Single-source · pending",
+        assessment: "Direct but bounded Windows capability. Complete coverage still needs other mechanisms."
+      },
+      "NCSC-02": {
+        headline: "Phishing-resistant MFA does not verify the business process",
+        why: "The same pending extraction records stolen credentials in 9 percent of investigated incidents, vishing as the second-most common initial-access vector, and help-desk targeting for password resets and MFA changes. Authentication technology and process verification have to be designed together.",
+        whyRefs: ["TT-CRED-01", "TT-AWARE-01", "TT-PASSWORD-01"],
+        whyBadge: "Single-source · pending",
+        assessment: "Strong bounded native MFA. Verification and universal coverage remain process and architecture responsibilities."
+      },
+      "NCSC-03": {
+        headline: "No native password manager was evidenced",
+        why: "Pending evidence records stolen credentials as a continuing initial-access vector, and help-desk targeting for password resets. A password manager reduces reuse and weak storage. Controlled recovery addresses a path attackers already use.",
+        whyRefs: ["TT-CRED-01", "TT-PASSWORD-01"],
+        whyBadge: "Single-source · pending",
+        assessment: "The password manager sits outside Falcon. CrowdStrike contributes identity-risk reduction and telemetry only."
+      },
+      "NCSC-04": {
+        headline: "A SIEM does not prove the log estate is complete",
+        why: "A pending recommendation is to close telemetry and endpoint-detection gaps, and to keep infrastructure documentation current, so response is not blocked by missing diagrams or logs. Without that evidence, an organisation cannot confidently scope an incident or show that the exploited gap has been closed.",
+        whyRefs: ["TT-LOG-01"],
+        whyBadge: "Single-source · pending",
+        assessment: "Strong native platform capability. Effectiveness remains source-, retention- and operations-dependent."
+      },
+      "NCSC-05": {
+        headline: "Telemetry is not an awareness programme",
+        why: "Pending findings record vishing as the second-most common initial-access vector, and campaigns that manipulated users and help desks to obtain credentials, approve rogue SaaS access, reset passwords or change MFA. Technical controls do not remove those human and process paths.",
+        whyRefs: ["TT-AWARE-01", "TT-AWARE-02", "TT-PASSWORD-01"],
+        whyBadge: "Single-source · pending",
+        assessment: "The awareness programme sits outside Falcon. CrowdStrike provides scenario and measurement inputs only."
+      },
+      "NCSC-06": {
+        headline: "Discovery is not lifecycle governance",
+        why: "Pending guidance calls for current infrastructure documentation and for closing telemetry gaps, and separately for hardening edge and core devices because exploitation remains a common entry path. Unknown or unsupported assets obstruct both prevention and response.",
+        whyRefs: ["TT-LOG-01", "TT-ASSET-01"],
+        whyBadge: "Single-source · pending",
+        assessment: "Strong security discovery and inventory. Lifecycle governance remains with the organisation."
+      },
+      "NCSC-07": {
+        headline: "Detection around backups is not a backup",
+        why: "Pending recommendations are to prioritise backup, identity and virtualisation security, because attackers target them to deny recovery, and to keep decoupled identity, immutable storage and offsite or air-gapped copies. Recovery is a resilience control.",
+        whyRefs: ["TT-BACKUP-02", "TT-BACKUP-01"],
+        whyBadge: "Single-source · pending",
+        assessment: "Backup and restoration sit outside Falcon. CrowdStrike is a supporting detection and investigation layer."
+      },
+      "NCSC-08": {
+        headline: "Behaviour blocking is not an approved execution set",
+        why: "A pending recommendation is to use pre-approved, centrally stored tools. Fewer out-of-baseline installs also means fewer opportunistic infections from self-installed software.",
+        whyRefs: ["TT-APP-01"],
+        whyBadge: "Single-source · pending",
+        assessment: "Bounded native prevention. Authoritative allowlisting stays outside Falcon where the design requires deny-by-default."
+      },
+      "NCSC-09": {
+        headline: "Privilege tools do not prove least privilege everywhere",
+        why: "A pending extraction records rapid hand-off from initial-access operators, and recommends phishing-resistant MFA with monitored break-glass procedures for Tier-0 access. Excess privilege turns one compromised account into broad system and recovery impact.",
+        whyRefs: ["TT-HANDOFF-01", "TT-PRIV-01"],
+        whyBadge: "Single-source · pending",
+        assessment: "Meaningful bounded native capability. Complete least privilege remains an identity-governance architecture."
+      },
+      "NCSC-10": {
+        headline: "A host firewall is not a zone architecture",
+        why: "A pending claim describes malware used to support lateral movement. Other pending recommendations emphasise hardened edge and core devices, and recovery environments decoupled from production identity. Segmentation limits blast radius after initial access.",
+        whyRefs: ["TT-NET-01", "TT-ASSET-01", "TT-BACKUP-01"],
+        whyBadge: "Pending · two reports",
+        assessment: "Bounded host enforcement and visibility. Network controls own the control objective."
+      }
+    },
+    threats: [
+      {
+        text: "A pending M-Trends 2026 extraction records exploits as the leading initial-access vector, and as 32 percent of investigations where a vector was identified. That is the practical case for measurable patch coverage.",
+        refs: ["TT-PATCH-01", "TT-PATCH-02"],
+        badge: "Single-source · pending"
+      },
+      {
+        text: "The same pending extraction records stolen credentials in 9 percent of investigations, vishing as the second-most common vector, and help-desk targeting for password resets and MFA changes.",
+        refs: ["TT-CRED-01", "TT-AWARE-01", "TT-PASSWORD-01"],
+        badge: "Single-source · pending"
+      },
+      {
+        text: "It also describes vishing used to steal credentials and to obtain rogue SaaS authorisation. People and business processes are part of the initial-access path.",
+        refs: ["TT-AWARE-02"],
+        badge: "Single-source · pending"
+      },
+      {
+        text: "Pending guidance is to close telemetry gaps, keep infrastructure documentation current, and harden edge and core devices. Unknown assets and missing logs obstruct both prevention and response.",
+        refs: ["TT-LOG-01", "TT-ASSET-01"],
+        badge: "Single-source · pending"
+      },
+      {
+        text: "The same pending extraction recommends prioritising backup, identity and virtualisation security, with decoupled identity, immutable storage and offsite or air-gapped copies.",
+        refs: ["TT-BACKUP-02", "TT-BACKUP-01"],
+        badge: "Single-source · pending"
+      },
+      {
+        text: "It recommends pre-approved, centrally stored tools, and phishing-resistant MFA with monitored break-glass access for Tier-0 systems, alongside a rapid hand-off from initial access to follow-on operators.",
+        refs: ["TT-APP-01", "TT-HANDOFF-01", "TT-PRIV-01"],
+        badge: "Single-source · pending"
+      },
+      {
+        text: "A pending CrowdStrike threat-hunting extraction describes malware used to support lateral movement. That is directional context for segmentation. It is not an approved finding.",
+        refs: ["TT-NET-01"],
+        badge: "Single-source · pending"
+      }
+    ],
+    architecture: [
+      { title: "Reconcile discovery into the lifecycle record", body: "Use Falcon Discover and Exposure Management as security discovery sources, reconciled into an authoritative asset lifecycle process." },
+      { title: "Bound the patch tools", body: "Use Falcon for IT only inside the evidenced Windows catalogue. Keep platform and vendor mechanisms for the rest of the estate." },
+      { title: "Keep authentication authoritative", body: "Use FalconID and Identity Protection for supported phishing-resistant and risk-based flows. The enterprise identity provider and the business process own complete MFA and verification." },
+      { title: "Define the log estate first", body: "Use Falcon Next-Gen SIEM as the central analysis platform only after required events, source coverage, time, retention and operating accountabilities are defined." },
+      { title: "Add an allowlist where the design needs one", body: "Pair Falcon Prevent with an authoritative allowlisting engine where application control requires deny-by-default execution." },
+      { title: "Validate privilege scope before relying on it", body: "Combine Falcon identity capability with identity governance, privileged-access management and secure administrative paths. Validate Falcon Privileged Access before treating it as deployed." },
+      { title: "Keep zones outside the host firewall", body: "Use Falcon Firewall Management as one enforcement layer inside a broader network, cloud and access-control architecture." },
+      { title: "Keep recovery independent", body: "Keep backup and recovery on an isolated platform and identity plane. Integrate its telemetry into Falcon without making Falcon the recovery authority." },
+      { title: "Provide the human controls elsewhere", body: "Provide a dedicated password manager and awareness programme. Use CrowdStrike telemetry to focus adoption and training.", proof: true }
+    ]
+  };
+
+  var DATA = null;
+  var NUM = {};
+  var main = document.getElementById("main");
+  var toc = document.getElementById("toc");
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function motion() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+  }
+  function cites(refs) {
+    if (!refs || !refs.length) return "";
+    return refs.map(function (id) {
+      var n = NUM[id];
+      return n ? "<a class=\"cite\" href=\"#fn" + n + "\">" + n + "</a>" : "";
+    }).join("");
+  }
+  function badge(label) {
+    return label ? " <span class=\"badge one\">" + esc(label) + "</span>" : "";
+  }
+  function shortUrl(url) {
+    var clean = String(url).replace(/^https?:\/\/(www\.)?/, "");
+    return clean.length > 72 ? clean.slice(0, 69) + "…" : clean;
+  }
+  function indexSources(data) {
+    var byId = {};
+    ["official", "cyberdoc", "capability", "thinkthreats", "supplemental"].forEach(function (key) {
+      (data.sources[key] || []).forEach(function (src) {
+        src._group = key;
+        byId[src.id] = src;
+      });
+    });
+    byId["OUT-NCSC-REG"] = { id: "OUT-NCSC-REG", _group: "capability", synthetic: "register" };
+    byId["TT-CORPUS"] = { id: "TT-CORPUS", _group: "thinkthreats", synthetic: "corpus" };
+    ORDER.forEach(function (id) {
+      if (!byId[id]) throw new Error("Missing source " + id);
+    });
+    var ordered = ORDER.map(function (id) { return byId[id]; });
+    Object.keys(byId).forEach(function (id) {
+      if (ORDER.indexOf(id) === -1) ordered.push(byId[id]);
+    });
+    ordered.forEach(function (src, i) {
+      src._n = i + 1;
+      NUM[src.id] = src._n;
+    });
+    return ordered;
+  }
+  function sourceBody(s) {
+    if (s.synthetic === "register") {
+      return "Capability mapping consulted for this assessment on 22 September 2026. The NCSC Critical Controls record is metadata only: zero detailed controls and zero control mappings. This crosswalk is analyst-authored. It is not a generated control mapping. This page did not re-query the mapping.";
+    }
+    if (s.synthetic === "corpus") {
+      return "ThinkThreats corpus, as cited by this assessment on 22 September 2026. Every selected claim was pending review. Pending claims are directional scene-setting, not approved intelligence findings. Absence of a claim is not treated as absence of threat. This page did not re-query the corpus.";
+    }
+    if (s._group === "official") {
+      var extra = s.id === "NCSC-SUMMARY"
+        ? " Current Top 10, retrieved 21 September 2026 and reverified 22 September 2026. NCSC reviews the list annually and may change controls. This briefing is tied to that snapshot."
+        : "";
+      return "New Zealand National Cyber Security Centre, <em>" + esc(s.title) + "</em>." + extra;
+    }
+    if (s._group === "cyberdoc") {
+      var note = "";
+      if (s.id === "CD-PATCH") {
+        note = " The assessment treats Windows patch deployment as the evidenced scope, and as catalogue-dependent.";
+      }
+      return "Product notes consulted for this assessment, <em>" + esc(s.title) + "</em>. Working material used for the crosswalk, not an independently verified product assurance." + note;
+    }
+    if (s.id === "ECO-AIRLOCK") {
+      return "CrowdStrike Marketplace, <em>" + esc(s.title) + "</em>. Consulted as an integrated allowlisting option, not as native Falcon capability.";
+    }
+    if (s._group === "capability") {
+      var rel = "Capability relationship consulted for this assessment, <em>" + esc(s.title) + "</em>. ";
+      if (s.id === "OUT-BDR") {
+        rel += "Alliance technologies recorded for that relationship include Rubrik, Cohesity and Veeam. No native CrowdStrike backup module is recorded. ";
+      }
+      if (s.id === "OUT-CS-FPA") {
+        rel += "The relationship records just-in-time and just-enough privilege, and privileged-session control. Dedicated corroborating product notes remain absent. ";
+      }
+      return rel + "A capability relationship, not a control-compliance assertion.";
+    }
+    return "ThinkThreats pending claim <span class=\"mono\">" + esc(s.claim_id) + "</span>. " + esc(s.title) + ". Review status " + esc(s.review_status) + " on 22 September 2026. Not an approved intelligence finding.";
+  }
+  function sourceItem(s) {
+    var meta = s.url ? "<span class=\"meta\"><a href=\"" + esc(s.url) + "\" target=\"_blank\" rel=\"noopener\">" + esc(shortUrl(s.url)) + "</a></span>" : "";
+    return "<li id=\"fn" + s._n + "\"><span class=\"n\">[" + s._n + "]</span> " + sourceBody(s) + meta + "</li>";
+  }
+  function parseRoute() {
+    var hash = "";
+    try { hash = decodeURIComponent(location.hash.replace(/^#/, "")); } catch (e) { hash = ""; }
+    if (!hash || hash === "overview") return { id: "overview" };
+    if (hash === "architecture" || hash === "method" || hash === "sources") return { id: hash };
+    if (/^fn\d+$/.test(hash)) return { id: "sources", focusId: hash };
+    var control = DATA.controls.find(function (c) { return c.slug === hash; });
+    if (control) return { id: "control", control: control };
+    return { id: "overview" };
+  }
+  function paintToc(route) {
+    var items = [{ href: "#overview", id: "overview", label: "Overview" }];
+    DATA.controls.forEach(function (c) {
+      items.push({ href: "#" + c.slug, id: c.slug, label: pad(c.order) + " " + SHORT[c.id] });
+    });
+    items.push({ href: "#architecture", id: "architecture", label: "Architecture" });
+    items.push({ href: "#method", id: "method", label: "Method" });
+    items.push({ href: "#sources", id: "sources", label: "Sources" });
+    var current = route.id === "control" ? route.control.slug : route.id;
+    toc.innerHTML = items.map(function (item) {
+      var on = item.id === current;
+      return "<a href=\"" + item.href + "\"" + (on ? " class=\"on\" aria-current=\"location\"" : "") + ">" + esc(item.label) + "</a>";
+    }).join("");
+    var active = toc.querySelector("a.on");
+    if (active) active.scrollIntoView({ inline: "nearest", block: "nearest" });
+  }
+  function paintFacts() {
+    document.getElementById("facts").innerHTML =
+      "<span><b>10</b> controls, reviewed annually · <a href=\"#fn" + NUM["NCSC-SUMMARY"] + "\">NCSC Critical Controls</a></span>" +
+      "<span><b>0</b> control mappings · <a href=\"#fn" + NUM["OUT-NCSC-REG"] + "\">capability mapping</a></span>" +
+      "<span><b>Windows</b> patch scope evidenced · <a href=\"#fn" + NUM["CD-PATCH"] + "\">Falcon for IT</a></span>" +
+      "<span><b>Pending</b> threat context · <a href=\"#fn" + NUM["TT-CORPUS"] + "\">ThinkThreats slice</a></span>";
+  }
+  var PROFILE = {
+    "NCSC-01": { control: "Windows bounded", controlKind: "yes", support: "Strong", supportKind: "strong", eco: "Required", ecoKind: "req", residual: "Complete scope", residualKind: "watch" },
+    "NCSC-02": { control: "Supported flows", controlKind: "yes", support: "Strong", supportKind: "strong", eco: "Verification owner", ecoKind: "owner", residual: "Process coverage", residualKind: "watch" },
+    "NCSC-03": { control: "None", controlKind: "none", support: "Identity support", supportKind: "support", eco: "Control owner", ecoKind: "owner", residual: "Provide / adopt", residualKind: "material" },
+    "NCSC-04": { control: "Strong / bounded", controlKind: "yes", support: "Strong", supportKind: "strong", eco: "Sources / SOC", ecoKind: "req", residual: "Source coverage", residualKind: "watch" },
+    "NCSC-05": { control: "None", controlKind: "none", support: "Scenario input", supportKind: "support", eco: "Control owner", ecoKind: "owner", residual: "Behaviour change", residualKind: "material" },
+    "NCSC-06": { control: "Inventory bounded", controlKind: "yes", support: "Strong", supportKind: "strong", eco: "Lifecycle owner", ecoKind: "owner", residual: "End-to-end lifecycle", residualKind: "watch" },
+    "NCSC-07": { control: "None", controlKind: "none", support: "Detection", supportKind: "support", eco: "Control owner", ecoKind: "owner", residual: "Recoverability", residualKind: "material" },
+    "NCSC-08": { control: "Behaviour bounded", controlKind: "yes", support: "Strong", supportKind: "strong", eco: "Allowlisting", ecoKind: "req", residual: "Approval / scope", residualKind: "watch" },
+    "NCSC-09": { control: "Identity bounded", controlKind: "yes", support: "Strong", supportKind: "strong", eco: "IGA / PAM", ecoKind: "req", residual: "Universal coverage", residualKind: "watch" },
+    "NCSC-10": { control: "Host firewall", controlKind: "yes", support: "Visibility", supportKind: "support", eco: "Network owner", ecoKind: "owner", residual: "Zone architecture", residualKind: "material" }
+  };
+  var MODULES = [
+    ["Falcon Exposure Management / Spotlight", ["S", "—", "—", "—", "—", "S", "—", "—", "—", "—"]],
+    ["Falcon for IT", ["D*", "—", "—", "—", "—", "S", "—", "—", "—", "—"]],
+    ["Falcon Discover", ["S", "—", "—", "—", "—", "D*", "—", "—", "—", "—"]],
+    ["FalconID", ["—", "D*", "S", "—", "—", "—", "—", "—", "—", "—"]],
+    ["Falcon Identity Protection", ["—", "D*/S", "S", "S", "—", "—", "S", "—", "D*/S", "—"]],
+    ["Falcon Next-Gen SIEM", ["S", "S", "S", "D*", "S", "S", "S", "S", "S", "S"]],
+    ["Falcon Onum", ["—", "—", "—", "S", "—", "—", "—", "—", "—", "—"]],
+    ["Falcon Prevent", ["—", "—", "—", "S", "—", "—", "S", "D*", "—", "—"]],
+    ["Falcon Insight XDR", ["—", "—", "—", "S", "S", "—", "S", "S", "S", "—"]],
+    ["Falcon Surface / Falcon for XIoT", ["S", "—", "—", "—", "—", "S", "—", "—", "—", "S"]],
+    ["Falcon Privileged Access / CIEM / Shield", ["—", "—", "—", "—", "—", "—", "—", "—", "D*/S", "—"]],
+    ["Falcon Firewall Management", ["—", "—", "—", "—", "—", "—", "—", "—", "—", "D*"]]
+  ];
+  var ROLE = {
+    supporting: ["Supporting", "support"],
+    evidence: ["Evidence", "strong"],
+    direct_bounded: ["Direct · bounded", "yes"],
+    direct_supporting: ["Direct / supporting", "yes"]
+  };
+  function pill(label, kind, lab) {
+    return "<span class=\"pcell\"><span class=\"plab\">" + esc(lab) + "</span><span class=\"pill " + kind + "\">" + esc(label) + "</span></span>";
+  }
+  function markCell(mark) {
+    var kind = mark === "S" ? "s" : mark === "D*" ? "d" : mark === "D*/S" ? "ds" : "none";
+    var title = mark === "D*" ? "Direct, bounded to documented scope" : mark === "S" ? "Supporting prevention, visibility, response or evidence" : mark === "D*/S" ? "Direct bounded and supporting" : "No material contribution evidenced";
+    return "<span class=\"mark " + kind + "\" title=\"" + esc(title) + "\">" + esc(mark) + "</span>";
+  }
+  function profileHtml() {
+    var head = "<div class=\"profile-head\"><span>NCSC Critical Control</span><span>Native control</span><span>Native support</span><span>Ecosystem control</span><span>Principal residual obligation</span></div>";
+    var rows = DATA.controls.map(function (c) {
+      var p = PROFILE[c.id];
+      if (!p) return "";
+      return "<a class=\"profile-row\" href=\"#" + esc(c.slug) + "\">" +
+        "<span class=\"who\"><small>N" + c.order + "</small>" + esc(c.title) + "</span>" +
+        pill(p.control, p.controlKind, "Native control") +
+        pill(p.support, p.supportKind, "Native support") +
+        pill(p.eco, p.ecoKind, "Ecosystem control") +
+        pill(p.residual, p.residualKind, "Residual obligation") +
+        "</a>";
+    }).join("");
+    return "<div class=\"profile\">" + head + rows + "</div>";
+  }
+  function moduleCrosswalk() {
+    var head = "<tr><th>CrowdStrike module</th>" + DATA.controls.map(function (c) {
+      return "<th><a href=\"#" + esc(c.slug) + "\">N" + c.order + "</a></th>";
+    }).join("") + "</tr>";
+    var body = MODULES.map(function (row) {
+      return "<tr><td class=\"mod\">" + esc(row[0]) + "</td>" + row[1].map(markCell).map(function (cell) {
+        return "<td>" + cell + "</td>";
+      }).join("") + "</tr>";
+    }).join("");
+    return "<div class=\"scroll\"><table class=\"cmp xwalk\"><thead>" + head + "</thead><tbody>" + body + "</tbody></table></div>";
+  }
+  function overviewHtml() {
+    var threats = COMMENTARY.threats.map(function (item) {
+      return "<p class=\"threat\">" + esc(item.text) + badge(item.badge) + cites(item.refs) + "</p>";
+    }).join("");
+    return "" +
+      "<section id=\"overview\" class=\"view-in band-navy\">" +
+        "<p class=\"kicker\">The argument</p>" +
+        "<h2>A licence does not establish NCSC conformance</h2>" +
+        "<div class=\"thesis\"><p>CrowdStrike provides control capability and evidence. <span>The organisation remains responsible for control design, scope, operation, exceptions and effectiveness.</span></p></div>" +
+        "<p class=\"prose\">" + esc(DATA.overall_conclusion) + cites(["NCSC-SUMMARY"]) + "</p>" +
+        "<p class=\"prose\">" + esc(DATA.interpretation_rule) + "</p>" +
+      "</section>" +
+      "<section class=\"view-in band-teal\">" +
+        "<p class=\"kicker\">Comparison</p>" +
+        "<h2>CrowdStrike contribution profile across the NCSC Critical Controls</h2>" +
+        "<p class=\"blurb\">Qualitative control architecture. Select a row to open that control. These labels are not an NCSC conformance score." + cites(["NCSC-SUMMARY"]) + "</p>" +
+        profileHtml() +
+        "<p class=\"note\">“Bounded” means direct capability only within a documented platform, source, workload or authentication scope. Residual labels identify the main obligation left with the organisation. They are not risk, maturity or compliance ratings.</p>" +
+        "<div class=\"panel teal\">" +
+          "<h3>Where each Falcon module shows up</h3>" +
+          "<p class=\"prose\"><span class=\"mark d\">D*</span> direct, bounded to documented scope. <span class=\"mark s\">S</span> supporting prevention, visibility, response or evidence. <span class=\"mark ds\">D*/S</span> both. <span class=\"mark none\">—</span> no material contribution evidenced. Capability classes, not maturity ratings.</p>" +
+          moduleCrosswalk() +
+        "</div>" +
+      "</section>" +
+      "<section class=\"view-in band-amber\">" +
+        "<p class=\"kicker\">Directional only</p>" +
+        "<h2>Why these controls sit on the same path</h2>" +
+        "<p class=\"blurb\">ThinkThreats claims selected for this assessment were all pending on 22 September 2026. They explain why an organisation might prioritise a control. They do not change the capability finding." + badge("Single-source · pending") + cites(["TT-CORPUS"]) + "</p>" +
+        "<details class=\"caveat\"><summary>Pending threat drivers</summary><div>" + threats + "</div></details>" +
+        "<div class=\"callout\"><strong>Dated list.</strong> NCSC reviews these ten controls annually and may change them. This briefing applies only to the 21 September 2026 snapshot." + cites(["NCSC-SUMMARY"]) + "</div>" +
+      "</section>";
+  }
+  function controlHtml(c) {
+    var note = COMMENTARY.controls[c.id] || {};
+    var map = c.structured_mapping || {};
+    var prof = PROFILE[c.id];
+    var i = DATA.controls.findIndex(function (item) { return item.id === c.id; });
+    var prev = DATA.controls[i - 1];
+    var next = DATA.controls[i + 1];
+    var official = OFFICIAL[c.id];
+    var chips = prof
+      ? "<div class=\"chipstrip\">" +
+          pill(prof.control, prof.controlKind, "Native control") +
+          pill(prof.support, prof.supportKind, "Native support") +
+          pill(prof.eco, prof.ecoKind, "Ecosystem control") +
+          pill(prof.residual, prof.residualKind, "Residual obligation") +
+        "</div>"
+      : "";
+    var modules = (map.native_modules || []).map(function (m) {
+      var role = ROLE[m.role] || [m.role, "none"];
+      return "<tr><td class=\"mod\">" + esc(m.module) + "</td><td><span class=\"pill " + role[1] + "\">" + esc(role[0]) + "</span></td><td>" + esc(m.how) + "</td><td>" + esc(m.boundary) + "</td></tr>";
+    }).join("");
+    var eco = (map.ecosystem_controls || []).map(function (row) {
+      return "<tr><td class=\"mod\">" + esc(row.component) + "</td><td>" + esc(row.how) + "</td></tr>";
+    }).join("");
+    var gaps = (map.gaps_and_residual || []).map(function (row) {
+      return "<tr><td>" + esc(row.gap) + "</td><td>" + esc(row.residual) + "</td></tr>";
+    }).join("");
+    var asks = (map.official_requirements || []).map(function (row) {
+      return "<li>" + esc(row) + "</li>";
+    }).join("");
+    var pager = "<nav class=\"pager\" aria-label=\"Adjacent controls\">" +
+      (prev ? "<a class=\"prev\" href=\"#" + prev.slug + "\">Previous: " + esc(prev.title) + "</a>" : "<span></span>") +
+      (next ? "<a class=\"next\" href=\"#" + next.slug + "\">Next: " + esc(next.title) + "</a>" : "<span></span>") +
+      "</nav>";
+    return "<section id=\"" + esc(c.slug) + "\" class=\"view-in band-teal\">" +
+      "<p class=\"kicker\">" + esc(c.id) + " · Control " + pad(c.order) + "</p>" +
+      "<h2>" + esc(note.headline || c.title) + "</h2>" +
+      "<div class=\"callout\"><strong>Assessment.</strong> " + esc(note.assessment || c.position) + "</div>" +
+      chips +
+      (note.why ? "<p class=\"prose\">" + esc(note.why) + badge(note.whyBadge) + cites(note.whyRefs) + "</p>" : "") +
+      "<div class=\"panel teal\">" +
+        "<h3>CrowdStrike modules</h3>" +
+        "<div class=\"scroll\"><table class=\"cmp\"><thead><tr><th>Module</th><th>Role</th><th>How it supports</th><th>Boundary</th></tr></thead><tbody>" + modules + "</tbody></table></div>" +
+        "<p class=\"note\">Sources recorded against this control." + cites(c.source_refs) + "</p>" +
+      "</div>" +
+      "<div class=\"panel amber\"><h3>What else has to enforce it</h3><div class=\"scroll\"><table class=\"cmp\"><thead><tr><th>Ecosystem control</th><th>How it completes the requirement</th></tr></thead><tbody>" + eco + "</tbody></table></div></div>" +
+      "<div class=\"panel pink\"><h3>Residual obligation</h3><div class=\"scroll\"><table class=\"cmp\"><thead><tr><th>Gap</th><th>Left with the organisation</th></tr></thead><tbody>" + gaps + "</tbody></table></div></div>" +
+      "<div class=\"panel navy\"><h3>NCSC requirement, in short</h3><ul class=\"limits\">" + asks + "</ul><p class=\"note\">" + cites(official ? [official] : []) + "</p></div>" +
+      pager +
+    "</section>";
+  }
+  function architectureHtml() {
+    var items = COMMENTARY.architecture.map(function (item, idx) {
+      return "<div class=\"find" + (item.proof ? " proof" : "") + "\"><span class=\"n\">" + pad(idx + 1) + "</span><div><h3>" + esc(item.title) + "</h3><p>" + esc(item.body) + "</p></div></div>";
+    }).join("");
+    return "<section id=\"architecture\" class=\"view-in band-navy\">" +
+      "<p class=\"kicker\">Control architecture</p>" +
+      "<h2>Pair the native layer with the control that actually enforces the requirement</h2>" +
+      "<p class=\"blurb\">Nine pairings from the assessment. They are an architecture, not a conformance score and not a 90-day plan.</p>" +
+      "<div class=\"finds\">" + items + "</div>" +
+      "<div class=\"warn\"><strong>What would change this advice.</strong> A later NCSC list needs a new edition of this crosswalk. Product notes that evidence a native password manager, an awareness curriculum, backup creation and restoration, deny-by-default allowlisting, or enterprise zone enforcement would change those findings. A proven patch scope beyond Windows would widen the patching finding. If the pending claims are withdrawn or materially revised, rewrite the threat paragraphs. If a reviewed control mapping for this edition becomes available, redo the crosswalk against it. Confirm entitlements in the tenant before treating any capability as deployed.</div>" +
+    "</section>";
+  }
+  function methodHtml() {
+    var limits = "<ul class=\"limits\">" + (DATA.limitations || []).map(function (item) {
+      return "<li>" + esc(item) + "</li>";
+    }).join("") + "</ul>";
+    var scale = Object.keys(DATA.assessment_scale || {}).map(function (key) {
+      return "<li><strong>" + esc(key.replace(/_/g, " ")) + ".</strong> " + esc(DATA.assessment_scale[key]) + "</li>";
+    }).join("");
+    return "<section id=\"method\" class=\"view-in band-navy\">" +
+      "<p class=\"kicker\">Method</p>" +
+      "<h2>An analyst crosswalk, not a generated coverage claim</h2>" +
+      "<div class=\"panel navy\"><h3>Evidence classes in the file</h3><ul class=\"limits\">" + scale + "</ul></div>" +
+      "<p class=\"prose\">The structured lists on each control are rendered from <a href=\"assessment.json\">assessment.json</a>, report <span class=\"mono\">" + esc(DATA.report_id) + "</span>, status " + esc(DATA.status) + ", as at " + esc(DATA.as_at) + ". The prose around those lists is the analyst commentary for that assessment. This page is ThinkInfoSec synthesis for boards and operators. It is not an NCSC or CrowdStrike publication, and it is not an assessment of any organisation.</p>" +
+      "<p class=\"prose\">NCSC describes the ten controls as a current priority list for deciding where to spend time and money. No conformance or maturity level is derived from product presence, licensing or configuration. The file records the result as " + esc(String(DATA.maturity_determination).replace(/_/g, " ")) + "." + cites(["NCSC-SUMMARY"]) + "</p>" +
+      "<p class=\"prose\">Product statements were taken from working product notes. Those notes are not treated as independently verified product assurance. Service relationships were taken from a capability mapping used for this assessment. They are not compliance evidence. That mapping’s record for these controls has no detailed controls and no control mappings." + cites(["OUT-NCSC-REG"]) + "</p>" +
+      "<p class=\"prose\">ThinkThreats material is used only to explain why a control might be prioritised. Every cited claim was pending on 22 September 2026." + cites(["TT-CORPUS"]) + "</p>" +
+      limits +
+      "<p class=\"note\">Public URLs in the source list are those recorded in the assessment. This briefing did not re-fetch them, and it did not re-query the product notes, the capability mapping, or ThinkThreats.</p>" +
+    "</section>";
+  }
+  function sourcesHtml() {
+    var groups = [
+      ["official", "Official framework"],
+      ["product", "CrowdStrike product evidence"],
+      ["capability", "Capability and alliance mappings"],
+      ["thinkthreats", "ThinkThreats context — pending"]
+    ];
+    function bucket(s) {
+      if (s._group === "supplemental" || s._group === "cyberdoc") return "product";
+      return s._group;
+    }
+    var html = groups.map(function (pair) {
+      var items = DATA._sources.filter(function (s) { return bucket(s) === pair[0]; })
+        .sort(function (a, b) { return a._n - b._n; });
+      if (!items.length) return "";
+      return "<p class=\"group-lbl\">" + pair[1] + "</p><ol class=\"sourcelist\">" +
+        items.map(sourceItem).join("") + "</ol>";
+    }).join("");
+    return "<section id=\"sources\">" +
+      "<p class=\"kicker\">Bibliography</p>" +
+      "<h2>Sources as recorded on 22 September 2026</h2>" +
+      "<p class=\"blurb\">Numbers follow first use in the briefing. Product notes and capability mappings have no public URL in the assessment, so none is invented here. Pending ThinkThreats claims are labelled as pending.</p>" +
+      html +
+      "<p class=\"note\">Accessed through the 22 September 2026 analyst assessment. Linked pages were not re-read for this publication.</p>" +
+    "</section>";
+  }
+  function viewHtml(route) {
+    if (route.id === "overview") return overviewHtml();
+    if (route.id === "control") return controlHtml(route.control);
+    if (route.id === "architecture") return architectureHtml();
+    if (route.id === "method") return methodHtml();
+    return sourcesHtml();
+  }
+  function render(fromNav) {
+    var route = parseRoute();
+    paintToc(route);
+    main.innerHTML = viewHtml(route);
+    var titleBit = route.control ? route.control.title + " — " : "";
+    document.title = titleBit + "NCSC Top 10 and the Falcon boundary | Thinkinfosec Hub";
+    if (route.focusId) {
+      var el = document.getElementById(route.focusId);
+      if (el) {
+        el.tabIndex = -1;
+        el.focus({ preventScroll: true });
+        el.scrollIntoView({ block: "start", behavior: motion() });
+      }
+      return;
+    }
+    if (fromNav) {
+      var heading = main.querySelector("h2");
+      if (heading) {
+        heading.tabIndex = -1;
+        heading.focus({ preventScroll: true });
+      }
+      var section = main.querySelector("section");
+      if (section) section.scrollIntoView({ block: "start", behavior: motion() });
+    }
+  }
+  function fail(message) {
+    main.innerHTML = "<section><p class=\"kicker\">Method</p><h2>The assessment file did not load</h2><p class=\"prose\">" + esc(message) + "</p></section>";
+  }
+  fetch("assessment.json")
+    .then(function (res) {
+      if (!res.ok) throw new Error("Open this briefing over HTTP so assessment.json can load (status " + res.status + ").");
+      return res.json();
+    })
+    .then(function (data) {
+      DATA = data;
+      DATA._sources = indexSources(data);
+      paintFacts();
+      render(location.hash.length > 1);
+      window.addEventListener("hashchange", function () { render(true); });
+    })
+    .catch(function (err) {
+      fail(err && err.message ? err.message : "The assessment file could not be read.");
+    });
+})();
+
+</script>
+</body>
+</html>

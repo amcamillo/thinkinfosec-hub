@@ -425,6 +425,18 @@
       "tech": [57, 1, 8, 12, 47, 67],
       "link": "Research/essential-eight-crowdstrike/",
       "description": "CrowdStrike capability against the Essential Eight: native scope, dependencies, and residual gaps."
+    },
+    {
+      "id": "research-ncsc-top-10-crowdstrike",
+      "title": "NCSC Top 10 and the Falcon boundary",
+      "kind": "research",
+      "origin": "hub",
+      "pillar": "process",
+      "people": ["thought-leadership"],
+      "processes": ["govern-assure", "threat-model", "respond-recover"],
+      "tech": [57, 1, 12, 37, 47, 67],
+      "link": "Research/ncsc-top-10-crowdstrike/",
+      "description": "CrowdStrike capability against New Zealand’s NCSC Critical Controls: native scope, dependencies, and residual obligations."
     }
   ]
 }

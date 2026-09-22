@@ -1,0 +1,1071 @@
+{
+  "schema_version": 2,
+  "report_id": "ncsc-top-10-crowdstrike-2026-09-22",
+  "title": "NCSC Top 10 and the Falcon boundary",
+  "subtitle": "Native capability, ecosystem dependencies and residual obligations",
+  "as_at": "2026-09-22",
+  "status": "analyst-draft",
+  "framework": {
+    "id": "ncsc-critical-controls",
+    "name": "NCSC Critical Controls",
+    "publisher": "New Zealand National Cyber Security Centre",
+    "jurisdiction": "NZ",
+    "edition": "2026-09-21",
+    "version": "Current Top 10 retrieved 2026-09-21",
+    "verified_at": "2026-09-22",
+    "annual_review": true,
+    "detailed_control_count": 0,
+    "control_mapping_count": 0
+  },
+  "vendor": {
+    "id": "crowdstrike",
+    "name": "CrowdStrike"
+  },
+  "assessment_scale": {
+    "native_direct": "CrowdStrike authoritatively performs a material part of the requirement.",
+    "native_direct_bounded": "CrowdStrike directly performs part of the requirement only for documented platforms, workloads, sources or authentication flows.",
+    "native_supporting": "CrowdStrike supplies prevention, discovery, prioritisation, detection, response or evidence but does not own the required control.",
+    "ecosystem": "Another technology, platform control or organisational process is required.",
+    "gap": "No sufficient native capability was evidenced or the requirement remains organisational."
+  },
+  "interpretation_rule": "This is a product-capability crosswalk. It does not infer NCSC conformance from product licensing, deployment, configuration or detections.",
+  "maturity_determination": "not_assessable_from_product_presence",
+  "overall_conclusion": "CrowdStrike provides strong but bounded support for patching, MFA, centralised logging, asset discovery, application control, least privilege and host-firewall enforcement. Password-manager provision, awareness training, backup and recovery, full asset lifecycle, business-process verification and enterprise network segmentation remain ecosystem or organisational responsibilities.",
+  "controls": [
+    {
+      "order": 1,
+      "id": "NCSC-01",
+      "slug": "patch-software-and-systems",
+      "title": "Patch software and systems",
+      "position": "bounded-native",
+      "native_level": "native_direct_bounded",
+      "structured_mapping": {
+        "official_requirements": [
+          "Inventory software, firmware, devices and dependencies.",
+          "Operate a repeatable notification, prioritisation, testing, deployment, rollback and verification process.",
+          "Keep systems current and make delay or cancellation an explicit risk decision.",
+          "Cover endpoints, servers, network devices, IoT, applications and legacy components."
+        ],
+        "native_modules": [
+          {
+            "module": "Falcon Exposure Management / Spotlight",
+            "role": "supporting",
+            "how": "Discovers vulnerabilities, unsupported software and exploit context.",
+            "boundary": "Does not deploy every patch."
+          },
+          {
+            "module": "Falcon Discover",
+            "role": "supporting",
+            "how": "Identifies managed, unmanaged and unsupported assets and software.",
+            "boundary": "Does not establish complete enterprise inventory."
+          },
+          {
+            "module": "Falcon for IT Patch Management",
+            "role": "direct_bounded",
+            "how": "Deploys supported Windows patches and reports host status.",
+            "boundary": "Windows- and catalogue-scoped in the cited evidence."
+          },
+          {
+            "module": "Falcon NG-SIEM",
+            "role": "evidence",
+            "how": "Correlates asset, exposure, deployment and change records.",
+            "boundary": "Requires source integrations and an organisation-defined process."
+          }
+        ],
+        "ecosystem_controls": [
+          {
+            "component": "UEM/RMM and vendor update services",
+            "how": "Patch non-Windows and out-of-catalogue software.",
+            "expected_evidence": "Coverage, deployment results and version compliance."
+          },
+          {
+            "component": "Network, appliance and firmware management",
+            "how": "Patches routers, firewalls, IoT, drivers and firmware.",
+            "expected_evidence": "Inventory, advisory mapping and verified deployment."
+          },
+          {
+            "component": "ITSM/change management",
+            "how": "Governs standard/emergency changes and exceptions.",
+            "expected_evidence": "Timestamped notification through validation and exception records."
+          }
+        ],
+        "gaps_and_residual": [
+          {
+            "gap": "Native deployment does not cover the complete NCSC scope.",
+            "residual": "Assign a patch mechanism and owner to every asset class."
+          },
+          {
+            "gap": "Discovery and status do not prove risk acceptance.",
+            "residual": "Record and re-evaluate delayed or cancelled patches."
+          },
+          {
+            "gap": "Delivery does not prove effective installation.",
+            "residual": "Independently verify versions or remediated exposure."
+          }
+        ]
+      },
+      "threat_driver": "Exploitation remained the leading initial-access vector in pending ThinkThreats evidence, making current, measurable patch coverage a direct compromise-risk control.",
+      "source_refs": [
+        "NCSC-PATCH",
+        "TT-PATCH-01",
+        "TT-PATCH-02",
+        "CD-PATCH",
+        "CD-EXPOSURE",
+        "CD-DISCOVER"
+      ]
+    },
+    {
+      "order": 2,
+      "id": "NCSC-02",
+      "slug": "mfa-and-verification",
+      "title": "Implement multi-factor authentication and verification",
+      "position": "strong-partial",
+      "native_level": "native_direct_bounded",
+      "structured_mapping": {
+        "official_requirements": [
+          "Identify critical, sensitive, administrative and internet-accessible systems and users.",
+          "Require appropriately strong multiple factors.",
+          "Independently verify sensitive payment, reset and data-change requests.",
+          "Govern enrolment, recovery, exceptions and authentication evidence."
+        ],
+        "native_modules": [
+          {
+            "module": "FalconID",
+            "role": "direct_bounded",
+            "how": "Provides phishing-resistant FIDO2 authentication for supported flows.",
+            "boundary": "Platform prerequisites and connectors prevent universal coverage."
+          },
+          {
+            "module": "Falcon Identity Protection",
+            "role": "direct_supporting",
+            "how": "Applies identity-risk and conditional-access policy to supported paths.",
+            "boundary": "Overlays rather than replaces the authoritative IdP."
+          },
+          {
+            "module": "Falcon NG-SIEM",
+            "role": "evidence",
+            "how": "Centralises authentication and policy events.",
+            "boundary": "Completeness depends on source onboarding and identity correlation."
+          }
+        ],
+        "ecosystem_controls": [
+          {
+            "component": "Enterprise IdP/SSO and connectors",
+            "how": "Extends MFA across required services.",
+            "expected_evidence": "Service inventory, effective policy, enrolment and sign-in results."
+          },
+          {
+            "component": "CIAM/application-native MFA",
+            "how": "Covers customer and non-federated flows.",
+            "expected_evidence": "Flow tests and bypass inventory."
+          },
+          {
+            "component": "Independent process verification",
+            "how": "Verifies sensitive requests through a trusted second channel.",
+            "expected_evidence": "Process, approval and call-back records."
+          }
+        ],
+        "gaps_and_residual": [
+          {
+            "gap": "Universal authentication coverage is architecture-dependent.",
+            "residual": "Maintain a service-to-authentication register and close bypasses."
+          },
+          {
+            "gap": "MFA does not satisfy business-process verification.",
+            "residual": "Operate independent verification resistant to account compromise."
+          },
+          {
+            "gap": "Recovery, break-glass and non-human identities remain external.",
+            "residual": "Design, test, monitor and review those paths."
+          }
+        ]
+      },
+      "threat_driver": "Stolen credentials, vishing and help-desk manipulation make both strong MFA and independent business-process verification necessary.",
+      "source_refs": [
+        "NCSC-MFA",
+        "TT-CRED-01",
+        "TT-AWARE-01",
+        "TT-PASSWORD-01",
+        "CD-FALCONID",
+        "CD-IDENTITY",
+        "CD-NGSIEM"
+      ]
+    },
+    {
+      "order": 3,
+      "id": "NCSC-03",
+      "slug": "password-manager",
+      "title": "Provide and use a password manager",
+      "position": "ecosystem-owned",
+      "native_level": "native_supporting",
+      "structured_mapping": {
+        "official_requirements": [
+          "Provide an approved password manager to all staff with organisational access.",
+          "Drive broad adoption of long, strong and unique passwords.",
+          "Store credentials and recovery material only in approved secure ways.",
+          "Govern hosting model, MFA, recovery and adoption."
+        ],
+        "native_modules": [
+          {
+            "module": "FalconID",
+            "role": "supporting",
+            "how": "Reduces password exposure for supported passwordless flows.",
+            "boundary": "Is not an enterprise password vault."
+          },
+          {
+            "module": "Falcon Identity Protection",
+            "role": "supporting",
+            "how": "Detects credential misuse and suspicious identity activity.",
+            "boundary": "Does not generate, store, share or rotate user passwords."
+          },
+          {
+            "module": "Falcon NG-SIEM",
+            "role": "evidence",
+            "how": "Can centralise password-manager, IdP and help-desk events.",
+            "boundary": "Requires a password-manager platform and connectors."
+          }
+        ],
+        "ecosystem_controls": [
+          {
+            "component": "Enterprise password manager",
+            "how": "Generates, encrypts, stores, shares and administers credentials.",
+            "expected_evidence": "Coverage, MFA, vault configuration and audit logs."
+          },
+          {
+            "component": "Identity lifecycle and recovery",
+            "how": "Controls onboarding, offboarding and emergency recovery.",
+            "expected_evidence": "Lifecycle and recovery-test records."
+          },
+          {
+            "component": "Adoption programme",
+            "how": "Migrates unsafe storage and measures use.",
+            "expected_evidence": "Adoption metrics, exceptions and remediation."
+          }
+        ],
+        "gaps_and_residual": [
+          {
+            "gap": "No native password-manager capability was evidenced.",
+            "residual": "Provide and govern a dedicated enterprise password manager."
+          },
+          {
+            "gap": "Passwordless coverage does not remove all secrets.",
+            "residual": "Inventory and vault residual credentials."
+          },
+          {
+            "gap": "Identity detections do not prove adoption.",
+            "residual": "Measure usage and remove unmanaged storage."
+          }
+        ]
+      },
+      "threat_driver": "Credential theft and attacker manipulation of password-reset processes make unique password storage and controlled recovery business priorities.",
+      "source_refs": [
+        "NCSC-PASSWORD",
+        "TT-CRED-01",
+        "TT-PASSWORD-01",
+        "CD-FALCONID",
+        "CD-IDENTITY"
+      ]
+    },
+    {
+      "order": 4,
+      "id": "NCSC-04",
+      "slug": "centralised-logging",
+      "title": "Centralised logging",
+      "position": "strong-native-coverage-dependent",
+      "native_level": "native_direct_bounded",
+      "structured_mapping": {
+        "official_requirements": [
+          "Identify critical events and systems that must be logged.",
+          "Collect logs centrally and protect them from unauthorised change.",
+          "Correlate events and create actionable alerts.",
+          "Manage source coverage, time, retention, access and incident use."
+        ],
+        "native_modules": [
+          {
+            "module": "Falcon Next-Gen SIEM",
+            "role": "direct_bounded",
+            "how": "Ingests, normalises, searches, correlates and alerts on native and third-party telemetry.",
+            "boundary": "Only covers correctly onboarded and retained sources within entitlement."
+          },
+          {
+            "module": "Falcon Onum",
+            "role": "supporting",
+            "how": "Collects, filters, transforms and routes telemetry.",
+            "boundary": "Is a pipeline, not a SIEM."
+          },
+          {
+            "module": "Falcon Insight XDR",
+            "role": "supporting",
+            "how": "Provides continuous endpoint and cross-domain telemetry.",
+            "boundary": "Does not represent the complete log estate."
+          },
+          {
+            "module": "Falcon Cloud Security CDR",
+            "role": "supporting",
+            "how": "Ingests supported cloud audit logs and detects cloud control-plane activity.",
+            "boundary": "Requires provider logging, enablement and a separate SKU."
+          }
+        ],
+        "ecosystem_controls": [
+          {
+            "component": "Source-system logging and connectors",
+            "how": "Produces and transports all required event classes.",
+            "expected_evidence": "Source register, connector health and ingestion tests."
+          },
+          {
+            "component": "Time, retention and access controls",
+            "how": "Makes records reliable, durable and protected.",
+            "expected_evidence": "NTP, retention, archive and access-review evidence."
+          },
+          {
+            "component": "SOC use cases and process",
+            "how": "Turns events into detection, triage and response.",
+            "expected_evidence": "Rule catalogue, runbooks, cases and SLAs."
+          }
+        ],
+        "gaps_and_residual": [
+          {
+            "gap": "SIEM ownership does not prove source completeness.",
+            "residual": "Maintain a required-event/source coverage matrix."
+          },
+          {
+            "gap": "Native telemetry excludes many business and infrastructure systems.",
+            "residual": "Onboard and validate external sources."
+          },
+          {
+            "gap": "Storage and detection do not guarantee action.",
+            "residual": "Staff, test and measure monitoring and response."
+          }
+        ]
+      },
+      "threat_driver": "Pending ThinkThreats guidance warns that telemetry gaps and outdated infrastructure documentation can block effective response.",
+      "source_refs": [
+        "NCSC-LOG",
+        "TT-LOG-01",
+        "CD-NGSIEM",
+        "CD-ONUM",
+        "CD-INSIGHT",
+        "CD-CDR"
+      ]
+    },
+    {
+      "order": 5,
+      "id": "NCSC-05",
+      "slug": "security-awareness",
+      "title": "Build security awareness in your organisation",
+      "position": "ecosystem-owned",
+      "native_level": "native_supporting",
+      "structured_mapping": {
+        "official_requirements": [
+          "Establish leadership support and a positive reporting culture.",
+          "Deliver ongoing and role-relevant education.",
+          "Address phishing, downloads, credential requests and sensitive processes.",
+          "Measure behaviour and improve the programme from incidents and exercises."
+        ],
+        "native_modules": [
+          {
+            "module": "Falcon NG-SIEM",
+            "role": "supporting",
+            "how": "Aggregates identity, phishing, endpoint and incident data for behavioural themes.",
+            "boundary": "Does not deliver training or simulations."
+          },
+          {
+            "module": "Falcon Insight XDR",
+            "role": "supporting",
+            "how": "Provides incident patterns for exercises and targeted communication.",
+            "boundary": "Detection data is only an input."
+          },
+          {
+            "module": "CrowdStrike threat intelligence",
+            "role": "supporting",
+            "how": "Supplies current adversary context for scenarios.",
+            "boundary": "Does not establish staff knowledge or behaviour."
+          }
+        ],
+        "ecosystem_controls": [
+          {
+            "component": "Awareness and phishing-simulation platform",
+            "how": "Delivers training, simulations and tracking.",
+            "expected_evidence": "Curriculum, results and completion metrics."
+          },
+          {
+            "component": "HR, leadership and communications",
+            "how": "Embeds expectations and role-specific content.",
+            "expected_evidence": "Leadership messages, onboarding and acknowledgements."
+          },
+          {
+            "component": "Human-risk process",
+            "how": "Converts incidents and exercises into interventions.",
+            "expected_evidence": "Trend analysis and corrective actions."
+          }
+        ],
+        "gaps_and_residual": [
+          {
+            "gap": "No native awareness-training capability was evidenced.",
+            "residual": "Operate a dedicated training and simulation capability."
+          },
+          {
+            "gap": "Telemetry does not prove behaviour change.",
+            "residual": "Measure reporting, repeat failure and process performance."
+          },
+          {
+            "gap": "Generic annual training is not an ongoing programme.",
+            "residual": "Deliver continuous, role-relevant interventions."
+          }
+        ]
+      },
+      "threat_driver": "Vishing and help-desk manipulation show that attackers exploit people and business processes as well as technical weaknesses.",
+      "source_refs": [
+        "NCSC-AWARE",
+        "TT-AWARE-01",
+        "TT-AWARE-02",
+        "TT-PASSWORD-01",
+        "CD-NGSIEM",
+        "CD-INSIGHT"
+      ]
+    },
+    {
+      "order": 6,
+      "id": "NCSC-06",
+      "slug": "asset-lifecycle-management",
+      "title": "Asset lifecycle management",
+      "position": "partial",
+      "native_level": "native_direct_bounded",
+      "structured_mapping": {
+        "official_requirements": [
+          "Record software, hardware, cloud and supply-chain assets with owners.",
+          "Record and harden assets before use.",
+          "Link assets to patching, vulnerability, configuration and support status.",
+          "Plan end of support and securely decommission and dispose of assets."
+        ],
+        "native_modules": [
+          {
+            "module": "Falcon Discover",
+            "role": "direct_bounded",
+            "how": "Discovers managed, unmanaged and unsupported assets.",
+            "boundary": "Does not govern procurement, ownership or disposal."
+          },
+          {
+            "module": "Falcon Exposure Management",
+            "role": "supporting",
+            "how": "Adds exposure, configuration and attack-path context.",
+            "boundary": "Security exposure is one lifecycle dimension."
+          },
+          {
+            "module": "Falcon for IT",
+            "role": "supporting",
+            "how": "Queries state and inventories software on covered hosts.",
+            "boundary": "Covered endpoints are not the full estate."
+          },
+          {
+            "module": "Falcon Surface / Falcon for XIoT",
+            "role": "supporting",
+            "how": "Adds external, shadow and OT/IoT discovery.",
+            "boundary": "Coverage remains product- and collection-dependent."
+          }
+        ],
+        "ecosystem_controls": [
+          {
+            "component": "CMDB/ITAM/SAM",
+            "how": "Maintains authoritative identity, ownership, dependencies and lifecycle.",
+            "expected_evidence": "Reconciled register, owners and quality metrics."
+          },
+          {
+            "component": "Procurement/development workflow",
+            "how": "Registers and hardens new assets before use.",
+            "expected_evidence": "Security gates and owner assignment."
+          },
+          {
+            "component": "Decommissioning and disposal",
+            "how": "Removes access and data and securely disposes of assets.",
+            "expected_evidence": "Approvals and sanitisation/destruction records."
+          }
+        ],
+        "gaps_and_residual": [
+          {
+            "gap": "Falcon is not the authoritative lifecycle system.",
+            "residual": "Reconcile discovery into CMDB/ITAM."
+          },
+          {
+            "gap": "Procurement, development and supplier lifecycle are outside scope.",
+            "residual": "Embed registration and security gates in those processes."
+          },
+          {
+            "gap": "Unsupported-asset detection does not retire assets.",
+            "residual": "Fund and track remediation or risk treatment."
+          }
+        ]
+      },
+      "threat_driver": "Unknown or outdated assets create exploitable exposure and leave responders without reliable infrastructure context.",
+      "source_refs": [
+        "NCSC-ASSET",
+        "TT-LOG-01",
+        "TT-ASSET-01",
+        "CD-DISCOVER",
+        "CD-EXPOSURE",
+        "CD-PATCH",
+        "CD-SURFACE",
+        "CD-XIOT"
+      ]
+    },
+    {
+      "order": 7,
+      "id": "NCSC-07",
+      "slug": "backups-and-restoration-testing",
+      "title": "Implement and test backups",
+      "position": "ecosystem-owned",
+      "native_level": "native_supporting",
+      "structured_mapping": {
+        "official_requirements": [
+          "Identify systems, data, configurations and owners requiring protection.",
+          "Define RPO and RTO from business requirements.",
+          "Protect and retain separated backups securely.",
+          "Verify jobs and test complete restoration with dependencies."
+        ],
+        "native_modules": [
+          {
+            "module": "Falcon Prevent",
+            "role": "supporting",
+            "how": "Detects or prevents ransomware and destructive behaviour.",
+            "boundary": "Does not create or restore backups."
+          },
+          {
+            "module": "Falcon Insight XDR",
+            "role": "supporting",
+            "how": "Investigates and contains activity affecting backup infrastructure.",
+            "boundary": "Containment is not recoverability."
+          },
+          {
+            "module": "Falcon Identity Protection",
+            "role": "supporting",
+            "how": "Detects risky access involving backup administration.",
+            "boundary": "Does not segregate recovery identity or storage."
+          },
+          {
+            "module": "Falcon NG-SIEM",
+            "role": "evidence",
+            "how": "Correlates backup, identity and endpoint alerts.",
+            "boundary": "Backup assurance depends on source-platform evidence."
+          }
+        ],
+        "ecosystem_controls": [
+          {
+            "component": "Dedicated backup/cyber-recovery platform",
+            "how": "Creates, retains, isolates and restores backups.",
+            "expected_evidence": "Coverage, job success, immutability, retention and restore results."
+          },
+          {
+            "component": "Isolated recovery environment",
+            "how": "Separates recovery identity and clean restoration.",
+            "expected_evidence": "Architecture, independent credentials and exercise results."
+          },
+          {
+            "component": "Business/service owners",
+            "how": "Define RPO/RTO and accept restored services.",
+            "expected_evidence": "Approved objectives and sign-off."
+          }
+        ],
+        "gaps_and_residual": [
+          {
+            "gap": "No native backup creation or restoration capability is evidenced.",
+            "residual": "Deploy and govern dedicated recovery technology."
+          },
+          {
+            "gap": "Detection cannot prove recoverability.",
+            "residual": "Test end-to-end restoration and dependencies."
+          },
+          {
+            "gap": "Production compromise can reach backup administration.",
+            "residual": "Segregate recovery identity and retain immutable or offline copies."
+          }
+        ]
+      },
+      "threat_driver": "Attackers target backup, identity and virtualisation layers to deny recovery, requiring isolated and tested restoration capability.",
+      "source_refs": [
+        "NCSC-BACKUP",
+        "TT-BACKUP-01",
+        "TT-BACKUP-02",
+        "CD-PREVENT",
+        "CD-INSIGHT",
+        "CD-IDENTITY",
+        "OUT-BDR"
+      ]
+    },
+    {
+      "order": 8,
+      "id": "NCSC-08",
+      "slug": "application-control",
+      "title": "Implement application control",
+      "position": "bounded-native",
+      "native_level": "native_direct_bounded",
+      "structured_mapping": {
+        "official_requirements": [
+          "Decide what applications and file types are permitted or restricted.",
+          "Block malicious, unwanted or unapproved execution.",
+          "Where allowlisting is used, progress from audit to enforce mode.",
+          "Maintain group/device policies, detection updates and monitoring."
+        ],
+        "native_modules": [
+          {
+            "module": "Falcon Prevent",
+            "role": "direct_bounded",
+            "how": "Blocks malicious and prohibited behaviour with ML, IOAs, exploit mitigation, script controls and custom IOAs.",
+            "boundary": "Does not create a complete business-approved allowlist."
+          },
+          {
+            "module": "Falcon Insight XDR",
+            "role": "supporting",
+            "how": "Records execution and supports investigation and containment.",
+            "boundary": "Does not define approved software."
+          },
+          {
+            "module": "Falcon NG-SIEM",
+            "role": "evidence",
+            "how": "Centralises execution and allow/block events.",
+            "boundary": "Requires complete authoritative policy sources."
+          }
+        ],
+        "ecosystem_controls": [
+          {
+            "component": "Airlock Digital",
+            "how": "Provides integrated deny-by-default allowlisting.",
+            "expected_evidence": "Policy, coverage, block events and exceptions."
+          },
+          {
+            "component": "WDAC/AppLocker or equivalent",
+            "how": "Provides approved-execution policy.",
+            "expected_evidence": "Enforced rules, scope and audit-to-enforce testing."
+          },
+          {
+            "component": "Software approval/change process",
+            "how": "Defines approved software and exceptions.",
+            "expected_evidence": "Requests, approvals, expiry and review."
+          }
+        ],
+        "gaps_and_residual": [
+          {
+            "gap": "Native deny-by-default allowlisting was not evidenced.",
+            "residual": "Add an allowlisting engine where required by control design."
+          },
+          {
+            "gap": "Behaviour blocking is not business approval.",
+            "residual": "Maintain an approved-software model."
+          },
+          {
+            "gap": "Complete special-workload coverage is not proven.",
+            "residual": "Define and test scope and exceptions."
+          }
+        ]
+      },
+      "threat_driver": "Pre-approved tools reduce out-of-baseline installs and opportunistic infection from self-installed software.",
+      "source_refs": [
+        "NCSC-APP",
+        "TT-APP-01",
+        "CD-PREVENT",
+        "CD-INSIGHT",
+        "ECO-AIRLOCK"
+      ]
+    },
+    {
+      "order": 9,
+      "id": "NCSC-09",
+      "slug": "least-privilege",
+      "title": "Enforce the principle of least privilege",
+      "position": "partial",
+      "native_level": "native_direct_bounded",
+      "structured_mapping": {
+        "official_requirements": [
+          "Identify and justify minimum permissions for every account type.",
+          "Use roles and separate administrative from everyday accounts.",
+          "Limit privilege by task and time, including just-in-time access.",
+          "Review entitlements and monitor privileged activity."
+        ],
+        "native_modules": [
+          {
+            "module": "Falcon Privileged Access",
+            "role": "direct_bounded",
+            "how": "Records just-in-time, just-enough privilege and privileged-session control.",
+            "boundary": "Dedicated corroborating product notes are absent; scope and evidence exports require validation."
+          },
+          {
+            "module": "Falcon Identity Protection",
+            "role": "direct_supporting",
+            "how": "Detects identity threats and conditionally enforces supported paths.",
+            "boundary": "Does not own every role or lifecycle process."
+          },
+          {
+            "module": "Falcon Cloud Security CIEM",
+            "role": "direct_supporting",
+            "how": "Finds excessive/dormant cloud permissions and supports bounded remediation.",
+            "boundary": "Capabilities differ by cloud provider."
+          },
+          {
+            "module": "Falcon Shield",
+            "role": "direct_bounded",
+            "how": "Applies privilege governance in supported SaaS integrations.",
+            "boundary": "Does not cover the whole estate."
+          }
+        ],
+        "ecosystem_controls": [
+          {
+            "component": "IdP, directory and IGA",
+            "how": "Owns roles, lifecycle, approval and certification.",
+            "expected_evidence": "Entitlements, approvals, reviews and deprovisioning."
+          },
+          {
+            "component": "PAM and vaulting",
+            "how": "Controls credentials and sessions outside native scope.",
+            "expected_evidence": "Coverage, JIT/check-out and session records."
+          },
+          {
+            "component": "Secure administrative paths",
+            "how": "Separates and hardens privileged access.",
+            "expected_evidence": "Device/network policy and access tests."
+          }
+        ],
+        "gaps_and_residual": [
+          {
+            "gap": "Universal privilege coverage is not proven.",
+            "residual": "Map every privileged path to an enforcement owner."
+          },
+          {
+            "gap": "Role design and approval are external governance.",
+            "residual": "Establish roles, separated accounts and justified workflows."
+          },
+          {
+            "gap": "Risk findings do not prove revocation.",
+            "residual": "Certify access and remove dormant/excess privilege."
+          }
+        ]
+      },
+      "threat_driver": "Rapid attacker hand-off and Tier-0 compromise risk make time-bound, monitored privilege essential to containing credential compromise.",
+      "source_refs": [
+        "NCSC-PRIV",
+        "TT-HANDOFF-01",
+        "TT-PRIV-01",
+        "OUT-CS-FPA",
+        "CD-IDENTITY",
+        "CD-CIEM",
+        "CD-SHIELD"
+      ]
+    },
+    {
+      "order": 10,
+      "id": "NCSC-10",
+      "slug": "network-segmentation-and-separation",
+      "title": "Implement network segmentation and separation",
+      "position": "ecosystem-led",
+      "native_level": "native_direct_bounded",
+      "structured_mapping": {
+        "official_requirements": [
+          "Identify devices, users, data, dependencies, ports and protocols.",
+          "Divide networks into zones based on function, sensitivity and trust.",
+          "Control and minimise connections between zones.",
+          "Harden devices and monitor remote, wireless, physical and cross-zone access."
+        ],
+        "native_modules": [
+          {
+            "module": "Falcon Firewall Management",
+            "role": "direct_bounded",
+            "how": "Centrally manages host-firewall rules on supported Windows, macOS and Linux hosts.",
+            "boundary": "Does not create enterprise zones or control every network path."
+          },
+          {
+            "module": "Falcon Insight XDR",
+            "role": "supporting",
+            "how": "Adds network-related telemetry, detection and endpoint containment.",
+            "boundary": "Detection and containment are not segmentation architecture."
+          },
+          {
+            "module": "Falcon NG-SIEM",
+            "role": "evidence",
+            "how": "Correlates endpoint, firewall, network and cloud events.",
+            "boundary": "Depends on complete integrations."
+          },
+          {
+            "module": "Falcon for XIoT",
+            "role": "supporting",
+            "how": "Discovers supported OT/IoT assets and ingests partner visibility.",
+            "boundary": "Discovery does not enforce segmentation."
+          }
+        ],
+        "ecosystem_controls": [
+          {
+            "component": "NGFW/FWaaS and cloud network controls",
+            "how": "Enforces zone boundaries and permitted flows.",
+            "expected_evidence": "Architecture, rulebase, reviews, tests and logs."
+          },
+          {
+            "component": "NAC/ZTNA/SDN",
+            "how": "Controls device/user admission and dynamic access.",
+            "expected_evidence": "Policy, posture, authentication and access decisions."
+          },
+          {
+            "component": "Network architecture/configuration management",
+            "how": "Maintains zones, flows, ownership and exceptions.",
+            "expected_evidence": "Diagrams, inventory, changes and penetration tests."
+          }
+        ],
+        "gaps_and_residual": [
+          {
+            "gap": "Native enforcement is mainly managed-host firewall policy.",
+            "residual": "Use network and cloud platforms for authoritative segmentation."
+          },
+          {
+            "gap": "Telemetry does not prove prohibited paths are blocked.",
+            "residual": "Test allowed and denied flows from each zone."
+          },
+          {
+            "gap": "Unmanaged, appliance, wireless, remote and OT paths can bypass endpoint controls.",
+            "residual": "Include every path in design, monitoring and exception review."
+          }
+        ]
+      },
+      "threat_driver": "Lateral movement and attacks on edge, core and recovery infrastructure make blast-radius reduction a business resilience requirement.",
+      "source_refs": [
+        "NCSC-NET",
+        "TT-NET-01",
+        "TT-ASSET-01",
+        "TT-BACKUP-01",
+        "CD-FIREWALL",
+        "CD-INSIGHT",
+        "CD-NGSIEM",
+        "CD-XIOT"
+      ]
+    }
+  ],
+  "sources": {
+    "official": [
+      {
+        "id": "NCSC-SUMMARY",
+        "title": "Critical Controls: Summary",
+        "url": "https://www.ncsc.govt.nz/protect-your-organisation/summary/",
+        "retrieved_at": "2026-09-22"
+      },
+      {
+        "id": "NCSC-PATCH",
+        "title": "Patching",
+        "url": "https://www.ncsc.govt.nz/protect-your-organisation/patching/"
+      },
+      {
+        "id": "NCSC-MFA",
+        "title": "Multi-factor authentication and verification",
+        "url": "https://www.ncsc.govt.nz/protect-your-organisation/multi-factor-authentication-and-verification/"
+      },
+      {
+        "id": "NCSC-PASSWORD",
+        "title": "Password managers",
+        "url": "https://www.ncsc.govt.nz/protect-your-organisation/password-managers/"
+      },
+      {
+        "id": "NCSC-LOG",
+        "title": "Centralised logging",
+        "url": "https://www.ncsc.govt.nz/protect-your-organisation/centralised-logging/"
+      },
+      {
+        "id": "NCSC-AWARE",
+        "title": "Build security awareness in your organisation",
+        "url": "https://www.ncsc.govt.nz/protect-your-organisation/build-security-awareness-in-your-organisation/"
+      },
+      {
+        "id": "NCSC-ASSET",
+        "title": "Asset lifecycle management",
+        "url": "https://www.ncsc.govt.nz/protect-your-organisation/asset-lifecycle-management/"
+      },
+      {
+        "id": "NCSC-BACKUP",
+        "title": "Implement and test backups",
+        "url": "https://www.ncsc.govt.nz/protect-your-organisation/implement-and-test-backups/"
+      },
+      {
+        "id": "NCSC-APP",
+        "title": "Application control",
+        "url": "https://www.ncsc.govt.nz/protect-your-organisation/application-control/"
+      },
+      {
+        "id": "NCSC-PRIV",
+        "title": "Principle of least privilege",
+        "url": "https://www.ncsc.govt.nz/protect-your-organisation/principle-of-least-privilege/"
+      },
+      {
+        "id": "NCSC-NET",
+        "title": "Network separation and segmentation",
+        "url": "https://www.ncsc.govt.nz/protect-your-organisation/network-separation-and-segmentation/"
+      }
+    ],
+    "cyberdoc": [
+      {
+        "id": "CD-PATCH",
+        "title": "Falcon for IT Patch Management"
+      },
+      {
+        "id": "CD-EXPOSURE",
+        "title": "Falcon Exposure Management and Spotlight"
+      },
+      {
+        "id": "CD-DISCOVER",
+        "title": "Falcon Discover"
+      },
+      {
+        "id": "CD-FALCONID",
+        "title": "FalconID"
+      },
+      {
+        "id": "CD-IDENTITY",
+        "title": "Falcon Identity Protection"
+      },
+      {
+        "id": "CD-NGSIEM",
+        "title": "Falcon Next-Gen SIEM"
+      },
+      {
+        "id": "CD-ONUM",
+        "title": "Falcon Onum"
+      },
+      {
+        "id": "CD-INSIGHT",
+        "title": "Falcon Insight XDR"
+      },
+      {
+        "id": "CD-CDR",
+        "title": "Falcon Cloud Security CDR"
+      },
+      {
+        "id": "CD-SURFACE",
+        "title": "Falcon Surface"
+      },
+      {
+        "id": "CD-XIOT",
+        "title": "Falcon for XIoT"
+      },
+      {
+        "id": "CD-PREVENT",
+        "title": "Falcon Prevent"
+      },
+      {
+        "id": "CD-CIEM",
+        "title": "Falcon Cloud Security CIEM"
+      },
+      {
+        "id": "CD-SHIELD",
+        "title": "Falcon Shield"
+      },
+      {
+        "id": "CD-FIREWALL",
+        "title": "Falcon Firewall Management"
+      }
+    ],
+    "capability": [
+      {
+        "id": "OUT-BDR",
+        "title": "Managed backup and cyber recovery"
+      },
+      {
+        "id": "OUT-CS-FPA",
+        "title": "Falcon Privileged Access"
+      }
+    ],
+    "thinkthreats": [
+      {
+        "id": "TT-PATCH-01",
+        "claim_id": "mandiant-m-trends-2026:c03",
+        "title": "Exploits remained the leading initial-access vector",
+        "review_status": "PENDING"
+      },
+      {
+        "id": "TT-PATCH-02",
+        "claim_id": "mandiant-m-trends-2026:c09",
+        "title": "Exploits recorded in 32 percent of investigations with an identified vector",
+        "review_status": "PENDING"
+      },
+      {
+        "id": "TT-AWARE-01",
+        "claim_id": "mandiant-m-trends-2026:c10",
+        "title": "Email phishing and vishing initial-access trend",
+        "review_status": "PENDING"
+      },
+      {
+        "id": "TT-AWARE-02",
+        "claim_id": "mandiant-m-trends-2026:c11",
+        "title": "Vishing used for credential theft and rogue SaaS authorisation",
+        "review_status": "PENDING"
+      },
+      {
+        "id": "TT-PASSWORD-01",
+        "claim_id": "mandiant-m-trends-2026:c12",
+        "title": "Help-desk targeting for password resets and MFA changes",
+        "review_status": "PENDING"
+      },
+      {
+        "id": "TT-CRED-01",
+        "claim_id": "mandiant-m-trends-2026:c14",
+        "title": "Stolen credentials recorded in 9 percent of investigations",
+        "review_status": "PENDING"
+      },
+      {
+        "id": "TT-LOG-01",
+        "claim_id": "mandiant-m-trends-2026:c25",
+        "title": "Close telemetry gaps and keep infrastructure documentation current",
+        "review_status": "PENDING"
+      },
+      {
+        "id": "TT-ASSET-01",
+        "claim_id": "mandiant-m-trends-2026:c06",
+        "title": "Harden edge and core devices because exploitation remains a common entry path",
+        "review_status": "PENDING"
+      },
+      {
+        "id": "TT-BACKUP-01",
+        "claim_id": "mandiant-m-trends-2026:c27",
+        "title": "Decoupled identity, immutable storage and offsite or air-gapped copies",
+        "review_status": "PENDING"
+      },
+      {
+        "id": "TT-BACKUP-02",
+        "claim_id": "mandiant-m-trends-2026:c05",
+        "title": "Prioritise backup, identity and virtualisation security",
+        "review_status": "PENDING"
+      },
+      {
+        "id": "TT-APP-01",
+        "claim_id": "mandiant-m-trends-2026:c24",
+        "title": "Use pre-approved, centrally stored tools",
+        "review_status": "PENDING"
+      },
+      {
+        "id": "TT-PRIV-01",
+        "claim_id": "mandiant-m-trends-2026:c26",
+        "title": "Phishing-resistant MFA and monitored break-glass access for Tier-0 systems",
+        "review_status": "PENDING"
+      },
+      {
+        "id": "TT-HANDOFF-01",
+        "claim_id": "mandiant-m-trends-2026:c04",
+        "title": "Rapid hand-off from initial-access to follow-on operators",
+        "review_status": "PENDING"
+      },
+      {
+        "id": "TT-NET-01",
+        "claim_id": "crowdstrike-threat-hunting-report-2025:reviewed-trial:cs-128",
+        "title": "Malware used to support lateral movement",
+        "review_status": "PENDING"
+      }
+    ],
+    "supplemental": [
+      {
+        "id": "ECO-AIRLOCK",
+        "title": "Airlock Digital precision application control",
+        "url": "https://marketplace.crowdstrike.com/listings/airlock-digital-precision-application-control/"
+      }
+    ]
+  },
+  "limitations": [
+    "This is a product-capability crosswalk, not an assessment of an organisation.",
+    "NCSC reviews the Top 10 annually. This briefing applies only to the 21 September 2026 snapshot, reverified on 22 September 2026.",
+    "The capability mapping used for this framework records metadata only: no detailed controls and no control mappings. The crosswalk is analyst-authored.",
+    "Product notes used here are working material rather than finished product assurance.",
+    "All selected ThinkThreats claims were pending review on 22 September 2026.",
+    "No customer deployment, configuration, exception or operating-effectiveness evidence was supplied.",
+    "Product availability, licensing, platform support and names can change and must be validated before implementation."
+  ]
+}
