@@ -1,0 +1,365 @@
+{
+  "schema_version": 1,
+  "report_id": "smb1001-crowdstrike-2026-09-22",
+  "title": "SMB1001, short of the catalogue",
+  "as_at": "2026-09-22",
+  "status": "metadata-only-licence-gated",
+  "interpretation_rule": "Detailed controls are intentionally empty. The public architecture may be paraphrased. Control text, tier rules and certification logic stay out until an authorised SMB1001:2026 copy is supplied and the rights for derivative mapping, PDF publication, web presentation and MCP output are confirmed.",
+  "maturity_determination": "not_assessable_without_licensed_control_source_and_customer_evidence",
+  "overall_conclusion": "SMB1001:2026 is Dynamic Standards International’s five-level cybersecurity certification for small and medium-sized businesses. This briefing records the public architecture only. Detailed controls remain empty because the standard licence restricts external publication and requires prior written permission for derivative works.",
+  "framework": {
+    "name": "SMB1001",
+    "publisher": "Dynamic Standards International",
+    "edition_on_public_page": "2026",
+    "version_recorded_by_assessment": "1.0",
+    "published_at_recorded_by_assessment": "2025-09-01",
+    "page_count_recorded_by_assessment": 93,
+    "recorded_facts_reconfirmed_in_public_page_payload": false,
+    "official_url": "https://dsi.org/smb1001",
+    "licence_url": "https://dsi.org/licence-agreement",
+    "licence_last_updated": "2026-02-11"
+  },
+  "licensing_gate": {
+    "status": "not_cleared",
+    "detailed_mapping_blocked": true,
+    "authorised_source_received": false,
+    "derivative_mapping_rights_confirmed": false
+  },
+  "levels": [
+    {
+      "id": "L1",
+      "label": "Level 1",
+      "public_summary": "Basic preventive controls, illustrated on the public page by firewalls and antivirus software."
+    },
+    {
+      "id": "L2",
+      "label": "Level 2",
+      "public_summary": "More advanced preventive measures against more sophisticated threats."
+    },
+    {
+      "id": "L3",
+      "label": "Level 3",
+      "public_summary": "Holistic risk management across people, processes and technology."
+    },
+    {
+      "id": "L4-5",
+      "label": "Levels 4 and 5",
+      "public_summary": "More complex governance: formal rules and policies, and risk-management practice. The public page states these two levels together."
+    }
+  ],
+  "focus_areas": [
+    {
+      "id": "FA-01",
+      "slug": "technology-management",
+      "order": 1,
+      "name": "Technology Management",
+      "public_summary": "Oversight of hardware, software and networks, including updates, vulnerability patching and security configuration.",
+      "native_modules": [
+        {
+          "module": "Falcon Prevent",
+          "role": "not_assessed",
+          "how": "Candidate only, because the public Level 1 line mentions antivirus. Not classified as the control.",
+          "boundary": "Platform coverage, exceptions and operating effectiveness are not assessed."
+        },
+        {
+          "module": "Falcon Exposure Management",
+          "role": "not_assessed",
+          "how": "Candidate only, because the public focus area mentions patching. Not classified as the control.",
+          "boundary": "Scan cadence, catalogue and deployment evidence are not assessed."
+        },
+        {
+          "module": "Falcon Discover",
+          "role": "not_assessed",
+          "how": "Candidate only, for asset visibility against the public technology-estate sentence.",
+          "boundary": "A complete inventory is not evidenced."
+        },
+        {
+          "module": "Falcon for IT Patch Management",
+          "role": "not_assessed",
+          "how": "Candidate only, for automated updates. Not classified as the control.",
+          "boundary": "Host and software scope are not assessed against a quoted requirement."
+        },
+        {
+          "module": "Falcon Insight XDR",
+          "role": "not_assessed",
+          "how": "Candidate only, for telemetry after configuration or prevention fails.",
+          "boundary": "Telemetry is not itself the configuration."
+        }
+      ],
+      "ecosystem_controls": [
+        {
+          "component": "Change, architecture and lifecycle owners",
+          "how": "The public sentence gives upkeep of the technology estate to the business. A sensor does not approve exceptions."
+        },
+        {
+          "component": "Cloud, network and application owners",
+          "how": "Assets outside a supported sensor stay outside any future native claim."
+        },
+        {
+          "component": "AI application owners",
+          "how": "Generative tools are software under the public description. No AI-security module is in the research queue."
+        }
+      ],
+      "gaps_and_residual": [
+        {
+          "gap": "The licensed control text is not available.",
+          "residual": "No technology-management control is classified, and no coverage claim is made."
+        },
+        {
+          "gap": "The public sentence is an estate, not an endpoint.",
+          "residual": "Firmware, network devices, unsupported platforms and AI tooling stay with the organisation."
+        }
+      ]
+    },
+    {
+      "id": "FA-02",
+      "slug": "access-management",
+      "order": 2,
+      "name": "Access Management",
+      "public_summary": "Access limited to authorised people, including password policy, multi-factor authentication and monitoring of user activity.",
+      "native_modules": [
+        {
+          "module": "Falcon Identity Protection",
+          "role": "not_assessed",
+          "how": "Candidate only, for identity risk and activity monitoring. Not classified as the control.",
+          "boundary": "Directory scope and conditional-access coverage are not assessed."
+        },
+        {
+          "module": "FalconID",
+          "role": "not_assessed",
+          "how": "Candidate only, for phishing-resistant authentication on supported flows.",
+          "boundary": "Which authentication paths exist is not assessed."
+        }
+      ],
+      "ecosystem_controls": [
+        {
+          "component": "Identity provider",
+          "how": "Password policy, account lifecycle, recovery and the authoritative directory stay with the identity provider."
+        },
+        {
+          "component": "Business owner of AI tool access",
+          "how": "Who may use a model, and with what data, is an access decision the public sentence does not assign to a sensor."
+        }
+      ],
+      "gaps_and_residual": [
+        {
+          "gap": "The licensed control text is not available.",
+          "residual": "No access-management control is classified."
+        },
+        {
+          "gap": "Password policy does not govern prompts.",
+          "residual": "Control of model credentials, prompt content and shadow AI stays with the organisation."
+        }
+      ]
+    },
+    {
+      "id": "FA-03",
+      "slug": "backup-and-recovery",
+      "order": 3,
+      "name": "Backup and Recovery",
+      "public_summary": "Backups of critical data and a recovery plan that can restore systems after an incident and limit downtime and data loss.",
+      "native_modules": [
+        {
+          "module": "Falcon Insight XDR",
+          "role": "not_assessed",
+          "how": "Candidate only, for detection of destructive activity around copies. Not a backup.",
+          "boundary": "Detection does not create a copy or run a restore."
+        },
+        {
+          "module": "Falcon Next-Gen SIEM",
+          "role": "not_assessed",
+          "how": "Candidate only, for evidence that an incident touched recovery systems.",
+          "boundary": "A log is not a restoration test."
+        }
+      ],
+      "ecosystem_controls": [
+        {
+          "component": "Backup platform",
+          "how": "Copies, immutability, isolation, retention and restoration testing sit with the backup owner."
+        },
+        {
+          "component": "Recovery governance",
+          "how": "What counts as critical data, including model artefacts if the business holds them, is an organisational decision."
+        }
+      ],
+      "gaps_and_residual": [
+        {
+          "gap": "The licensed control text is not available.",
+          "residual": "No backup control is classified."
+        },
+        {
+          "gap": "Visibility is not recoverability.",
+          "residual": "A Falcon detection cannot stand in for a tested restore."
+        }
+      ]
+    },
+    {
+      "id": "FA-04",
+      "slug": "policies-plans-procedures",
+      "order": 4,
+      "name": "Policies, Plans and Procedures",
+      "public_summary": "Cybersecurity policies, procedures and contingency plans, including how the organisation responds to incidents and protects sensitive information.",
+      "native_modules": [
+        {
+          "module": "Falcon Next-Gen SIEM",
+          "role": "not_assessed",
+          "how": "Candidate only, for workflow and evidence once an incident process already exists.",
+          "boundary": "A feed does not write the policy or approve an exception."
+        },
+        {
+          "module": "Falcon Insight XDR",
+          "role": "not_assessed",
+          "how": "Candidate only, for investigation evidence.",
+          "boundary": "An investigation record is not a contingency plan."
+        }
+      ],
+      "ecosystem_controls": [
+        {
+          "component": "Governance, risk and incident owners",
+          "how": "Policies, plans, supplier rules and exception registers stay with the organisation."
+        },
+        {
+          "component": "AI governance owner",
+          "how": "An AI-use rule, where the business needs one, is not evidenced by a detection feed."
+        }
+      ],
+      "gaps_and_residual": [
+        {
+          "gap": "The licensed control text is not available.",
+          "residual": "Tier names, control counts and any AI-use policy in commentary are not adopted as requirements."
+        },
+        {
+          "gap": "A policy is not a technical control.",
+          "residual": "Prompt-injection defence and the rest of the OWASP GenAI list stay an organisational design job."
+        }
+      ]
+    },
+    {
+      "id": "FA-05",
+      "slug": "education-and-training",
+      "order": 5,
+      "name": "Education and Training",
+      "public_summary": "Ongoing training so staff know current threats and sound practice, with human error treated as a cause of incidents.",
+      "native_modules": [
+        {
+          "module": "None in the research queue",
+          "role": "not_assessed",
+          "how": "Threat context can inform training. No awareness module was named for classification.",
+          "boundary": "Content, simulations and behaviour measurement are not a Falcon function in this assessment."
+        }
+      ],
+      "ecosystem_controls": [
+        {
+          "component": "Awareness programme, HR and leadership",
+          "how": "The curriculum, the exercises and the measure of behaviour stay with the organisation."
+        }
+      ],
+      "gaps_and_residual": [
+        {
+          "gap": "The licensed control text is not available.",
+          "residual": "No training control is classified."
+        },
+        {
+          "gap": "Current threats now include generative-AI tradecraft.",
+          "residual": "Training that stops at a generic phishing poster does not discharge the public sentence. That judgement is not an SMB1001 score."
+        }
+      ]
+    }
+  ],
+  "public_examples": [
+    {
+      "example": "Engage a technical support specialist",
+      "candidate_research": "Falcon Complete and CrowdStrike services",
+      "likely_owner": "Qualified support arrangements, accountability and governance",
+      "status": "not_assessed"
+    },
+    {
+      "example": "Install and configure a firewall",
+      "candidate_research": "Falcon Firewall Management",
+      "likely_owner": "Network, cloud and appliance firewalls beyond supported host scope",
+      "status": "not_assessed"
+    },
+    {
+      "example": "Install antivirus software on all devices",
+      "candidate_research": "Falcon Prevent, Falcon Insight XDR, Falcon Discover",
+      "likely_owner": "Complete device inventory, unsupported platforms and exceptions",
+      "status": "not_assessed"
+    },
+    {
+      "example": "Automatically install updates and patches",
+      "candidate_research": "Falcon for IT Patch Management, Exposure Management, Discover",
+      "likely_owner": "Non-covered software, firmware, network devices and change governance",
+      "status": "not_assessed"
+    },
+    {
+      "example": "Change passwords routinely",
+      "candidate_research": "Falcon Identity Protection, FalconID",
+      "likely_owner": "Authoritative identity provider, password policy, vaulting and recovery",
+      "status": "not_assessed"
+    },
+    {
+      "example": "Implement a backup and recovery strategy",
+      "candidate_research": "Falcon Insight XDR and Falcon Next-Gen SIEM, as evidence candidates only",
+      "likely_owner": "Backup technology, immutability, restoration testing and recovery governance",
+      "status": "not_assessed"
+    }
+  ],
+  "assessment_scale": {
+    "native_direct": "CrowdStrike authoritatively performs a material part of the requirement.",
+    "native_direct_bounded": "CrowdStrike directly performs part of the requirement only for documented platforms, workloads, sources or flows.",
+    "native_supporting": "CrowdStrike supplies prevention, discovery, prioritisation, detection, response or evidence but does not own the required control.",
+    "ecosystem": "Another technology, platform control or organisational process is required.",
+    "gap": "No sufficient native capability is evidenced, or the requirement remains organisational.",
+    "not_assessed": "The licensed requirement, or the evidence needed to classify coverage, is not yet available. Every row in this briefing uses this class."
+  },
+  "sources": {
+    "official": [
+      {
+        "id": "DSI-SMB1001",
+        "title": "SMB1001",
+        "url": "https://dsi.org/smb1001",
+        "use": "Public level and focus-area descriptions, and the publisher’s alignment statement"
+      },
+      {
+        "id": "DSI-LICENCE",
+        "title": "Licence Agreement for SMB1001",
+        "url": "https://dsi.org/licence-agreement",
+        "use": "Internal-use grant, publication ban, and written-permission rule for derivative works"
+      }
+    ],
+    "ai_security": [
+      {
+        "id": "WAVE-AI",
+        "title": "Cyber Benchmark 2026",
+        "url": "https://www.wavestone.com/en/insight/cyber-benchmark-2026-progress-slows-as-complexity-rises-1/",
+        "use": "AI policy versus prompt-injection defence, large-organisation slice"
+      },
+      {
+        "id": "CS-GTR-AI",
+        "title": "2026 Global Threat Report press note",
+        "url": "https://www.crowdstrike.com/en-us/press-releases/2026-crowdstrike-global-threat-report/",
+        "use": "Malicious prompts and the year-on-year rise in AI-enabled adversary activity"
+      },
+      {
+        "id": "OWASP-LLM",
+        "title": "OWASP Top 10 for LLMs and GenAI 2025",
+        "url": "https://genai.owasp.org/llm-top-10/",
+        "use": "External vocabulary for prompt injection and related application risks"
+      }
+    ]
+  },
+  "limitations": [
+    "No authorised copy of the licensed standard was supplied.",
+    "No evidence of rights to publish a derivative control mapping was supplied.",
+    "Control identifiers, tier rules, attestation and certification evidence are absent on purpose.",
+    "Candidate CrowdStrike modules are research hypotheses, not assessed mappings.",
+    "The framework page, as recorded on 22 September 2026, advertises a separate commercial-use option for platforms and service delivery. That agreement was not supplied, and the sentence was not repeated in the page payload re-read for this briefing.",
+    "The next step is an authorised SMB1001:2026 copy and confirmation covering derivative mapping, PDF publication, web presentation and MCP output.",
+    "No customer entitlement, deployment, configuration or operating effectiveness was assessed.",
+    "The public page re-read on 22 September 2026 confirmed the level prose, the five focus areas and the licence terms. It did not contain the recorded 93-page count, the 1 September 2025 date, or the six FAQ example sentences.",
+    "A separate 2027 edition is not substituted for the 2026 baseline. The public page read here is the 2026 standard.",
+    "Wavestone’s AI figures are a slice of more than 20 large organisations. They are not the 200-organisation maturity average, and they are not an SMB sample.",
+    "CrowdStrike sells Falcon. The threat figures are vendor telemetry.",
+    "This briefing is not legal advice on the DSI licence."
+  ]
+}

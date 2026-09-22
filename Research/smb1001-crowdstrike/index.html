@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMB1001, short of the catalogue | Thinkinfosec Hub</title>
+<meta name="description" content="What SMB1001:2026 is, and how far a public briefing can go while the licensed controls stay empty and derivative use is not cleared.">
+<meta name="author" content="Andre Camillo">
+<link rel="canonical" href="https://amcamillo.github.io/thinkinfosec-hub/Research/smb1001-crowdstrike/">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0D1F3C;
+  --teal: #00BFCF;
+  --teal-dark: #008A96;
+  --pink: #FF2D78;
+  --green: #00875A;
+  --bg: #f4f7f6;
+  --card: #ffffff;
+  --ink: #333333;
+  --mute: #555555;
+  --faint: #777777;
+  --line: #dddddd;
+  --radius: 8px;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
+  --focus: 2px solid var(--teal);
+  --col: 1040px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--teal-dark); }
+a:hover { text-decoration: underline; }
+a:focus-visible, button:focus-visible, summary:focus-visible {
+  outline: var(--focus); outline-offset: 3px;
+}
+.skip {
+  position: absolute; left: 0.75rem; top: -3rem;
+  background: var(--navy); color: #fff; padding: 0.5rem 0.85rem;
+  border-radius: var(--radius); z-index: 400; text-decoration: none;
+}
+.skip:focus { top: 0.75rem; }
+.topbar { background: var(--navy); color: #fff; }
+.topbar-inner {
+  max-width: var(--col); margin: 0 auto;
+  min-height: 52px; padding: 8px 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+.brand img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.brand-name { font-size: 15px; font-weight: 700; display: block; line-height: 1.15; }
+.brand-sub { font-size: 12px; color: var(--teal); font-weight: 500; }
+.topbar-meta { font-size: 13px; color: rgba(255,255,255,0.62); }
+.mast { background: var(--card); border-bottom: 1px solid var(--line); }
+.mast-inner { max-width: var(--col); margin: 0 auto; padding: 28px 24px 22px; }
+.crumb { font-size: 13px; color: var(--faint); margin-bottom: 18px; }
+.crumb a { color: var(--teal-dark); text-decoration: none; font-weight: 500; }
+.crumb a:hover { text-decoration: underline; }
+.sep { margin: 0 8px; color: var(--line); }
+.dateline { font-size: 13px; color: var(--teal-dark); font-weight: 600; margin-bottom: 8px; }
+.advice-stamp {
+  display: inline-block; margin: 0 0 14px;
+  padding: 6px 12px; border: 2px solid #FF8B00; border-radius: 4px;
+  background: #fff8f0; color: #9a4d00;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.mast h1 {
+  font-size: clamp(28px, 3.6vw, 38px);
+  font-weight: 700; color: var(--navy);
+  letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 12px;
+}
+.mast h1 em { font-style: normal; color: var(--teal-dark); }
+.lede { max-width: 42rem; color: var(--mute); margin-bottom: 10px; }
+.meta-line { font-size: 14px; color: var(--faint); margin-bottom: 18px; }
+.facts {
+  display: flex; flex-wrap: wrap; gap: 10px 32px;
+  padding-top: 16px; border-top: 1px solid var(--line);
+  font-size: 14px; color: var(--mute);
+}
+.facts b { color: var(--navy); font-weight: 700; margin-right: 5px; }
+.facts a { text-decoration: none; font-size: 13px; }
+.facts a:hover { text-decoration: underline; }
+.toc {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--card); border-bottom: 1px solid var(--line); padding: 8px 0;
+}
+.toc-inner {
+  max-width: var(--col); margin: 0 auto; padding: 0 24px;
+  display: flex; gap: 4px; overflow-x: auto; width: 100%;
+}
+.toc a {
+  flex-shrink: 0; color: var(--faint); text-decoration: none;
+  font-size: 13px; font-weight: 500; min-height: 40px; padding: 0 12px;
+  display: inline-flex; align-items: center; border-radius: 6px;
+}
+.toc a:hover { color: var(--navy); background: var(--bg); }
+.toc a.on { color: var(--navy); background: var(--bg); font-weight: 600; }
+.wrap { max-width: var(--col); margin: 0 auto; padding: 20px 24px 64px; display: grid; gap: 16px; }
+section {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 28px 28px 24px; scroll-margin-top: 64px;
+}
+.kicker {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--teal-dark); margin-bottom: 6px;
+}
+h2 {
+  font-size: 1.45rem; font-weight: 700; color: var(--navy);
+  margin: 0 0 10px; letter-spacing: -0.02em; line-height: 1.25;
+}
+h3 { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.blurb { color: var(--mute); margin-bottom: 18px; max-width: 44rem; }
+.prose { font-size: 14.5px; color: var(--mute); margin-top: 8px; }
+.note { font-size: 14px; color: var(--mute); margin-top: 12px; }
+.thesis {
+  background: var(--bg); border-radius: var(--radius); padding: 16px 18px; margin: 0 0 20px;
+}
+.thesis p { font-size: 1.05rem; font-weight: 600; color: var(--navy); line-height: 1.5; max-width: 46rem; }
+.thesis span { color: var(--teal-dark); }
+.callout {
+  margin-top: 16px; padding: 14px 16px; background: var(--navy); color: #fff;
+  border-radius: var(--radius); font-size: 14.5px;
+}
+.callout strong { color: var(--teal); }
+.callout .cite { color: var(--teal); }
+.warn {
+  margin-top: 14px; padding: 12px 14px; background: #fff8f0;
+  border-left: 3px solid #FF8B00; border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 14.5px; color: var(--mute);
+}
+.warn strong { color: var(--navy); }
+.grid-2 { display: grid; gap: 16px; }
+@media (min-width: 800px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+.mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; }
+sup.cite, .cite {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10px; font-weight: 500; line-height: 0; vertical-align: super;
+}
+.cite { color: var(--teal-dark); text-decoration: none; margin-left: 1px; }
+.cite:hover { text-decoration: underline; }
+.sourcelist { list-style: none; display: grid; gap: 12px; }
+.sourcelist li {
+  font-size: 14px; color: var(--mute); padding-left: 2.6rem; position: relative;
+  line-height: 1.55; scroll-margin-top: 72px;
+}
+.sourcelist li > .n {
+  position: absolute; left: 0; top: 0;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px; font-weight: 600; color: var(--navy);
+}
+.sourcelist a { word-break: break-word; }
+.sourcelist .meta {
+  display: block; margin-top: 2px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px; color: var(--faint);
+}
+.group-lbl {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--teal-dark); margin: 22px 0 10px;
+}
+.group-lbl:first-child { margin-top: 0; }
+.sourcelist li:target { background: #eef8f9; border-radius: 6px; }
+.badge {
+  display: inline; font-size: 12px; font-weight: 600; font-style: italic;
+  border: 0; background: none; color: var(--faint); padding: 0; text-transform: none;
+}
+.finds { display: grid; gap: 0; }
+.find {
+  display: grid; grid-template-columns: 2.2rem 1fr; gap: 8px;
+  padding: 16px 0; border-top: 1px solid var(--line);
+}
+.find .n { font-size: 14px; font-weight: 700; color: var(--teal-dark); padding-top: 2px; }
+.find.proof .n { color: var(--pink); }
+.find p { font-size: 15px; color: var(--ink); margin: 6px 0 0; }
+.find h3 { margin: 0; }
+details.caveat { border-top: 1px solid var(--line); }
+details.caveat summary {
+  cursor: pointer; list-style: none; padding: 12px 0;
+  font-weight: 600; font-size: 15px; color: var(--navy);
+  display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px;
+}
+details.caveat summary::-webkit-details-marker { display: none; }
+details.caveat summary::after { content: "+"; color: var(--teal-dark); font-weight: 500; }
+details.caveat[open] summary::after { content: "–"; }
+details.caveat p, details.caveat .inner { padding: 0 0 14px; font-size: 14.5px; color: var(--mute); }
+.levels { list-style: none; display: grid; gap: 10px; margin-top: 14px; }
+.levels li { font-size: 14.5px; color: var(--mute); padding-top: 10px; border-top: 1px solid var(--line); }
+.levels strong { color: var(--navy); }
+.pager { display: flex; justify-content: space-between; gap: 12px; margin-top: 16px; }
+.pager a {
+  display: inline-flex; align-items: center; min-height: 44px;
+  font-size: 14px; font-weight: 600; text-decoration: none; max-width: 48%;
+}
+.pager a.next { margin-left: auto; text-align: right; }
+.toc a { transition: background-color 160ms ease, color 160ms ease; }
+.band-navy { border-top: 4px solid var(--navy); }
+.band-teal { border-top: 4px solid var(--teal); }
+.band-amber { border-top: 4px solid #FF8B00; }
+.panel {
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 14px 16px 12px; margin-top: 14px;
+}
+.panel.teal { background: #f3fbfc; border-top: 3px solid var(--teal); }
+.panel.navy { background: #f4f7fb; border-top: 3px solid var(--navy); }
+.panel.amber { background: #fff8f0; border-top: 3px solid #FF8B00; }
+.panel.pink { background: #fff5f8; border-top: 3px solid var(--pink); }
+.panel h3 { margin-bottom: 8px; }
+.profile { display: grid; gap: 8px; }
+.profile-head, .profile-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 1.35fr) repeat(4, minmax(108px, 1fr));
+  gap: 8px; align-items: center;
+}
+.profile-head {
+  background: var(--navy); color: #fff; border-radius: 8px;
+  padding: 10px 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.01em;
+}
+.profile-row {
+  text-decoration: none; color: inherit; background: #f6f8fb;
+  border-radius: 8px; padding: 10px 12px; min-height: 48px;
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+.profile-row:hover { background: #e7eef6; }
+.profile-row .who { font-weight: 700; color: var(--navy); }
+.profile-row .who small {
+  display: block; font-weight: 600; color: var(--teal-dark);
+  font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px;
+}
+.plab { display: none; }
+.chipstrip {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px; margin: 12px 0 4px;
+}
+.chipstrip .plab { display: block; }
+.pill {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 28px; padding: 2px 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 700; line-height: 1.2; color: var(--navy);
+  white-space: nowrap;
+}
+.pill.none { background: #e8edf4; }
+.pill.yes { background: #c9f0dc; }
+.pill.strong { background: #cfe5ff; }
+.pill.support { background: #dcecff; }
+.pill.req { background: #ffe1b8; }
+.pill.owner { background: #ffd49a; }
+.pill.material { background: #ffd1d1; }
+.pill.watch { background: #ffe8b8; }
+.scroll { overflow-x: auto; margin-top: 8px; }
+.cmp { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.cmp th {
+  text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--faint);
+  padding: 0 10px 8px 0; border-bottom: 2px solid var(--navy); white-space: nowrap;
+}
+.cmp td {
+  padding: 9px 10px 9px 0; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--mute);
+}
+.cmp .mod { font-weight: 700; color: var(--navy); }
+.limits { margin: 8px 0 0 1.1rem; display: grid; gap: 8px; }
+.limits li { font-size: 14.5px; color: var(--mute); }
+#main > section.view-in { animation: rise 260ms ease both; }
+#main > section.view-in:nth-child(2) { animation-delay: 50ms; }
+#main > section.view-in:nth-child(3) { animation-delay: 100ms; }
+.view-in .panel { animation: rise 280ms ease both; }
+.view-in .panel:nth-of-type(2) { animation-delay: 40ms; }
+.view-in .panel:nth-of-type(3) { animation-delay: 80ms; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .toc a, .profile-row { transition: none; }
+  #main > section.view-in, .view-in .panel { animation: none; }
+}
+footer {
+  background: var(--navy); color: rgba(255,255,255,0.65);
+  padding: 24px; text-align: center;
+}
+footer .ft-main { font-size: 14px; max-width: var(--col); margin: 0 auto; }
+footer .ft-main a { color: var(--teal); text-decoration: none; }
+footer .ft-main a:hover { text-decoration: underline; }
+footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.4); max-width: 40rem; }
+@media (max-width: 800px) {
+  .topbar-meta { display: none; }
+  .find { grid-template-columns: 1fr; }
+  section { padding: 20px 18px 18px; }
+  .pager { flex-direction: column; }
+  .pager a, .pager a.next { max-width: none; text-align: left; margin-left: 0; }
+  .profile-head { display: none; }
+  .profile-row { grid-template-columns: 1fr 1fr; align-items: start; }
+  .profile-row .who { grid-column: 1 / -1; }
+  .chipstrip { grid-template-columns: 1fr 1fr; }
+  .plab {
+    display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--faint); margin-bottom: 4px;
+  }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../../index.html">
+      <img src="../../assets/learning-hub-logo.png" alt="Thinkinfosec Hub logo" width="32" height="32" onerror="this.style.display='none'">
+      <span>
+        <span class="brand-name">Thinkinfosec</span>
+        <span class="brand-sub">Research briefing</span>
+      </span>
+    </a>
+    <p class="topbar-meta">September 2026</p>
+  </div>
+</header>
+
+<div class="mast">
+  <div class="mast-inner">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="../../index.html">Hub</a><span class="sep">/</span>
+      <a href="../../index.html#research">Research</a><span class="sep">/</span>
+      SMB1001, short of the catalogue
+    </nav>
+    <p class="dateline">Independent research briefing · September 2026</p>
+    <p class="advice-stamp">Not legal advice</p>
+    <h1>SMB1001, short of the <em>catalogue</em></h1>
+    <p class="lede">SMB1001 is Dynamic Standards International’s five-level cybersecurity certification for small and medium-sized businesses. This briefing can describe that public shape. The licensed controls are intentionally empty, and a derivative mapping is not cleared.</p>
+    <p class="meta-line">SMB1001:2026 · public architecture · as at 22 September 2026</p>
+    <p class="facts" id="facts">
+      <span><b>5</b> levels on the public page · <a href="#fn1">DSI</a></span>
+      <span><b>Written permission</b> before a derivative · <a href="#fn2">DSI licence</a></span>
+      <span><b>10%</b> prompt-injection defences · <a href="#fn3">Wavestone</a></span>
+      <span><b>More than 90</b> GenAI prompt intrusions · <a href="#fn4">CrowdStrike 2026</a></span>
+    </p>
+  </div>
+</div>
+
+<nav class="toc" aria-label="On this page"><div class="toc-inner" id="toc"></div></nav>
+
+<main id="main" class="wrap">
+  <section>
+    <p class="kicker">The argument</p>
+    <h2>What SMB1001 is, and where this page stops</h2>
+    <div class="thesis">
+      <p>SMB1001 is a five-level certification for small and medium-sized businesses. <span>This page can describe the public shape. It cannot open the controls.</span></p>
+    </div>
+    <p class="blurb">Open this briefing over a local web server to load the focus-area navigator. The five public focus areas, the depth limit, the method and the sources are separate views.</p>
+  </section>
+</main>
+
+<noscript>
+  <div class="wrap">
+    <section>
+      <p class="kicker">How to read this</p>
+      <h2>JavaScript is required for the focus-area navigator</h2>
+      <p class="prose">SMB1001 is Dynamic Standards International’s five-level certification for small and medium-sized businesses. The detailed controls are intentionally empty. The standard licence restricts external publication and requires prior written permission for derivative works. This page paraphrases the public architecture only.</p>
+    </section>
+  </div>
+</noscript>
+
+<footer>
+  <p class="ft-main">ThinkInfoSec 2026 — <a href="https://www.linkedin.com/in/andrecamillo/" target="_blank" rel="noopener">Andre Camillo</a> · <a href="../../index.html#research">Back to Research</a></p>
+  <p class="ft-sub">Independent briefing. Educational use. Not a DSI or CrowdStrike publication. Numbered citations map to the source list. The thesis is ThinkInfoSec synthesis of the 22 September 2026 assessment. Not legal advice.</p>
+</footer>
+
+<script>
+(function () {
+  var ORDER = ["DSI-SMB1001", "DSI-LICENCE", "WAVE-AI", "CS-GTR-AI", "OWASP-LLM"];
+  var SHORT = {
+    "FA-01": "Technology",
+    "FA-02": "Access",
+    "FA-03": "Backup",
+    "FA-04": "Policies",
+    "FA-05": "Training"
+  };
+  var COMMENTARY = {
+    "FA-01": {
+      headline: "A patched endpoint is not the technology estate",
+      why: "DSI’s public page puts hardware, software, networks, patching and configuration in this focus area. It does not name generative AI. CrowdStrike’s 24 February 2026 press note, covering calendar 2025, says adversaries injected malicious prompts into legitimate GenAI tools at more than 90 organisations, and that AI-enabled adversary activity rose 89% year on year. Those figures explain why an AI tool belongs in the asset conversation. They do not show that any Falcon module meets an SMB1001 control. CrowdStrike sells the defensive platform.",
+      whyRefs: ["DSI-SMB1001", "CS-GTR-AI"],
+      whyBadge: "Single-source · CrowdStrike"
+    },
+    "FA-02": {
+      headline: "Identity telemetry is not the access rule",
+      why: "The public sentence covers password policy, multi-factor authentication and monitoring of user activity. Wavestone’s AI slice, more than 20 large organisations rather than the 200-organisation benchmark, found a dedicated AI security policy at 76% and defences against prompt injection or other AI-specific threats at 10%. A password rule does not govern who may paste corporate data into a model. That is an access problem sitting beside SMB1001. It is not an SMB1001 finding, and no identity module is classified here.",
+      whyRefs: ["DSI-SMB1001", "WAVE-AI"],
+      whyBadge: "Single-source · Wavestone"
+    },
+    "FA-03": {
+      headline: "Detection around copies is not recovery",
+      why: "The public page asks for backups of critical data and a plan to restore systems after an incident. Detection of destructive activity around that infrastructure does not create an immutable copy or a tested restore. Whether model weights, prompt logs or retrieval stores count as critical data is the organisation’s decision. No backup product was assessed.",
+      whyRefs: ["DSI-SMB1001"],
+      whyBadge: ""
+    },
+    "FA-04": {
+      headline: "A workflow feed is not a policy",
+      why: "The public page describes policies, procedures, contingency plans, incident response and protection of sensitive information. It does not mention AI. Wavestone’s large-organisation slice is the external clock: policy is common, and technical defence against prompt injection is not. OWASP’s 2025 GenAI Top 10 names prompt injection, sensitive-information disclosure and excessive agency as application risks. Those lists are vocabularies the organisation can use. This briefing does not map them onto an SMB1001 tier, and it does not adopt tier names or an AI-use policy from certification commentary.",
+      whyRefs: ["DSI-SMB1001", "WAVE-AI", "OWASP-LLM"],
+      whyBadge: "Single-source · Wavestone"
+    },
+    "FA-05": {
+      headline: "Threat context is not a training programme",
+      why: "The public page treats staff awareness of current threats, and human error, as a line of defence. CrowdStrike’s 2026 note describes AI used across reconnaissance, credential theft and evasion, and GenAI tools turned into an intrusion path. Training that never mentions prompt handling does not meet the spirit of “current threats”. The curriculum, the exercises and the measure of behaviour stay with the organisation. No awareness module is in the research queue.",
+      whyRefs: ["DSI-SMB1001", "CS-GTR-AI"],
+      whyBadge: "Single-source · CrowdStrike"
+    }
+  };
+
+  var DATA = null;
+  var NUM = {};
+  var main = document.getElementById("main");
+  var toc = document.getElementById("toc");
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function motion() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+  }
+  function cites(refs) {
+    if (!refs || !refs.length) return "";
+    return refs.map(function (id) {
+      var n = NUM[id];
+      return n ? "<a class=\"cite\" href=\"#fn" + n + "\">" + n + "</a>" : "";
+    }).join("");
+  }
+  function badge(label) {
+    return label ? " <span class=\"badge one\">" + esc(label) + "</span>" : "";
+  }
+  function shortUrl(url) {
+    var clean = String(url).replace(/^https?:\/\/(www\.)?/, "");
+    return clean.length > 72 ? clean.slice(0, 69) + "…" : clean;
+  }
+  function indexSources(data) {
+    var byId = {};
+    ["official", "ai_security", "thinkthreats"].forEach(function (key) {
+      (data.sources[key] || []).forEach(function (src) {
+        src._group = key;
+        byId[src.id] = src;
+      });
+    });
+    ORDER.forEach(function (id) {
+      if (!byId[id]) throw new Error("Missing source " + id);
+    });
+    var ordered = ORDER.map(function (id) { return byId[id]; });
+    ordered.forEach(function (src, i) {
+      src._n = i + 1;
+      NUM[src.id] = src._n;
+    });
+    data._sources = ordered;
+  }
+  function sourceBody(s) {
+    if (s.id === "DSI-SMB1001") {
+      return "Dynamic Standards International, SMB1001 public page. Five progressive levels and five focus areas for small and medium-sized businesses. The page component read on 22 September 2026 is the 2026 standard. DSI states that work toward SMB1001 also starts alignment with the UK Cyber Essentials, the CIS Controls and CMMC. The 22 September assessment records a separate commercial-use offer on this page for platforms and service delivery. That sentence was not repeated in the payload re-read for this briefing.";
+    }
+    if (s.id === "DSI-LICENCE") {
+      return "Dynamic Standards International, <em>Licence Agreement for SMB1001</em>. Last updated 11 February 2026. Internal use by employees and contractors of the licensed organisation. The document must not be posted on a website or distributed outside the business. Adaptations and derivative works require prior written permission. Governed by the laws of Queensland. This briefing is not legal advice.";
+    }
+    if (s.id === "WAVE-AI") {
+      return "Wavestone, <em>Cyber Benchmark 2026: Progress slows as complexity rises</em>, 15 June 2026. The AI figures used here are from a slice of more than 20 large organisations: 76% have a dedicated AI security policy; 10% have defences against prompt injection or other AI-specific threats. They are not the benchmark’s 200-organisation maturity average, and they are not an SMB sample. Wavestone sells consulting.";
+    }
+    if (s.id === "CS-GTR-AI") {
+      return "CrowdStrike, “2026 CrowdStrike Global Threat Report: AI Accelerates Adversaries and Reshapes the Attack Surface,” 24 February 2026. Malicious prompts injected into GenAI tools at more than 90 organisations. AI-enabled adversary activity up 89% year on year. Vendor telemetry. CrowdStrike sells Falcon.";
+    }
+    if (s.id === "OWASP-LLM") {
+      return "OWASP Gen AI Security Project, <em>Top 10 for LLMs and Generative AI Apps</em>, 2025 edition. Includes LLM01 prompt injection, LLM02 sensitive information disclosure and LLM06 excessive agency. An external vocabulary, not an SMB1001 annex.";
+    }
+    return esc(s.title) + ".";
+  }
+  function sourceItem(s) {
+    var meta = s.url ? "<span class=\"meta\"><a href=\"" + esc(s.url) + "\" target=\"_blank\" rel=\"noopener\">" + esc(shortUrl(s.url)) + "</a></span>" : "";
+    return "<li id=\"fn" + s._n + "\"><span class=\"n\">[" + s._n + "]</span> " + sourceBody(s) + meta + "</li>";
+  }
+  function areas() { return DATA.focus_areas || []; }
+  function parseRoute() {
+    var hash = "";
+    try { hash = decodeURIComponent(location.hash.replace(/^#/, "")); } catch (e) { hash = ""; }
+    if (!hash || hash === "overview") return { id: "overview" };
+    if (hash === "architecture" || hash === "method" || hash === "sources") return { id: hash };
+    if (/^fn\d+$/.test(hash)) return { id: "sources", focusId: hash };
+    var area = areas().find(function (c) { return c.slug === hash; });
+    if (area) return { id: "area", area: area };
+    return { id: "overview" };
+  }
+  function paintToc(route) {
+    var items = [{ href: "#overview", id: "overview", label: "Overview" }];
+    areas().forEach(function (c) {
+      items.push({ href: "#" + c.slug, id: c.slug, label: pad(c.order) + " " + (SHORT[c.id] || c.name) });
+    });
+    items.push({ href: "#architecture", id: "architecture", label: "Architecture" });
+    items.push({ href: "#method", id: "method", label: "Method" });
+    items.push({ href: "#sources", id: "sources", label: "Sources" });
+    var current = route.id === "area" ? route.area.slug : route.id;
+    toc.innerHTML = items.map(function (item) {
+      var on = item.id === current;
+      return "<a href=\"" + item.href + "\"" + (on ? " class=\"on\" aria-current=\"location\"" : "") + ">" + esc(item.label) + "</a>";
+    }).join("");
+    var active = toc.querySelector("a.on");
+    if (active && active.scrollIntoView) active.scrollIntoView({ inline: "nearest", block: "nearest" });
+  }
+  function paintFacts() {
+    document.getElementById("facts").innerHTML =
+      "<span><b>5</b> levels on the public page · <a href=\"#fn" + NUM["DSI-SMB1001"] + "\">DSI</a></span>" +
+      "<span><b>Written permission</b> before a derivative · <a href=\"#fn" + NUM["DSI-LICENCE"] + "\">DSI licence</a></span>" +
+      "<span><b>10%</b> prompt-injection defences · <a href=\"#fn" + NUM["WAVE-AI"] + "\">Wavestone</a></span>" +
+      "<span><b>More than 90</b> GenAI prompt intrusions · <a href=\"#fn" + NUM["CS-GTR-AI"] + "\">CrowdStrike 2026</a></span>";
+  }
+  function pill(label, kind, lab) {
+    return "<span class=\"pcell\"><span class=\"plab\">" + esc(lab) + "</span><span class=\"pill " + kind + "\">" + esc(label) + "</span></span>";
+  }
+  function profileHtml() {
+    var head = "<div class=\"profile-head\"><span>Public focus area</span><span>Native control</span><span>Native support</span><span>Ecosystem control</span><span>Residual obligation</span></div>";
+    var rows = areas().map(function (c) {
+      return "<a class=\"profile-row\" href=\"#" + esc(c.slug) + "\">" +
+        "<span class=\"who\"><small>" + esc(c.id) + "</small>" + esc(c.name) + "</span>" +
+        pill("Not assessed", "none", "Native control") +
+        pill("Not assessed", "none", "Native support") +
+        pill("Not assessed", "none", "Ecosystem control") +
+        pill("Not assessed", "none", "Residual obligation") +
+        "</a>";
+    }).join("");
+    return "<div class=\"profile\">" + head + rows + "</div>";
+  }
+  function examplesHtml() {
+    var rows = (DATA.public_examples || []).map(function (row) {
+      return "<tr><td>" + esc(row.example) + "</td><td>" + esc(row.candidate_research) + "</td><td>" + esc(row.likely_owner) + "</td><td><span class=\"pill none\">Not assessed</span></td></tr>";
+    }).join("");
+    return "<details class=\"caveat\"><summary>Research queue recorded as public examples</summary><div class=\"inner\">" +
+      "<p>The 22 September assessment records these six lines as Level 1 examples from the public FAQ. The page payload re-read for this briefing did not contain them, so they are not re-quoted as fresh primary text. They are not a Level 1 catalogue, and they are not mappings.</p>" +
+      "<div class=\"scroll\"><table class=\"cmp\"><thead><tr><th>Recorded example</th><th>Candidate research</th><th>Likely owner</th><th>Disposition</th></tr></thead><tbody>" +
+      rows + "</tbody></table></div></div></details>";
+  }
+  function levelsHtml() {
+    return "<ul class=\"levels\">" + (DATA.levels || []).map(function (level) {
+      return "<li><strong>" + esc(level.label) + ".</strong> " + esc(level.public_summary) + "</li>";
+    }).join("") + "</ul>";
+  }
+  function overviewHtml() {
+    return "" +
+      "<section id=\"overview\" class=\"view-in band-navy\">" +
+        "<p class=\"kicker\">The argument</p>" +
+        "<h2>What SMB1001 is, and where this page stops</h2>" +
+        "<div class=\"thesis\"><p>SMB1001 is a five-level certification for small and medium-sized businesses. <span>This page can describe the public shape. It cannot open the controls.</span></p></div>" +
+        "<p class=\"prose\">Dynamic Standards International publishes SMB1001 as a multi-tiered cybersecurity certification for small and medium-sized businesses. The public page describes five progressive levels. A business is not required to complete all five. The same page groups Levels 4 and 5 in one sentence, and it organises the standard as people, process and technology across five focus areas. Those lines are the public architecture. They are not the licensed requirements." + cites(["DSI-SMB1001"]) + "</p>" +
+        levelsHtml() +
+        "<p class=\"prose\">DSI says work toward SMB1001 also starts alignment with the UK Cyber Essentials, the CIS Controls and CMMC. That is the publisher’s statement about the standard, not a reading of any product." + cites(["DSI-SMB1001"]) + "</p>" +
+        "<h3>Why the public shape is the ceiling</h3>" +
+        "<p class=\"prose\">The only framework text used here is DSI’s public webpage. That page names the publisher, the five levels and the five focus areas. It does not set out control identifiers, tier allocation, evidence requirements or certification logic. Those sit in the licensed document, and no authorised copy was supplied. Paraphrasing the webpage is publication of what DSI has already put in public. Quoting the controls would be publication of the document the licence keeps inside the licensed organisation." + cites(["DSI-SMB1001", "DSI-LICENCE"]) + "</p>" +
+        "<h3>Why the control list is empty on purpose</h3>" +
+        "<p class=\"prose\">The catalogue is empty because filling it would mean copying the standard, or reconstructing it from public examples and certification commentary. Either result would look like SMB1001 and would not be it. A reconstructed list would also be a derivative work published on the web, which the standard licence does not allow. The six Level 1 lines later on this page are a research queue recorded from the public FAQ. They are not Level 1." + cites(["DSI-LICENCE"]) + "</p>" +
+        "<h3>Why a derivative mapping is not cleared</h3>" +
+        "<p class=\"prose\">The standard licence, last updated 11 February 2026, allows employees and contractors of the licensed organisation to use the document internally. It prohibits posting the document on a website and distributing it outside the business. Adaptations and derivative works need prior written permission. A control-to-product mapping is that kind of work. So is a PDF of the mapping, a web page that exposes control text, and a service that returns framework-derived content. The framework page, as recorded on 22 September, advertises a separate commercial-use option for platforms and service delivery. That agreement was not supplied. The licence actually read for this briefing does not clear those uses." + cites(["DSI-LICENCE", "DSI-SMB1001"]) + "</p>" +
+        "<div class=\"callout\"><strong>What would unlock the catalogue.</strong> An authorised SMB1001:2026 copy, plus confirmation that covers derivative mapping, PDF publication, web presentation and MCP output. Until that confirmation exists, the focus areas below stay a research lens." + cites(["DSI-LICENCE"]) + "</div>" +
+      "</section>" +
+      "<section class=\"view-in band-teal\">" +
+        "<p class=\"kicker\">Comparison</p>" +
+        "<h2>Five public focus areas, none of them scored</h2>" +
+        "<p class=\"blurb\">Rows are the focus areas DSI names, not controls. Select a row for the research lens. Grey means not assessed. It is not a finding that native control is absent, and it is not a maturity score." + cites(["DSI-SMB1001"]) + "</p>" +
+        profileHtml() +
+        "<p class=\"note\">A module crosswalk is not drawn. Candidate modules are a research queue. An em dash would be read as a finding of absence, and this assessment does not have that finding.</p>" +
+        examplesHtml() +
+      "</section>" +
+      "<section class=\"view-in band-amber\">" +
+        "<p class=\"kicker\">Directional only</p>" +
+        "<h2>AI security sits beside the standard, not inside a mapped control</h2>" +
+        "<p class=\"blurb\">The public page does not name an AI focus area. Two external clocks explain why AI-use governance remains an organisational residual. They do not fill an SMB1001 row, and they do not outrank the comparison above.</p>" +
+        "<details class=\"caveat\"><summary>AI security figures</summary><div class=\"inner\">" +
+          "<p>Wavestone, 15 June 2026, assessed AI security in a slice of more than 20 large organisations. 76% have a dedicated AI security policy. 10% have defences against prompt injection or other AI-specific threats. That slice is not the benchmark’s 200-organisation maturity average, and it is not an SMB sample." + badge("Single-source · Wavestone") + cites(["WAVE-AI"]) + "</p>" +
+          "<p>CrowdStrike’s 24 February 2026 Global Threat Report press note says malicious prompts were injected into GenAI tools at more than 90 organisations, and that AI-enabled adversary activity rose 89% year on year. The collection window for the breakout figures in that note is calendar 2025. CrowdStrike sells Falcon." + badge("Single-source · CrowdStrike") + cites(["CS-GTR-AI"]) + "</p>" +
+          "<p>OWASP’s 2025 GenAI Top 10 is a public list an organisation can use when it designs technical controls, starting with prompt injection. It is not an SMB1001 annex." + cites(["OWASP-LLM"]) + "</p>" +
+        "</div></details>" +
+      "</section>";
+  }
+  function areaHtml(c) {
+    var note = COMMENTARY[c.id] || {};
+    var i = areas().findIndex(function (item) { return item.id === c.id; });
+    var prev = areas()[i - 1];
+    var next = areas()[i + 1];
+    var chips = "<div class=\"chipstrip\">" +
+      pill("Not assessed", "none", "Native control") +
+      pill("Not assessed", "none", "Native support") +
+      pill("Not assessed", "none", "Ecosystem control") +
+      pill("Not assessed", "none", "Residual obligation") +
+      "</div>";
+    var modules = (c.native_modules || []).map(function (m) {
+      return "<tr><td class=\"mod\">" + esc(m.module) + "</td><td><span class=\"pill none\">Not assessed</span></td><td>" + esc(m.how) + "</td><td>" + esc(m.boundary) + "</td></tr>";
+    }).join("");
+    var eco = (c.ecosystem_controls || []).map(function (row) {
+      return "<tr><td class=\"mod\">" + esc(row.component) + "</td><td>" + esc(row.how) + "</td></tr>";
+    }).join("");
+    var gaps = (c.gaps_and_residual || []).map(function (row) {
+      return "<tr><td>" + esc(row.gap) + "</td><td>" + esc(row.residual) + "</td></tr>";
+    }).join("");
+    var pager = "<nav class=\"pager\" aria-label=\"Adjacent focus areas\">" +
+      (prev ? "<a class=\"prev\" href=\"#" + prev.slug + "\">Previous: " + esc(prev.name) + "</a>" : "<span></span>") +
+      (next ? "<a class=\"next\" href=\"#" + next.slug + "\">Next: " + esc(next.name) + "</a>" : "<span></span>") +
+      "</nav>";
+    return "<section id=\"" + esc(c.slug) + "\" class=\"view-in band-teal\">" +
+      "<p class=\"kicker\">" + esc(c.id) + " · Focus area " + pad(c.order) + " · not a control</p>" +
+      "<h2>" + esc(note.headline || c.name) + "</h2>" +
+      "<div class=\"callout\"><strong>Not assessed.</strong> The licensed control text is not in this briefing, so this focus area stays a research lens.</div>" +
+      chips +
+      "<p class=\"note\">Grey means the licensed requirement has not been classified. It is not a finding that native control is absent.</p>" +
+      (note.why ? "<p class=\"prose\">" + esc(note.why) + badge(note.whyBadge) + cites(note.whyRefs) + "</p>" : "") +
+      "<div class=\"panel teal\">" +
+        "<h3>CrowdStrike modules</h3>" +
+        "<div class=\"scroll\"><table class=\"cmp\"><thead><tr><th>Module</th><th>Role</th><th>How it supports</th><th>Boundary</th></tr></thead><tbody>" + modules + "</tbody></table></div>" +
+        "<p class=\"note\">Every role is not assessed. A named module is a research hypothesis from the public sentence, not a native or supporting classification.</p>" +
+      "</div>" +
+      "<div class=\"grid-2\">" +
+        "<div class=\"panel amber\"><h3>What else has to enforce it</h3><table class=\"cmp\"><thead><tr><th>Expected owner</th><th>Why the product cannot close it</th></tr></thead><tbody>" + eco + "</tbody></table></div>" +
+        "<div class=\"panel pink\"><h3>Residual obligation</h3><table class=\"cmp\"><thead><tr><th>Gap</th><th>Left with the organisation</th></tr></thead><tbody>" + gaps + "</tbody></table></div>" +
+      "</div>" +
+      "<div class=\"panel navy\"><h3>Public focus area, in short</h3><p class=\"prose\">" + esc(c.public_summary) + "</p><p class=\"note\">This is DSI’s public description, not a licensed control and not a certification requirement." + cites(["DSI-SMB1001"]) + "</p></div>" +
+      pager +
+    "</section>";
+  }
+  function architectureHtml() {
+    var items = [
+      { title: "Hold the mapping", body: "No control row is justified until an authorised SMB1001:2026 copy is on file and the confirmation covers derivative mapping, PDF publication, web presentation and MCP output. Essential Eight maturity logic and NCSC control logic are not imported." },
+      { title: "Keep the focus areas as navigation", body: "Technology, access, backup, policy and training are the public taxonomy. They are not five controls, and they are not a score." },
+      { title: "Pair any future module with the owner who still enforces the requirement", body: "Identity provider, backup platform, policy owner and training owner remain first-class. Telemetry does not replace those owners." },
+      { title: "Leave AI-use governance on the organisational side", body: "Use Wavestone’s policy-versus-control split as a clock, and OWASP’s 2025 list as a technical vocabulary. Neither is an SMB1001 annex. No AI-security module is asserted.", proof: true },
+      { title: "Do not certify from commentary", body: "Tier nicknames, control counts and an AI-use policy attributed in certification commentary are not used. A separate ThinkInfoSec narrative discusses those tier labels from third-party guides. This crosswalk does not." }
+    ];
+    var html = items.map(function (item, idx) {
+      return "<div class=\"find" + (item.proof ? " proof" : "") + "\"><span class=\"n\">" + pad(idx + 1) + "</span><div><h3>" + esc(item.title) + "</h3><p>" + esc(item.body) + "</p></div></div>";
+    }).join("");
+    return "<section id=\"architecture\" class=\"view-in band-navy\">" +
+      "<p class=\"kicker\">Control architecture</p>" +
+      "<h2>What has to be true before a control row exists</h2>" +
+      "<p class=\"blurb\">Five pairings from the assessment. They describe the hold, not a maturity score and not a 90-day plan. The narrative tier discussion is a <a href=\"../preparing-for-2027/#smb1001\">separate briefing</a>.</p>" +
+      "<div class=\"finds\">" + html + "</div>" +
+      "<div class=\"warn\"><strong>What would change this advice.</strong> An authorised SMB1001:2026 copy, with confirmation for derivative mapping, PDF publication, web presentation and MCP output, would allow control rows. A public DSI statement that names an AI control would let that requirement be quoted. Certification commentary would not. A product note that evidences a mechanism against a quoted SMB1001 requirement would let a chip move off “not assessed”. If Wavestone revises the prompt-injection figure, the AI clock changes. It would still not fill an empty catalogue.</div>" +
+    "</section>";
+  }
+  function methodHtml() {
+    var limits = "<ul class=\"limits\">" + (DATA.limitations || []).map(function (item) {
+      return "<li>" + esc(item) + "</li>";
+    }).join("") + "</ul>";
+    var scale = Object.keys(DATA.assessment_scale || {}).map(function (key) {
+      return "<li><strong>" + esc(key.replace(/_/g, " ")) + ".</strong> " + esc(DATA.assessment_scale[key]) + "</li>";
+    }).join("");
+    var fw = DATA.framework || {};
+    return "<section id=\"method\" class=\"view-in band-navy\">" +
+      "<p class=\"kicker\">Method</p>" +
+      "<h2>How far an empty catalogue allows this page to go</h2>" +
+      "<div class=\"panel navy\"><h3>Evidence classes prepared for a later mapping</h3><ul class=\"limits\">" + scale + "</ul></div>" +
+      "<p class=\"prose\">The focus-area tables are rendered from <a href=\"assessment.json\">assessment.json</a>, report <span class=\"mono\">" + esc(DATA.report_id) + "</span>, status " + esc(DATA.status) + ", as at " + esc(DATA.as_at) + ". The prose around those tables is ThinkInfoSec commentary of the same date. This page is not a DSI or CrowdStrike publication, and it is not an assessment of any organisation.</p>" +
+      "<p class=\"prose\">" + esc(DATA.interpretation_rule) + " The file records the result as " + esc(String(DATA.maturity_determination).replace(/_/g, " ")) + ". No SMB1001 level is stated, because the licensed controls are not in the file." + cites(["DSI-SMB1001", "DSI-LICENCE"]) + "</p>" +
+      "<p class=\"prose\">The assessment records the pinned baseline as SMB1001:2026 version " + esc(fw.version_recorded_by_assessment) + ", published " + esc(fw.published_at_recorded_by_assessment) + ", " + esc(fw.page_count_recorded_by_assessment) + " pages. Those three facts were not in the public page payload re-read for this briefing. The level prose, the five focus areas and the licence terms were. The commercial-use offer for platforms and service delivery is carried from that assessment’s reading of the framework page. The payload re-read did not repeat the sentence." + cites(["DSI-SMB1001", "DSI-LICENCE"]) + "</p>" +
+      "<p class=\"prose\">No product notes were retrieved against an SMB1001 requirement, because the requirement text is not available.</p>" +
+      limits +
+      "<p class=\"note\">Public URLs in the source list are the pages read for this briefing on 22 September 2026, plus the assessment’s record of facts the payload did not repeat. No URL was invented.</p>" +
+    "</section>";
+  }
+  function sourcesHtml() {
+    var groups = [
+      ["official", "Official framework"],
+      ["ai_security", "AI security context"]
+    ];
+    var html = groups.map(function (pair) {
+      var items = DATA._sources.filter(function (s) { return s._group === pair[0]; });
+      if (!items.length) return "";
+      return "<p class=\"group-lbl\">" + pair[1] + "</p><ol class=\"sourcelist\">" + items.map(sourceItem).join("") + "</ol>";
+    }).join("");
+    return "<section id=\"sources\">" +
+      "<p class=\"kicker\">Bibliography</p>" +
+      "<h2>Sources as read on 22 September 2026</h2>" +
+      "<p class=\"blurb\">Numbers follow the mast, then first use in the briefing. The AI sources are context for the residual. They are not SMB1001 requirements.</p>" +
+      html +
+    "</section>";
+  }
+  function viewHtml(route) {
+    if (route.id === "overview") return overviewHtml();
+    if (route.id === "area") return areaHtml(route.area);
+    if (route.id === "architecture") return architectureHtml();
+    if (route.id === "method") return methodHtml();
+    return sourcesHtml();
+  }
+  function render(fromNav) {
+    var route = parseRoute();
+    paintToc(route);
+    main.innerHTML = viewHtml(route);
+    var titleBit = route.area ? route.area.name + " — " : "";
+    document.title = titleBit + "SMB1001, short of the catalogue | Thinkinfosec Hub";
+    if (route.focusId) {
+      var el = document.getElementById(route.focusId);
+      if (el) {
+        el.tabIndex = -1;
+        el.focus({ preventScroll: true });
+        el.scrollIntoView({ block: "start", behavior: motion() });
+      }
+      return;
+    }
+    if (fromNav) {
+      var heading = main.querySelector("h2");
+      if (heading) {
+        heading.tabIndex = -1;
+        heading.focus({ preventScroll: true });
+      }
+      if (main.scrollIntoView) main.scrollIntoView({ block: "start", behavior: motion() });
+    }
+  }
+  function fail(message) {
+    main.innerHTML = "<section><p class=\"kicker\">Method</p><h2>The assessment file did not load</h2><p class=\"prose\">" + esc(message) + " SMB1001 is a five-level certification for small and medium-sized businesses. This briefing describes the public architecture only, because the licensed controls are empty.</p></section>";
+  }
+  fetch("assessment.json")
+    .then(function (res) {
+      if (!res.ok) throw new Error("Open this briefing over HTTP so assessment.json can load (status " + res.status + ").");
+      return res.json();
+    })
+    .then(function (data) {
+      DATA = data;
+      indexSources(data);
+      paintFacts();
+      render(location.hash.length > 1);
+      window.addEventListener("hashchange", function () { render(true); });
+    })
+    .catch(function (err) {
+      fail(err && err.message ? err.message : "The assessment file could not be read.");
+    });
+})();
+</script>
+</body>
+</html>

@@ -185,18 +185,6 @@
       "description": "70 technology domains across the Falcon ecosystem."
     },
     {
-      "id": "research-ncsc",
-      "title": "NCSC Critical Controls vs CrowdStrike Alliances",
-      "kind": "research",
-      "origin": "hub",
-      "pillar": "process",
-      "people": ["thought-leadership"],
-      "processes": ["govern-assure", "architect-zt"],
-      "tech": [57],
-      "link": "Research/ncsc-critical-controls/",
-      "description": "NCSC Top 10 controls mapped to Falcon alliances."
-    },
-    {
       "id": "learn-helpful-links",
       "title": "CrowdStrike Public Resource Library",
       "kind": "learn",
@@ -437,6 +425,18 @@
       "tech": [57, 1, 12, 37, 47, 67],
       "link": "Research/ncsc-top-10-crowdstrike/",
       "description": "CrowdStrike capability against New Zealand’s NCSC Critical Controls: native scope, dependencies, and residual obligations."
+    },
+    {
+      "id": "research-smb1001-crowdstrike",
+      "title": "SMB1001, short of the catalogue",
+      "kind": "research",
+      "origin": "hub",
+      "pillar": "process",
+      "people": ["thought-leadership"],
+      "processes": ["govern-assure", "threat-model"],
+      "tech": [57, 62],
+      "link": "Research/smb1001-crowdstrike/",
+      "description": "What SMB1001:2026 is, and how far a public briefing can go while the licensed controls stay empty."
     }
   ]
 }
