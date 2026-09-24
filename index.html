@@ -741,14 +741,6 @@
             flex-grow: 1;
         }
 
-        .card-count {
-            display: block;
-            margin: -0.35rem 0 0.65rem;
-            font-size: 0.72rem;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
         .project-footer {
             display: flex;
             justify-content: space-between;
@@ -1672,12 +1664,10 @@
             const q = catalogueQuery.trim();
             if (!q) {
                 status.textContent = '';
-                paintCardCounts();
                 return;
             }
             const total = document.querySelectorAll('#outcomes [data-card-id]:not(.is-search-hidden), #projectsGrid [data-card-id], #research [data-card-id]:not(.is-search-hidden), #learn [data-card-id]:not(.is-search-hidden), #connect .connect-link:not(.is-search-hidden)').length;
             status.textContent = total === 1 ? '1 match' : total + ' matches';
-            paintCardCounts();
         }
 
         function setupCatalogueSearch() {
@@ -1692,51 +1682,12 @@
         let activeOrigin = 'all';
 
         const LOOK_KEY = 'thinkinfosec-look';
-        const CLICK_KEY = 'thinkinfosec-card-clicks';
-        const showCardClicks = true;
-
-        function readCardClicks() {
-            try { return JSON.parse(localStorage.getItem(CLICK_KEY) || '{}'); }
-            catch (e) { return {}; }
-        }
-
-        function paintCardCounts() {
-            if (!showCardClicks) return;
-            const counts = readCardClicks();
-            document.querySelectorAll('[data-card-id]').forEach(card => {
-                let mark = card.querySelector('.card-count');
-                if (!mark) {
-                    mark = document.createElement('span');
-                    mark.className = 'card-count';
-                    const title = card.querySelector('h3');
-                    if (title) title.insertAdjacentElement('afterend', mark);
-                }
-                const n = counts[card.dataset.cardId] || 0;
-                mark.textContent = n === 1 ? '1 click' : n + ' clicks';
-            });
-        }
-
-        function setupCardClicks() {
-            document.addEventListener('click', (event) => {
-                const card = event.target.closest('[data-card-id]');
-                if (!card) return;
-                const link = event.target.closest('a');
-                if (!link || !card.contains(link) || link.getAttribute('href') === '#tools') return;
-                const id = card.dataset.cardId;
-                const counts = readCardClicks();
-                counts[id] = (counts[id] || 0) + 1;
-                try { localStorage.setItem(CLICK_KEY, JSON.stringify(counts)); } catch (e) { /* private mode */ }
-                paintCardCounts();
-            });
-            paintCardCounts();
-        }
 
         function init() {
             renderFeatured();
             bindFeaturedGlow();
             renderProjects();
             renderVideos();
-            setupCardClicks();
             setupCatalogueSearch();
             setupFilters();
             setupLook();
@@ -1822,7 +1773,6 @@
                     </div>
                 </div>`;
             }).join('');
-            paintCardCounts();
         }
 
         function renderVideos() {
@@ -1856,7 +1806,6 @@
                 </div>
             `).join('');
             videosContainer.innerHTML = libraryCard + videoCards;
-            paintCardCounts();
         }
 
         let lookBusy = false;
