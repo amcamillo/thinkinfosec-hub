@@ -5,30 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Password Generator — Thinkinfosec Hub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --primary:        #0077b5;
-            --primary-dark:   #005a8c;
-            --primary-faint:  rgba(0, 119, 181, 0.08);
-            --bg:             #f4f7f6;
-            --card:           #ffffff;
-            --text:           #1a1a2e;
-            --text-secondary: #555;
-            --text-muted:     #888;
-            --border:         #dde3e8;
-            --shadow:         0 2px 8px rgba(0,0,0,0.07);
-            --shadow-lg:      0 8px 24px rgba(0,0,0,0.10);
-            --radius:         10px;
-            --transition:     all 0.25s cubic-bezier(0.4,0,0.2,1);
-            --mono:           'DM Mono', monospace;
+            --bg: #f4f7f6;
+            --surface: #ffffff;
+            --surface-2: #eef2f4;
+            --surface-3: #e3e9ed;
+            --border: #dddddd;
+            --border-strong: #c4ccd4;
+            --text: #333333;
+            --text-dim: #555555;
+            --text-faint: #8a94a0;
+            --accent: #0077b5;
+            --accent-strong: #005a8c;
+            --accent-weak: rgba(0, 119, 181, 0.12);
+            --cyan: #00bfcf;
+            --magenta: #ff2d78;
+            --danger: #d64550;
+            --ok: #12a150;
+            --shadow: 0 6px 20px rgba(15, 40, 70, 0.08);
+            --shadow-md: 0 10px 30px rgba(15, 40, 70, 0.12);
+            --shadow-lg: 0 24px 60px rgba(15, 40, 70, 0.22);
+            --r-sm: 6px;
+            --r-md: 9px;
+            --r-lg: 16px;
+            --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            --primary: var(--accent);
+            --primary-dark: var(--accent-strong);
+            --primary-faint: var(--accent-weak);
+            --card: var(--surface);
+            --text-secondary: var(--text-dim);
+            --text-muted: var(--text-faint);
+            --radius: var(--r-md);
+            --transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
         }
 
         * { margin:0; padding:0; box-sizing:border-box; }
 
         body {
-            font-family: 'DM Sans', sans-serif;
+            font-family: var(--font);
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
@@ -36,48 +54,55 @@
             flex-direction: column;
         }
 
+        button:focus-visible, a:focus-visible, input:focus-visible {
+            outline: 3px solid var(--accent-weak);
+            outline-offset: 2px;
+        }
+
         /* ─── Header ─── */
         .header {
-            background: var(--card);
+            height: 60px;
+            background: var(--surface);
             border-bottom: 1px solid var(--border);
-            padding: 2.5rem 1rem 2rem;
-            text-align: center;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: inherit;
         }
 
         .header-logo {
-            width: 72px;
-            height: 72px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 1rem;
+            box-shadow: 0 0 0 1px var(--border);
+        }
+
+        .brand-name {
+            font-size: 0.72rem;
+            font-weight: 650;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
         }
 
         .header h1 {
-            font-size: 1.9rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
+            font-size: 0.95rem;
+            font-weight: 650;
             color: var(--text);
         }
 
-        .header p {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            margin-top: 0.3rem;
-        }
+        .header h1 span { color: var(--accent); }
 
         /* ─── Nav ─── */
-        .nav {
-            background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            padding: 0.8rem 1.5rem;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+        .nav { display: none; }
 
         .nav a {
             color: var(--text-secondary);
@@ -114,7 +139,7 @@
         .card {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: var(--radius);
+            border-radius: var(--r-lg);
             box-shadow: var(--shadow);
             overflow: hidden;
         }
@@ -204,9 +229,9 @@
 
         input[type="text"]:focus,
         input[type="password"]:focus {
-            border-color: var(--primary);
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(0,119,181,0.12);
+            border-color: var(--accent);
+            background: var(--surface);
+            box-shadow: 0 0 0 3px var(--accent-weak);
         }
 
         input::placeholder { color: var(--text-muted); }
@@ -237,9 +262,9 @@
             color: #fff;
             border: none;
             border-radius: var(--radius);
-            font-family: 'DM Sans', sans-serif;
+            font-family: var(--font);
             font-size: 0.95rem;
-            font-weight: 600;
+            font-weight: 650;
             cursor: pointer;
             transition: var(--transition);
             display: flex;
@@ -250,9 +275,7 @@
         }
 
         .btn-generate:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(0,119,181,0.3);
+            background: var(--accent-strong);
         }
 
         .btn-generate:active { transform: translateY(0); }
@@ -291,8 +314,8 @@
         }
 
         .output-box.success {
-            border-color: #2d9b6e;
-            background: #f0faf5;
+            border-color: var(--ok);
+            background: rgba(18, 161, 80, 0.08);
         }
 
         .output-value {
@@ -329,9 +352,9 @@
         }
 
         .copy-btn.copied {
-            border-color: #2d9b6e;
-            color: #2d9b6e;
-            background: #f0faf5;
+            border-color: var(--ok);
+            color: var(--ok);
+            background: rgba(18, 161, 80, 0.08);
         }
 
         /* strength bar */
@@ -365,12 +388,12 @@
         /* error state */
         .error-msg {
             display: none;
-            color: #c0392b;
+            color: var(--danger);
             font-size: 0.82rem;
             padding: 0.6rem 0.8rem;
-            background: #fdf3f2;
-            border: 1px solid #f5c6c2;
-            border-radius: 8px;
+            background: rgba(214, 69, 80, 0.08);
+            border: 1px solid rgba(214, 69, 80, 0.28);
+            border-radius: var(--r-sm);
         }
 
         .error-msg.visible { display: block; }
@@ -380,7 +403,7 @@
             margin-top: 1.25rem;
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: var(--radius);
+            border-radius: var(--r-lg);
             box-shadow: var(--shadow);
             padding: 1.25rem 1.5rem;
         }
@@ -439,7 +462,7 @@
         .footer a:hover { text-decoration: underline; }
 
         @media (max-width: 480px) {
-            .header h1 { font-size: 1.5rem; }
+            .header h1 { font-size: 0.9rem; }
             .card-body { padding: 1.25rem; }
         }
     </style>
@@ -448,10 +471,12 @@
 
     <!-- Header -->
     <header class="header">
-        <img src="../../assets/learning-hub-logo.png" alt="Thinkinfosec Logo" class="header-logo"
-             onerror="this.style.display='none'">
-        <h1>Thinkinfosec Hub</h1>
-        <p>Explore the latest in AI, InfoSec, and Cloud technologies</p>
+        <a class="header-brand" href="../../index.html" title="ThinkInfoSec Hub">
+            <img src="../../assets/learning-hub-logo.png" alt="ThinkInfoSec" class="header-logo"
+                 onerror="this.style.display='none'">
+            <span class="brand-name">ThinkInfoSec</span>
+        </a>
+        <h1>Password <span>Generator</span></h1>
     </header>
 
     <!-- Breadcrumb nav -->

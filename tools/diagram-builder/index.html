@@ -5,26 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Architecture Diagram Builder — ThinkInfoSec Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ── ThinkInfoSec design tokens (single source of truth) ── */
 :root {
-  --accent:#00BFCF; --accent-strong:#0D1F3C; --accent-soft:rgba(0,191,207,0.14);
-  --navy:#0D1F3C;
-  --bg:#E9ECF1; --surface:#FFFFFF; --surface-2:#F4F5F7; --border:#DFE1E6;
-  --text:#172B4D; --text-secondary:#4a5568; --text-muted:#6B778C;
-  /* semantic diagram roles */
-  --native:#00BFCF; --hybrid:#FF8B00; --partner:#7C3AED; --services:#FF2D78;
-  --ghost:#9aa4b2;
-  --mono:'Space Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  --sans:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
-  --teal:var(--accent);
+  --bg:#f4f7f6; --surface:#ffffff; --surface-2:#eef2f4; --surface-3:#e3e9ed;
+  --border:#dddddd; --border-strong:#c4ccd4;
+  --text:#333333; --text-dim:#555555; --text-faint:#8a94a0;
+  --accent:#0077b5; --accent-strong:#005a8c; --accent-weak:rgba(0,119,181,0.12);
+  --cyan:#00bfcf; --magenta:#ff2d78; --danger:#d64550; --ok:#12a150;
+  --shadow:0 6px 20px rgba(15,40,70,0.08);
+  --shadow-md:0 10px 30px rgba(15,40,70,0.12);
+  --shadow-lg:0 24px 60px rgba(15,40,70,0.22);
+  --r-sm:6px; --r-md:9px; --r-lg:16px;
+  --font:"Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --navy:#333333;
+  --text-secondary:var(--text-dim); --text-muted:var(--text-faint);
+  --accent-soft:var(--accent-weak);
+  --native:#00bfcf; --hybrid:#f59e0b; --partner:#a855f7; --services:#ff2d78;
+  --ghost:#8a94a0;
+  --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans:var(--font);
+  --teal:var(--cyan);
 }
 :root[data-theme="dark"] {
-  --accent:#00BFCF; --accent-strong:#5ee0ea; --accent-soft:rgba(0,191,207,0.16);
-  --bg:#0D1F3C; --surface:#112240; --surface-2:#0D1F3C; --border:#1A3358;
-  --text:#E9ECF1; --text-secondary:#aebdd0; --text-muted:#8BA0B8;
-  --native:#00BFCF; --hybrid:#FFAB4A; --partner:#a78bfa; --services:#ff6b9d;
+  --bg:#0a0e14; --surface:#10151e; --surface-2:#161d28; --surface-3:#1c2533;
+  --border:#263140; --border-strong:#3a4a5e;
+  --text:#e6edf3; --text-dim:#b7c3d0; --text-faint:#8b9aab;
+  --text-secondary:#b7c3d0; --text-muted:#8b9aab;
+  --accent:#0077b5; --accent-strong:#4aa3d8; --accent-weak:rgba(0,119,181,0.22);
+  --accent-soft:var(--accent-weak);
+  --navy:#e6edf3;
+  --native:#00bfcf; --hybrid:#f59e0b; --partner:#c084fc; --services:#ff6b9d;
   --ghost:#5a6b82;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -33,37 +45,37 @@ body { font-family:var(--sans); background:var(--bg); color:var(--text); transit
 
 /* ── Shell: header ── */
 .header {
-  background:var(--surface); color:var(--text);
+  height:60px; background:var(--surface); color:var(--text);
   border-bottom:1px solid var(--border);
-  padding:0.7rem 1.25rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap;
+  padding:0 16px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;
 }
 .header-brand { display:flex; align-items:center; gap:0.6rem; text-decoration:none; color:inherit; }
 .header-brand img { width:30px; height:30px; border-radius:50%; object-fit:cover; box-shadow:0 0 0 1px var(--border); }
-.header-brand .brand-name { font-family:var(--mono); font-size:0.62rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--accent-strong); }
+.header-brand .brand-name { font-family:var(--font); font-size:0.72rem; font-weight:650; text-transform:uppercase; letter-spacing:0.08em; color:var(--text); }
 .header-brand:hover .brand-name { color:var(--accent); }
-.header h1 { font-family:var(--mono); font-size:0.95rem; font-weight:700; letter-spacing:0.01em; }
+.header h1 { font-family:var(--font); font-size:0.95rem; font-weight:650; letter-spacing:0.01em; }
 .header h1 span { color:var(--accent); }
 .header .spacer { margin-left:auto; display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap; }
-.template-tabs { display:flex; gap:0.3rem; }
+.template-tabs { display:flex; gap:2px; padding:3px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; }
 .template-tab {
-  font-family:var(--mono); font-size:0.58rem; letter-spacing:0.04em; padding:0.35rem 0.65rem;
-  border:1px solid var(--border); border-radius:6px; background:var(--surface);
-  color:var(--text-muted); cursor:pointer; transition:all 0.15s; text-transform:uppercase;
+  font-family:var(--font); font-size:0.78rem; font-weight:550; letter-spacing:0; padding:6px 9px;
+  border:1px solid transparent; border-radius:6px; background:transparent;
+  color:var(--text-dim); cursor:pointer; transition:background 0.15s, color 0.15s; text-transform:none;
 }
-.template-tab:hover { border-color:var(--accent); color:var(--text); }
-.template-tab.active { background:var(--accent); color:#0D1F3C; border-color:var(--accent); font-weight:700; }
+.template-tab:hover { background:var(--surface); color:var(--accent); box-shadow:inset 0 0 0 1px var(--border); }
+.template-tab.active { background:var(--accent); color:#fff; border-color:var(--accent); font-weight:650; }
 .tab-badge {
   display:inline-block; margin-left:0.4rem; padding:0.08rem 0.32rem; border-radius:3px;
   font-size:0.5rem; font-weight:700; letter-spacing:0.08em; vertical-align:1px;
   background:rgba(255,139,0,0.15); color:#FF8B00; border:1px solid rgba(255,139,0,0.4);
 }
-.template-tab.active .tab-badge { background:rgba(13,31,60,0.15); color:#0D1F3C; border-color:rgba(13,31,60,0.35); }
+.template-tab.active .tab-badge { background:rgba(255,255,255,0.18); color:#fff; border-color:rgba(255,255,255,0.35); }
 .theme-toggle {
-  display:inline-flex; align-items:center; gap:0.4rem; font-family:var(--mono); font-size:0.58rem;
-  letter-spacing:0.06em; text-transform:uppercase; padding:0.35rem 0.6rem; border-radius:6px;
-  border:1px solid var(--border); background:var(--surface); color:var(--text-muted); cursor:pointer; transition:all .15s;
+  display:inline-flex; align-items:center; gap:0.4rem; font-family:var(--font); font-size:0.78rem; font-weight:550;
+  letter-spacing:0; text-transform:none; padding:6px 9px; border-radius:6px;
+  border:1px solid transparent; background:transparent; color:var(--text-dim); cursor:pointer; transition:background .15s, color .15s;
 }
-.theme-toggle:hover { border-color:var(--accent); color:var(--text); }
+.theme-toggle:hover { background:var(--surface-2); color:var(--accent); box-shadow:inset 0 0 0 1px var(--border); }
 .theme-toggle .swatch { width:11px; height:11px; border-radius:50%; background:linear-gradient(135deg,var(--accent) 50%,var(--accent-strong) 50%); box-shadow:0 0 0 1px var(--border); }
 
 .app { display:flex; flex:1; min-height:0; }
@@ -147,28 +159,30 @@ body { font-family:var(--sans); background:var(--bg); color:var(--text); transit
 .canvas-area { flex:1; display:flex; flex-direction:column; overflow:hidden; }
 .canvas-wrapper {
   flex:1; overflow:auto; display:flex; align-items:center; justify-content:center; padding:0.9rem;
-  background: repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(120,130,150,0.04) 19px,rgba(120,130,150,0.04) 20px),
-    repeating-linear-gradient(90deg,transparent,transparent 19px,rgba(120,130,150,0.04) 19px,rgba(120,130,150,0.04) 20px);
+  background-color:var(--bg);
+  background-image:radial-gradient(circle, rgba(138,148,160,0.55) 1px, transparent 1px);
+  background-size:16px 16px;
 }
-#diagramSvg { background:var(--surface); border:1px solid var(--border); border-radius:8px; box-shadow:0 2px 10px rgba(13,31,60,0.08); max-width:100%; height:auto; }
+#diagramSvg { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); box-shadow:var(--shadow); max-width:100%; height:auto; }
 .export-bar {
-  background:var(--surface); border-top:1px solid var(--border); padding:0.45rem 1.25rem;
-  display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;
+  background:var(--surface); border-top:1px solid var(--border); padding:8px 16px;
+  display:flex; align-items:center; gap:2px; flex-wrap:wrap;
 }
+button:focus-visible, a:focus-visible, input:focus-visible { outline:3px solid var(--accent-weak); outline-offset:2px; }
 .export-bar-label { font-family:var(--mono); font-size:0.55rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-right:0.3rem; }
 .export-btn {
-  font-family:var(--mono); font-size:0.56rem; letter-spacing:0.04em; padding:0.32rem 0.65rem;
-  border:1px solid var(--border); border-radius:6px; background:var(--surface); color:var(--text-secondary); cursor:pointer; transition:all 0.15s;
+  font-family:var(--font); font-size:0.82rem; font-weight:550; letter-spacing:0; padding:6px 9px;
+  border:1px solid transparent; border-radius:6px; background:transparent; color:var(--text-dim); cursor:pointer; transition:background 0.15s, color 0.15s;
 }
-.export-btn:hover { border-color:var(--accent-strong); color:var(--accent-strong); }
-.export-btn.primary { background:var(--accent-strong); color:#fff; border-color:var(--accent-strong); }
-.export-btn.primary:hover { background:var(--accent); color:#0D1F3C; border-color:var(--accent); }
-.export-btn.active { background:var(--accent); color:#0D1F3C; border-color:var(--accent); font-weight:700; }
-.modal-overlay { display:none; position:fixed; inset:0; background:rgba(13,31,60,0.6); z-index:100; align-items:center; justify-content:center; }
+.export-btn:hover { background:var(--surface); color:var(--accent); box-shadow:inset 0 0 0 1px var(--border); }
+.export-btn.primary { background:var(--accent); color:#fff; border-color:var(--accent); border-radius:9px; padding:8px 14px; font-weight:650; }
+.export-btn.primary:hover { background:var(--accent-strong); color:#fff; box-shadow:none; }
+.export-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); font-weight:650; }
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(15,40,70,0.35); backdrop-filter:blur(3px); z-index:100; align-items:center; justify-content:center; }
 .modal-overlay.active { display:flex; }
-.modal { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.25rem; width:90%; max-width:700px; max-height:80vh; overflow-y:auto; box-shadow:0 8px 32px rgba(13,31,60,0.22); }
+.modal { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:1.25rem; width:min(860px, 92vw); max-height:88vh; overflow-y:auto; box-shadow:var(--shadow-lg); }
 .modal h3 { font-family:var(--mono); font-size:0.75rem; margin-bottom:0.6rem; color:var(--accent-strong); }
-.modal pre { background:var(--navy); color:var(--accent); padding:0.75rem; border-radius:6px; font-family:var(--mono); font-size:0.65rem; line-height:1.6; overflow-x:auto; white-space:pre-wrap; }
+.modal pre { background:var(--surface-2); color:var(--text); border:1px solid var(--border); padding:0.75rem; border-radius:var(--r-sm); font-family:var(--mono); font-size:0.72rem; line-height:1.6; overflow-x:auto; white-space:pre-wrap; }
 .modal-actions { display:flex; gap:0.45rem; margin-top:0.8rem; }
 .disclaimer {
   font-size:0.53rem; color:var(--text-muted); line-height:1.4; margin-top:0.5rem;
@@ -437,8 +451,8 @@ const TEMPLATES = [
     {id:'dlp',label:'Falcon Data Security for Endpoint',sub:'DLP — data in motion',zone:'data',cov:'NATIVE',on:true,span:['endpoints']},
     {id:'ds-cloud',label:'Falcon Data Security for Cloud',sub:'Runtime DSPM',zone:'data',cov:'NATIVE',on:true,span:['cloud']},
     {id:'seb',label:'Falcon Secure Access',sub:'Secure enterprise browser',zone:'data',cov:'NATIVE',on:false,span:['endpoints']},
-    // AI Security — Falcon AIDR ships as two modules (native, built into the Falcon sensor)
-    {id:'aidr-wf',label:'Falcon AIDR for Workforce',sub:'AI traffic — endpoints',zone:'aisec',cov:'NATIVE',on:true,span:['endpoints']},
+    // AI Security — Falcon Guardian (ex AIDR for Workforce) plus AIDR for Agents
+    {id:'aidr-wf',label:'Falcon Guardian',sub:'AI traffic — endpoints',zone:'aisec',cov:'NATIVE',on:true,span:['endpoints']},
     {id:'aidr-ag',label:'Falcon AIDR for Agents',sub:'AI workloads — cloud',zone:'aisec',cov:'NATIVE',on:true,span:['cloud']},
     // Exposure Management (Surface = EASM, Spotlight = VM; Discover + IT hygiene fold in here)
     {id:'ctem',label:'Falcon Exposure Management',sub:'RBVM / ExPRT.AI — unified exposure',zone:'exposure',cov:'NATIVE',on:true},
