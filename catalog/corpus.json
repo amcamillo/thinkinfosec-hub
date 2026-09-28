@@ -437,6 +437,18 @@
       "tech": [57, 62],
       "link": "Research/smb1001-crowdstrike/",
       "description": "What SMB1001:2026 is, and how far a public briefing can go while the licensed controls stay empty."
+    },
+    {
+      "id": "research-openai-medicare-portal",
+      "title": "When goals become the threat vector",
+      "kind": "research",
+      "origin": "hub",
+      "pillar": "process",
+      "people": ["thought-leadership"],
+      "processes": ["govern-assure", "threat-model"],
+      "tech": [57, 62, 43],
+      "link": "Research/openai-medicare-portal/",
+      "description": "Agentic threat research: an OpenAI evaluation agent, the Medicare statistics portal, and the goal that outranked the block."
     }
   ]
 }

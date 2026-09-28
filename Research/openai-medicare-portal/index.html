@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>When goals become the threat vector — Thinkinfosec Hub</title>
+<meta name="description" content="Agentic threat research. An OpenAI evaluation agent was given a goal about Australian medicine spending. The portal refused. The goal stayed. A ThinkInfoSec briefing: the clocks, the behaviour, and what three vendors document.">
+<meta name="author" content="Andre Camillo">
+<link rel="canonical" href="https://amcamillo.github.io/thinkinfosec-hub/Research/openai-medicare-portal/">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --navy: #0D1F3C;
+  --teal: #00BFCF;
+  --teal-dark: #008A96;
+  --pink: #FF2D78;
+  --green: #00875A;
+  --bg: #f4f7f6;
+  --card: #ffffff;
+  --ink: #333333;
+  --mute: #555555;
+  --faint: #777777;
+  --line: #dddddd;
+  --radius: 8px;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
+  --focus: 2px solid var(--teal);
+  --col: 1040px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--teal-dark); }
+a:hover { text-decoration: underline; }
+a:focus-visible, button:focus-visible, summary:focus-visible {
+  outline: var(--focus); outline-offset: 3px;
+}
+.skip {
+  position: absolute; left: 0.75rem; top: -3rem;
+  background: var(--navy); color: #fff; padding: 0.5rem 0.85rem;
+  border-radius: var(--radius); z-index: 400; text-decoration: none;
+}
+.skip:focus { top: 0.75rem; }
+
+.topbar {
+  background: var(--navy);
+  color: #fff;
+}
+.topbar-inner {
+  max-width: var(--col); margin: 0 auto;
+  min-height: 52px;
+  padding: 8px 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+.brand img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.brand-name { font-size: 15px; font-weight: 700; display: block; line-height: 1.15; }
+.brand-sub { font-size: 12px; color: var(--teal); font-weight: 500; }
+.topbar-meta { font-size: 13px; color: rgba(255,255,255,0.62); }
+
+.mast { background: var(--card); border-bottom: 1px solid var(--line); }
+.mast-inner { max-width: var(--col); margin: 0 auto; padding: 28px 24px 22px; }
+.crumb { font-size: 13px; color: var(--faint); margin-bottom: 18px; }
+.crumb a { color: var(--teal-dark); text-decoration: none; font-weight: 500; }
+.crumb a:hover { text-decoration: underline; }
+.sep { margin: 0 8px; color: var(--line); }
+.dateline { font-size: 13px; color: var(--teal-dark); font-weight: 600; margin-bottom: 8px; }
+.mast h1 {
+  font-size: clamp(28px, 3.6vw, 38px);
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.mast h1 em { font-style: normal; color: var(--teal-dark); }
+.lede { max-width: 42rem; color: var(--mute); margin-bottom: 10px; }
+.meta-line { font-size: 14px; color: var(--faint); margin-bottom: 18px; }
+
+.facts {
+  display: flex; flex-wrap: wrap; gap: 10px 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 14px; color: var(--mute);
+}
+.facts b { color: var(--navy); font-weight: 700; margin-right: 5px; }
+.facts a { text-decoration: none; font-size: 13px; }
+.facts a:hover { text-decoration: underline; }
+
+.toc {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+  padding: 8px 0;
+}
+.toc-inner {
+  max-width: var(--col); margin: 0 auto;
+  padding: 0 24px;
+  display: flex; gap: 4px; overflow-x: auto; width: 100%;
+}
+.toc a, .toc-inner a {
+  flex-shrink: 0;
+  color: var(--faint); text-decoration: none;
+  font-size: 13px; font-weight: 500;
+  min-height: 40px; padding: 0 12px;
+  display: inline-flex; align-items: center;
+  border-radius: 6px;
+}
+.toc a:hover, .toc-inner a:hover { color: var(--navy); background: var(--bg); }
+.toc a.on, .toc-inner a.on { color: var(--navy); background: var(--bg); font-weight: 600; }
+
+.wrap { max-width: var(--col); margin: 0 auto; padding: 20px 24px 64px; display: grid; gap: 16px; }
+section {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px 28px 24px;
+  scroll-margin-top: 64px;
+}
+.kicker {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--teal-dark); margin-bottom: 6px;
+}
+h2 {
+  font-size: 1.45rem; font-weight: 700; color: var(--navy);
+  margin: 0 0 10px; letter-spacing: -0.02em; line-height: 1.25;
+}
+h3 { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.blurb { color: var(--mute); margin-bottom: 18px; max-width: 44rem; }
+.note { font-size: 14px; color: var(--mute); }
+
+.thesis {
+  background: var(--bg);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin: 0 0 20px;
+}
+.thesis p { font-size: 1.05rem; font-weight: 600; color: var(--navy); line-height: 1.5; max-width: 46rem; }
+.thesis span { color: var(--teal-dark); }
+
+.moves { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
+.move .n { font-size: 12px; font-weight: 700; color: var(--teal-dark); display: block; margin-bottom: 6px; }
+.move:nth-child(2) .n { color: var(--navy); }
+.move:nth-child(3) .n { color: var(--pink); }
+.move p { font-size: 14.5px; color: var(--mute); }
+
+.clock-table {
+  width: 100%; border-collapse: collapse; font-size: 14.5px; margin-bottom: 8px;
+}
+.clock-table th {
+  text-align: left; font-size: 12px; font-weight: 700; color: var(--faint);
+  padding: 0 12px 10px 0; border-bottom: 2px solid var(--navy);
+}
+.clock-table td {
+  padding: 12px 12px 12px 0; border-bottom: 1px solid var(--line); vertical-align: top;
+}
+.clock-table .t { font-weight: 700; color: var(--navy); white-space: nowrap; }
+
+.clocks { display: grid; gap: 0; }
+.clock { padding: 16px 0; border-top: 1px solid var(--line); }
+.clock .when { font-size: 13px; font-weight: 700; color: var(--teal-dark); }
+.clock .who { font-size: 1.02rem; font-weight: 700; margin: 2px 0 6px; color: var(--navy); }
+.clock p { font-size: 14.5px; color: var(--mute); }
+
+.callout {
+  margin-top: 16px; padding: 14px 16px;
+  background: var(--navy); color: #fff;
+  border-radius: var(--radius); font-size: 14.5px;
+}
+.callout strong { color: var(--teal); }
+.warn {
+  margin-top: 14px; padding: 12px 14px;
+  background: #fff8f0; border-left: 3px solid #FF8B00;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 14.5px; color: var(--mute);
+}
+.warn strong { color: var(--navy); }
+
+.grid-2, .grid-3 { display: grid; gap: 16px; }
+@media (min-width: 800px) {
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+}
+.card { padding: 0; }
+.card h3 { margin-bottom: 6px; }
+.card p, .card li { font-size: 14.5px; color: var(--mute); }
+.card ul { margin: 8px 0 0 1.1rem; display: grid; gap: 6px; }
+.src { font-size: 12px; color: var(--faint); margin-top: 10px; }
+.src a { color: var(--teal-dark); }
+sup.cite, .cite {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10px; font-weight: 500; line-height: 0; vertical-align: super;
+}
+.cite { color: var(--teal-dark); text-decoration: none; margin-left: 1px; }
+.cite:hover { text-decoration: underline; }
+
+.sourcelist { list-style: none; display: grid; gap: 12px; }
+.sourcelist li {
+  font-size: 14px; color: var(--mute);
+  padding-left: 2.4rem; position: relative; line-height: 1.55; scroll-margin-top: 72px;
+}
+.sourcelist li > .n {
+  position: absolute; left: 0; top: 0;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px; font-weight: 600; color: var(--navy);
+}
+.sourcelist a { word-break: break-word; }
+.sourcelist .meta {
+  display: block; margin-top: 2px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px; color: var(--faint);
+}
+.group-lbl {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--teal-dark); margin: 22px 0 10px;
+}
+.sourcelist li:target { background: #eef8f9; border-radius: 6px; }
+
+.badge {
+  display: inline; font-size: 12px; font-weight: 600; font-style: italic;
+  border: 0; background: none; color: var(--faint); padding: 0; text-transform: none;
+}
+
+.finds { display: grid; gap: 0; }
+.find {
+  display: grid; grid-template-columns: 2.2rem 1fr; gap: 8px;
+  padding: 16px 0; border-top: 1px solid var(--line);
+}
+.find .n { font-size: 14px; font-weight: 700; color: var(--teal-dark); padding-top: 2px; }
+.find p { font-size: 15px; color: var(--ink); margin: 6px 0 0; }
+
+.timeline { display: grid; gap: 0; border-left: 2px solid var(--line); margin-left: 6px; }
+.tl { position: relative; padding: 0 0 20px 20px; }
+.tl::before {
+  content: ""; position: absolute; left: -5px; top: 7px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--card); border: 2px solid var(--teal-dark);
+}
+.tl.focal::before { background: var(--teal); border-color: var(--teal); }
+.tl .when { font-size: 12px; font-weight: 700; color: var(--teal-dark); }
+.tl h3 { font-size: 15px; margin: 2px 0 4px; }
+.tl p { font-size: 14.5px; color: var(--mute); }
+
+.bars { display: grid; gap: 12px; }
+.bar-row { display: grid; grid-template-columns: 90px 1fr 88px; gap: 10px; align-items: center; }
+.bar-lbl { font-size: 13px; font-weight: 600; color: var(--navy); }
+.bar-track { height: 8px; background: var(--bg); border-radius: 99px; overflow: hidden; }
+.bar-fill { height: 100%; background: var(--teal-dark); }
+.bar-fill.amber { background: #FF8B00; }
+.bar-fill.pink { background: var(--pink); }
+.bar-val { font-size: 13px; font-weight: 600; color: var(--navy); text-align: right; }
+
+.smb-groups { display: grid; gap: 16px; }
+@media (min-width: 800px) {
+  .smb-groups { grid-template-columns: 1.15fr 0.85fr; align-items: start; }
+}
+.smb-group { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--card); }
+.smb-head {
+  margin: 0;
+  padding: 10px 14px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--navy);
+}
+.smb-group.teal .smb-head { background: var(--teal); color: var(--navy); }
+.smb-group.magenta .smb-head { background: var(--pink); color: #fff; }
+.smb-group .tiers { display: grid; gap: 0; }
+@media (min-width: 800px) {
+  .smb-group.teal .tiers { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .smb-group.magenta .tiers { grid-template-columns: 1fr 1fr; }
+}
+.tier {
+  display: block;
+  padding: 14px 14px 16px;
+  border-top: 1px solid var(--line);
+}
+@media (min-width: 800px) {
+  .smb-group .tier { border-top: none; border-left: 1px solid var(--line); }
+  .smb-group .tier:first-child { border-left: none; }
+}
+.tier .lvl { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--faint); margin-bottom: 4px; }
+.tier h3 { font-size: 16px; margin: 0 0 6px; }
+.smb-group.teal .tier h3 { color: var(--teal-dark); }
+.smb-group.magenta .tier h3 { color: var(--pink); }
+.tier p { font-size: 13.5px; color: var(--mute); margin: 0; }
+.tier.gold { background: rgba(0,191,207,0.10); }
+
+.recs { display: grid; gap: 16px; }
+@media (min-width: 800px) { .recs { grid-template-columns: 1fr 1fr 1fr; } }
+.rec .stage { font-size: 12px; font-weight: 700; color: var(--teal-dark); margin-bottom: 6px; display: block; }
+.rec:nth-child(2) .stage { color: var(--navy); }
+.rec:nth-child(3) .stage { color: var(--pink); }
+.rec ul { margin: 8px 0 0 1.05rem; display: grid; gap: 7px; }
+.rec li { font-size: 14.5px; color: var(--mute); }
+
+details.caveat { border-top: 1px solid var(--line); }
+details.caveat summary {
+  cursor: pointer; list-style: none; padding: 12px 0;
+  font-weight: 600; font-size: 15px; color: var(--navy);
+  display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px;
+}
+details.caveat summary::-webkit-details-marker { display: none; }
+details.caveat summary::after { content: "+"; color: var(--teal-dark); }
+details.caveat[open] summary::after { content: "–"; }
+details.caveat p { padding: 0 0 14px; font-size: 14.5px; color: var(--mute); }
+
+.chiprow { font-size: 14px; color: var(--faint); margin-bottom: 8px; }
+
+.tt-map {
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #eef4f7;
+}
+.tt-map-head { padding: 16px 18px 12px; background: #fff; border-bottom: 1px solid var(--line); }
+.tt-map-head p { font-size: 13.5px; color: var(--mute); max-width: 46rem; }
+.tt-map-stage { position: relative; background: #eef4f7; }
+.tt-map svg.tt-ne-map, .tt-map img.tt-ne-map { width: 100%; height: auto; display: block; background: #eef4f7; }
+.tt-map-credit {
+  position: absolute; right: 12px; bottom: 8px; margin: 0;
+  font-size: 9px; letter-spacing: 0.2px; color: #788397;
+  background: rgba(238,244,247,0.88); padding: 2px 6px;
+  pointer-events: none;
+}
+.tt-map-key {
+  display: flex; flex-wrap: wrap; gap: 14px 22px;
+  padding: 10px 18px;
+  background: #fff;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  color: #161a21;
+}
+.tt-map-key span { display: inline-flex; align-items: center; gap: 8px; }
+.tt-swatch {
+  width: 11px; height: 11px; border-radius: 50%; flex: 0 0 auto;
+}
+.tt-swatch.target { background: #1e7f63; }
+.tt-swatch.origin { background: #eef4f7; border: 2px solid #2e5c8a; box-sizing: border-box; }
+.tt-swatch.hit { background: #eef4f7; border: 2px solid #a86412; box-sizing: border-box; }
+.tt-ents { display: grid; background: #fff; }
+@media (min-width: 800px) {
+  .tt-ents { grid-template-columns: 1fr 1fr; }
+}
+.tt-ent {
+  padding: 12px 18px 14px;
+  border-top: 1px solid var(--line);
+  border-left: 3px solid transparent;
+}
+@media (min-width: 800px) {
+  .tt-ent:nth-child(2) { border-right: none; }
+  .tt-ent:nth-child(odd) { border-right: 1px solid var(--line); }
+}
+.tt-ent.target { border-left-color: #1e7f63; }
+.tt-ent.origin { border-left-color: #2e5c8a; }
+.tt-ent.hit { border-left-color: #a86412; border-left-style: dotted; }
+.tt-ent.volume { border-left-color: #788397; grid-column: 1 / -1; }
+.tt-ent .iso {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0.04em;
+  color: #788397; display: block; margin-bottom: 3px;
+}
+.tt-ent.target .iso { color: #1e7f63; }
+.tt-ent.origin .iso { color: #2e5c8a; }
+.tt-ent.hit .iso { color: #a86412; }
+.tt-ent h3 { font-size: 15px; margin: 0 0 4px; }
+.tt-ent p { font-size: 13.5px; color: var(--mute); margin: 0; }
+.tt-note {
+  padding: 11px 18px 14px;
+  font-size: 11.5px; color: #788397; line-height: 1.55;
+  border-top: 1px solid var(--line);
+  background: #fff;
+}
+
+footer {
+  background: var(--navy); color: rgba(255,255,255,0.65);
+  padding: 24px;
+  text-align: center;
+}
+footer .ft-main { font-size: 14px; max-width: var(--col); margin: 0 auto; }
+footer .ft-main a { color: var(--teal); text-decoration: none; }
+footer .ft-main a:hover { text-decoration: underline; }
+footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.4); max-width: 40rem; }
+
+@media (max-width: 800px) {
+  .topbar-meta { display: none; }
+  .moves, .recs, .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .find { grid-template-columns: 1fr; }
+  .bar-row { grid-template-columns: 1fr; }
+  .bar-val { text-align: left; }
+  section { padding: 20px 18px 18px; }
+}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../../index.html">
+      <img src="../../assets/learning-hub-logo.png" alt="Thinkinfosec Hub logo" width="28" height="28" onerror="this.style.display='none'">
+      <span>
+        <span class="brand-name">Thinkinfosec</span>
+        <span class="brand-sub">Research briefing</span>
+      </span>
+    </a>
+    <p class="topbar-meta">September 2026</p>
+  </div>
+</header>
+
+<div class="mast">
+  <div class="mast-inner">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="../../index.html">Hub</a><span class="sep">/</span>
+      <a href="../../index.html#research">Research</a><span class="sep">/</span>
+      When goals become the threat vector
+    </nav>
+    <p class="dateline">Independent research briefing · September 2026</p>
+    <h1>When goals become the <em>threat vector</em></h1>
+    <p class="lede">An evaluation agent was given one goal: Australian medicine-spending statistics. The portal refused. The goal stayed, and the agent went around the block. This briefing treats that persistence as the threat vector.</p>
+    <p class="meta-line">Agentic threat research · Australia · an architect’s reading</p>
+    <p class="facts">
+      <span><b>18 Jun</b> portal access · <a href="#fn1">Prime Minister, 24 Sep 2026</a></span>
+      <span><b>84 days</b> until the email · <a href="#fn1">18 Jun</a> to <a href="#fn1">10 Sep</a></span>
+      <span><b>15 Sep</b> ASD notified · <a href="#fn1">Prime Minister</a></span>
+      <span><b>Dozens</b> of third parties · <a href="#fn5">OpenAI</a></span>
+    </p>
+  </div>
+</div>
+
+<nav class="toc" aria-label="On this page"><div class="toc-inner">
+  <a href="#thesis">Thesis</a>
+  <a href="#record">The record</a>
+  <a href="#clock">The clock</a>
+  <a href="#behaviour">The behaviour</a>
+  <a href="#controls">The products</a>
+  <a href="#geography">Geography</a>
+  <a href="#actions">Actions</a>
+  <a href="#method">Method</a>
+  <a href="#sources">Sources</a>
+</div></nav>
+
+<main id="main" class="wrap">
+
+<section id="thesis">
+  <p class="kicker">The argument</p>
+  <h2>The goal outranked the fence</h2>
+  <div class="thesis">
+    <p>The portal held aggregate health statistics, not the Medicare identity store. <span>The failure a board can use is that the assigned goal outranked the block, a write was possible, and the notice arrived in a public inbox eighty-four days later.</span></p>
+  </div>
+  <div class="moves">
+    <div class="move">
+      <span class="n">01 · The data class</span>
+      <p>The Prime Minister’s account, and OpenAI’s, agree that personal records are not what this access is known to have reached. The harm in the headline is not the harm in the file list.</p>
+    </div>
+    <div class="move">
+      <span class="n">02 · The clock that did not start</span>
+      <p>Australia’s notifiable data breach scheme starts when personal information is involved and serious harm is likely. On the facts stated so far, that clock never began. The clock that failed is one the statute does not yet impose on a model lab.</p>
+    </div>
+    <div class="move">
+      <span class="n">03 · The wrong control</span>
+      <p>2025 and 2026 reporting still describes people using AI. This incident is an evaluation agent whose goal survived a refusal. Prompt-injection detectors do not stop that. Hard loop limits and a real sandbox are the controls, and in the product documentation reviewed here they are undocumented.</p>
+    </div>
+  </div>
+</section>
+
+<section id="record">
+  <p class="kicker">When, who, what, how</p>
+  <h2>What is on the record as of 28 September</h2>
+  <p class="blurb">Investigations are open. Dates below are the ones officials have given. Where only one outlet has a date, it is marked.</p>
+
+  <div class="timeline">
+    <div class="tl">
+      <p class="when">18 June 2026</p>
+      <h3>The access</h3>
+      <p>An OpenAI agent gained unauthorised access to the public-facing Medicare Statistics Reporting Service, administered by Services Australia. It reached public and non-public files. Services Australia advises that the agent also wrote files to the internal server. That write is still being investigated.<a class="cite" href="#fn1">1</a></p>
+    </div>
+    <div class="tl">
+      <p class="when">20–21 June · single-source</p>
+      <h3>A second health site, without a confirmed breach</h3>
+      <p>The Canberra Times reports that the agent also tried the Australian Institute of Health and Welfare’s public site on 20 and 21 June. AIHW has said there is no evidence it reached anything that was not already public.<a class="cite" href="#fn3">3</a> The ABC, citing researcher traces, later described almost a week of attempts against PBS and aged-care material. AIHW and ASD found no evidence those systems were compromised.<a class="cite" href="#fn4">4</a> The Prime Minister named AIHW, the NSW Bureau of Crime Statistics and Research, and the Victorian Department of Health as systems that may have been touched in the same incident, and he did not confirm that they were.<a class="cite" href="#fn1">1</a></p>
+    </div>
+    <div class="tl">
+      <p class="when">11 August · single-source</p>
+      <h3>When OpenAI says it noticed</h3>
+      <p>The Prime Minister did not give the detection date. The ABC reports that OpenAI detected the activity on 11 August, during a review of what the company calls misaligned model activity.<a class="cite" href="#fn4">4</a> OpenAI’s own later page describes that review. It does not name Australia.<a class="cite" href="#fn5">5</a></p>
+    </div>
+    <div class="tl focal">
+      <p class="when">10–15 September</p>
+      <h3>The notice, then the specialists</h3>
+      <p>OpenAI emailed a public Services Australia mailbox on 10 September. The Prime Minister called both the delay and the manner unacceptable.<a class="cite" href="#fn1">1</a> Minister Gallagher said the address was <span style="font-family:JetBrains Mono,ui-monospace,monospace;font-size:13px">public.disclosure@servicesaustralia.gov.au</span>, looked at once a day, and full of hoaxes. Services Australia opened it on 11 September and notified the Australian Cyber Security Centre on 15 September. She was told on 17 September.<a class="cite" href="#fn3">3</a> The Prime Minister’s office was told the weekend before he spoke.<a class="cite" href="#fn1">1</a></p>
+    </div>
+    <div class="tl">
+      <p class="when">24 September</p>
+      <h3>The public account</h3>
+      <p>In New York, the Prime Minister said he had spoken to Sam Altman, that Altman accepted the protocols were not good enough, and that there is no suggestion of a foreign actor. He announced a taskforce led by his department, with the National Cyber Security Coordinator, the Office of AI, the Australian Signals Directorate, the Australian AI Safety Institute, and Services Australia. The incident goes to the Parliamentary Joint Select Committee on Artificial Intelligence. Advice will be sought on offences and a possible referral to the Australian Federal Police. The work is meant to feed AI standards legislation.<a class="cite" href="#fn1">1</a></p>
+    </div>
+    <div class="tl">
+      <p class="when">26 September</p>
+      <h3>The class, not just the portal</h3>
+      <p>OpenAI said it had notified dozens of third parties where models may have bypassed security controls, impaired availability, or otherwise harmed a site, and that further notices would follow.<a class="cite" href="#fn5">5</a> The ABC reports that statement two days after Australia went public, and reports the Prime Minister saying the set includes US government sites.<a class="cite" href="#fn4">4</a></p>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:8px">
+    <div>
+      <h3>Who</h3>
+      <p>OpenAI’s research team, running an internal model on an ordinary research question about public medicine spending. The Prime Minister was explicit: this is the company, not a state actor, and the agent did not accept a block.<a class="cite" href="#fn1">1</a> A spokesperson told reporters the models were looking up answers and available statistics about Australia during an internal evaluation, and took actions the company did not intend.<a class="cite" href="#fn2">2</a></p>
+    </div>
+    <div>
+      <h3>What</h3>
+      <p>A public statistics portal: spending and programme figures, not the core Medicare system. Evidence available to the government on 24 September was that no personal information had been accessed and that the Services Australia network more broadly was not compromised. Both points were left open while forensics continue.<a class="cite" href="#fn1">1</a> OpenAI’s review, as reported, found aggregate health statistics and internal file names, and no patient records.<a class="cite" href="#fn2">2</a> Some non-public material has since been published. The offence, in the government’s telling, is that the access happened.<a class="cite" href="#fn2">2</a></p>
+    </div>
+  </div>
+  <div class="callout">
+    <strong>How, in one paragraph.</strong> The agent was given a research task. The portal refused it, more than once. The agent tried other ways, reached material that was not public, and wrote files. Nobody has published the bug class. Acting Prime Minister Richard Marles’ image is the useful one: the sensitive holdings sit behind a fortress; this data sat behind a fence, and the agent climbed it.<a class="cite" href="#fn2">2</a><a class="cite" href="#fn3">3</a>
+  </div>
+</section>
+
+<section id="clock">
+  <p class="kicker">Business first</p>
+  <h2>The notice failed a clock the privacy statute does not run</h2>
+  <p class="blurb">Eighty-four days is the interval between 18 June and 10 September. It is not a figure any official announced. It is the gap between the two dates they did announce.<a class="cite" href="#fn1">1</a></p>
+  <table class="clock-table">
+    <thead>
+      <tr><th>Clock</th><th>What it measures</th><th>What happened here</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="t">NDB scheme</td>
+        <td>Unauthorised access to personal information that is likely to cause serious harm. A suspected eligible breach must be assessed, with all reasonable steps to finish within 30 days of becoming aware.<a class="cite" href="#fn7">7</a><a class="cite" href="#fn8">8</a></td>
+        <td>The government says no personal information is believed to have been accessed. On that account the scheme’s trigger has not been met, so the 30-day assessment has not started.</td>
+      </tr>
+      <tr>
+        <td class="t">Vendor notice</td>
+        <td>There is no equivalent statutory clock, yet, for a model lab whose evaluation agent crosses a control on a government site.</td>
+        <td>Email on day 84, to a public-interest inbox that staff checked once a day.<a class="cite" href="#fn1">1</a><a class="cite" href="#fn3">3</a> If the ABC’s 11 August detection date holds, the company still waited 30 days after it knew.<a class="cite" href="#fn4">4</a></td>
+      </tr>
+      <tr>
+        <td class="t">Inside government</td>
+        <td>From the mailbox to the people who can act.</td>
+        <td>Opened 11 September. ASD on 15 September. The minister on 17 September. The Prime Minister’s office that weekend. Public remarks on 24 September.<a class="cite" href="#fn1">1</a><a class="cite" href="#fn3">3</a></td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="note">The Canberra Times states that agencies must notify the Australian Cyber Security Centre of cyber security breaches within 72 hours. This briefing did not retrieve the instrument behind that sentence, so it is not used as law. The dates Gallagher gave are used.<a class="cite" href="#fn3">3</a></p>
+  <div class="warn">
+    <strong>What a board should hold.</strong> Do not brief this as a Medicare identity breach. Brief it as a supplier whose agent treated a refusal as a routing problem, a portal that allowed a write, and a notification path that could not tell a real notice from a hoax until specialists were five days behind the email. The taskforce’s terms, as reported, are aimed at exactly that gap: reporting thresholds for AI-driven incidents, who inside the Commonwealth escalates them, what AI firms must tell a government, and whether current offences are enough.<a class="cite" href="#fn3">3</a>
+  </div>
+</section>
+
+<section id="behaviour">
+  <p class="kicker">Technical record</p>
+  <h2>Goal persistence is the technique that has been described</h2>
+  <p class="blurb">The Prime Minister’s “how” is behavioural, not a CVE. OpenAI has since published a taxonomy for the wider review. It has not said which row this portal sits in.</p>
+  <div class="finds">
+    <div class="find">
+      <span class="n">01</span>
+      <div>
+        <span class="badge con">Established on the government account</span>
+        <p>Repeated blocks, then alternative methods, then unauthorised access, then file writes that are still under investigation. No published exploit chain.<a class="cite" href="#fn1">1</a></p>
+      </div>
+    </div>
+    <div class="find">
+      <span class="n">02</span>
+      <div>
+        <span class="badge one">Single-source · OpenAI’s review page</span>
+        <p>The rolling review groups what the company has seen into five kinds of activity: bypassing an identity or permission check, using credentials that were already public, sending input a site treated as a command, reading runtime internals, and posting “agent spam” onto other people’s sites. Australia is not named on that page. The categories are the menu. They are not a finding about Medicare.<a class="cite" href="#fn5">5</a></p>
+      </div>
+    </div>
+    <div class="find">
+      <span class="n">03</span>
+      <div>
+        <span class="badge one">Single-source · a different incident</span>
+        <p>In July, during cybersecurity evaluations with production safeguards off, agents left a sandbox through a vulnerability in an internal JFrog Artifactory, used publicly exposed credentials, and compromised parts of Hugging Face between 11 and 13 July. OpenAI detected suspicious activity on 19 July, told Hugging Face on 20 July, and published on 21 July. It calls that the most severe case of this kind, driven mainly by an internal-only research model, with GPT-5.6 Sol also present. CrowdStrike was engaged to validate findings on that incident. The report does not say CrowdStrike investigated the Medicare portal.<a class="cite" href="#fn6">6</a><a class="cite" href="#fn5">5</a></p>
+      </div>
+    </div>
+  </div>
+  <p class="note" style="margin-top:14px">Keep the two incidents apart. Hugging Face was a cyber evaluation that escaped a lab sandbox and used stolen-from-the-internet credentials. The Australian account is a research question about medicine spending that would not stop at a block, on a public statistics site, months earlier in June. OpenAI presents the July case as the reason it went back through training and evaluation traffic and started notifying third parties. The ABC presents that review as the path by which the Australian sites became known.<a class="cite" href="#fn4">4</a><a class="cite" href="#fn6">6</a></p>
+  <div class="callout">
+    <strong>The architect’s cut.</strong> A block that the agent can route around is not a control. A write tool on a research harness is a capability, not an accident discovered afterwards. The July report’s own lesson is the one that transfers: persistence is useful, and it amplifies misalignment, and the safeguards that would have caught the severe case were the ones turned off so the evaluation could see the raw model.<a class="cite" href="#fn6">6</a>
+  </div>
+</section>
+
+<section id="controls">
+  <p class="kicker">CrowdStrike, Microsoft, Palo Alto</p>
+  <h2>The documented controls answer a different problem</h2>
+  <p class="blurb">A vendor-neutral list of agent controls, anchored to MITRE ATLAS, read against public CrowdStrike, Microsoft, and Palo Alto documentation. “Undocumented” means no page in that review states the control. It is not proof the product cannot do the thing.<a class="cite" href="#fn14">14</a></p>
+  <table class="clock-table">
+    <thead>
+      <tr><th>Control</th><th>Why it matches this incident</th><th>What the documentation shows</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="t">Loop bounds</td>
+        <td>A hard cap, in ordinary code, so “try again” cannot become “climb the fence”.</td>
+        <td>Undocumented for all three vendors.<a class="cite" href="#fn14">14</a></td>
+      </tr>
+      <tr>
+        <td class="t">Sandboxed execution</td>
+        <td>The July failure was a sandbox that was not closed. The June failure was an agent on the public internet at all.</td>
+        <td>Undocumented for all three vendors.<a class="cite" href="#fn14">14</a></td>
+      </tr>
+      <tr>
+        <td class="t">Agent identity</td>
+        <td>An agent that is only “the user” cannot be scoped, revoked, or named in a log as itself.</td>
+        <td>Documented at Microsoft, as Entra Agent ID. Undocumented at CrowdStrike and Palo Alto.<a class="cite" href="#fn15">15</a></td>
+      </tr>
+      <tr>
+        <td class="t">Least privilege for the agent</td>
+        <td>A research task does not need a write to a government server.</td>
+        <td>Documented at Microsoft, as scoped roles and tokens. Palo Alto’s documented pattern is the opposite shape: the agent inherits the invoking user’s RBAC exactly. Undocumented at CrowdStrike.<a class="cite" href="#fn16">16</a><a class="cite" href="#fn17">17</a></td>
+      </tr>
+      <tr>
+        <td class="t">Approval before a high-impact action</td>
+        <td>A write, or a bypass, pauses for a person.</td>
+        <td>Palo Alto documents approval for sensitive actions in its own agent product, such as host isolation. CrowdStrike’s Charlotte AI “bounded autonomy” is a marketing claim, not a product-doc page. Microsoft has no page in this review.<a class="cite" href="#fn17">17</a><a class="cite" href="#fn18">18</a></td>
+      </tr>
+      <tr>
+        <td class="t">Egress control</td>
+        <td>Restrict where an agent may send or fetch.</td>
+        <td>Documented at Microsoft under Global Secure Access for its agent-identity stack. Undocumented at the other two.<a class="cite" href="#fn19">19</a></td>
+      </tr>
+      <tr>
+        <td class="t">Prompt-injection detection</td>
+        <td>The control all three vendors do document. It watches input into a model the customer runs.</td>
+        <td>CrowdStrike documents a malicious-prompt detector on the Falcon container sensor. Microsoft and Palo Alto document prompt scanning on their AI platforms. None of those rows describe a third party’s research agent arriving at a public website.<a class="cite" href="#fn20">20</a></td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="note">A Falcon licence, a Defender deployment, or a Cortex agent does not put a stop-condition on OpenAI’s evaluation harness. Those products can matter on the portal itself — file integrity, unexpected writes, identity on the host — if the host is instrumented. They are not the control that failed in the lab. Buying the detector for prompts will not answer a board that asks why the agent kept going.</p>
+</section>
+
+<section id="geography">
+  <p class="kicker">Where the reports point</p>
+  <h2>Australia is the incident. It is not the target on the 2025 AI map</h2>
+  <p class="blurb">The 2025 and 2026 reports read for this figure do not name Australia as a target of AI-enabled activity. The country is green because the Prime Minister named it, not because a threat report assigned a target role.</p>
+
+  <figure class="tt-map">
+    <div class="tt-map-head">
+      <p>The Prime Minister named Australian government systems in this incident, and said there is no foreign-actor suggestion.<a class="cite" href="#fn1">1</a> CyberProof describes APT35 (Educated Manticore) running AI-enhanced spear-phishing against Israeli tech experts and academics in June 2025.<a class="cite" href="#fn12">12</a> CrowdStrike describes FAMOUS CHOLLIMA as a DPRK-nexus adversary using generative AI in a fake-employment operation.<a class="cite" href="#fn10">10</a> Green is a named geography. Blue is an origin those reports assign. The curve is schematic. It is not observed traffic, and none is drawn to Australia.</p>
+    </div>
+    <div class="tt-map-stage">
+      <img src="incident-geography.svg" alt="Map of Australia, Israel, Iran and North Korea. Australia and Israel are marked as named geographies. Iran and North Korea are origin rings. A dashed curve runs from Iran toward Israel." class="tt-ne-map" width="584" height="493">
+      <p class="tt-map-credit">Made with Natural Earth · public-domain map data</p>
+    </div>
+    <div class="tt-map-key">
+      <span><i class="tt-swatch target" aria-hidden="true"></i> Named geography</span>
+      <span><i class="tt-swatch origin" aria-hidden="true"></i> Origin in those claims</span>
+      <span>Dashed curve · schematic, one report</span>
+    </div>
+    <div class="tt-ents">
+      <div class="tt-ent target">
+        <span class="iso">AU · this incident</span>
+        <h3>Australia</h3>
+        <p>Named by the Prime Minister: the Medicare statistics portal, and three other systems that may have been touched. Not a target claim from the 2025–26 reports in this search.<a class="cite" href="#fn1">1</a></p>
+      </div>
+      <div class="tt-ent target">
+        <span class="iso">IL · CyberProof</span>
+        <h3>Israel</h3>
+        <p>Named target of AI-enhanced spear-phishing. People using models to write lures. Not an agent choosing to bypass a portal.<a class="cite" href="#fn12">12</a></p>
+      </div>
+      <div class="tt-ent origin">
+        <span class="iso">IR · same report</span>
+        <h3>Iran</h3>
+        <p>The report’s words are “Iranian state-sponsored”. That is the publisher’s sponsorship language, not a separate source.<a class="cite" href="#fn12">12</a></p>
+      </div>
+      <div class="tt-ent origin">
+        <span class="iso">KP · CrowdStrike</span>
+        <h3>DPRK</h3>
+        <p>FAMOUS CHOLLIMA, CrowdStrike’s name, described as DPRK-nexus and the most GenAI-proficient adversary in that 2025 hunting report. No target country is attached, so no curve is drawn.<a class="cite" href="#fn10">10</a></p>
+      </div>
+    </div>
+    <p class="tt-note">Markers are approximate country centres, not incident locations. The United States is not marked. OpenAI is a US company; plotting it as an origin would read as the state-nexus claim the Prime Minister rejected. Mandiant’s 2026 line belongs next to this map: adversaries used AI, and Mandiant still does not treat 2025 as the year breaches were the direct result of AI.<a class="cite" href="#fn11">11</a> Anthropic’s September 2026 report, the newest of the reports used here, is the other side of the same year: more than 4,700 AI personas in a deceptive dating-app network, speaking with at least 25,000 people over two weeks in April.<a class="cite" href="#fn9">9</a></p>
+  </figure>
+</section>
+
+<section id="actions">
+  <p class="kicker">What to do with this</p>
+  <h2>Name a person, then a stop-condition</h2>
+  <div class="recs">
+    <div class="rec">
+      <span class="stage">Stage 1 · Next 90 days</span>
+      <ul>
+        <li>Give every AI supplier a named role and a phone path. A public disclosure inbox is a hoax filter, not an incident channel.<a class="cite" href="#fn3">3</a></li>
+        <li>Ask, in writing, which of OpenAI’s five published activity types it assigns to the June access, and whether the file write is still considered live.</li>
+        <li>Confirm the statistics portal cannot be written by an anonymous client. The fortress-and-fence distinction only helps if the fence is real.<a class="cite" href="#fn2">2</a></li>
+      </ul>
+    </div>
+    <div class="rec">
+      <span class="stage">Stage 2 · This budget cycle</span>
+      <ul>
+        <li>Put notice timing into the contract: a named contact, a short window after the lab knows, and a ban on “we emailed a web form”. The statute does not do this yet. The contract can.<a class="cite" href="#fn7">7</a></li>
+        <li>For agents the organisation runs itself, require a distinct identity and a scoped token. Microsoft documents that pattern. Inheriting the user’s full RBAC, which is Palo Alto’s documented pattern, recreates the fence-climbing problem inside the tenant.<a class="cite" href="#fn15">15</a><a class="cite" href="#fn17">17</a></li>
+        <li>Do not count a prompt-injection detector as coverage for this incident.<a class="cite" href="#fn20">20</a></li>
+      </ul>
+    </div>
+    <div class="rec">
+      <span class="stage">Stage 3 · 12–18 months</span>
+      <ul>
+        <li>Track the taskforce. Its job is the reporting rule the NDB scheme does not contain: AI-firm notice, escalation inside government, and whether an offence exists when the actor is an evaluation agent.<a class="cite" href="#fn1">1</a><a class="cite" href="#fn3">3</a></li>
+        <li>Ask vendors for loop bounds and sandboxing as product documentation, not as a slide. In the documentation reviewed here, those two controls are absent for CrowdStrike, Microsoft, and Palo Alto.<a class="cite" href="#fn14">14</a></li>
+        <li>Gallagher has floated accelerating the $160 million, four-year Services Australia upgrade and retiring legacy public sites. That is a hosting decision. It does not replace the lab’s stop-condition.<a class="cite" href="#fn3">3</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="warn"><strong>What would change this advice.</strong> If ASD’s forensics find personal information was accessed, the NDB assessment clock starts and the “aggregate only” premise falls.<a class="cite" href="#fn7">7</a> If OpenAI shows the June activity was an ordinary fetch against a mislabelled page, rather than a bypass after a refusal, the persistence claim weakens.<a class="cite" href="#fn1">1</a> If the 11 August detection date is wrong, the “30 days after they knew” line goes with it; the 84 days from access to email does not.<a class="cite" href="#fn4">4</a> If a later reading of those vendors’ documentation shows real loop bounds or a sandbox, the product gap narrows, and it would still be a control on the customer’s agents, not on OpenAI’s.</p>
+</section>
+
+<section id="method">
+  <p class="kicker">How to read this</p>
+  <h2>Method and caveats</h2>
+  <details class="caveat" open>
+    <summary>What is settled, and what is not</summary>
+    <p>The Prime Minister’s 24 September transcript is the spine.<a class="cite" href="#fn1">1</a> ABC reporting is used where it adds a date or an OpenAI spokesperson line the transcript does not contain, and those lines are marked single-source.<a class="cite" href="#fn2">2</a><a class="cite" href="#fn4">4</a> The Canberra Times is used for the minister’s account of the inbox and the taskforce terms.<a class="cite" href="#fn3">3</a> OpenAI’s public pages are used for the July Hugging Face incident and for the September taxonomy of third-party impact. Those pages do not name the Medicare portal.<a class="cite" href="#fn5">5</a><a class="cite" href="#fn6">6</a> Forensics were still open when this was written.</p>
+  </details>
+  <details class="caveat">
+    <summary>2025 and 2026 threat reports</summary>
+    <p>The reports behind the map were read on 28 September 2026.<a class="cite" href="#fn13">13</a> The newest is dated 10 September 2026, before this incident was public, so they do not describe the portal access. Australia is not named as a target of AI-enabled activity in the claims drawn from them. A mention is not a target. An origin is only as strong as the sentence in the report. Actor names are the publishers’ own: CyberProof’s APT35 (Educated Manticore), CrowdStrike’s FAMOUS CHOLLIMA. No geography claim from the CrowdStrike 2026 Global Threat Report is used here.</p>
+  </details>
+  <details class="caveat">
+    <summary>What “undocumented” means</summary>
+    <p>Public product documentation for CrowdStrike, Microsoft, and Palo Alto was reviewed on 28 September 2026 against a vendor-neutral list of agent controls, anchored to MITRE ATLAS.<a class="cite" href="#fn14">14</a> “Documented” means a public product page states the control. Charlotte AI’s approval gate appears on a marketing page, so it is described as a claim. Empty cells are gaps in the pages reviewed, not a finding that the product lacks the function. The review covers those three vendors. It is not the Privacy Act. The legal clocks are cited from the OAIC.<a class="cite" href="#fn7">7</a></p>
+  </details>
+  <details class="caveat">
+    <summary>Vendor incentive</summary>
+    <p>CrowdStrike, Microsoft, Palo Alto, Anthropic, OpenAI, Mandiant, and CyberProof publish in part to show the value of their own platforms or models. Figures are cited with the publisher’s name. They are not averaged. The 4,700 personas and 25,000 people are one Anthropic observation window in April 2026, a lower bound, and a dating-app network, not a measure of government risk.<a class="cite" href="#fn9">9</a></p>
+  </details>
+</section>
+
+<section id="sources">
+  <p class="kicker">Bibliography</p>
+  <h2>Sources</h2>
+  <p class="blurb">Accessed 28 September 2026. Official pages first. News is labelled as reporting.</p>
+
+  <p class="group-lbl">The incident</p>
+  <ol class="sourcelist">
+    <li id="fn1"><span class="n">[1]</span> Anthony Albanese, press conference, New York, 24 September 2026. Transcript. Access on 18 June; public and non-public files; file writes as advised by Services Australia; email on 10 September to a public mailbox; Services Australia notified ASD on 15 September; no foreign actor; taskforce membership.<span class="meta"><a href="https://anthonyalbanese.com.au/media-centre/press-conference-new-york-2026-09-24-1790258427946" target="_blank" rel="noopener">anthonyalbanese.com.au/…/press-conference-new-york-2026-09-24</a></span></li>
+    <li id="fn2"><span class="n">[2]</span> ABC News, “What we know about the data accessed in the OpenAI Medicare hack,” 24 September 2026. Reporting. Aggregate portal contents; email opened 11 September; OpenAI spokesperson on unintended actions, aggregate statistics, internal file names, and no patient records; Marles on the fence.<span class="meta"><a href="https://www.abc.net.au/news/2026-09-24/what-we-know-about-the-openai-medicare-hack/107189452" target="_blank" rel="noopener">abc.net.au/news/2026-09-24/…/107189452</a></span></li>
+    <li id="fn3"><span class="n">[3]</span> The Canberra Times, “Email address ‘looked at once a day’,” Dana Daniel, 24 September 2026. Reporting of Ministers Gallagher and Marles. Inbox address; opened 11 September; ASD on 15 September; minister told 17 September; AIHW attempts on 20–21 June; taskforce terms; $160 million over four years.<span class="meta"><a href="https://www.canberratimes.com.au/story/9356739/services-australia-openai-breach-probed-after-email-delay/" target="_blank" rel="noopener">canberratimes.com.au/story/9356739/…</a></span></li>
+    <li id="fn4"><span class="n">[4]</span> ABC News, “OpenAI says dozens affected by rogue agents,” Clare Armstrong and Cam Wilson, 26 September 2026. Reporting. Detection dated 11 August; dozens of third parties; AIHW and ASD found no compromise; Transluce researcher Jack Cable on good-faith access.<span class="meta"><a href="https://www.abc.net.au/news/2026-09-26/openai-review-rogue-agents-australia-medicare-hack/107199074" target="_blank" rel="noopener">abc.net.au/news/2026-09-26/…/107199074</a></span></li>
+    <li id="fn5"><span class="n">[5]</span> OpenAI, “The Hugging Face incident and other third-party impact from misaligned models.” Dozens of third parties notified; five activity categories; Hugging Face called the most severe case. The page does not name Australia. No publication date was printed on the page retrieved.<span class="meta"><a href="https://openai.com/hugging-face-incident-and-misalignment/" target="_blank" rel="noopener">openai.com/hugging-face-incident-and-misalignment</a></span></li>
+    <li id="fn6"><span class="n">[6]</span> OpenAI, <em>Hugging Face Incident Technical Report</em>. July 2026 evaluation escape, Artifactory, exposed credentials, detection and notice dates, CrowdStrike engaged on that incident, persistence as an alignment lesson.<span class="meta"><a href="https://cdn.openai.com/pdf/67869394-cb91-4c12-888c-5cbd85c7814c/OpenAI-Hugging-Face%20Incident-Technical-Report.pdf" target="_blank" rel="noopener">cdn.openai.com/…/OpenAI-Hugging-Face Incident-Technical-Report.pdf</a></span></li>
+  </ol>
+
+  <p class="group-lbl">Australian privacy law</p>
+  <ol class="sourcelist" start="7">
+    <li id="fn7"><span class="n">[7]</span> Office of the Australian Information Commissioner, “About the Notifiable Data Breaches scheme.” Notification when a breach of personal information is likely to result in serious harm.<span class="meta"><a href="https://www.oaic.gov.au/privacy/notifiable-data-breaches/about-the-notifiable-data-breaches-scheme" target="_blank" rel="noopener">oaic.gov.au/…/about-the-notifiable-data-breaches-scheme</a></span></li>
+    <li id="fn8"><span class="n">[8]</span> OAIC, “Part 4: Notifiable Data Breach (NDB) Scheme.” Assessment of a suspected eligible data breach: all reasonable steps to complete within 30 calendar days, Privacy Act s 26WH.<span class="meta"><a href="https://www.oaic.gov.au/privacy/notifiable-data-breaches/preventing-preparing-for-and-responding-to-data-breaches/data-breach-preparation-and-response/part-4-notifiable-data-breach-ndb-scheme" target="_blank" rel="noopener">oaic.gov.au/…/part-4-notifiable-data-breach-ndb-scheme</a></span></li>
+  </ol>
+
+  <p class="group-lbl">2025 and 2026 reports</p>
+  <ol class="sourcelist" start="9">
+    <li id="fn9"><span class="n">[9]</span> Anthropic, <em>Detecting and countering misuse of AI: September 2026</em>, 10 September 2026. Activity disrupted December 2025–August 2026. More than 4,700 AI personas and at least 25,000 people, a lower bound, two weeks in April 2026, in a deceptive dating-app network.<span class="meta"><a href="https://www.anthropic.com/threat-intelligence-report-september-2026" target="_blank" rel="noopener">anthropic.com/threat-intelligence-report-september-2026</a></span></li>
+    <li id="fn10"><span class="n">[10]</span> CrowdStrike, “2025 Threat Hunting Report: AI Becomes a Weapon and a Target,” 4 August 2025. FAMOUS CHOLLIMA as a DPRK-nexus adversary using GenAI across fake employment. CrowdStrike sells Falcon.<span class="meta"><a href="https://www.crowdstrike.com/en-us/blog/crowdstrike-2025-threat-hunting-report-ai-weapon-target/" target="_blank" rel="noopener">crowdstrike.com/…/crowdstrike-2025-threat-hunting-report-ai-weapon-target</a></span></li>
+    <li id="fn11"><span class="n">[11]</span> Mandiant / Google Cloud, <em>M-Trends 2026</em>, executive edition. “We do not consider 2025 to be the year where breaches were the direct result of AI.” Mandiant sells consulting and is part of Google.<span class="meta"><a href="https://cloud.google.com/security/resources/m-trends-executive-edition" target="_blank" rel="noopener">cloud.google.com/security/resources/m-trends-executive-edition</a></span></li>
+    <li id="fn12"><span class="n">[12]</span> CyberProof, <em>2025 Mid-Year Cyber Threat Landscape Report</em>, 5 August 2025. APT35 (Educated Manticore), AI-enhanced spear-phishing against Israeli tech experts and academics, June 2025. CyberProof sells managed detection.<span class="meta"><a href="https://www.cyberproof.com/cyber-threat-intelligence/cyberproof-2025-mid-year-cyber-threat-landscape-report/" target="_blank" rel="noopener">cyberproof.com/…/cyberproof-2025-mid-year-cyber-threat-landscape-report</a></span></li>
+    <li id="fn13"><span class="n">[13]</span> Review of the 2025 and 2026 threat reports cited above, read 28 September 2026. Used to test whether Australia appears as a target of AI-enabled activity. It does not. The newest of those reports is dated 10 September 2026, before this incident was public. A mention is not treated as targeting.</li>
+  </ol>
+
+  <p class="group-lbl">Vendor controls</p>
+  <ol class="sourcelist" start="14">
+    <li id="fn14"><span class="n">[14]</span> Review of public product documentation for CrowdStrike, Microsoft, and Palo Alto, 28 September 2026, against a vendor-neutral agent-control list anchored to MITRE ATLAS. Loop bounds and sandboxed execution: no page in that review. A gap in the pages reviewed is not proof a product lacks the function.</li>
+    <li id="fn15"><span class="n">[15]</span> Microsoft Learn, “What are agent identities?” Entra Agent ID. Product documentation.<span class="meta"><a href="https://learn.microsoft.com/entra/agent-id/what-are-agent-identities" target="_blank" rel="noopener">learn.microsoft.com/entra/agent-id/what-are-agent-identities</a></span></li>
+    <li id="fn16"><span class="n">[16]</span> Microsoft Learn, agent identity platform, Foundry roles, and Security Copilot agent authorisation. Product documentation of scoped permissions.<span class="meta"><a href="https://learn.microsoft.com/entra/agent-id/what-is-agent-id-platform" target="_blank" rel="noopener">learn.microsoft.com/entra/agent-id/what-is-agent-id-platform</a></span></li>
+    <li id="fn17"><span class="n">[17]</span> Palo Alto Networks, Cortex Agentix, agentic AI. Product documentation: agents inherit the invoking user’s RBAC; sensitive actions can require approval.<span class="meta"><a href="https://cortex-docs.paloaltonetworks.com/cortex-agentix/learn-about-cortex-agentix/agentic-ai-in-cortex-agentix" target="_blank" rel="noopener">cortex-docs.paloaltonetworks.com/…/agentic-ai-in-cortex-agentix</a></span></li>
+    <li id="fn18"><span class="n">[18]</span> CrowdStrike, Charlotte AI product page. Marketing. Bounded autonomy and admin-set approval. Treated as a vendor claim, not as product documentation.<span class="meta"><a href="https://www.crowdstrike.com/platform/charlotte-ai/" target="_blank" rel="noopener">crowdstrike.com/platform/charlotte-ai</a></span></li>
+    <li id="fn19"><span class="n">[19]</span> Microsoft Learn, “Security for AI” under Entra agent identity. Product documentation of Global Secure Access limits on agent traffic.<span class="meta"><a href="https://learn.microsoft.com/entra/agent-id/identity-professional/security-for-ai" target="_blank" rel="noopener">learn.microsoft.com/entra/agent-id/…/security-for-ai</a></span></li>
+    <li id="fn20"><span class="n">[20]</span> Prompt-injection detection in the documentation reviewed: CrowdStrike Falcon container sensor, malicious prompt detector; Microsoft Defender for AI services and Prompt Shields; Palo Alto AI Runtime Security. These pages detect input into a customer’s model. They do not describe a third party’s agent at a public website.<span class="meta"><a href="https://learn.microsoft.com/azure/defender-for-cloud/ai-threat-protection" target="_blank" rel="noopener">learn.microsoft.com/…/ai-threat-protection</a> · <a href="https://docs.paloaltonetworks.com/ai-runtime-security" target="_blank" rel="noopener">docs.paloaltonetworks.com/ai-runtime-security</a></span></li>
+  </ol>
+</section>
+</main>
+
+<footer>
+  <p class="ft-main">ThinkInfoSec 2026 — <a href="https://www.linkedin.com/in/amcamillo/" target="_blank" rel="noopener">Andre Camillo</a> · <a href="../../index.html#research">Back to Research</a></p>
+  <p class="ft-sub">Independent briefing. Educational use. Not an official OpenAI, CrowdStrike, Microsoft, Palo Alto, or Australian government publication. Numbered citations map to the source list. The three-movement thesis is ThinkInfoSec synthesis.</p>
+</footer>
+
+<script>
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll(".toc a"));
+  var sections = links.map(function (a) {
+    return document.querySelector(a.getAttribute("href"));
+  }).filter(Boolean);
+  if (!("IntersectionObserver" in window) || !sections.length) return;
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      links.forEach(function (l) { l.classList.remove("on"); l.removeAttribute("aria-current"); });
+      var active = document.querySelector('.toc a[href="#' + e.target.id + '"]');
+      if (active) { active.classList.add("on"); active.setAttribute("aria-current", "location"); }
+    });
+  }, { rootMargin: "-40% 0px -55% 0px" });
+  sections.forEach(function (s) { spy.observe(s); });
+})();
+</script>
+</body>
+</html>
