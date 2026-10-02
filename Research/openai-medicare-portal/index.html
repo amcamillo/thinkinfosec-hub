@@ -120,6 +120,15 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
 .facts a { text-decoration: none; font-size: 13px; }
 .facts a:hover { text-decoration: underline; }
 
+.walkthrough { margin: 18px 0 0; }
+.walkthrough img {
+  display: block; width: 100%; height: auto;
+  border-radius: var(--radius); border: 1px solid var(--line);
+}
+.walkthrough figcaption {
+  margin-top: 8px; font-size: 13px; color: var(--mute); max-width: 46rem;
+}
+
 .toc {
   position: sticky; top: 0; z-index: 200;
   background: var(--card);
@@ -476,6 +485,10 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
       <span><b>15 Sep</b> ASD notified · <a href="#fn1">Prime Minister</a></span>
       <span><b>Dozens</b> of third parties · <a href="#fn5">OpenAI</a></span>
     </p>
+    <figure class="walkthrough">
+      <img src="goal-persistence.gif" width="1400" height="1202" alt="Animated walkthrough titled When goals become the threat vector. A research goal for Australian medicine-spending statistics goes to an evaluation agent, then to the statistics portal. The portal refuses. A dashed path returns into unauthorised access of public and non-public files and file writes on 18 June, still under investigation. The notice path runs from lab detection on 11 August, to an email in a public inbox on 10 September, to ASD notified on 15 September.">
+      <figcaption>Walkthrough of this briefing. The solid line is what happened. The dashed return is the refusal treated as a route. Diamonds mark a check or a capability on that path.</figcaption>
+    </figure>
   </div>
 </div>
 
