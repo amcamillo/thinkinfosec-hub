@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The harness ladder, with the attack surface each rung opens</title>
+<style>
+:root { --tis-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+.tx-tag    { font: 700 9.5px var(--tis-font); letter-spacing: 1.3px; text-transform: uppercase; }
+.tx-title  { font: 700 15px var(--tis-font); letter-spacing: -.1px; }
+.tx-sub    { font: 400 11.5px var(--tis-font); }
+.tx-label  { font: 500 11px var(--tis-font); }
+.tx-glabel { font: 800 10.5px var(--tis-font); letter-spacing: 1.8px; text-transform: uppercase; }
+.tx-gnote  { font: 400 11px var(--tis-font); }
+.tx-pill   { font: 600 11px var(--tis-font); }
+.tx-gate   { font: 700 11px var(--tis-font); }
+.tx-note   { font: 500 11px var(--tis-font); font-style: italic; }
+
+:root {
+  --tis-magenta:#FF2D78; --tis-magenta-2:#D91E63; --tis-teal:#00BFCF; --tis-teal-2:#0B6459; --tis-navy:#0D1F3C;
+  --tis-ink:#FFFFFF; --tis-mute:rgba(255,255,255,.68); --tis-line:rgba(255,255,255,.16);
+  --tis-glass:rgba(6,10,18,.56); --tis-glass-2:rgba(6,10,18,.72);
+}
+* { box-sizing: border-box; }
+html, body { background: var(--tis-navy); }
+body { margin: 0; overflow-x: hidden; font-family: var(--tis-font); color: var(--tis-ink); }
+.stage { position: relative; overflow: hidden; background: var(--tis-navy); min-height: 100vh; }
+.stage .zone { position: absolute; inset: 0; }
+.stage .zone-magenta { background: linear-gradient(77deg, #FF2D78 0%, #D91E63 18%, #8C2060 38%, #4A1D52 58%, rgba(13,31,60,.35) 76%, rgba(13,31,60,0) 92%); }
+.stage .zone-teal { background: linear-gradient(57deg, rgba(13,31,60,0) 8%, rgba(13,31,60,.35) 24%, #0F3A4A 44%, #0B6459 64%, #009AAB 82%, #00BFCF 100%); }
+.stage .wash  { background: rgba(6,10,18,.14); }
+.stage .grain { background-image: radial-gradient(rgba(255,255,255,.5) .5px, transparent .5px); background-size: 4px 4px; opacity: .035; }
+.wrap { position: relative; z-index: 1; padding: 44px 16px; display: flex; justify-content: center; }
+.panel { background: var(--tis-glass-2); -webkit-backdrop-filter: blur(20px) saturate(140%); backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid var(--tis-line); border-radius: 18px; padding: 28px 30px 24px; width: 100%; }
+.eyebrow { display: flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--tis-mute); margin: 0 0 10px; }
+.eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #fff; }
+h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 900; letter-spacing: -.5px; margin: 0 0 8px; text-wrap: balance; }
+.caption { color: var(--tis-mute); font-size: .95rem; line-height: 1.6; margin: 0 0 22px; max-width: 78ch; }
+.diagram { overflow-x: auto; margin: 0 -6px; padding: 0 6px; }
+.diagram svg { display: block; width: 100%; height: auto; min-width: 760px; margin: 0 auto; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--tis-line); font-size: 12px; color: var(--tis-mute); }
+.legend span { display: inline-flex; align-items: center; gap: 9px; }
+.legend svg { flex: none; }
+/* diagram primitives */
+.n-box   { fill: rgba(8,14,26,.82); stroke: rgba(255,255,255,.15); stroke-width: 1; }
+.ghost .n-box { fill: rgba(8,14,26,.35); stroke: rgba(255,255,255,.34); stroke-dasharray: 5 4; }
+.tx-title { fill: #fff; }
+.tx-sub   { fill: rgba(255,255,255,.62); }
+.tx-gnote { fill: rgba(255,255,255,.55); }
+.tx-note  { fill: rgba(255,255,255,.6); }
+.g-box    { stroke-width: 1; }
+.port     { fill: #0b1422; stroke-width: 1.3; }
+
+.panel { max-width: 2014px; }
+</style></head>
+<body><div class="stage"><div class="zone zone-magenta"></div><div class="zone zone-teal"></div><div class="zone wash"></div><div class="zone grain"></div>
+<main class="wrap"><section class="panel">
+<p class="eyebrow">ThinkInfoSec · AI Harness Engineering, Figure 2 redrawn with a security lens</p>
+<h1>The harness ladder, with the attack surface each rung opens</h1>
+<p class="caption">Middle and bottom rows are the paper: each rung adds one class of runtime support (Table 3) and its outcome on one login-bug task (Table 5). The magenta top row and the dashed H4 rung are my security read: every rung that adds capability also adds attack surface, and the paper never models an attacker.</p>
+<figure class="diagram" style="margin:0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-28 -28 1952 824" width="1952" style="max-width:1952px" role="img" aria-label="Five harness levels left to right with three layers. Top layer, security lens: H0 exposes poisoned repository content, paired with checks the agent cannot edit. H1 exposes excessive agency, paired with an allowlist and no ambient credentials. H2 exposes persistent memory poisoning, paired with reviewed memory writes. H3 exposes self-attestation, paired with a verifier out of the agent's reach. A proposed H4 answers a hostile adversary the paper never models. Middle layer, from the paper: H0 task and repository; H1 tool registry, test commands, usage protocol; H2 project memory, task state, context selection; H3 deterministic checks, bug reproduction, failure attribution, verification report; proposed H4 provenance labels, secrets broker, egress-deny sandbox, adversarial failure class. Bottom layer, outcomes: H0 verified because the regression happened to finish, H1 and H2 unverified after a timeout, H3 verified with the timeout disclosed, H4 untested."><defs><marker id="ah-flow" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="rgba(255,255,255,.58)"/></marker><marker id="ah-conditional" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#FF2D78"/></marker><marker id="ah-optional" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="rgba(255,255,255,.82)"/></marker><marker id="ah-reference" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#00BFCF"/></marker></defs>
+<g class="group" data-id="h0"><rect class="g-box" x="0" y="126" width="250.2" height="264" rx="18" fill="rgba(255,255,255,.025)" stroke="rgba(255,255,255,.16)"/>
+<text class="tx-glabel" x="28" y="155" fill="rgba(255,255,255,.62)">H0 · Minimal</text>
+<text class="tx-gnote" x="145.6" y="155">the baseline</text>
+</g>
+<g class="group" data-id="h1"><rect class="g-box" x="336.3" y="126" width="245" height="390" rx="18" fill="rgba(0,191,207,.06)" stroke="rgba(0,191,207,.38)"/>
+<text class="tx-glabel" x="364.3" y="155" fill="#00BFCF">H1 · Tool</text>
+<text class="tx-gnote" x="453.6" y="155">inherits H0</text>
+</g>
+<g class="group" data-id="h2"><rect class="g-box" x="686.9" y="126" width="329.4" height="390" rx="18" fill="rgba(0,191,207,.06)" stroke="rgba(0,191,207,.38)"/>
+<text class="tx-glabel" x="714.9" y="155" fill="#00BFCF">H2 · Context–memory</text>
+<text class="tx-gnote" x="898.5" y="155">inherits H0–H1</text>
+</g>
+<g class="group" data-id="h3"><rect class="g-box" x="1111.1" y="126" width="410.7" height="516" rx="18" fill="rgba(0,191,207,.06)" stroke="rgba(0,191,207,.38)"/>
+<text class="tx-glabel" x="1139.1" y="155" fill="#00BFCF">H3 · Observability–verification</text>
+<text class="tx-gnote" x="1404" y="155">inherits H0–H2</text>
+</g>
+<g class="group" data-id="h4"><rect class="g-box" x="1595.6" y="126" width="299.5" height="516" rx="18" fill="rgba(255,45,120,.06)" stroke="rgba(255,45,120,.42)"/>
+<text class="tx-glabel" x="1623.6" y="155" fill="#FF2D78">H4 · Trust boundary</text>
+<text class="tx-gnote" x="1802.6" y="155">proposed</text>
+</g>
+<path data-e="0" d="M125.1,66 L125.1,126" fill="none" stroke="#FF2D78" stroke-width="1.4" stroke-dasharray="6 4" marker-end="url(#ah-conditional)"/>
+<path data-e="1" d="M458.8,66 L458.8,126" fill="none" stroke="#FF2D78" stroke-width="1.4" stroke-dasharray="6 4" marker-end="url(#ah-conditional)"/>
+<path data-e="2" d="M851.6,66 L851.6,126" fill="none" stroke="#FF2D78" stroke-width="1.4" stroke-dasharray="6 4" marker-end="url(#ah-conditional)"/>
+<path data-e="3" d="M1316.5,66 L1316.5,126" fill="none" stroke="#FF2D78" stroke-width="1.4" stroke-dasharray="6 4" marker-end="url(#ah-conditional)"/>
+<path data-e="4" d="M1745.4,66 L1745.4,126" fill="none" stroke="#FF2D78" stroke-width="1.4" stroke-dasharray="6 4" marker-end="url(#ah-conditional)"/>
+<path data-e="5" d="M250.2,209 L336.3,209" fill="none" stroke="rgba(255,255,255,.58)" stroke-width="1.4" marker-end="url(#ah-flow)"/>
+<path data-e="6" d="M581.3,209 L686.9,209" fill="none" stroke="rgba(255,255,255,.58)" stroke-width="1.4" marker-end="url(#ah-flow)"/>
+<path data-e="7" d="M1016.2,209 L1111.1,209" fill="none" stroke="rgba(255,255,255,.58)" stroke-width="1.4" marker-end="url(#ah-flow)"/>
+<path data-e="8" d="M1521.8,209 L1595.6,209" fill="none" stroke="rgba(255,255,255,.82)" stroke-width="1.4" stroke-dasharray="9 4 2 4" marker-end="url(#ah-optional)"/>
+<path data-e="9" d="M125.1,390 L125.1,702" fill="none" stroke="rgba(255,255,255,.82)" stroke-width="1.4" stroke-dasharray="9 4 2 4" marker-end="url(#ah-optional)"/>
+<path data-e="10" d="M458.8,516 L458.8,702" fill="none" stroke="rgba(255,255,255,.58)" stroke-width="1.4" marker-end="url(#ah-flow)"/>
+<path data-e="11" d="M851.6,516 L851.6,702" fill="none" stroke="rgba(255,255,255,.58)" stroke-width="1.4" marker-end="url(#ah-flow)"/>
+<path data-e="12" d="M1316.5,642 L1316.5,702" fill="none" stroke="rgba(255,255,255,.58)" stroke-width="1.4" marker-end="url(#ah-flow)"/>
+<path data-e="13" d="M1745.4,642 L1745.4,702" fill="none" stroke="rgba(255,255,255,.82)" stroke-width="1.4" stroke-dasharray="9 4 2 4" marker-end="url(#ah-optional)"/>
+<circle class="port" cx="125.1" cy="66" r="3.4" stroke="#FF2D78"/>
+<circle class="port" cx="458.8" cy="66" r="3.4" stroke="#FF2D78"/>
+<circle class="port" cx="851.6" cy="66" r="3.4" stroke="#FF2D78"/>
+<circle class="port" cx="1316.5" cy="66" r="3.4" stroke="#FF2D78"/>
+<circle class="port" cx="1745.4" cy="66" r="3.4" stroke="#FF2D78"/>
+<circle class="port" cx="250.2" cy="209" r="3.4" stroke="rgba(255,255,255,.58)"/>
+<circle class="port" cx="581.3" cy="209" r="3.4" stroke="rgba(255,255,255,.58)"/>
+<circle class="port" cx="1016.2" cy="209" r="3.4" stroke="rgba(255,255,255,.58)"/>
+<circle class="port" cx="1521.8" cy="209" r="3.4" stroke="rgba(255,255,255,.82)"/>
+<circle class="port" cx="125.1" cy="390" r="3.4" stroke="rgba(255,255,255,.82)"/>
+<circle class="port" cx="458.8" cy="516" r="3.4" stroke="rgba(255,255,255,.58)"/>
+<circle class="port" cx="851.6" cy="516" r="3.4" stroke="rgba(255,255,255,.58)"/>
+<circle class="port" cx="1316.5" cy="642" r="3.4" stroke="rgba(255,255,255,.58)"/>
+<circle class="port" cx="1745.4" cy="642" r="3.4" stroke="rgba(255,255,255,.82)"/>
+<g class="node" data-id="r0"><rect class="n-box" x="30.6" y="0" width="189" height="66" rx="10"/><circle cx="47.6" cy="17.5" r="3.2" fill="#FF2D78"/><text class="tx-tag" x="56.6" y="21" fill="#FF2D78">OWASP LLM01</text><text class="tx-title" x="44.6" y="41">Poisoned repo content</text><text class="tx-sub" x="44.6" y="56">READMEs, comments, issue text</text></g>
+<g class="node" data-id="r1"><rect class="n-box" x="360.3" y="0" width="197" height="66" rx="10"/><circle cx="377.3" cy="17.5" r="3.2" fill="#FF2D78"/><text class="tx-tag" x="386.3" y="21" fill="#FF2D78">OWASP LLM06</text><text class="tx-title" x="374.3" y="41">Excessive agency</text><text class="tx-sub" x="374.3" y="56">shell, MCP servers, ambient creds</text></g>
+<g class="node" data-id="r2"><rect class="n-box" x="764.6" y="0" width="174" height="66" rx="10"/><circle cx="781.6" cy="17.5" r="3.2" fill="#FF2D78"/><text class="tx-tag" x="790.6" y="21" fill="#FF2D78">OWASP LLM04</text><text class="tx-title" x="778.6" y="41">Persistent poisoning</text><text class="tx-sub" x="778.6" y="56">memory trusted next session</text></g>
+<g class="node" data-id="r3"><rect class="n-box" x="1226" y="0" width="181" height="66" rx="10"/><circle cx="1243" cy="17.5" r="3.2" fill="#FF2D78"/><text class="tx-tag" x="1252" y="21" fill="#FF2D78">Integrity</text><text class="tx-title" x="1240" y="41">Agent grades itself</text><text class="tx-sub" x="1240" y="56">weakened tests, forged report</text></g>
+<g class="node" data-id="r4"><rect class="n-box" x="1657.9" y="0" width="175" height="66" rx="10"/><circle cx="1674.9" cy="17.5" r="3.2" fill="#FF2D78"/><text class="tx-tag" x="1683.9" y="21" fill="#FF2D78">Not modelled</text><text class="tx-title" x="1671.9" y="41">A hostile adversary</text><text class="tx-sub" x="1671.9" y="56">absent from the whole paper</text></g>
+<g class="node" data-id="task"><rect class="n-box" x="28" y="176" width="156" height="66" rx="10"/><circle cx="45" cy="193.5" r="3.2" fill="rgba(255,255,255,.62)"/><text class="tx-tag" x="54" y="197" fill="rgba(255,255,255,.62)">given</text><text class="tx-title" x="42" y="217">Task description</text><text class="tx-sub" x="42" y="232">objective + requirements</text></g>
+<g class="node" data-id="repo"><rect class="n-box" x="28" y="302" width="148" height="66" rx="10"/><circle cx="45" cy="319.5" r="3.2" fill="rgba(255,255,255,.62)"/><text class="tx-tag" x="54" y="323" fill="rgba(255,255,255,.62)">given</text><text class="tx-title" x="42" y="343">Repository files</text><text class="tx-sub" x="42" y="358">nothing else</text></g>
+<g class="node" data-id="tools"><rect class="n-box" x="364.3" y="176" width="148" height="66" rx="10"/><circle cx="381.3" cy="193.5" r="3.2" fill="#00BFCF"/><text class="tx-tag" x="390.3" y="197" fill="#00BFCF">+ tool</text><text class="tx-title" x="378.3" y="217">Tool registry</text><text class="tx-sub" x="378.3" y="232">declared actions</text></g>
+<g class="node" data-id="tests"><rect class="n-box" x="364.3" y="302" width="189" height="66" rx="10"/><circle cx="381.3" cy="319.5" r="3.2" fill="#00BFCF"/><text class="tx-tag" x="390.3" y="323" fill="#00BFCF">+ tool</text><text class="tx-title" x="378.3" y="343">Test-command registry</text><text class="tx-sub" x="378.3" y="358">how to run checks</text></g>
+<g class="node" data-id="usage"><rect class="n-box" x="364.3" y="428" width="168" height="66" rx="10"/><circle cx="381.3" cy="445.5" r="3.2" fill="#00BFCF"/><text class="tx-tag" x="390.3" y="449" fill="#00BFCF">+ tool</text><text class="tx-title" x="378.3" y="469">Tool-usage protocol</text><text class="tx-sub" x="378.3" y="484">when and how</text></g>
+<g class="node" data-id="mem"><rect class="n-box" x="714.9" y="176" width="208" height="66" rx="10"/><circle cx="731.9" cy="193.5" r="3.2" fill="#00BFCF"/><text class="tx-tag" x="740.9" y="197" fill="#00BFCF">+ memory</text><text class="tx-title" x="728.9" y="217">Project memory</text><text class="tx-sub" x="728.9" y="232">guide · architecture · known failures</text></g>
+<g class="node" data-id="state"><rect class="n-box" x="714.9" y="302" width="160" height="66" rx="10"/><circle cx="731.9" cy="319.5" r="3.2" fill="#00BFCF"/><text class="tx-tag" x="740.9" y="323" fill="#00BFCF">+ memory</text><text class="tx-title" x="728.9" y="343">Task_State</text><text class="tx-sub" x="728.9" y="358">plan, files, open questions</text></g>
+<g class="node" data-id="ctx"><rect class="n-box" x="714.9" y="428" width="149" height="66" rx="10"/><circle cx="731.9" cy="445.5" r="3.2" fill="#00BFCF"/><text class="tx-tag" x="740.9" y="449" fill="#00BFCF">+ memory</text><text class="tx-title" x="728.9" y="469">Context selection</text><text class="tx-sub" x="728.9" y="484">what to read, when</text></g>
+<g class="node" data-id="det"><rect class="n-box" x="1139.1" y="176" width="171" height="66" rx="10"/><circle cx="1156.1" cy="193.5" r="3.2" fill="#00BFCF"/><text class="tx-tag" x="1165.1" y="197" fill="#00BFCF">+ verify</text><text class="tx-title" x="1153.1" y="217">Deterministic checks</text><text class="tx-sub" x="1153.1" y="232">one probe per requirement</text></g>
+<g class="node" data-id="repro"><rect class="n-box" x="1139.1" y="302" width="151" height="66" rx="10"/><circle cx="1156.1" cy="319.5" r="3.2" fill="#00BFCF"/><text class="tx-tag" x="1165.1" y="323" fill="#00BFCF">+ verify</text><text class="tx-title" x="1153.1" y="343">Bug reproduction</text><text class="tx-sub" x="1153.1" y="358">fail before you fix</text></g>
+<g class="node" data-id="attr"><rect class="n-box" x="1139.1" y="428" width="155" height="66" rx="10"/><circle cx="1156.1" cy="445.5" r="3.2" fill="#00BFCF"/><text class="tx-tag" x="1165.1" y="449" fill="#00BFCF">+ verify</text><text class="tx-title" x="1153.1" y="469">Failure attribution</text><text class="tx-sub" x="1153.1" y="484">classify before recovery</text></g>
+<g class="node" data-id="vrep"><rect class="n-box" x="1139.1" y="554" width="157" height="66" rx="10"/><circle cx="1156.1" cy="571.5" r="3.2" fill="#00BFCF"/><text class="tx-tag" x="1165.1" y="575" fill="#00BFCF">+ verify</text><text class="tx-title" x="1153.1" y="595">Verification report</text><text class="tx-sub" x="1153.1" y="610">protocol + template</text></g>
+<g class="node ghost" data-id="prov"><rect class="n-box" x="1623.6" y="176" width="153" height="66" rx="10"/><circle cx="1640.6" cy="193.5" r="3.2" fill="#FF2D78"/><text class="tx-tag" x="1649.6" y="197" fill="#FF2D78">+ trust</text><text class="tx-title" x="1637.6" y="217">Provenance labels</text><text class="tx-sub" x="1637.6" y="232">trust tier on every input</text></g>
+<g class="node ghost" data-id="sec"><rect class="n-box" x="1623.6" y="302" width="160" height="66" rx="10"/><circle cx="1640.6" cy="319.5" r="3.2" fill="#FF2D78"/><text class="tx-tag" x="1649.6" y="323" fill="#FF2D78">+ trust</text><text class="tx-title" x="1637.6" y="343">Secrets broker</text><text class="tx-sub" x="1637.6" y="358">short-lived scoped tokens</text></g>
+<g class="node ghost" data-id="sbx"><rect class="n-box" x="1623.6" y="428" width="175" height="66" rx="10"/><circle cx="1640.6" cy="445.5" r="3.2" fill="#FF2D78"/><text class="tx-tag" x="1649.6" y="449" fill="#FF2D78">+ trust</text><text class="tx-title" x="1637.6" y="469">Egress-deny sandbox</text><text class="tx-sub" x="1637.6" y="484">no default network</text></g>
+<g class="node ghost" data-id="fadv"><rect class="n-box" x="1623.6" y="554" width="148" height="66" rx="10"/><circle cx="1640.6" cy="571.5" r="3.2" fill="#FF2D78"/><text class="tx-tag" x="1649.6" y="575" fill="#FF2D78">+ trust</text><text class="tx-title" x="1637.6" y="595">F_adversarial</text><text class="tx-sub" x="1637.6" y="610">escalate, don't retry</text></g>
+<g class="node ghost" data-id="o0"><rect class="n-box" x="35.6" y="702" width="179" height="66" rx="10"/><circle cx="52.6" cy="719.5" r="3.2" fill="rgba(255,255,255,.62)"/><text class="tx-tag" x="61.6" y="723" fill="rgba(255,255,255,.62)">H0 outcome</text><text class="tx-title" x="49.6" y="743">Verified</text><text class="tx-sub" x="49.6" y="758">regression happened to finish</text></g>
+<g class="node" data-id="o1"><rect class="n-box" x="384.8" y="702" width="148" height="66" rx="10"/><circle cx="401.8" cy="719.5" r="3.2" fill="#FF2D78"/><text class="tx-tag" x="410.8" y="723" fill="#FF2D78">H1 outcome</text><text class="tx-title" x="398.8" y="743">Unverified</text><text class="tx-sub" x="398.8" y="758">regression timeout</text></g>
+<g class="node" data-id="o2"><rect class="n-box" x="777.6" y="702" width="148" height="66" rx="10"/><circle cx="794.6" cy="719.5" r="3.2" fill="#FF2D78"/><text class="tx-tag" x="803.6" y="723" fill="#FF2D78">H2 outcome</text><text class="tx-title" x="791.6" y="743">Unverified</text><text class="tx-sub" x="791.6" y="758">same timeout</text></g>
+<g class="node" data-id="o3"><rect class="n-box" x="1241" y="702" width="151" height="66" rx="10"/><circle cx="1258" cy="719.5" r="3.2" fill="#00BFCF"/><text class="tx-tag" x="1267" y="723" fill="#00BFCF">H3 outcome</text><text class="tx-title" x="1255" y="743">Verified</text><text class="tx-sub" x="1255" y="758">same timeout, disclosed</text></g>
+<g class="node ghost" data-id="o4"><rect class="n-box" x="1663.4" y="702" width="164" height="66" rx="10"/><circle cx="1680.4" cy="719.5" r="3.2" fill="rgba(255,255,255,.62)"/><text class="tx-tag" x="1689.4" y="723" fill="rgba(255,255,255,.62)">H4 outcome</text><text class="tx-title" x="1677.4" y="743">Untested</text><text class="tx-sub" x="1677.4" y="758">proposed, not in the paper</text></g>
+<text class="tx-label" x="134.1" y="99.5" fill="#FF7FAA">pair: checks it can't edit</text>
+<text class="tx-label" x="467.8" y="99.5" fill="#FF7FAA">pair: allowlist, no ambient creds</text>
+<text class="tx-label" x="860.6" y="99.5" fill="#FF7FAA">pair: reviewed memory writes</text>
+<text class="tx-label" x="1325.5" y="99.5" fill="#FF7FAA">pair: verifier out of reach</text>
+<text class="tx-label" x="1754.4" y="99.5" fill="#FF7FAA">answers it</text>
+<text class="tx-label" x="270.2" y="198.5" fill="rgba(255,255,255,.66)">+ actions</text>
+<text class="tx-label" x="601.3" y="198.5" fill="rgba(255,255,255,.66)">+ knowledge</text>
+<text class="tx-label" x="1036.2" y="198.5" fill="rgba(255,255,255,.66)">+ evidence</text>
+<text class="tx-label" x="1541.8" y="198.5" fill="rgba(255,255,255,.75)">+ trust</text>
+<polygon data-e="12" data-at="1316.5,672" points="1316.5,664.5 1324,672 1316.5,679.5 1309,672" fill="#00BFCF" stroke="#0b1422" stroke-width="2"/>
+<text class="tx-gate" x="1330.5" y="675.5" fill="#00BFCF">evidence per requirement</text></svg></figure>
+<div class="legend"><span><svg width="30" height="8" viewBox="0 0 30 8" aria-hidden="true"><line x1="1" y1="4" x2="29" y2="4" stroke="#FF2D78" stroke-width="1.6" stroke-dasharray="6 4"/></svg>security lens: attack surface the rung opens, and the control to pair</span><span><svg width="30" height="8" viewBox="0 0 30 8" aria-hidden="true"><line x1="1" y1="4" x2="29" y2="4" stroke="rgba(255,255,255,.58)" stroke-width="1.6"/></svg>next rung: adds one class, inherits all below</span><span><svg width="30" height="8" viewBox="0 0 30 8" aria-hidden="true"><line x1="1" y1="4" x2="29" y2="4" stroke="rgba(255,255,255,.82)" stroke-width="1.6" stroke-dasharray="9 4 2 4"/></svg>circumstance or proposal, not proven by the harness</span><span><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><polygon points="7,0 14,7 7,14 0,7" fill="#00BFCF"/></svg>requirement-linked evidence</span></div>
+</section></main></div></body></html>

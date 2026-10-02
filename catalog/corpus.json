@@ -437,6 +437,18 @@
       "tech": [57, 62, 43],
       "link": "Research/openai-medicare-portal/",
       "description": "Agentic threat research: an OpenAI evaluation agent, the Medicare statistics portal, and the goal that outranked the block."
+    },
+    {
+      "id": "research-ai-harness-engineering",
+      "title": "The harness is the control plane",
+      "kind": "research",
+      "origin": "hub",
+      "pillar": "process",
+      "people": ["thought-leadership"],
+      "processes": ["govern-assure", "threat-model"],
+      "tech": [57, 62],
+      "link": "Research/ai-harness-engineering/",
+      "description": "A controls reading of Zhong and Zhu’s harness ladder, and the trust boundaries the preprint leaves open."
     }
   ]
 }

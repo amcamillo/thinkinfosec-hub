@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Harness Security Lens</title>
+<style>
+:root {
+  --tis-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --tis-magenta:#FF2D78; --tis-teal:#00BFCF; --tis-navy:#0D1F3C;
+  --tis-ink:#FFFFFF; --tis-mute:rgba(255,255,255,.68); --tis-line:rgba(255,255,255,.16);
+  --tis-glass-2:rgba(6,10,18,.72);
+  --teal-dim:rgba(0,191,207,.38); --teal-wash:rgba(0,191,207,.07);
+  --mag-dim:rgba(255,45,120,.42); --mag-wash:rgba(255,45,120,.07);
+}
+* { box-sizing: border-box; }
+html, body { background: var(--tis-navy); }
+body { margin: 0; overflow-x: hidden; font-family: var(--tis-font); color: var(--tis-ink); }
+.stage { position: relative; overflow: hidden; background: var(--tis-navy); min-height: 100vh; }
+.stage .zone { position: absolute; inset: 0; }
+.zone-magenta { background: linear-gradient(77deg, #FF2D78 0%, #D91E63 18%, #8C2060 38%, #4A1D52 58%, rgba(13,31,60,.35) 76%, rgba(13,31,60,0) 92%); }
+.zone-teal { background: linear-gradient(57deg, rgba(13,31,60,0) 8%, rgba(13,31,60,.35) 24%, #0F3A4A 44%, #0B6459 64%, #009AAB 82%, #00BFCF 100%); }
+.wash  { background: rgba(6,10,18,.14); }
+.grain { background-image: radial-gradient(rgba(255,255,255,.5) .5px, transparent .5px); background-size: 4px 4px; opacity: .035; }
+.wrap { position: relative; z-index: 1; padding: 44px 16px; display: flex; justify-content: center; }
+.panel { background: var(--tis-glass-2); -webkit-backdrop-filter: blur(20px) saturate(140%); backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid var(--tis-line); border-radius: 18px; padding: 28px 30px 24px; width: 100%; max-width: 1440px; }
+.eyebrow { display: flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--tis-mute); margin: 0 0 10px; }
+.eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #fff; }
+h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 900; letter-spacing: -.5px; margin: 0 0 8px; text-wrap: balance; }
+.caption { color: var(--tis-mute); font-size: .95rem; line-height: 1.6; margin: 0 0 22px; max-width: 92ch; }
+
+/* table as a stack of block rows */
+.grid { display: grid; gap: 8px; }
+.row { display: grid; grid-template-columns: 210px 1fr 1fr 150px 1.35fr 1.6fr; gap: 0;
+  border: 1px solid rgba(255,255,255,.15); border-radius: 10px; background: rgba(8,14,26,.82); overflow: hidden; }
+.row > div { padding: 12px 14px; font-size: 12.5px; line-height: 1.45; color: rgba(255,255,255,.78); border-left: 1px solid rgba(255,255,255,.07); }
+.row > div:first-child { border-left: 0; }
+.head { background: transparent; border: 0; }
+.head > div { font: 800 10.5px var(--tis-font); letter-spacing: 1.8px; text-transform: uppercase; color: var(--tis-mute); padding-top: 0; padding-bottom: 4px; border-left-color: transparent; }
+.head .paper { color: var(--tis-teal); }
+.head .lens  { color: var(--tis-magenta); }
+.tag { display: block; font: 700 9.5px var(--tis-font); letter-spacing: 1.3px; text-transform: uppercase; color: var(--tis-teal); margin-bottom: 4px; }
+.title { font: 700 15px var(--tis-font); letter-spacing: -.1px; color: #fff; }
+.c-name { box-shadow: inset 3px 0 0 var(--tis-teal); background: var(--teal-wash); }
+.c-fail { color: #FF9DBF !important; }
+.c-evid span { display: inline-block; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--teal-dim); color: #7FE6EF; font: 600 11px var(--tis-font); }
+.c-lens { background: var(--mag-wash); }
+.c-lens b { color: #fff; font-weight: 700; }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+.chip { padding: 2px 8px; border-radius: 999px; font: 600 10.5px var(--tis-font); border: 1px solid var(--mag-dim); color: #FF9DBF; white-space: nowrap; }
+.c-do { color: rgba(255,255,255,.86) !important; }
+.ghost { background: rgba(8,14,26,.35); border: 1px dashed rgba(255,255,255,.34); }
+.ghost .c-name { box-shadow: inset 3px 0 0 var(--tis-magenta); background: var(--mag-wash); }
+.ghost .tag { color: var(--tis-magenta); }
+.ghost .c-evid span { border-color: var(--mag-dim); color: #FF9DBF; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--tis-line); font-size: 12px; color: var(--tis-mute); }
+.legend span { display: inline-flex; align-items: center; gap: 9px; }
+.sw { width: 22px; height: 12px; border-radius: 3px; display: inline-block; }
+.src { margin-top: 10px; font-size: 11px; color: rgba(255,255,255,.5); }
+.src a { color: #7FE6EF; }
+
+@media (max-width: 1100px) {
+  .head { display: none; }
+  .row { grid-template-columns: 1fr; }
+  .row > div { border-left: 0; border-top: 1px solid rgba(255,255,255,.07); }
+  .row > div:first-child { border-top: 0; }
+  .row > div[data-h]::before { content: attr(data-h); display: block; font: 800 9.5px var(--tis-font); letter-spacing: 1.6px; text-transform: uppercase; color: var(--tis-mute); margin-bottom: 4px; }
+}
+</style></head>
+<body><div class="stage"><div class="zone zone-magenta"></div><div class="zone zone-teal"></div><div class="zone wash"></div><div class="zone grain"></div>
+<main class="wrap"><section class="panel">
+<p class="eyebrow">ThinkInfoSec · AI Harness Engineering through a security lens</p>
+<h1>The harness is the control plane</h1>
+<p class="caption">Zhong &amp; Zhu's eleven harness components (arXiv 2605.13357, Table 1), with each one's runtime contract, failure mode and evidence quoted from the paper. Each is mapped to the security control it already resembles and the practical control I'd put in place. The paper has no adversary in its threat model, so the dashed twelfth row is my addition, not theirs.</p>
+
+<div class="grid" role="table" aria-label="Eleven harness components mapped to security controls">
+  <div class="row head" role="row">
+    <div class="paper" role="columnheader">Component</div>
+    <div class="paper" role="columnheader">Runtime contract</div>
+    <div class="paper" role="columnheader">Failure when absent</div>
+    <div class="paper" role="columnheader">Evidence</div>
+    <div class="lens" role="columnheader">Security lens</div>
+    <div class="lens" role="columnheader">Practical control</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="c-name" role="cell"><span class="tag">01 · task</span><span class="title">Task interface</span></div>
+    <div data-h="Runtime contract" role="cell">Present objective, requirements, constraints, success criteria</div>
+    <div class="c-fail" data-h="Failure when absent" role="cell">Underspecified goal; wrong-target work</div>
+    <div class="c-evid" data-h="Evidence" role="cell"><span>Task record</span></div>
+    <div class="c-lens" data-h="Security lens" role="cell"><b>Authorised scope.</b> The task is the change request. Text lifted from issues or tickets is untrusted input.
+      <div class="chips"><span class="chip">800-53 CM-3</span><span class="chip">OWASP LLM01</span></div></div>
+    <div class="c-do" data-h="Practical control" role="cell">Tie every agent run to an approved ticket. Agents never self-assign work from issue text or comments.</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="c-name" role="cell"><span class="tag">02 · context</span><span class="title">Context manager</span></div>
+    <div data-h="Runtime contract" role="cell">Select and expose task-relevant project content</div>
+    <div class="c-fail" data-h="Failure when absent" role="cell">Wrong-file inspection; missed constraints</div>
+    <div class="c-evid" data-h="Evidence" role="cell"><span>Context trace</span></div>
+    <div class="c-lens" data-h="Security lens" role="cell"><b>Indirect prompt injection.</b> READMEs, vendored code, dependency docs and web results all flow straight into the model.
+      <div class="chips"><span class="chip">OWASP LLM01</span></div></div>
+    <div class="c-do" data-h="Practical control" role="cell">Label context by provenance (first-party, third-party, web). The context trace records which untrusted sources the agent read.</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="c-name" role="cell"><span class="tag">03 · tools</span><span class="title">Tool registry</span></div>
+    <div data-h="Runtime contract" role="cell">Declare available tools and allowed commands</div>
+    <div class="c-fail" data-h="Failure when absent" role="cell">Failed call; unsafe command; repeated timeout</div>
+    <div class="c-evid" data-h="Evidence" role="cell"><span>Tool trace</span></div>
+    <div class="c-lens" data-h="Security lens" role="cell"><b>Excessive agency.</b> Each MCP server and shell command widens the agent's blast radius. Tool output is untrusted input.
+      <div class="chips"><span class="chip">OWASP LLM06</span><span class="chip">800-53 AC-6</span></div></div>
+    <div class="c-do" data-h="Practical control" role="cell">Allowlist tools and commands per task class, with no wildcard shell. Review the registry like a firewall ruleset.</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="c-name" role="cell"><span class="tag">04 · memory</span><span class="title">Project memory</span></div>
+    <div data-h="Runtime contract" role="cell">Provide agent-readable architecture, testing, known-failure knowledge</div>
+    <div class="c-fail" data-h="Failure when absent" role="cell">Repeated rediscovery; wrong-layer fix</div>
+    <div class="c-evid" data-h="Evidence" role="cell"><span>Memory references</span></div>
+    <div class="c-lens" data-h="Security lens" role="cell"><b>Persistent poisoning.</b> Anything one agent writes to memory, the next agent trusts. It works as a stored-injection channel.
+      <div class="chips"><span class="chip">OWASP LLM04</span></div></div>
+    <div class="c-do" data-h="Practical control" role="cell">Treat memory writes as privileged changes: version them, review them via CODEOWNERS, and never auto-merge agent edits to memory.</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="c-name" role="cell"><span class="tag">05 · state</span><span class="title">Task state</span></div>
+    <div data-h="Runtime contract" role="cell">Maintain hypothesis, inspected files, open questions, next steps</div>
+    <div class="c-fail" data-h="Failure when absent" role="cell">Drift; repeated work; incoherence</div>
+    <div class="c-evid" data-h="Evidence" role="cell"><span>Task-state file</span></div>
+    <div class="c-lens" data-h="Security lens" role="cell"><b>Data handling.</b> Scratch notes collect file contents, env values and stack traces, all of which can leak.
+      <div class="chips"><span class="chip">OWASP LLM02</span></div></div>
+    <div class="c-do" data-h="Practical control" role="cell">Keep state files in the session sandbox, run secrets scanning on them, and purge or retain them on the same schedule as other change records.</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="c-name" role="cell"><span class="tag">06 · observe</span><span class="title">Observability layer</span></div>
+    <div data-h="Runtime contract" role="cell">Expose logs, traces, outputs, runtime errors</div>
+    <div class="c-fail" data-h="Failure when absent" role="cell">Unverifiable success; un-diagnosable failure</div>
+    <div class="c-evid" data-h="Evidence" role="cell"><span>Observation log</span></div>
+    <div class="c-lens" data-h="Security lens" role="cell"><b>Audit logging &amp; provenance.</b> The eight trace types make up an episode package, which is effectively a build attestation.
+      <div class="chips"><span class="chip">800-53 AU</span><span class="chip">SLSA</span><span class="chip">EU AI Act Art. 12 (shape)</span></div></div>
+    <div class="c-do" data-h="Practical control" role="cell">Attach the episode package to the PR, forward tool traces to the SIEM, and keep them as long as other change records.</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="c-name" role="cell"><span class="tag">07 · attribute</span><span class="title">Failure attribution</span></div>
+    <div data-h="Runtime contract" role="cell">Separate observation, expected behavior, diagnosis</div>
+    <div class="c-fail" data-h="Failure when absent" role="cell">Random patching after failure</div>
+    <div class="c-evid" data-h="Evidence" role="cell"><span>Attribution log</span></div>
+    <div class="c-lens" data-h="Security lens" role="cell"><b>Root cause before recovery.</b> This is incident-response discipline. The taxonomy has no adversarial category.
+      <div class="chips"><span class="chip">IR / RCA</span></div></div>
+    <div class="c-do" data-h="Practical control" role="cell">Add an F_adversarial class so a suspected injection gets escalated, not quietly "recovered" from by a retry.</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="c-name" role="cell"><span class="tag">08 · verify</span><span class="title">Verification protocol</span></div>
+    <div data-h="Runtime contract" role="cell">Map task requirements to deterministic evidence</div>
+    <div class="c-fail" data-h="Failure when absent" role="cell">Unverified success; false confidence</div>
+    <div class="c-evid" data-h="Evidence" role="cell"><span>Verification trace</span></div>
+    <div class="c-lens" data-h="Security lens" role="cell"><b>Change management &amp; verifier integrity.</b> An agent that weakens tests is the party under assessment editing its own assessment.
+      <div class="chips"><span class="chip">800-53 CM-3</span><span class="chip">SA-11</span><span class="chip">SSDF SP 800-218</span></div></div>
+    <div class="c-do" data-h="Practical control" role="cell">Run requirement checks evaluator-side, where the agent can't edit them. Put tests and CI under CODEOWNERS. "The agent said tests pass" isn't evidence.</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="c-name" role="cell"><span class="tag">09 · permit</span><span class="title">Permission boundary</span></div>
+    <div data-h="Runtime contract" role="cell">Restrict risky actions; expose approval gates</div>
+    <div class="c-fail" data-h="Failure when absent" role="cell">Unsafe invalid episodes</div>
+    <div class="c-evid" data-h="Evidence" role="cell"><span>Permission record</span></div>
+    <div class="c-lens" data-h="Security lens" role="cell"><b>Least privilege by another name.</b> The paper gives it one row, so the specifics are left to you.
+      <div class="chips"><span class="chip">800-53 AC-6</span><span class="chip">OWASP LLM06</span></div></div>
+    <div class="c-do" data-h="Practical control" role="cell">No ambient cloud credentials in the agent's shell. Approval gates on CI config, infrastructure-as-code and dependency manifests. Sandbox with default-deny egress.</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="c-name" role="cell"><span class="tag">10 · entropy</span><span class="title">Entropy auditor</span></div>
+    <div data-h="Runtime contract" role="cell">Detect maintenance burden introduced by the agent</div>
+    <div class="c-fail" data-h="Failure when absent" role="cell">Stale docs; dependency churn; residue</div>
+    <div class="c-evid" data-h="Evidence" role="cell"><span>Entropy audit</span></div>
+    <div class="c-lens" data-h="Security lens" role="cell"><b>Attack surface management.</b> A forgotten debug script is a forgotten endpoint, and an unneeded dependency adds a supply-chain link (and slopsquatting risk).
+      <div class="chips"><span class="chip">OWASP LLM03</span><span class="chip">SCA</span></div></div>
+    <div class="c-do" data-h="Practical control" role="cell">Gate every agent session: new packages, scripts, endpoints and doc changes go through the same SCA and secrets scanning.</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="c-name" role="cell"><span class="tag">11 · intervene</span><span class="title">Intervention logger</span></div>
+    <div data-h="Runtime contract" role="cell">Record human assistance and its avoidability</div>
+    <div class="c-fail" data-h="Failure when absent" role="cell">Invisible human scaffolding</div>
+    <div class="c-evid" data-h="Evidence" role="cell"><span>Intervention log</span></div>
+    <div class="c-lens" data-h="Security lens" role="cell"><b>Measurable human oversight.</b> M-HIR = missing-harness interventions ÷ total episodes.
+      <div class="chips"><span class="chip">NIST AI RMF Measure/Manage</span></div></div>
+    <div class="c-do" data-h="Practical control" role="cell">Log the times a human <i>stopped</i> an unsafe action separately from the times one <i>helped</i>. The stops are security events.</div>
+  </div>
+
+  <div class="row ghost" role="row">
+    <div class="c-name" role="cell"><span class="tag">12 · my addition</span><span class="title">Trust boundary management</span></div>
+    <div data-h="Runtime contract" role="cell">Separate trusted instructions from untrusted content across context, memory and tool output</div>
+    <div class="c-fail" data-h="Failure when absent" role="cell">Hijacked agent; self-attested malicious change</div>
+    <div class="c-evid" data-h="Evidence" role="cell"><span>Provenance labels</span></div>
+    <div class="c-lens" data-h="Security lens" role="cell"><b>The missing adversary.</b> The paper never mentions prompt injection, secrets, sandboxes or attacks.
+      <div class="chips"><span class="chip">OWASP LLM01</span><span class="chip">LLM04</span><span class="chip">LLM06</span></div></div>
+    <div class="c-do" data-h="Practical control" role="cell">Broker secrets through short-lived scoped tokens. Require signing or review for memory writes. Keep independent evaluator checks even when the harness is mature.</div>
+  </div>
+</div>
+
+<div class="legend">
+  <span><i class="sw" style="background:rgba(0,191,207,.18);box-shadow:inset 3px 0 0 #00BFCF"></i>From the paper (Table 1, quoted)</span>
+  <span><i class="sw" style="background:rgba(255,45,120,.14);border:1px solid rgba(255,45,120,.42)"></i>Security lens: my mapping</span>
+  <span><i class="sw" style="border:1px dashed rgba(255,255,255,.5)"></i>Not in the paper: proposed addition</span>
+</div>
+<p class="src">Source: Zhong &amp; Zhu, <a href="https://arxiv.org/html/2605.13357v1">AI Harness Engineering: A Runtime Substrate for Foundation-Model Software Agents</a> (arXiv preprint, 13 May 2026). Control references: NIST SP 800-53, NIST SSDF SP 800-218, NIST AI RMF, OWASP Top 10 for LLM Applications 2025, SLSA.</p>
+</section></main></div></body></html>
