@@ -449,6 +449,18 @@
       "tech": [57, 62],
       "link": "Research/ai-harness-engineering/",
       "description": "A controls reading of Zhong and Zhu’s harness ladder, and the trust boundaries the preprint leaves open."
+    },
+    {
+      "id": "research-always-on-agents",
+      "title": "Always-on agents",
+      "kind": "research",
+      "origin": "hub",
+      "pillar": "process",
+      "people": ["thought-leadership"],
+      "processes": ["govern-assure", "threat-model"],
+      "tech": [57, 62],
+      "link": "Research/always-on-agents/",
+      "description": "A security reading of OpenAI dots, Meta Muse and xAI Grok Bot: published controls, and what an ANZ team should do this sprint."
     }
   ]
 }
