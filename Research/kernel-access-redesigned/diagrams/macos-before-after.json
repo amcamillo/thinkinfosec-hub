@@ -1,0 +1,22 @@
+{
+  "title": "Kernel extensions, then Endpoint Security",
+  "eyebrow": "ThinkInfoSec · macOS",
+  "caption": "Third-party code leaves the kernel. An Endpoint Security client in user space receives events from the kernel.",
+  "alt": "Before: a third-party kernel extension in Ring 0. After: the kernel sends events to an Endpoint Security client in user space.",
+  "theme": "thinkinfosec",
+  "nodes": [
+    { "id": "kext", "tag": "Ring 0", "title": "Kernel extension", "sub": "third-party code", "tone": "magenta" },
+    { "id": "kern", "tag": "Kernel", "title": "Kernel", "sub": "sends the events", "tone": "neutral" },
+    { "id": "client", "tag": "User space", "title": "Endpoint Security", "sub": "client receives them", "tone": "teal" }
+  ],
+  "groups": [
+    { "id": "before", "label": "Before", "tone": "magenta", "rows": [["kext"]] },
+    { "id": "after", "label": "After", "tone": "teal", "rows": [["kern", "client"]] }
+  ],
+  "rows": [["before", "after"]],
+  "edges": [
+    { "from": "before", "to": "after", "label": "get it out" },
+    { "from": "kern", "to": "client", "label": "events" }
+  ],
+  "legend": [{ "style": "flow", "label": "the move, and the events" }]
+}

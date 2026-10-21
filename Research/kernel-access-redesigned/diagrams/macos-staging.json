@@ -1,0 +1,18 @@
+{
+  "title": "How Apple staged the change",
+  "eyebrow": "ThinkInfoSec · macOS",
+  "caption": "Announced at WWDC 2019. The kernel interfaces were deprecated in Catalina 10.15. From Big Sur, extensions using them no longer load by default.",
+  "alt": "Staging strip: announced at WWDC 2019, deprecated in Catalina 10.15, no longer loaded by default from Big Sur.",
+  "theme": "thinkinfosec",
+  "nodes": [
+    { "id": "wwdc", "tag": "WWDC 2019", "title": "Announced", "sub": "the move off kexts", "tone": "neutral" },
+    { "id": "cat", "tag": "Catalina 10.15", "title": "Deprecated", "sub": "those kernel interfaces", "tone": "magenta" },
+    { "id": "sur", "tag": "Big Sur onward", "title": "Not loaded", "sub": "no longer by default", "tone": "teal" }
+  ],
+  "rows": [["wwdc", "cat", "sur"]],
+  "edges": [
+    { "from": "wwdc", "to": "cat" },
+    { "from": "cat", "to": "sur" }
+  ],
+  "legend": [{ "style": "flow", "label": "Apple's own staging" }]
+}

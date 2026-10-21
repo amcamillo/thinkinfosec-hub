@@ -1,0 +1,24 @@
+{
+  "title": "The long road off the Windows kernel",
+  "eyebrow": "ThinkInfoSec · Windows",
+  "caption": "PatchGuard, the EU commitment, the July 2024 outage, then WRI at Ignite, a WESP private preview, and Fal.Con still calling it a preview.",
+  "alt": "Timeline from Vista PatchGuard and the EU commitment, through the 19 July 2024 outage, WRI at Ignite in November 2024, the June 2025 WESP private preview, and Fal.Con 2026.",
+  "theme": "thinkinfosec",
+  "nodes": [
+    { "id": "pg", "tag": "Vista", "title": "PatchGuard", "sub": "64-bit kernel locked", "tone": "neutral" },
+    { "id": "eu", "tag": "EU", "title": "The complaint", "sub": "then the 2009 commitment", "tone": "neutral" },
+    { "id": "out", "tag": "19 Jul 2024", "title": "The outage", "sub": "8.5 million devices", "tone": "magenta" },
+    { "id": "wri", "tag": "Ignite · Nov 2024", "title": "WRI announced", "sub": "user mode, like apps", "tone": "teal" },
+    { "id": "wesp", "tag": "Jun 2025", "title": "WESP preview", "sub": "first private preview", "tone": "teal" },
+    { "id": "fal", "tag": "Fal.Con · Sep 2026", "title": "Still preview", "sub": "not general availability", "tone": "magenta" }
+  ],
+  "rows": [["pg", "eu", "out"], ["wri", "wesp", "fal"]],
+  "edges": [
+    { "from": "pg", "to": "eu" },
+    { "from": "eu", "to": "out" },
+    { "from": "out", "to": "wri" },
+    { "from": "wri", "to": "wesp" },
+    { "from": "wesp", "to": "fal" }
+  ],
+  "legend": [{ "style": "flow", "label": "sequence" }]
+}

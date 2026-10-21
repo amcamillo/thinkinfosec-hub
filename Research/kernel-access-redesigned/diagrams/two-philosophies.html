@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two philosophies, one axiom</title>
+<style>
+:root { --tis-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+.tx-tag    { font: 700 9.5px var(--tis-font); letter-spacing: 1.3px; text-transform: uppercase; }
+.tx-title  { font: 700 15px var(--tis-font); letter-spacing: -.1px; }
+.tx-sub    { font: 400 11.5px var(--tis-font); }
+.tx-label  { font: 500 11px var(--tis-font); }
+.tx-glabel { font: 800 10.5px var(--tis-font); letter-spacing: 1.8px; text-transform: uppercase; }
+.tx-gnote  { font: 400 11px var(--tis-font); }
+.tx-pill   { font: 600 11px var(--tis-font); }
+.tx-gate   { font: 700 11px var(--tis-font); }
+.tx-note   { font: 500 11px var(--tis-font); font-style: italic; }
+
+:root {
+  --tis-magenta:#FF2D78; --tis-magenta-2:#D91E63; --tis-teal:#00BFCF; --tis-teal-2:#0B6459; --tis-navy:#0D1F3C;
+  --tis-ink:#FFFFFF; --tis-mute:rgba(255,255,255,.68); --tis-line:rgba(255,255,255,.16);
+  --tis-glass:rgba(6,10,18,.56); --tis-glass-2:rgba(6,10,18,.72);
+}
+* { box-sizing: border-box; }
+html, body { background: var(--tis-navy); }
+body { margin: 0; overflow-x: hidden; font-family: var(--tis-font); color: var(--tis-ink); }
+.stage { position: relative; overflow: hidden; background: var(--tis-navy); min-height: 100vh; }
+.stage .zone { position: absolute; inset: 0; }
+.stage .zone-magenta { background: linear-gradient(77deg, #FF2D78 0%, #D91E63 18%, #8C2060 38%, #4A1D52 58%, rgba(13,31,60,.35) 76%, rgba(13,31,60,0) 92%); }
+.stage .zone-teal { background: linear-gradient(57deg, rgba(13,31,60,0) 8%, rgba(13,31,60,.35) 24%, #0F3A4A 44%, #0B6459 64%, #009AAB 82%, #00BFCF 100%); }
+.stage .wash  { background: rgba(6,10,18,.14); }
+.stage .grain { background-image: radial-gradient(rgba(255,255,255,.5) .5px, transparent .5px); background-size: 4px 4px; opacity: .035; }
+.wrap { position: relative; z-index: 1; padding: 44px 16px; display: flex; justify-content: center; }
+.panel { background: var(--tis-glass-2); -webkit-backdrop-filter: blur(20px) saturate(140%); backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid var(--tis-line); border-radius: 18px; padding: 28px 30px 24px; width: 100%; }
+.eyebrow { display: flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--tis-mute); margin: 0 0 10px; }
+.eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #fff; }
+h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 900; letter-spacing: -.5px; margin: 0 0 8px; text-wrap: balance; }
+.caption { color: var(--tis-mute); font-size: .95rem; line-height: 1.6; margin: 0 0 22px; max-width: 78ch; }
+.diagram { overflow-x: auto; margin: 0 -6px; padding: 0 6px; }
+.diagram svg { display: block; width: 100%; height: auto; min-width: 760px; margin: 0 auto; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--tis-line); font-size: 12px; color: var(--tis-mute); }
+.legend span { display: inline-flex; align-items: center; gap: 9px; }
+.legend svg { flex: none; }
+/* diagram primitives */
+.n-box   { fill: rgba(8,14,26,.82); stroke: rgba(255,255,255,.15); stroke-width: 1; }
+.ghost .n-box { fill: rgba(8,14,26,.35); stroke: rgba(255,255,255,.34); stroke-dasharray: 5 4; }
+.tx-title { fill: #fff; }
+.tx-sub   { fill: rgba(255,255,255,.62); }
+.tx-gnote { fill: rgba(255,255,255,.55); }
+.tx-note  { fill: rgba(255,255,255,.6); }
+.g-box    { stroke-width: 1; }
+.port     { fill: #0b1422; stroke-width: 1.3; }
+
+.panel { max-width: 1072px; }
+.diagram svg { min-width: 760px; }
+</style></head>
+<body><div class="stage"><div class="zone zone-magenta"></div><div class="zone zone-teal"></div><div class="zone wash"></div><div class="zone grain"></div>
+<main class="wrap"><section class="panel">
+<p class="eyebrow">ThinkInfoSec · The split</p>
+<h1>Two philosophies, one axiom</h1>
+<p class="caption">Apple and Microsoft pay in context switches and platform dependence. Linux pays in expressiveness. Rice's theorem is why the verifier has to be conservative.</p>
+<figure class="diagram" style="margin:0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-28 -28 1010 320" width="1010" style="max-width:1010px" role="img" aria-label="Spatial isolation, chosen by Apple and Microsoft, against language-level constraint, chosen by Linux. Both meet Rice's theorem: a verifier cannot decide every interesting property, so it turns some safe programs away."><defs><marker id="ah-flow" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="rgba(255,255,255,.58)"/></marker><marker id="ah-conditional" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#FF2D78"/></marker><marker id="ah-optional" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="rgba(255,255,255,.82)"/></marker><marker id="ah-reference" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#00BFCF"/></marker></defs>
+<g class="group" data-id="spatial"><rect class="g-box" x="0" y="0" width="507" height="138" rx="18" fill="rgba(255,45,120,.06)" stroke="rgba(255,45,120,.42)"/>
+<text class="tx-glabel" x="28" y="29" fill="#FF2D78">Spatial isolation</text>
+<text class="tx-gnote" x="186.3" y="29">Apple and Microsoft</text>
+</g>
+<g class="group" data-id="lang"><rect class="g-box" x="551" y="0" width="403" height="138" rx="18" fill="rgba(0,191,207,.06)" stroke="rgba(0,191,207,.38)"/>
+<text class="tx-glabel" x="579" y="29" fill="#00BFCF">Language-level constraint</text>
+<text class="tx-gnote" x="812.1" y="29">Linux</text>
+</g>
+<path data-e="0" d="M188,83 L232,83" fill="none" stroke="rgba(255,255,255,.58)" stroke-width="1.4" marker-end="url(#ah-flow)"/>
+<path data-e="1" d="M734,83 L778,83" fill="none" stroke="rgba(255,255,255,.58)" stroke-width="1.4" marker-end="url(#ah-flow)"/>
+<circle class="port" cx="188" cy="83" r="3.4" stroke="rgba(255,255,255,.58)"/>
+<circle class="port" cx="734" cy="83" r="3.4" stroke="rgba(255,255,255,.58)"/>
+<g class="node" data-id="move"><rect class="n-box" x="28" y="50" width="160" height="66" rx="10"/><circle cx="45" cy="67.5" r="3.2" fill="#FF2D78"/><text class="tx-title" x="42" y="91">Move the observer</text><text class="tx-sub" x="42" y="106">isolated fault domain</text></g>
+<g class="node" data-id="payS"><rect class="n-box" x="232" y="50" width="247" height="66" rx="10"/><circle cx="249" cy="67.5" r="3.2" fill="rgba(255,255,255,.62)"/><text class="tx-title" x="246" y="91">Paid in</text><text class="tx-sub" x="246" y="106">context switches and platform dependence</text></g>
+<g class="node" data-id="keep"><rect class="n-box" x="579" y="50" width="155" height="66" rx="10"/><circle cx="596" cy="67.5" r="3.2" fill="#00BFCF"/><text class="tx-title" x="593" y="91">Keep the observer</text><text class="tx-sub" x="593" y="106">restrict what it expresses</text></g>
+<g class="node" data-id="payL"><rect class="n-box" x="778" y="50" width="148" height="66" rx="10"/><circle cx="795" cy="67.5" r="3.2" fill="rgba(255,255,255,.62)"/><text class="tx-title" x="792" y="91">Paid in</text><text class="tx-sub" x="792" y="106">expressiveness</text></g>
+<g class="node ghost" data-id="rice"><rect class="n-box" x="314.5" y="198" width="377" height="66" rx="10"/><circle cx="331.5" cy="215.5" r="3.2" fill="rgba(255,255,255,.62)"/><text class="tx-tag" x="340.5" y="219" fill="rgba(255,255,255,.62)">Same axiom</text><text class="tx-title" x="328.5" y="239">Rice's theorem</text><text class="tx-sub" x="328.5" y="254">a verifier has to be conservative, and turns some safe programs away</text></g></svg></figure>
+<div class="legend"><span><svg width="30" height="8" viewBox="0 0 30 8" aria-hidden="true"><line x1="1" y1="4" x2="29" y2="4" stroke="rgba(255,255,255,.58)" stroke-width="1.6"/></svg>the currency each one pays</span></div>
+</section></main></div></body></html>

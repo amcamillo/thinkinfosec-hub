@@ -1,0 +1,33 @@
+{
+  "title": "The eBPF pipeline",
+  "eyebrow": "ThinkInfoSec · Linux",
+  "caption": "Instead of native machine code, you submit bytecode. A verifier checks it, a JIT turns the approved result into native instructions, and BPF-LSM attaches to the same hooks SELinux and AppArmor use.",
+  "alt": "Bytecode passes a verifier and a JIT, then runs as native code in the kernel. BPF-LSM sits on the same LSM hooks as SELinux and AppArmor.",
+  "theme": "thinkinfosec",
+  "nodes": [
+    { "id": "bc", "tag": "01 · submit", "title": "Bytecode", "sub": "not native machine code", "tone": "neutral" },
+    { "id": "ver", "tag": "02 · check", "title": "Verifier", "sub": "checks it before it runs", "tone": "teal" },
+    { "id": "jit", "tag": "03 · compile", "title": "JIT compiler", "sub": "approved result, native", "tone": "teal" },
+    { "id": "nat", "tag": "04 · Ring 0", "title": "Native code", "sub": "runs in the kernel", "tone": "magenta" },
+    { "id": "sel", "title": "SELinux", "sub": "existing LSM hook", "tone": "neutral" },
+    { "id": "app", "title": "AppArmor", "sub": "existing LSM hook", "tone": "neutral" },
+    { "id": "lsm", "tag": "KRSI", "title": "BPF-LSM", "sub": "programs attach here", "tone": "teal" }
+  ],
+  "groups": [
+    {
+      "id": "hooks",
+      "label": "Same LSM hooks",
+      "note": "no loadable kernel module",
+      "tone": "teal",
+      "rows": [["sel", "app", "lsm"]]
+    }
+  ],
+  "rows": [["bc", "ver", "jit", "nat"], ["~", "hooks"]],
+  "edges": [
+    { "from": "bc", "to": "ver" },
+    { "from": "ver", "to": "jit" },
+    { "from": "jit", "to": "nat" },
+    { "from": "nat", "to": "lsm", "label": "attach" }
+  ],
+  "legend": [{ "style": "flow", "label": "what gets loaded" }]
+}

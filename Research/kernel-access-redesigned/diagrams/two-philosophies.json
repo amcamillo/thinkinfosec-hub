@@ -1,0 +1,38 @@
+{
+  "title": "Two philosophies, one axiom",
+  "eyebrow": "ThinkInfoSec · The split",
+  "caption": "Apple and Microsoft pay in context switches and platform dependence. Linux pays in expressiveness. Rice's theorem is why the verifier has to be conservative.",
+  "alt": "Spatial isolation, chosen by Apple and Microsoft, against language-level constraint, chosen by Linux. Both meet Rice's theorem: a verifier cannot decide every interesting property, so it turns some safe programs away.",
+  "theme": "thinkinfosec",
+  "nodes": [
+    { "id": "move", "title": "Move the observer", "sub": "isolated fault domain", "tone": "magenta" },
+    { "id": "payS", "title": "Paid in", "sub": "context switches and platform dependence", "tone": "neutral" },
+    { "id": "keep", "title": "Keep the observer", "sub": "restrict what it expresses", "tone": "teal" },
+    { "id": "payL", "title": "Paid in", "sub": "expressiveness", "tone": "neutral" },
+    { "id": "rice", "tag": "Same axiom", "title": "Rice's theorem", "sub": "a verifier has to be conservative, and turns some safe programs away", "tone": "neutral", "variant": "ghost", "alignX": ["spatial", "lang"] }
+  ],
+  "groups": [
+    {
+      "id": "spatial",
+      "label": "Spatial isolation",
+      "note": "Apple and Microsoft",
+      "tone": "magenta",
+      "rows": [["move", "payS"]]
+    },
+    {
+      "id": "lang",
+      "label": "Language-level constraint",
+      "note": "Linux",
+      "tone": "teal",
+      "rows": [["keep", "payL"]]
+    }
+  ],
+  "rows": [["spatial", "lang"], ["rice"]],
+  "edges": [
+    { "from": "move", "to": "payS" },
+    { "from": "keep", "to": "payL" }
+  ],
+  "legend": [
+    { "style": "flow", "label": "the currency each one pays" }
+  ]
+}

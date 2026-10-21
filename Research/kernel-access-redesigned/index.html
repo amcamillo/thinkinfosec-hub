@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kernel-Access Redesigned — Thinkinfosec Hub</title>
+<meta name="description" content="How Linux, macOS and Windows each got security tools out of Ring 0, and how finished each journey is. Andre Camillo, 15 October 2026.">
+<meta name="author" content="Andre Camillo">
+<link rel="canonical" href="https://amcamillo.github.io/thinkinfosec-hub/Research/kernel-access-redesigned/">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0D1F3C; --teal: #00BFCF; --teal-dark: #008A96; --pink: #FF2D78;
+  --bg: #f4f7f6; --card: #ffffff; --ink: #333333; --mute: #555555; --faint: #777777; --line: #dddddd;
+  --radius: 8px; --shadow: 0 4px 6px -1px rgba(0,0,0,.07); --col: 1040px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: Inter, system-ui, sans-serif; font-size: 16px; line-height: 1.65; }
+a { color: var(--teal-dark); }
+img { max-width: 100%; height: auto; }
+.skip { position: absolute; left: -999px; top: 8px; background: var(--navy); color: #fff; padding: 8px 12px; z-index: 10; }
+.skip:focus { left: 8px; }
+.topbar { background: var(--navy); color: #fff; }
+.topbar-inner { max-width: var(--col); margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.brand { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; }
+.brand img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.brand-name { display: block; font-weight: 700; letter-spacing: -0.02em; }
+.brand-sub { display: block; font-size: 12px; color: rgba(255,255,255,.65); }
+.topbar-meta { font-size: 13px; color: rgba(255,255,255,.65); }
+.mast { background: var(--card); border-bottom: 1px solid var(--line); }
+.mast-inner { max-width: var(--col); margin: 0 auto; padding: 28px 24px 22px; }
+.crumb { font-size: 13px; color: var(--faint); margin-bottom: 18px; }
+.crumb a { color: var(--teal-dark); text-decoration: none; font-weight: 500; }
+.crumb a:hover { text-decoration: underline; }
+.sep { margin: 0 8px; color: var(--line); }
+.dateline { font-size: 13px; color: var(--teal-dark); font-weight: 600; margin-bottom: 8px; }
+.mast h1 { font-size: clamp(28px, 3.6vw, 38px); font-weight: 700; color: var(--navy); letter-spacing: -0.02em; line-height: 1.2; margin: 0 0 12px; }
+.mast h1 em { font-style: normal; color: var(--teal-dark); }
+.title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px 28px; }
+.title-row h1 { flex: 1 1 auto; min-width: 0; margin-bottom: 0; }
+.title-side { flex: 0 0 260px; display: flex; flex-direction: column; gap: 8px; }
+.ai-disclose { margin: 0; font-size: 12px; line-height: 1.45; color: var(--mute); border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 10px; background: var(--bg); }
+.ai-disclose strong { display: block; color: var(--navy); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2px; }
+.advice-stamp { margin: 0; padding: 8px 10px; border: 1.5px solid #FF8B00; border-radius: var(--radius); background: #fff8f0; color: #9a4d00; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; line-height: 1.35; }
+.toc { position: sticky; top: 0; z-index: 200; background: var(--card); border-bottom: 1px solid var(--line); padding: 8px 0; }
+.toc-inner { max-width: var(--col); margin: 0 auto; padding: 0 24px; display: flex; gap: 4px; overflow-x: auto; width: 100%; }
+.toc a { flex-shrink: 0; color: var(--faint); text-decoration: none; font-size: 13px; font-weight: 500; min-height: 40px; padding: 0 12px; display: inline-flex; align-items: center; border-radius: 6px; }
+.toc a:hover { color: var(--navy); background: var(--bg); }
+.wrap { max-width: var(--col); margin: 0 auto; padding: 20px 24px 64px; }
+article { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px 28px 24px; min-width: 0; }
+p { margin: 0 0 12px; }
+h2 { font-size: 1.45rem; font-weight: 700; color: var(--navy); letter-spacing: -0.02em; line-height: 1.25; margin: 28px 0 12px; scroll-margin-top: 64px; }
+.kicker { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal-dark); margin: 28px 0 6px; }
+.scroll { overflow-x: auto; max-width: 100%; margin: 4px 0 16px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 0; }
+.cap { margin: 0 0 8px; font-size: 13px; color: var(--mute); }
+th { text-align: left; font-size: 12px; font-weight: 700; color: var(--faint); padding: 0 14px 10px 0; border-bottom: 2px solid var(--navy); vertical-align: bottom; }
+td { padding: 12px 14px 12px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+td:first-child { font-weight: 700; color: var(--navy); white-space: nowrap; }
+.fig { margin: 8px 0 16px; max-width: 100%; }
+.fig img { display: block; width: 100%; height: auto; border-radius: var(--radius); }
+.fig figcaption { margin-top: 8px; font-size: 13px; color: var(--mute); line-height: 1.5; }
+.callout { margin: 8px 0 16px; padding: 14px 16px; background: var(--navy); color: #fff; border-radius: var(--radius); font-size: 14.5px; }
+.callout strong { color: var(--teal); }
+blockquote { margin: 16px 0 0; padding: 12px 14px; border-left: 3px solid var(--teal); background: var(--bg); border-radius: 0 var(--radius) var(--radius) 0; color: var(--mute); }
+blockquote p:last-child { margin-bottom: 0; }
+footer { background: var(--navy); color: rgba(255,255,255,0.65); padding: 24px; text-align: center; }
+footer .ft-main { font-size: 14px; max-width: var(--col); margin: 0 auto; }
+footer .ft-main a { color: var(--teal); text-decoration: none; }
+footer .ft-main a:hover { text-decoration: underline; }
+footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.4); max-width: 40rem; }
+@media (max-width: 800px) {
+  .topbar-meta { display: none; }
+  .title-row { flex-direction: column; }
+  .title-side { flex-basis: auto; }
+  article { padding: 20px 18px 18px; }
+  table { min-width: 680px; }
+}
+a:focus-visible { outline: 2px solid var(--teal-dark); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../../index.html">
+      <img src="../../assets/learning-hub-logo.png" alt="Thinkinfosec Hub logo" width="28" height="28" onerror="this.style.display='none'">
+      <span>
+        <span class="brand-name">Thinkinfosec</span>
+        <span class="brand-sub">Research briefing</span>
+      </span>
+    </a>
+    <p class="topbar-meta">October 2026</p>
+  </div>
+</header>
+
+<div class="mast">
+  <div class="mast-inner">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="../../index.html">Hub</a><span class="sep">/</span>
+      <a href="../../index.html#research">Research</a><span class="sep">/</span>
+      Kernel-Access Redesigned
+    </nav>
+    <p class="dateline">15 October 2026 · Andre Camillo</p>
+    <div class="title-row">
+      <h1>Kernel-Access <em>Redesigned</em></h1>
+      <div class="title-side">
+        <p class="ai-disclose" role="note"><strong>AI-assisted research</strong> Minor inconsistencies can occur. Every claim remains grounded in the ThinkInfoSec ontology and the sources disclosed on this page.</p>
+        <p class="advice-stamp">This is not legal advice</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="toc" aria-label="On this page"><div class="toc-inner">
+  <a href="#opening">Opening</a>
+  <a href="#linux">Linux</a>
+  <a href="#macos">macOS</a>
+  <a href="#windows">Windows</a>
+  <a href="#philosophies">Two philosophies</a>
+  <a href="#monday">Monday</a>
+</div></nav>
+
+<main id="main" class="wrap">
+<article id="opening">
+
+<p>While I was researching for Fal.Con 2026 and watching through the sessions, one caught my attention: the Thursday keynote from Alex Ionescu, CrowdStrike's Chief Technology Innovation Officer (that's the title on <a href="https://www.crowdstrike.com/en-us/events/fal-con/las-vegas/keynotes/" target="_blank" rel="noopener">CrowdStrike's own keynote page</a>). He's a founding chief architect of the Falcon platform who <a href="https://www.crowdstrike.com/en-us/press-releases/crowdstrike-appoints-alex-ionescu-chief-technology-innovation-officer/" target="_blank" rel="noopener">rejoined CrowdStrike in April 2025</a>, and CrowdStrike's own wrap-up of the event described his slot as the road ahead for the Falcon sensor. Somewhere in that session he briefly compared the user-mode evolution endpoint sensors have been going through across operating systems, and it got me thinking: if Linux, macOS and Windows have all now reached for a user-mode answer, how did each one get there, and how finished is each journey really? That's the question this post tries to answer. (Disclosure up front: I work at CrowdStrike, so weigh everything below accordingly.)</p>
+
+<p>There's a concept in distributed systems called <em>fate sharing</em> — two components share fate when the failure of one takes the other down with it. It's a polite way of describing what we did to endpoints for the better part of two decades: we put the thing meant to protect the machine in the same memory space as the thing that keeps it running.</p>
+
+<p>On 19 July 2024 that arrangement sent the bill. CrowdStrike pushed a sensor configuration update, a logic error in Channel File 291 made Windows fall over, and Microsoft's estimate, as relayed in <a href="https://cisa.gov/news-events/alerts/2024/07/19/widespread-it-outage-due-crowdstrike-update" target="_blank" rel="noopener">CISA's alert</a>, put it at 8.5 million Windows devices. That's under one percent of all Windows machines, and still enough to ground airlines and stall hospitals. (I'll stick to primary sources where I can and flag where it's my read.)</p>
+
+<p>Here's a detail worth having a look at, because it sharpens the whole argument. In <a href="https://www.intelligentcio.com/apac/?p=37560" target="_blank" rel="noopener">CrowdStrike's own technical update</a> (republished by Intelligent CIO), the company points out that channel files carry a .sys extension but aren't kernel drivers. They're content. A content file crashed a kernel-resident component, which is exactly the coupling fate sharing warns about.</p>
+
+<p>Long story short, the last fifteen years of operating system design have been a systematic removal of third-party code from Ring 0 — and Linux, macOS and Windows each landed on a different answer. Let's get into it then. One warning up front: the Windows leg of this journey is further from finished than a lot of the commentary suggests, and I'll show you where.</p>
+
+<p class="kicker">Linux</p>
+<h2 id="linux">Linux and eBPF</h2>
+
+<p>Linux went first, and it chose the cleverest route: keep the code in the kernel, but change what the code is allowed to be. According to the <a href="https://en.wikipedia.org/wiki/EBPF" target="_blank" rel="noopener">eBPF entry on Wikipedia</a>, the original authors were Alexei Starovoitov and Daniel Borkmann, and it landed in Linux 3.18 in 2014 (a December 2014 release, if you like your dates precise). Brendan Gregg gets plenty of credit for what came next — bcc in 2015, bpftrace in 2018 — but that's tooling and evangelism, not authorship, and it's a distinction I've seen blurred in more than one conference deck.</p>
+
+<figure class="fig">
+  <img src="diagrams/linux-timeline.png" alt="Timeline from Linux 3.18 in 2014, through bcc, bpftrace and the 2019 KRSI proposal, to the March 2020 merge and Linux 5.7." width="1380" height="1013">
+  <figcaption>eBPF landed in Linux 3.18 in 2014. bcc and bpftrace are tooling, not authorship. KRSI was proposed in 2019, merged in March 2020, and shipped in Linux 5.7. <a href="diagrams/linux-timeline.png">Static image</a></figcaption>
+</figure>
+
+<p>The mechanism, as I understand it, is that instead of loading native machine code into Ring 0, you submit bytecode. A verifier checks it before it runs, and a JIT compiler turns the approved result into native instructions. The security payoff arrived with BPF-LSM, also known as KRSI (Kernel Runtime Security Instrumentation). KP Singh proposed it in 2019, per the <a href="https://issa.mydigitalpublication.com/articles/mitigating-attacks-on-a-supercomputer-with-krsi" target="_blank" rel="noopener">ISSA Journal's write-up</a>, and it merged in March 2020 and shipped in the 5.7 kernel, letting you attach eBPF programs to the same hooks SELinux and AppArmor use. That's how tools like Cilium, Tetragon and Falco do inline enforcement without a loadable kernel module (LKM) to crash the host.</p>
+
+<figure class="fig">
+  <img src="diagrams/ebpf-pipeline.png" alt="Bytecode passes a verifier and a JIT, then runs as native code in the kernel. BPF-LSM sits on the same LSM hooks as SELinux and AppArmor." width="1694" height="1196">
+  <figcaption>Bytecode, then the verifier, then the JIT, then native code in the kernel. BPF-LSM attaches to the same hooks SELinux and AppArmor use. <a href="diagrams/ebpf-pipeline.png">Static image</a></figcaption>
+</figure>
+
+<p class="kicker">macOS</p>
+<h2 id="macos">macOS and Endpoint Security</h2>
+
+<p>Apple took the opposite bet: if third-party code is the problem, get it out. Apple announced the move at WWDC 2019, and <a href="https://developer.apple.com/support/kernel-extensions" target="_blank" rel="noopener">Apple's own developer page</a> shows the staging — the relevant kernel interfaces were deprecated in Catalina 10.15, and from Big Sur onward kernel extensions using those deprecated interfaces no longer load by default. The replacement is the Endpoint Security framework, with third-party code running in user space and getting events from the kernel. On Apple silicon it goes further. As <a href="https://eclecticlight.co/2024/09/09/mastering-secure-boot-on-apple-silicon/" target="_blank" rel="noopener">Eclectic Light's walkthrough</a> puts it, the default Full Security mode loads only Apple's own kernel extensions, and you have to drop to Reduced Security from Recovery to allow third-party ones.</p>
+
+<figure class="fig">
+  <img src="diagrams/macos-before-after.png" alt="Before: a third-party kernel extension in Ring 0. After: the kernel sends events to an Endpoint Security client in user space." width="1674" height="899">
+  <figcaption>Before, third-party code sits in the kernel. After, an Endpoint Security client in user space receives events from the kernel. <a href="diagrams/macos-before-after.png">Static image</a></figcaption>
+</figure>
+
+<figure class="fig">
+  <img src="diagrams/macos-staging.png" alt="Staging strip: announced at WWDC 2019, deprecated in Catalina 10.15, no longer loaded by default from Big Sur." width="1300" height="761">
+  <figcaption>Announced at WWDC 2019. Deprecated in Catalina 10.15. From Big Sur, those kernel extensions no longer load by default. <a href="diagrams/macos-staging.png">Static image</a></figcaption>
+</figure>
+
+<p>There's a price, and it's worth naming. As <a href="https://eclecticlight.co/2024/07/24/how-macos-is-moving-away-from-kernel-extensions/" target="_blank" rel="noopener">Eclectic Light notes</a>, if a security developer wants access to events that Endpoint Security doesn't expose, they have to ask Apple to add them. My read: that's the real trade of the move to user space. You buy stability by making the platform owner the gatekeeper of what you can see. (One more caveat for transparency — I haven't re-verified Apple's AUTH-event timeout behaviour for this post, so I'm leaving the detail out rather than quoting it from memory.)</p>
+
+<div class="callout"><strong>The gatekeeper trade-off.</strong> You buy stability by making the platform owner the gatekeeper of what you can see. If a security developer wants access to events that Endpoint Security doesn't expose, they have to ask Apple to add them.</div>
+
+<p class="kicker">Windows</p>
+<h2 id="windows">PatchGuard, the EU commitment, WRI and WESP</h2>
+
+<p>Windows had the hardest road, partly because of history. When Microsoft locked down the 64-bit kernel with PatchGuard for Vista, security vendors complained to the European Commission. In <a href="https://news.microsoft.com/?p=48181" target="_blank" rel="noopener">Brad Smith's announcement</a>, Microsoft said it would keep PatchGuard but extend new kernel-level APIs so vendors could still do their jobs. A 2009 interoperability commitment then required Microsoft to document the APIs its own security products call and make them available to third parties.</p>
+
+<p>After the outage, Microsoft pointed at that commitment as part of the explanation. <a href="https://www.theregister.com/2024/07/22/windows_crowdstrike_kernel_eu/" target="_blank" rel="noopener">The Register's reading</a> is that nothing in the undertaking would have stopped Microsoft building an out-of-kernel API for vendors to use. I agree, and it's my read as much as theirs: regulators narrowed the options, but the alternative still had to be built, and for years nobody built it.</p>
+
+<p>That changed with the Windows Resiliency Initiative (WRI), announced at Ignite in November 2024. The goal, per <a href="https://blogs.windows.com/windowsexperience/2024/11/19/windows-security-and-resiliency-protecting-your-business/" target="_blank" rel="noopener">Microsoft's Windows blog</a>, is for security products like antivirus to run in user mode just as apps do. The vehicle is the Windows endpoint security platform (WESP), and <a href="https://blogs.windows.com/windowsexperience/2025/11/18/preparing-for-whats-next-windows-security-and-resiliency-innovations-help-organizations-mitigate-risks-recover-faster-and-prepare-for-the-era-of-ai/" target="_blank" rel="noopener">Microsoft's November 2025 update</a> says the first private preview shipped in June 2025.</p>
+
+<p>Now the bit that circulates wrongly. A lot of recent commentary treats WESP as already rolled out. It isn't. At Fal.Con in September, CrowdStrike's Alex Ionescu described it as still in private preview and expected to reach general availability soon, per <a href="https://www.investing.com/news/transcripts/crowdstrike-at-falcon-pushes-deeper-into-aidriven-security-93CH-4888375" target="_blank" rel="noopener">the keynote coverage on Investing.com</a>. That's CrowdStrike's own account, so take it with the usual vendor discount, but it matches Microsoft's own tense, and I couldn't find any Microsoft statement of general availability. Ionescu also framed WESP as the third big OS evolution after eBPF and Endpoint Security. That framing is the company's; I think it's a fair one, but it's theirs.</p>
+
+<figure class="fig">
+  <img src="diagrams/windows-timeline.png" alt="Timeline from Vista PatchGuard and the EU complaint, through the 19 July 2024 outage, WRI at Ignite in November 2024, the June 2025 WESP private preview, and Fal.Con 2026." width="1418" height="1111">
+  <figcaption>Vista PatchGuard, the EU complaint and the 2009 commitment, the 19 July 2024 outage, WRI at Ignite in November 2024, the WESP private preview in June 2025, and Fal.Con still calling it a preview. <a href="diagrams/windows-timeline.png">Static image</a></figcaption>
+</figure>
+
+<p>The same caution applies to the rest of the Windows package. Native Sysmon was announced at Ignite 2025 and, per <a href="https://bleepingcomputer.com/news/microsoft/microsoft-rolls-out-native-windows-11-sysmon-security-monitoring" target="_blank" rel="noopener">BleepingComputer</a>, it's only rolling out to Insiders on the Beta and Dev channels and is disabled by default. Memory integrity is moving faster: per <a href="https://www.helpnetsecurity.com/2026/09/03/windows-memory-integrity-update/" target="_blank" rel="noopener">Help Net Security</a>, quality updates starting October 2026 begin enabling it on eligible devices (and VBS too where needed), after a readiness check, and machines where it was already switched off are left alone. So it's a staged default, not enforcement. Quick Machine Recovery is real and shipping — per <a href="https://support.microsoft.com/windows/quick-machine-recovery-in-windows-aa2852f4-e04e-4af4-9508-0addda165304" target="_blank" rel="noopener">Microsoft Support</a>, it applies remediations through Windows Update from the recovery environment after boot failures — but it recovers boots, it doesn't stop an agent from taking the kernel down in the first place.</p>
+
+<figure class="fig">
+  <img src="diagrams/windows-status.png" alt="Status board: WESP in private preview, native Sysmon on Insiders and off by default, memory integrity a staged default from October 2026, Quick Machine Recovery shipping but only recovering boots." width="1180" height="1202">
+  <figcaption>WESP is a private preview. Native Sysmon is Insiders only and off by default. Memory integrity is a staged default from October 2026. Quick Machine Recovery ships, and it recovers boots. <a href="diagrams/windows-status.png">Static image</a></figcaption>
+</figure>
+
+<p>One more correction, because I've seen it repeated. eBPF for Windows isn't the user-mode escape hatch the story sometimes implies. The <a href="https://github.com/microsoft/ebpf-for-windows" target="_blank" rel="noopener">project's README</a> says the verifier runs in a secure user-mode environment, but verified programs then load into a kernel-mode execution context, and with HVCI enabled they can't be JIT-compiled and have to run in native mode, compiled into regular Windows drivers. Verified, yes. Out of the kernel, no.</p>
+
+<figure class="fig">
+  <img src="diagrams/ebpf-windows.png" alt="An eBPF program is verified in user mode, then loaded into a kernel-mode execution context. With HVCI it cannot be JIT-compiled and runs as a native Windows driver. Verified, yes. Out of the kernel, no." width="2074" height="1149">
+  <figcaption>The verifier runs in user mode. Verified programs then load into a kernel-mode execution context. With HVCI on, no JIT: they run as regular Windows drivers. Verified, yes. Out of the kernel, no. <a href="diagrams/ebpf-windows.png">Static image</a></figcaption>
+</figure>
+
+<p class="kicker">The split</p>
+<h2 id="philosophies">Two philosophies</h2>
+
+<p>Step back and the three platforms split into two philosophies. Apple and Microsoft chose spatial isolation: move the observer into an isolated fault domain in user space, and accept the cost of crossing the boundary. Linux chose language-level constraint: keep the observer in the kernel, but restrict what it can express so a verifier can reject anything dangerous. Same axiom, different currency — one pays in context switches and platform dependence, the other in expressiveness. (This is Rice's theorem showing up in practice: no checker can decide every interesting property of arbitrary programs, so a verifier has to be conservative and will turn away some programs that were actually safe.)</p>
+
+<figure class="fig">
+  <img src="diagrams/two-philosophies.png" alt="Spatial isolation, chosen by Apple and Microsoft, against language-level constraint, chosen by Linux, with Rice's theorem: a verifier has to be conservative and turns some safe programs away." width="2144" height="1150">
+  <figcaption>Spatial isolation pays in context switches and platform dependence. Language-level constraint pays in expressiveness. Rice's theorem is why the verifier has to be conservative. <a href="diagrams/two-philosophies.png">Static image</a></figcaption>
+</figure>
+
+<p class="cap">Kernel path, user-mode path, and maturity. Drawn from the account above.</p>
+<div class="scroll">
+<table>
+  <thead>
+    <tr><th></th><th>Kernel path</th><th>User-mode path</th><th>Maturity</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Linux</td>
+      <td>Bytecode through a verifier and a JIT, then native code in the kernel. BPF-LSM on the same hooks as SELinux and AppArmor.</td>
+      <td>The observer stays in the kernel. The limit is what the program can express.</td>
+      <td>Shipped. Linux 3.18 in 2014. BPF-LSM in 5.7.</td>
+    </tr>
+    <tr>
+      <td>macOS</td>
+      <td>Deprecated kernel-extension interfaces no longer load by default from Big Sur. Full Security on Apple silicon loads only Apple's own extensions.</td>
+      <td>An Endpoint Security client in user space receives events from the kernel.</td>
+      <td>Shipped. What you can see is the events Apple exposes.</td>
+    </tr>
+    <tr>
+      <td>Windows</td>
+      <td>eBPF for Windows verifies in user mode, then loads programs into a kernel-mode execution context. With HVCI, they run as regular Windows drivers.</td>
+      <td>WESP, so security products run in user mode the way apps do.</td>
+      <td>WESP is still a private preview. Native Sysmon is Insiders only and off by default. Memory integrity is a staged default from October 2026. Quick Machine Recovery ships, and recovers boots.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>My read, and it's only that: the verifier is still software, and software has bugs, so 'mathematically safe' is a goal rather than a guarantee. And whether user-space enforcement hits a hard latency wall in high-throughput environments (trading systems, database I/O, AI training clusters) is, as far as I can tell, an open question rather than a settled one. I haven't seen independent benchmarks that settle it, and I'd treat anyone who claims otherwise, vendors included, with the standard discount rate.</p>
+
+<p>There's also a second-order effect worth watching. As Ring 0 gets locked down by HVCI, SIP and verifiers, attention moves below it — hypervisor, firmware, baseboard management controllers. The lessons of this decade (isolate the observer, constrain its power, make failure recoverable) apply there too, and nobody has had their July 2024 moment yet.</p>
+
+<p class="kicker">What to do</p>
+<h2 id="monday">On Monday</h2>
+
+<p>So what do you do with this on Monday? Three things. First, check where memory integrity stands across your Windows fleet before the October quality updates land, because as Help Net Security points out, posture can now shift between patch cycles without anyone raising a change request, and incompatible drivers are the likely casualty. Second, ask your endpoint vendor for its WESP position in writing, in Microsoft's language: private preview versus general availability is the line that matters. Third, on Linux estates, find out whether your sensor is running as a kernel module or on eBPF, because that single answer tells you a lot about its blast radius when something goes wrong.</p>
+
+<blockquote>
+  <p>Learn more about my Cloud and Security Projects: <a href="https://amcamillo.github.io/thinkinfosec-hub">ThinkInfoSec Hub</a> · <a href="https://www.youtube.com/channel/UCK5IydDSpf-Yz7qCmVjDN5Q" target="_blank" rel="noopener">YouTube</a> · <a href="https://open.spotify.com/show/2e32C7SFXNUqfRR3YemmtI" target="_blank" rel="noopener">Podcast</a></p>
+  <p>Thank you for reading and leave your thoughts/comments!</p>
+</blockquote>
+
+</article>
+</main>
+
+<footer>
+  <p class="ft-main">ThinkInfoSec 2026 — <a href="https://www.linkedin.com/in/amcamillo/" target="_blank" rel="noopener">Andre Camillo</a> · <a href="../../index.html#research">Back to Research</a></p>
+  <p class="ft-sub">Independent briefing. Educational use. Not an official publication of CrowdStrike, Apple, Microsoft, or the Linux kernel project. The author works at CrowdStrike, as the opening says.</p>
+</footer>
+</body>
+</html>

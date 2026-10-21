@@ -1,0 +1,30 @@
+{
+  "title": "eBPF for Windows",
+  "eyebrow": "ThinkInfoSec · Windows",
+  "caption": "The verifier runs in a secure user-mode environment. Verified programs then load into a kernel-mode execution context. Verified, yes. Out of the kernel, no.",
+  "alt": "An eBPF program is verified in user mode, then loaded into a kernel-mode execution context. With HVCI it cannot be JIT-compiled and runs as a native Windows driver. Verified, yes. Out of the kernel, no.",
+  "theme": "thinkinfosec",
+  "nodes": [
+    { "id": "prog", "tag": "Submit", "title": "eBPF program", "sub": "bytecode in", "tone": "neutral" },
+    { "id": "ver", "tag": "User mode", "title": "Verifier", "sub": "secure user-mode env", "tone": "teal" },
+    { "id": "ctx", "tag": "Kernel mode", "title": "Execution context", "sub": "programs load here", "tone": "magenta" },
+    { "id": "hvci", "tag": "HVCI enabled", "title": "Native mode", "sub": "a regular Windows driver", "tone": "magenta", "variant": "ghost" },
+    { "id": "no", "title": "Verified, yes", "sub": "Out of the kernel, no", "tone": "magenta", "alignX": "kern" }
+  ],
+  "groups": [
+    { "id": "user", "label": "User mode", "tone": "teal", "rows": [["ver"]] },
+    { "id": "kern", "label": "Still in the kernel", "tone": "magenta", "rows": [["ctx", "hvci"]] }
+  ],
+  "rows": [["prog", "user", "kern"], ["no"]],
+  "edges": [
+    { "from": "prog", "to": "ver" },
+    { "from": "ver", "to": "ctx", "label": "then load" },
+    { "from": "ctx", "to": "hvci", "style": "conditional", "label": "no JIT" },
+    { "from": "kern", "to": "no", "style": "reference" }
+  ],
+  "legend": [
+    { "style": "flow", "label": "load path" },
+    { "style": "conditional", "label": "when HVCI is on" },
+    { "style": "reference", "label": "verified, still in the kernel" }
+  ]
+}

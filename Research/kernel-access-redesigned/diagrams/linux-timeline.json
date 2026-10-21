@@ -1,0 +1,24 @@
+{
+  "title": "How Linux got to BPF-LSM",
+  "eyebrow": "ThinkInfoSec · Linux",
+  "caption": "eBPF landed in Linux 3.18 in 2014. bcc and bpftrace are tooling. KRSI was proposed in 2019, merged in March 2020, and shipped in Linux 5.7.",
+  "alt": "Timeline from Linux 3.18 in 2014, through bcc, bpftrace and the 2019 KRSI proposal, to the March 2020 merge and Linux 5.7.",
+  "theme": "thinkinfosec",
+  "nodes": [
+    { "id": "e318", "tag": "Dec 2014", "title": "Linux 3.18", "sub": "eBPF lands", "tone": "teal" },
+    { "id": "bcc", "tag": "2015", "title": "bcc", "sub": "tooling, not authorship", "tone": "neutral" },
+    { "id": "bpf", "tag": "2018", "title": "bpftrace", "sub": "tooling, not authorship", "tone": "neutral" },
+    { "id": "krsi", "tag": "2019", "title": "KRSI proposed", "sub": "KP Singh", "tone": "magenta" },
+    { "id": "merge", "tag": "March 2020", "title": "Merged", "sub": "BPF-LSM joins the kernel", "tone": "teal" },
+    { "id": "k57", "tag": "Linux 5.7", "title": "Ships", "sub": "same hooks as the LSMs", "tone": "teal" }
+  ],
+  "rows": [["e318", "bcc", "bpf"], ["krsi", "merge", "k57"]],
+  "edges": [
+    { "from": "e318", "to": "bcc" },
+    { "from": "bcc", "to": "bpf" },
+    { "from": "bpf", "to": "krsi" },
+    { "from": "krsi", "to": "merge" },
+    { "from": "merge", "to": "k57" }
+  ],
+  "legend": [{ "style": "flow", "label": "sequence" }]
+}

@@ -1,0 +1,23 @@
+{
+  "title": "Where the Windows package stands",
+  "eyebrow": "ThinkInfoSec · Windows",
+  "caption": "WESP is a private preview. Native Sysmon is Insiders only and off by default. Memory integrity is a staged default from October 2026. Quick Machine Recovery ships, and it recovers boots.",
+  "alt": "Status board: WESP in private preview, native Sysmon on Insiders and off by default, memory integrity a staged default from October 2026, Quick Machine Recovery shipping but only recovering boots.",
+  "theme": "thinkinfosec",
+  "nodes": [
+    { "id": "wesp", "tag": "Private preview", "title": "WESP", "sub": "not general availability", "tone": "magenta" },
+    { "id": "sys", "tag": "Insiders only", "title": "Native Sysmon", "sub": "off by default", "tone": "magenta" },
+    { "id": "mem", "tag": "From Oct 2026", "title": "Memory integrity", "sub": "staged default, not enforced", "tone": "teal" },
+    { "id": "qmr", "tag": "Shipping", "title": "Quick Machine Recovery", "sub": "recovers boots only", "tone": "neutral" }
+  ],
+  "groups": [
+    {
+      "id": "board",
+      "label": "The package",
+      "tone": "neutral",
+      "rows": [["wesp", "sys"], ["mem", "qmr"]]
+    }
+  ],
+  "rows": [["board"]],
+  "edges": []
+}
