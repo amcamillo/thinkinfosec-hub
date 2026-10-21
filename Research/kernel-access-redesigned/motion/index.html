@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Kernel-Access Redesigned</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,700&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #0D1F3C; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: #0D1F3C; }
+      .clip { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; }
+      .enter-fade { opacity: 0; }
+      .enter-push { transform: translateX(1920px); }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="kernel-access"
+      data-start="0"
+      data-duration="58.6"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div
+        id="s-ep"
+        class="clip "
+        data-composition-id="ebpf-pipeline"
+        data-composition-src="compositions/ebpf-pipeline.html"
+        data-start="0"
+        data-duration="7.7"
+        data-track-index="0"
+        data-width="1920"
+        data-height="1080"
+        style="z-index:1"
+      ></div>
+      <div
+        id="s-lt"
+        class="clip enter-fade"
+        data-composition-id="linux-timeline"
+        data-composition-src="compositions/linux-timeline.html"
+        data-start="7.2"
+        data-duration="7.7"
+        data-track-index="1"
+        data-width="1920"
+        data-height="1080"
+        style="z-index:2"
+      ></div>
+      <div
+        id="s-mb"
+        class="clip enter-push"
+        data-composition-id="macos-before-after"
+        data-composition-src="compositions/macos-before-after.html"
+        data-start="14.4"
+        data-duration="7.7"
+        data-track-index="0"
+        data-width="1920"
+        data-height="1080"
+        style="z-index:3"
+      ></div>
+      <div
+        id="s-ms"
+        class="clip enter-fade"
+        data-composition-id="macos-staging"
+        data-composition-src="compositions/macos-staging.html"
+        data-start="21.6"
+        data-duration="7.7"
+        data-track-index="1"
+        data-width="1920"
+        data-height="1080"
+        style="z-index:4"
+      ></div>
+      <div
+        id="s-wt"
+        class="clip enter-push"
+        data-composition-id="windows-timeline"
+        data-composition-src="compositions/windows-timeline.html"
+        data-start="28.8"
+        data-duration="7.7"
+        data-track-index="0"
+        data-width="1920"
+        data-height="1080"
+        style="z-index:5"
+      ></div>
+      <div
+        id="s-ws"
+        class="clip enter-fade"
+        data-composition-id="windows-status"
+        data-composition-src="compositions/windows-status.html"
+        data-start="36"
+        data-duration="7.7"
+        data-track-index="1"
+        data-width="1920"
+        data-height="1080"
+        style="z-index:6"
+      ></div>
+      <div
+        id="s-ew"
+        class="clip enter-fade"
+        data-composition-id="ebpf-windows"
+        data-composition-src="compositions/ebpf-windows.html"
+        data-start="43.2"
+        data-duration="7.7"
+        data-track-index="0"
+        data-width="1920"
+        data-height="1080"
+        style="z-index:7"
+      ></div>
+      <div
+        id="s-tp"
+        class="clip enter-push"
+        data-composition-id="two-philosophies"
+        data-composition-src="compositions/two-philosophies.html"
+        data-start="50.4"
+        data-duration="8.2"
+        data-track-index="1"
+        data-width="1920"
+        data-height="1080"
+        style="z-index:8"
+      ></div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.to("#s-ep", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 7.2);
+      tl.fromTo("#s-lt", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut", immediateRender: false }, 7.2);
+      tl.to("#s-lt", { x: -1920, duration: 0.5, ease: "power3.inOut" }, 14.4);
+      tl.fromTo("#s-mb", { x: 1920 }, { x: 0, duration: 0.5, ease: "power3.inOut", immediateRender: false }, 14.4);
+      tl.to("#s-mb", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 21.6);
+      tl.fromTo("#s-ms", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut", immediateRender: false }, 21.6);
+      tl.to("#s-ms", { x: -1920, duration: 0.5, ease: "power3.inOut" }, 28.8);
+      tl.fromTo("#s-wt", { x: 1920 }, { x: 0, duration: 0.5, ease: "power3.inOut", immediateRender: false }, 28.8);
+      tl.to("#s-wt", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 36.0);
+      tl.fromTo("#s-ws", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut", immediateRender: false }, 36.0);
+      tl.to("#s-ws", { opacity: 0, duration: 0.5, ease: "sine.inOut" }, 43.2);
+      tl.fromTo("#s-ew", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "sine.inOut", immediateRender: false }, 43.2);
+      tl.to("#s-ew", { x: -1920, duration: 0.5, ease: "power3.inOut" }, 50.4);
+      tl.fromTo("#s-tp", { x: 1920 }, { x: 0, duration: 0.5, ease: "power3.inOut", immediateRender: false }, 50.4);
+      tl.to("#s-tp", { opacity: 0, duration: 0.7, ease: "power2.in" }, 57.8);
+      window.__timelines["kernel-access"] = tl;
+    </script>
+  </body>
+</html>

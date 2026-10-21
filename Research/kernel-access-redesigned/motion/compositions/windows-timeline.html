@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+</head>
+<body>
+  <template id="windows-timeline-template">
+    <style>
+    @font-face {
+      font-family: "Newsreader";
+      src: url("../assets/fonts/newsreader-latin.woff2") format("woff2");
+      font-weight: 500 700;
+      font-style: normal;
+      font-display: block;
+    }
+    #root { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; }
+    [data-composition-id="windows-timeline"] {
+      background: #0D1F3C;
+      color: #F4F7F6;
+      font-family: "Newsreader", serif;
+    }
+    [data-composition-id="windows-timeline"] .wt-scene {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 52px 72px 44px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    [data-composition-id="windows-timeline"] .wt-glow,
+    [data-composition-id="windows-timeline"] .wt-ghost,
+    [data-composition-id="windows-timeline"] .wt-grid {
+      position: absolute;
+      pointer-events: none;
+    }
+    [data-composition-id="windows-timeline"] .wt-glow-a {
+      width: 880px; height: 880px; left: -220px; top: -280px;
+      background: radial-gradient(circle, rgba(0,191,207,0.20), transparent 68%);
+    }
+    [data-composition-id="windows-timeline"] .wt-glow-b {
+      width: 760px; height: 760px; right: -200px; bottom: -300px;
+      background: radial-gradient(circle, rgba(255,45,120,0.14), transparent 70%);
+    }
+    [data-composition-id="windows-timeline"] .wt-grid {
+      inset: -48px;
+      background-image:
+        linear-gradient(rgba(0,191,207,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,191,207,0.045) 1px, transparent 1px);
+      background-size: 88px 88px;
+    }
+    [data-composition-id="windows-timeline"] .wt-ghost {
+      right: -20px; bottom: -46px;
+      font-family: "Newsreader", serif;
+      font-weight: 700;
+      font-size: 220px;
+      letter-spacing: -0.04em;
+      line-height: 0.8;
+      color: #00BFCF;
+      opacity: 0.07;
+      white-space: nowrap;
+    }
+    [data-composition-id="windows-timeline"] .wt-head { display: flex; flex-direction: column; gap: 8px; z-index: 1; }
+    [data-composition-id="windows-timeline"] .wt-meta {
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 18px; letter-spacing: 0.08em; color: #00BFCF;
+    }
+    [data-composition-id="windows-timeline"] .wt-kicker {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 20px; color: #D5E4E6; letter-spacing: 0.02em;
+    }
+    [data-composition-id="windows-timeline"] .wt-title {
+      font-size: 64px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.02;
+      max-width: 1600px;
+    }
+    [data-composition-id="windows-timeline"] .wt-rule {
+      height: 2px; width: 280px; background: #00BFCF; transform-origin: left center; margin-top: 6px;
+    }
+    [data-composition-id="windows-timeline"] .wt-board {
+      flex: 1; min-height: 0; z-index: 1;
+      display: flex; flex-direction: column; justify-content: center; gap: 18px;
+    }
+    [data-composition-id="windows-timeline"] .wt-row { display: flex; align-items: stretch; gap: 16px; min-height: 0; }
+    [data-composition-id="windows-timeline"] .wt-card {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column; justify-content: center; gap: 8px;
+      padding: 20px 22px;
+      min-height: 168px;
+      background: #16304C;
+      border: 1px solid rgba(213,228,230,0.24);
+      border-radius: 10px;
+    }
+    [data-composition-id="windows-timeline"] .wt-teal { border: 2px solid #00BFCF; }
+    [data-composition-id="windows-timeline"] .wt-magenta { border: 2px solid #FF2D78; }
+    [data-composition-id="windows-timeline"] .wt-dashed {
+      background: transparent;
+      border-style: dashed;
+    }
+    [data-composition-id="windows-timeline"] .wt-tag {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 16px; letter-spacing: 0.04em; color: #D5E4E6;
+      font-variant-numeric: tabular-nums;
+    }
+    [data-composition-id="windows-timeline"] .wt-teal > .wt-tag,
+    [data-composition-id="windows-timeline"] .wt-tag.wt-teal { color: #00BFCF; }
+    [data-composition-id="windows-timeline"] .wt-magenta > .wt-tag,
+    [data-composition-id="windows-timeline"] .wt-tag.wt-magenta { color: #FFB4C8; }
+    [data-composition-id="windows-timeline"] .wt-card h2 {
+      font-size: 34px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.08; color: #F4F7F6;
+    }
+    [data-composition-id="windows-timeline"] .wt-sub {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 20px; line-height: 1.3; color: #D5E4E6;
+    }
+    [data-composition-id="windows-timeline"] .wt-arrow, [data-composition-id="windows-timeline"] .wt-pill {
+      flex: 0 0 auto; align-self: center;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 22px; color: #00BFCF; letter-spacing: 0.02em;
+      transform-origin: left center;
+    }
+    [data-composition-id="windows-timeline"] .wt-pill {
+      border: 1px solid #00BFCF; border-radius: 999px; padding: 8px 14px; font-size: 18px;
+    }
+    [data-composition-id="windows-timeline"] .wt-pill.wt-magenta {
+      color: #FFB4C8; border-color: #FF2D78; border-style: dashed;
+    }
+    [data-composition-id="windows-timeline"] .wt-group {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column; gap: 12px;
+      padding: 16px 18px 18px;
+      border: 1px solid rgba(213,228,230,0.28);
+      border-radius: 14px;
+    }
+    [data-composition-id="windows-timeline"] .wt-group.wt-teal { border-color: rgba(0,191,207,0.75); }
+    [data-composition-id="windows-timeline"] .wt-group.wt-magenta { border-color: rgba(255,45,120,0.8); }
+    [data-composition-id="windows-timeline"] .wt-glabel {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 18px; letter-spacing: 0.06em; color: #D5E4E6;
+    }
+    [data-composition-id="windows-timeline"] .wt-teal > .wt-glabel { color: #00BFCF; }
+    [data-composition-id="windows-timeline"] .wt-magenta > .wt-glabel { color: #FFB4C8; }
+    [data-composition-id="windows-timeline"] .wt-gnote {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 18px; color: #D5E4E6;
+    }
+    [data-composition-id="windows-timeline"] .wt-caption {
+      z-index: 1;
+      font-size: 26px; line-height: 1.32; color: #F4F7F6; max-width: 1680px;
+    }
+    [data-composition-id="windows-timeline"] .wt-join {
+      height: 2px; background: #00BFCF; transform-origin: left center;
+    }
+    [data-composition-id="windows-timeline"] .wt-split { display: flex; gap: 28px; align-items: center; }
+    [data-composition-id="windows-timeline"] .wt-grid2 {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 22px; min-height: 0; flex: 1;
+    }
+    [data-composition-id="windows-timeline"] .wt-verdict, [data-composition-id="windows-timeline"] .wt-rice {
+      border-radius: 12px; padding: 18px 28px;
+      display: flex; flex-direction: column; gap: 6px; justify-content: center;
+    }
+    [data-composition-id="windows-timeline"] .wt-verdict { border: 2px solid #FF2D78; background: #16304C; }
+    [data-composition-id="windows-timeline"] .wt-verdict h2 { font-size: 48px; font-weight: 700; letter-spacing: -0.03em; }
+    [data-composition-id="windows-timeline"] .wt-rice {
+      border: 2px dashed rgba(213,228,230,0.45); background: transparent;
+    }
+    [data-composition-id="windows-timeline"] .wt-rice h2 { font-size: 40px; font-weight: 700; letter-spacing: -0.02em; }
+    [data-composition-id="windows-timeline"] .wt-attach { display: flex; justify-content: flex-end; padding-right: 6%; }
+  </style>
+    <div id="root" data-composition-id="windows-timeline" data-width="1920" data-height="1080" data-duration="8">
+      <div class="wt-scene" id="wt-scene">
+        
+    <div class="wt-grid" id="wt-grid" data-layout-ignore="true"></div>
+    <div class="wt-glow wt-glow-a" id="wt-glow-a" data-layout-ignore="true"></div>
+    <div class="wt-glow wt-glow-b" id="wt-glow-b" data-layout-ignore="true"></div>
+    <div class="wt-ghost" id="wt-ghost" data-layout-ignore="true">2024</div>
+        
+    <header class="wt-head">
+      <div class="wt-meta">
+        <span id="wt-series">Kernel-Access Redesigned</span>
+        <span id="wt-index">05 / 08</span>
+      </div>
+      <p class="wt-kicker" id="wt-kicker">Windows</p>
+      <h1 class="wt-title" id="wt-title">The long road off the Windows kernel</h1>
+      <div class="wt-rule" id="wt-rule"></div>
+    </header>
+        <div class="wt-board" id="wt-board">
+          
+    <div class="wt-row">
+      <article class="wt-card" id="wt-pg"><p class="wt-tag">Vista</p><h2>PatchGuard</h2><p class="wt-sub">64-bit kernel locked</p></article>
+      <span class="wt-arrow" id="wt-a1">→</span>
+      <article class="wt-card" id="wt-eu"><p class="wt-tag">EU</p><h2>The complaint</h2><p class="wt-sub">then the 2009 commitment</p></article>
+      <span class="wt-arrow" id="wt-a2">→</span>
+      <article class="wt-card wt-magenta" id="wt-out"><p class="wt-tag">19 Jul 2024</p><h2>The outage</h2><p class="wt-sub">8.5 million devices</p></article>
+    </div>
+    <div class="wt-join" id="wt-join"></div>
+    <div class="wt-row">
+      <article class="wt-card wt-teal" id="wt-wri"><p class="wt-tag">Ignite · Nov 2024</p><h2>WRI announced</h2><p class="wt-sub">user mode, like apps</p></article>
+      <span class="wt-arrow" id="wt-a3">→</span>
+      <article class="wt-card wt-teal" id="wt-wesp"><p class="wt-tag">Jun 2025</p><h2>WESP preview</h2><p class="wt-sub">first private preview</p></article>
+      <span class="wt-arrow" id="wt-a4">→</span>
+      <article class="wt-card wt-magenta" id="wt-fal"><p class="wt-tag">Fal.Con · Sep 2026</p><h2>Still preview</h2><p class="wt-sub">not general availability</p></article>
+    </div>
+        </div>
+        <p class="wt-caption" id="wt-caption">PatchGuard, the EU commitment, the July 2024 outage, then WRI at Ignite, a WESP private preview, and Fal.Con still calling it a preview.</p>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      
+      tl.fromTo("#wt-grid", { x: 0 }, { x: -36, duration: 7.1, ease: "sine.inOut" }, 0.2);
+      tl.fromTo("#wt-glow-a", { scale: 1 }, { scale: 1.06, duration: 6.6, ease: "power1.inOut" }, 0.25);
+      tl.fromTo("#wt-ghost", { scale: 1.04, opacity: 0 }, { scale: 1, opacity: 0.07, duration: 0.7, ease: "power2.out" }, 0.18);
+      tl.fromTo("#wt-series", { opacity: 0 }, { opacity: 1, duration: 0.28, ease: "sine.out" }, 0.16);
+      tl.fromTo("#wt-index", { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "circ.out" }, 0.2);
+      tl.fromTo("#wt-kicker", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power1.out" }, 0.22);
+      tl.fromTo("#wt-title", { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.58, ease: "expo.out" }, 0.28);
+      tl.fromTo("#wt-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.inOut" }, 0.46);
+      tl.fromTo("#wt-pg", { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.46, ease: "power3.out" }, 0.58);
+      tl.fromTo("#wt-a1", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.2, ease: "power2.inOut" }, 0.74);
+      tl.fromTo("#wt-eu", { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.44, ease: "power4.out" }, 0.76);
+      tl.fromTo("#wt-a2", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.18, ease: "sine.inOut" }, 0.92);
+      tl.fromTo("#wt-out", { scale: 1.06, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.22, ease: "power4.out" }, 0.96);
+      tl.fromTo("#wt-join", { scaleX: 0 }, { scaleX: 1, duration: 0.36, ease: "power2.inOut" }, 1.2);
+      tl.fromTo("#wt-wri", { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.42, ease: "circ.out" }, 1.28);
+      tl.fromTo("#wt-a3", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.2, ease: "sine.out" }, 1.44);
+      tl.fromTo("#wt-wesp", { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "expo.out" }, 1.46);
+      tl.fromTo("#wt-a4", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.2, ease: "power3.inOut" }, 1.6);
+      tl.fromTo("#wt-fal", { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.48, ease: "power3.out" }, 1.62);
+      tl.fromTo("#wt-caption", { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power1.out" }, 2.15);
+  
+      window.__timelines["windows-timeline"] = tl;
+    </script>
+  </template>
+</body>
+</html>

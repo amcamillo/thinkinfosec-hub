@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+</head>
+<body>
+  <template id="two-philosophies-template">
+    <style>
+    @font-face {
+      font-family: "Newsreader";
+      src: url("../assets/fonts/newsreader-latin.woff2") format("woff2");
+      font-weight: 500 700;
+      font-style: normal;
+      font-display: block;
+    }
+    #root { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; }
+    [data-composition-id="two-philosophies"] {
+      background: #0D1F3C;
+      color: #F4F7F6;
+      font-family: "Newsreader", serif;
+    }
+    [data-composition-id="two-philosophies"] .tp-scene {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 52px 72px 44px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    [data-composition-id="two-philosophies"] .tp-glow,
+    [data-composition-id="two-philosophies"] .tp-ghost,
+    [data-composition-id="two-philosophies"] .tp-grid {
+      position: absolute;
+      pointer-events: none;
+    }
+    [data-composition-id="two-philosophies"] .tp-glow-a {
+      width: 880px; height: 880px; left: -220px; top: -280px;
+      background: radial-gradient(circle, rgba(0,191,207,0.20), transparent 68%);
+    }
+    [data-composition-id="two-philosophies"] .tp-glow-b {
+      width: 760px; height: 760px; right: -200px; bottom: -300px;
+      background: radial-gradient(circle, rgba(255,45,120,0.14), transparent 70%);
+    }
+    [data-composition-id="two-philosophies"] .tp-grid {
+      inset: -48px;
+      background-image:
+        linear-gradient(rgba(0,191,207,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,191,207,0.045) 1px, transparent 1px);
+      background-size: 88px 88px;
+    }
+    [data-composition-id="two-philosophies"] .tp-ghost {
+      right: -20px; bottom: -46px;
+      font-family: "Newsreader", serif;
+      font-weight: 700;
+      font-size: 220px;
+      letter-spacing: -0.04em;
+      line-height: 0.8;
+      color: #00BFCF;
+      opacity: 0.07;
+      white-space: nowrap;
+    }
+    [data-composition-id="two-philosophies"] .tp-head { display: flex; flex-direction: column; gap: 8px; z-index: 1; }
+    [data-composition-id="two-philosophies"] .tp-meta {
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 18px; letter-spacing: 0.08em; color: #00BFCF;
+    }
+    [data-composition-id="two-philosophies"] .tp-kicker {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 20px; color: #D5E4E6; letter-spacing: 0.02em;
+    }
+    [data-composition-id="two-philosophies"] .tp-title {
+      font-size: 64px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.02;
+      max-width: 1600px;
+    }
+    [data-composition-id="two-philosophies"] .tp-rule {
+      height: 2px; width: 280px; background: #00BFCF; transform-origin: left center; margin-top: 6px;
+    }
+    [data-composition-id="two-philosophies"] .tp-board {
+      flex: 1; min-height: 0; z-index: 1;
+      display: flex; flex-direction: column; justify-content: center; gap: 18px;
+    }
+    [data-composition-id="two-philosophies"] .tp-row { display: flex; align-items: stretch; gap: 16px; min-height: 0; }
+    [data-composition-id="two-philosophies"] .tp-card {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column; justify-content: center; gap: 8px;
+      padding: 20px 22px;
+      min-height: 168px;
+      background: #16304C;
+      border: 1px solid rgba(213,228,230,0.24);
+      border-radius: 10px;
+    }
+    [data-composition-id="two-philosophies"] .tp-teal { border: 2px solid #00BFCF; }
+    [data-composition-id="two-philosophies"] .tp-magenta { border: 2px solid #FF2D78; }
+    [data-composition-id="two-philosophies"] .tp-dashed {
+      background: transparent;
+      border-style: dashed;
+    }
+    [data-composition-id="two-philosophies"] .tp-tag {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 16px; letter-spacing: 0.04em; color: #D5E4E6;
+      font-variant-numeric: tabular-nums;
+    }
+    [data-composition-id="two-philosophies"] .tp-teal > .tp-tag,
+    [data-composition-id="two-philosophies"] .tp-tag.tp-teal { color: #00BFCF; }
+    [data-composition-id="two-philosophies"] .tp-magenta > .tp-tag,
+    [data-composition-id="two-philosophies"] .tp-tag.tp-magenta { color: #FFB4C8; }
+    [data-composition-id="two-philosophies"] .tp-card h2 {
+      font-size: 34px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.08; color: #F4F7F6;
+    }
+    [data-composition-id="two-philosophies"] .tp-sub {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 20px; line-height: 1.3; color: #D5E4E6;
+    }
+    [data-composition-id="two-philosophies"] .tp-arrow, [data-composition-id="two-philosophies"] .tp-pill {
+      flex: 0 0 auto; align-self: center;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 22px; color: #00BFCF; letter-spacing: 0.02em;
+      transform-origin: left center;
+    }
+    [data-composition-id="two-philosophies"] .tp-pill {
+      border: 1px solid #00BFCF; border-radius: 999px; padding: 8px 14px; font-size: 18px;
+    }
+    [data-composition-id="two-philosophies"] .tp-pill.tp-magenta {
+      color: #FFB4C8; border-color: #FF2D78; border-style: dashed;
+    }
+    [data-composition-id="two-philosophies"] .tp-group {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column; gap: 12px;
+      padding: 16px 18px 18px;
+      border: 1px solid rgba(213,228,230,0.28);
+      border-radius: 14px;
+    }
+    [data-composition-id="two-philosophies"] .tp-group.tp-teal { border-color: rgba(0,191,207,0.75); }
+    [data-composition-id="two-philosophies"] .tp-group.tp-magenta { border-color: rgba(255,45,120,0.8); }
+    [data-composition-id="two-philosophies"] .tp-glabel {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 18px; letter-spacing: 0.06em; color: #D5E4E6;
+    }
+    [data-composition-id="two-philosophies"] .tp-teal > .tp-glabel { color: #00BFCF; }
+    [data-composition-id="two-philosophies"] .tp-magenta > .tp-glabel { color: #FFB4C8; }
+    [data-composition-id="two-philosophies"] .tp-gnote {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 18px; color: #D5E4E6;
+    }
+    [data-composition-id="two-philosophies"] .tp-caption {
+      z-index: 1;
+      font-size: 26px; line-height: 1.32; color: #F4F7F6; max-width: 1680px;
+    }
+    [data-composition-id="two-philosophies"] .tp-join {
+      height: 2px; background: #00BFCF; transform-origin: left center;
+    }
+    [data-composition-id="two-philosophies"] .tp-split { display: flex; gap: 28px; align-items: center; }
+    [data-composition-id="two-philosophies"] .tp-grid2 {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 22px; min-height: 0; flex: 1;
+    }
+    [data-composition-id="two-philosophies"] .tp-verdict, [data-composition-id="two-philosophies"] .tp-rice {
+      border-radius: 12px; padding: 18px 28px;
+      display: flex; flex-direction: column; gap: 6px; justify-content: center;
+    }
+    [data-composition-id="two-philosophies"] .tp-verdict { border: 2px solid #FF2D78; background: #16304C; }
+    [data-composition-id="two-philosophies"] .tp-verdict h2 { font-size: 48px; font-weight: 700; letter-spacing: -0.03em; }
+    [data-composition-id="two-philosophies"] .tp-rice {
+      border: 2px dashed rgba(213,228,230,0.45); background: transparent;
+    }
+    [data-composition-id="two-philosophies"] .tp-rice h2 { font-size: 40px; font-weight: 700; letter-spacing: -0.02em; }
+    [data-composition-id="two-philosophies"] .tp-attach { display: flex; justify-content: flex-end; padding-right: 6%; }
+  </style>
+    <div id="root" data-composition-id="two-philosophies" data-width="1920" data-height="1080" data-duration="8.2">
+      <div class="tp-scene" id="tp-scene">
+        
+    <div class="tp-grid" id="tp-grid" data-layout-ignore="true"></div>
+    <div class="tp-glow tp-glow-a" id="tp-glow-a" data-layout-ignore="true"></div>
+    <div class="tp-glow tp-glow-b" id="tp-glow-b" data-layout-ignore="true"></div>
+    <div class="tp-ghost" id="tp-ghost" data-layout-ignore="true">RICE</div>
+        
+    <header class="tp-head">
+      <div class="tp-meta">
+        <span id="tp-series">Kernel-Access Redesigned</span>
+        <span id="tp-index">08 / 08</span>
+      </div>
+      <p class="tp-kicker" id="tp-kicker">Two philosophies</p>
+      <h1 class="tp-title" id="tp-title">Two philosophies, one axiom</h1>
+      <div class="tp-rule" id="tp-rule"></div>
+    </header>
+        <div class="tp-board" id="tp-board">
+          
+    <div class="tp-split">
+      <section class="tp-group tp-magenta" id="tp-spatial">
+        <p class="tp-glabel" id="tp-spatial-label">Spatial isolation</p>
+        <p class="tp-gnote" id="tp-spatial-note">Apple and Microsoft</p>
+        <article class="tp-card tp-magenta" id="tp-move"><h2>Move the observer</h2><p class="tp-sub">isolated fault domain</p></article>
+        <article class="tp-card" id="tp-payS"><h2>Paid in</h2><p class="tp-sub">context switches and platform dependence</p></article>
+      </section>
+      <section class="tp-group tp-teal" id="tp-lang">
+        <p class="tp-glabel" id="tp-lang-label">Language-level constraint</p>
+        <p class="tp-gnote" id="tp-lang-note">Linux</p>
+        <article class="tp-card tp-teal" id="tp-keep"><h2>Keep the observer</h2><p class="tp-sub">restrict what it expresses</p></article>
+        <article class="tp-card" id="tp-payL"><h2>Paid in</h2><p class="tp-sub">expressiveness</p></article>
+      </section>
+    </div>
+    <article class="tp-rice" id="tp-rice">
+      <p class="tp-tag tp-magenta" id="tp-axiom">Same axiom</p>
+      <h2>Rice's theorem</h2>
+      <p class="tp-sub">a verifier has to be conservative, and turns some safe programs away</p>
+    </article>
+        </div>
+        <p class="tp-caption" id="tp-caption">Apple and Microsoft pay in context switches and platform dependence. Linux pays in expressiveness. Rice's theorem is why the verifier has to be conservative.</p>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      
+      tl.fromTo("#tp-glow-a", { rotation: 0, scale: 1 }, { rotation: 8, scale: 1.05, duration: 7.0, ease: "sine.inOut" }, 0.2);
+      tl.fromTo("#tp-glow-b", { y: 0 }, { y: -22, duration: 6.4, ease: "power1.inOut" }, 0.3);
+      tl.fromTo("#tp-ghost", { opacity: 0 }, { opacity: 0.07, duration: 0.9, ease: "sine.out" }, 0.18);
+      tl.fromTo("#tp-series", { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: 0.36, ease: "power2.out" }, 0.16);
+      tl.fromTo("#tp-index", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.out" }, 0.24);
+      tl.fromTo("#tp-kicker", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "circ.out" }, 0.28);
+      tl.fromTo("#tp-title", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.85, ease: "power3.out" }, 0.34);
+      tl.fromTo("#tp-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.inOut" }, 0.7);
+      tl.fromTo("#tp-spatial", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: "expo.out" }, 0.9);
+      tl.fromTo("#tp-lang", { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: "power4.out" }, 1.05);
+      tl.fromTo("#tp-rice", { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: "power2.out" }, 1.55);
+      tl.fromTo("#tp-caption", { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.42, ease: "sine.inOut" }, 2.15);
+  
+      window.__timelines["two-philosophies"] = tl;
+    </script>
+  </template>
+</body>
+</html>

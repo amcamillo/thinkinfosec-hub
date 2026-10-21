@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+</head>
+<body>
+  <template id="macos-before-after-template">
+    <style>
+    @font-face {
+      font-family: "Newsreader";
+      src: url("../assets/fonts/newsreader-latin.woff2") format("woff2");
+      font-weight: 500 700;
+      font-style: normal;
+      font-display: block;
+    }
+    #root { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; }
+    [data-composition-id="macos-before-after"] {
+      background: #0D1F3C;
+      color: #F4F7F6;
+      font-family: "Newsreader", serif;
+    }
+    [data-composition-id="macos-before-after"] .mb-scene {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 52px 72px 44px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    [data-composition-id="macos-before-after"] .mb-glow,
+    [data-composition-id="macos-before-after"] .mb-ghost,
+    [data-composition-id="macos-before-after"] .mb-grid {
+      position: absolute;
+      pointer-events: none;
+    }
+    [data-composition-id="macos-before-after"] .mb-glow-a {
+      width: 880px; height: 880px; left: -220px; top: -280px;
+      background: radial-gradient(circle, rgba(0,191,207,0.20), transparent 68%);
+    }
+    [data-composition-id="macos-before-after"] .mb-glow-b {
+      width: 760px; height: 760px; right: -200px; bottom: -300px;
+      background: radial-gradient(circle, rgba(255,45,120,0.14), transparent 70%);
+    }
+    [data-composition-id="macos-before-after"] .mb-grid {
+      inset: -48px;
+      background-image:
+        linear-gradient(rgba(0,191,207,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,191,207,0.045) 1px, transparent 1px);
+      background-size: 88px 88px;
+    }
+    [data-composition-id="macos-before-after"] .mb-ghost {
+      right: -20px; bottom: -46px;
+      font-family: "Newsreader", serif;
+      font-weight: 700;
+      font-size: 220px;
+      letter-spacing: -0.04em;
+      line-height: 0.8;
+      color: #00BFCF;
+      opacity: 0.07;
+      white-space: nowrap;
+    }
+    [data-composition-id="macos-before-after"] .mb-head { display: flex; flex-direction: column; gap: 8px; z-index: 1; }
+    [data-composition-id="macos-before-after"] .mb-meta {
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 18px; letter-spacing: 0.08em; color: #00BFCF;
+    }
+    [data-composition-id="macos-before-after"] .mb-kicker {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 20px; color: #D5E4E6; letter-spacing: 0.02em;
+    }
+    [data-composition-id="macos-before-after"] .mb-title {
+      font-size: 64px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.02;
+      max-width: 1600px;
+    }
+    [data-composition-id="macos-before-after"] .mb-rule {
+      height: 2px; width: 280px; background: #00BFCF; transform-origin: left center; margin-top: 6px;
+    }
+    [data-composition-id="macos-before-after"] .mb-board {
+      flex: 1; min-height: 0; z-index: 1;
+      display: flex; flex-direction: column; justify-content: center; gap: 18px;
+    }
+    [data-composition-id="macos-before-after"] .mb-row { display: flex; align-items: stretch; gap: 16px; min-height: 0; }
+    [data-composition-id="macos-before-after"] .mb-card {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column; justify-content: center; gap: 8px;
+      padding: 20px 22px;
+      min-height: 168px;
+      background: #16304C;
+      border: 1px solid rgba(213,228,230,0.24);
+      border-radius: 10px;
+    }
+    [data-composition-id="macos-before-after"] .mb-teal { border: 2px solid #00BFCF; }
+    [data-composition-id="macos-before-after"] .mb-magenta { border: 2px solid #FF2D78; }
+    [data-composition-id="macos-before-after"] .mb-dashed {
+      background: transparent;
+      border-style: dashed;
+    }
+    [data-composition-id="macos-before-after"] .mb-tag {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 16px; letter-spacing: 0.04em; color: #D5E4E6;
+      font-variant-numeric: tabular-nums;
+    }
+    [data-composition-id="macos-before-after"] .mb-teal > .mb-tag,
+    [data-composition-id="macos-before-after"] .mb-tag.mb-teal { color: #00BFCF; }
+    [data-composition-id="macos-before-after"] .mb-magenta > .mb-tag,
+    [data-composition-id="macos-before-after"] .mb-tag.mb-magenta { color: #FFB4C8; }
+    [data-composition-id="macos-before-after"] .mb-card h2 {
+      font-size: 34px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.08; color: #F4F7F6;
+    }
+    [data-composition-id="macos-before-after"] .mb-sub {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 20px; line-height: 1.3; color: #D5E4E6;
+    }
+    [data-composition-id="macos-before-after"] .mb-arrow, [data-composition-id="macos-before-after"] .mb-pill {
+      flex: 0 0 auto; align-self: center;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 22px; color: #00BFCF; letter-spacing: 0.02em;
+      transform-origin: left center;
+    }
+    [data-composition-id="macos-before-after"] .mb-pill {
+      border: 1px solid #00BFCF; border-radius: 999px; padding: 8px 14px; font-size: 18px;
+    }
+    [data-composition-id="macos-before-after"] .mb-pill.mb-magenta {
+      color: #FFB4C8; border-color: #FF2D78; border-style: dashed;
+    }
+    [data-composition-id="macos-before-after"] .mb-group {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column; gap: 12px;
+      padding: 16px 18px 18px;
+      border: 1px solid rgba(213,228,230,0.28);
+      border-radius: 14px;
+    }
+    [data-composition-id="macos-before-after"] .mb-group.mb-teal { border-color: rgba(0,191,207,0.75); }
+    [data-composition-id="macos-before-after"] .mb-group.mb-magenta { border-color: rgba(255,45,120,0.8); }
+    [data-composition-id="macos-before-after"] .mb-glabel {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 18px; letter-spacing: 0.06em; color: #D5E4E6;
+    }
+    [data-composition-id="macos-before-after"] .mb-teal > .mb-glabel { color: #00BFCF; }
+    [data-composition-id="macos-before-after"] .mb-magenta > .mb-glabel { color: #FFB4C8; }
+    [data-composition-id="macos-before-after"] .mb-gnote {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 18px; color: #D5E4E6;
+    }
+    [data-composition-id="macos-before-after"] .mb-caption {
+      z-index: 1;
+      font-size: 26px; line-height: 1.32; color: #F4F7F6; max-width: 1680px;
+    }
+    [data-composition-id="macos-before-after"] .mb-join {
+      height: 2px; background: #00BFCF; transform-origin: left center;
+    }
+    [data-composition-id="macos-before-after"] .mb-split { display: flex; gap: 28px; align-items: center; }
+    [data-composition-id="macos-before-after"] .mb-grid2 {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 22px; min-height: 0; flex: 1;
+    }
+    [data-composition-id="macos-before-after"] .mb-verdict, [data-composition-id="macos-before-after"] .mb-rice {
+      border-radius: 12px; padding: 18px 28px;
+      display: flex; flex-direction: column; gap: 6px; justify-content: center;
+    }
+    [data-composition-id="macos-before-after"] .mb-verdict { border: 2px solid #FF2D78; background: #16304C; }
+    [data-composition-id="macos-before-after"] .mb-verdict h2 { font-size: 48px; font-weight: 700; letter-spacing: -0.03em; }
+    [data-composition-id="macos-before-after"] .mb-rice {
+      border: 2px dashed rgba(213,228,230,0.45); background: transparent;
+    }
+    [data-composition-id="macos-before-after"] .mb-rice h2 { font-size: 40px; font-weight: 700; letter-spacing: -0.02em; }
+    [data-composition-id="macos-before-after"] .mb-attach { display: flex; justify-content: flex-end; padding-right: 6%; }
+  </style>
+    <div id="root" data-composition-id="macos-before-after" data-width="1920" data-height="1080" data-duration="8">
+      <div class="mb-scene" id="mb-scene">
+        
+    <div class="mb-grid" id="mb-grid" data-layout-ignore="true"></div>
+    <div class="mb-glow mb-glow-a" id="mb-glow-a" data-layout-ignore="true"></div>
+    <div class="mb-glow mb-glow-b" id="mb-glow-b" data-layout-ignore="true"></div>
+    <div class="mb-ghost" id="mb-ghost" data-layout-ignore="true">KEXT</div>
+        
+    <header class="mb-head">
+      <div class="mb-meta">
+        <span id="mb-series">Kernel-Access Redesigned</span>
+        <span id="mb-index">03 / 08</span>
+      </div>
+      <p class="mb-kicker" id="mb-kicker">macOS and Endpoint Security</p>
+      <h1 class="mb-title" id="mb-title">Kernel extensions, then Endpoint Security</h1>
+      <div class="mb-rule" id="mb-rule"></div>
+    </header>
+        <div class="mb-board" id="mb-board">
+          
+    <div class="mb-split">
+      <section class="mb-group mb-magenta" id="mb-before">
+        <p class="mb-glabel" id="mb-before-label">Before</p>
+        <article class="mb-card mb-magenta" id="mb-kext"><p class="mb-tag">Ring 0</p><h2>Kernel extension</h2><p class="mb-sub">third-party code</p></article>
+      </section>
+      <div class="mb-bridge" id="mb-bridge" style="display:flex;align-items:center;">
+        <span class="mb-pill" id="mb-out">get it out</span>
+      </div>
+      <section class="mb-group mb-teal" id="mb-after">
+        <p class="mb-glabel" id="mb-after-label">After</p>
+        <div class="mb-row">
+          <article class="mb-card" id="mb-kern"><p class="mb-tag">Kernel</p><h2>Kernel</h2><p class="mb-sub">sends the events</p></article>
+          <span class="mb-pill" id="mb-events">events</span>
+          <article class="mb-card mb-teal" id="mb-client"><p class="mb-tag">User space</p><h2>Endpoint Security</h2><p class="mb-sub">client receives them</p></article>
+        </div>
+      </section>
+    </div>
+        </div>
+        <p class="mb-caption" id="mb-caption">Third-party code leaves the kernel. An Endpoint Security client in user space receives events from the kernel.</p>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      
+      tl.fromTo("#mb-glow-a", { scale: 1, x: 0 }, { scale: 1.07, x: -18, duration: 7.0, ease: "sine.inOut" }, 0.2);
+      tl.fromTo("#mb-glow-b", { scale: 1 }, { scale: 1.05, duration: 6.5, ease: "power1.inOut" }, 0.28);
+      tl.fromTo("#mb-ghost", { x: -20, opacity: 0 }, { x: 0, opacity: 0.07, duration: 0.85, ease: "power2.out" }, 0.2);
+      tl.fromTo("#mb-series", { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "circ.out" }, 0.16);
+      tl.fromTo("#mb-index", { opacity: 0 }, { opacity: 1, duration: 0.36, ease: "sine.out" }, 0.22);
+      tl.fromTo("#mb-kicker", { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.34, ease: "power3.out" }, 0.26);
+      tl.fromTo("#mb-title", { y: 22, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: "power4.out" }, 0.32);
+      tl.fromTo("#mb-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.46, ease: "power3.inOut" }, 0.52);
+      tl.fromTo("#mb-before", { x: -48, opacity: 0 }, { x: 0, opacity: 1, duration: 0.55, ease: "expo.out" }, 0.66);
+      tl.fromTo("#mb-out", { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.36, ease: "back.out(1.5)" }, 1.05);
+      tl.fromTo("#mb-after", { x: 48, opacity: 0 }, { x: 0, opacity: 1, duration: 0.55, ease: "power3.out" }, 1.15);
+      tl.fromTo("#mb-events", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "sine.out" }, 1.55);
+      tl.fromTo("#mb-caption", { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power1.out" }, 1.9);
+  
+      window.__timelines["macos-before-after"] = tl;
+    </script>
+  </template>
+</body>
+</html>

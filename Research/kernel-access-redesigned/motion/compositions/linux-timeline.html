@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+</head>
+<body>
+  <template id="linux-timeline-template">
+    <style>
+    @font-face {
+      font-family: "Newsreader";
+      src: url("../assets/fonts/newsreader-latin.woff2") format("woff2");
+      font-weight: 500 700;
+      font-style: normal;
+      font-display: block;
+    }
+    #root { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; }
+    [data-composition-id="linux-timeline"] {
+      background: #0D1F3C;
+      color: #F4F7F6;
+      font-family: "Newsreader", serif;
+    }
+    [data-composition-id="linux-timeline"] .lt-scene {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 52px 72px 44px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    [data-composition-id="linux-timeline"] .lt-glow,
+    [data-composition-id="linux-timeline"] .lt-ghost,
+    [data-composition-id="linux-timeline"] .lt-grid {
+      position: absolute;
+      pointer-events: none;
+    }
+    [data-composition-id="linux-timeline"] .lt-glow-a {
+      width: 880px; height: 880px; left: -220px; top: -280px;
+      background: radial-gradient(circle, rgba(0,191,207,0.20), transparent 68%);
+    }
+    [data-composition-id="linux-timeline"] .lt-glow-b {
+      width: 760px; height: 760px; right: -200px; bottom: -300px;
+      background: radial-gradient(circle, rgba(255,45,120,0.14), transparent 70%);
+    }
+    [data-composition-id="linux-timeline"] .lt-grid {
+      inset: -48px;
+      background-image:
+        linear-gradient(rgba(0,191,207,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,191,207,0.045) 1px, transparent 1px);
+      background-size: 88px 88px;
+    }
+    [data-composition-id="linux-timeline"] .lt-ghost {
+      right: -20px; bottom: -46px;
+      font-family: "Newsreader", serif;
+      font-weight: 700;
+      font-size: 220px;
+      letter-spacing: -0.04em;
+      line-height: 0.8;
+      color: #00BFCF;
+      opacity: 0.07;
+      white-space: nowrap;
+    }
+    [data-composition-id="linux-timeline"] .lt-head { display: flex; flex-direction: column; gap: 8px; z-index: 1; }
+    [data-composition-id="linux-timeline"] .lt-meta {
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 18px; letter-spacing: 0.08em; color: #00BFCF;
+    }
+    [data-composition-id="linux-timeline"] .lt-kicker {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 20px; color: #D5E4E6; letter-spacing: 0.02em;
+    }
+    [data-composition-id="linux-timeline"] .lt-title {
+      font-size: 64px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.02;
+      max-width: 1600px;
+    }
+    [data-composition-id="linux-timeline"] .lt-rule {
+      height: 2px; width: 280px; background: #00BFCF; transform-origin: left center; margin-top: 6px;
+    }
+    [data-composition-id="linux-timeline"] .lt-board {
+      flex: 1; min-height: 0; z-index: 1;
+      display: flex; flex-direction: column; justify-content: center; gap: 18px;
+    }
+    [data-composition-id="linux-timeline"] .lt-row { display: flex; align-items: stretch; gap: 16px; min-height: 0; }
+    [data-composition-id="linux-timeline"] .lt-card {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column; justify-content: center; gap: 8px;
+      padding: 20px 22px;
+      min-height: 168px;
+      background: #16304C;
+      border: 1px solid rgba(213,228,230,0.24);
+      border-radius: 10px;
+    }
+    [data-composition-id="linux-timeline"] .lt-teal { border: 2px solid #00BFCF; }
+    [data-composition-id="linux-timeline"] .lt-magenta { border: 2px solid #FF2D78; }
+    [data-composition-id="linux-timeline"] .lt-dashed {
+      background: transparent;
+      border-style: dashed;
+    }
+    [data-composition-id="linux-timeline"] .lt-tag {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 16px; letter-spacing: 0.04em; color: #D5E4E6;
+      font-variant-numeric: tabular-nums;
+    }
+    [data-composition-id="linux-timeline"] .lt-teal > .lt-tag,
+    [data-composition-id="linux-timeline"] .lt-tag.lt-teal { color: #00BFCF; }
+    [data-composition-id="linux-timeline"] .lt-magenta > .lt-tag,
+    [data-composition-id="linux-timeline"] .lt-tag.lt-magenta { color: #FFB4C8; }
+    [data-composition-id="linux-timeline"] .lt-card h2 {
+      font-size: 34px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.08; color: #F4F7F6;
+    }
+    [data-composition-id="linux-timeline"] .lt-sub {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 20px; line-height: 1.3; color: #D5E4E6;
+    }
+    [data-composition-id="linux-timeline"] .lt-arrow, [data-composition-id="linux-timeline"] .lt-pill {
+      flex: 0 0 auto; align-self: center;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 22px; color: #00BFCF; letter-spacing: 0.02em;
+      transform-origin: left center;
+    }
+    [data-composition-id="linux-timeline"] .lt-pill {
+      border: 1px solid #00BFCF; border-radius: 999px; padding: 8px 14px; font-size: 18px;
+    }
+    [data-composition-id="linux-timeline"] .lt-pill.lt-magenta {
+      color: #FFB4C8; border-color: #FF2D78; border-style: dashed;
+    }
+    [data-composition-id="linux-timeline"] .lt-group {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column; gap: 12px;
+      padding: 16px 18px 18px;
+      border: 1px solid rgba(213,228,230,0.28);
+      border-radius: 14px;
+    }
+    [data-composition-id="linux-timeline"] .lt-group.lt-teal { border-color: rgba(0,191,207,0.75); }
+    [data-composition-id="linux-timeline"] .lt-group.lt-magenta { border-color: rgba(255,45,120,0.8); }
+    [data-composition-id="linux-timeline"] .lt-glabel {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 18px; letter-spacing: 0.06em; color: #D5E4E6;
+    }
+    [data-composition-id="linux-timeline"] .lt-teal > .lt-glabel { color: #00BFCF; }
+    [data-composition-id="linux-timeline"] .lt-magenta > .lt-glabel { color: #FFB4C8; }
+    [data-composition-id="linux-timeline"] .lt-gnote {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 18px; color: #D5E4E6;
+    }
+    [data-composition-id="linux-timeline"] .lt-caption {
+      z-index: 1;
+      font-size: 26px; line-height: 1.32; color: #F4F7F6; max-width: 1680px;
+    }
+    [data-composition-id="linux-timeline"] .lt-join {
+      height: 2px; background: #00BFCF; transform-origin: left center;
+    }
+    [data-composition-id="linux-timeline"] .lt-split { display: flex; gap: 28px; align-items: center; }
+    [data-composition-id="linux-timeline"] .lt-grid2 {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 22px; min-height: 0; flex: 1;
+    }
+    [data-composition-id="linux-timeline"] .lt-verdict, [data-composition-id="linux-timeline"] .lt-rice {
+      border-radius: 12px; padding: 18px 28px;
+      display: flex; flex-direction: column; gap: 6px; justify-content: center;
+    }
+    [data-composition-id="linux-timeline"] .lt-verdict { border: 2px solid #FF2D78; background: #16304C; }
+    [data-composition-id="linux-timeline"] .lt-verdict h2 { font-size: 48px; font-weight: 700; letter-spacing: -0.03em; }
+    [data-composition-id="linux-timeline"] .lt-rice {
+      border: 2px dashed rgba(213,228,230,0.45); background: transparent;
+    }
+    [data-composition-id="linux-timeline"] .lt-rice h2 { font-size: 40px; font-weight: 700; letter-spacing: -0.02em; }
+    [data-composition-id="linux-timeline"] .lt-attach { display: flex; justify-content: flex-end; padding-right: 6%; }
+  </style>
+    <div id="root" data-composition-id="linux-timeline" data-width="1920" data-height="1080" data-duration="8">
+      <div class="lt-scene" id="lt-scene">
+        
+    <div class="lt-grid" id="lt-grid" data-layout-ignore="true"></div>
+    <div class="lt-glow lt-glow-a" id="lt-glow-a" data-layout-ignore="true"></div>
+    <div class="lt-glow lt-glow-b" id="lt-glow-b" data-layout-ignore="true"></div>
+    <div class="lt-ghost" id="lt-ghost" data-layout-ignore="true">5.7</div>
+        
+    <header class="lt-head">
+      <div class="lt-meta">
+        <span id="lt-series">Kernel-Access Redesigned</span>
+        <span id="lt-index">02 / 08</span>
+      </div>
+      <p class="lt-kicker" id="lt-kicker">Linux and eBPF</p>
+      <h1 class="lt-title" id="lt-title">How Linux got to BPF-LSM</h1>
+      <div class="lt-rule" id="lt-rule"></div>
+    </header>
+        <div class="lt-board" id="lt-board">
+          
+    <div class="lt-row">
+      <article class="lt-card lt-teal" id="lt-e318"><p class="lt-tag">Dec 2014</p><h2>Linux 3.18</h2><p class="lt-sub">eBPF lands</p></article>
+      <span class="lt-arrow" id="lt-a1">→</span>
+      <article class="lt-card" id="lt-bcc"><p class="lt-tag">2015</p><h2>bcc</h2><p class="lt-sub">tooling, not authorship</p></article>
+      <span class="lt-arrow" id="lt-a2">→</span>
+      <article class="lt-card" id="lt-bpf"><p class="lt-tag">2018</p><h2>bpftrace</h2><p class="lt-sub">tooling, not authorship</p></article>
+    </div>
+    <div class="lt-join" id="lt-join"></div>
+    <div class="lt-row">
+      <article class="lt-card lt-magenta" id="lt-krsi"><p class="lt-tag">2019</p><h2>KRSI proposed</h2><p class="lt-sub">KP Singh</p></article>
+      <span class="lt-arrow" id="lt-a3">→</span>
+      <article class="lt-card lt-teal" id="lt-merge"><p class="lt-tag">March 2020</p><h2>Merged</h2><p class="lt-sub">BPF-LSM joins the kernel</p></article>
+      <span class="lt-arrow" id="lt-a4">→</span>
+      <article class="lt-card lt-teal" id="lt-k57"><p class="lt-tag">Linux 5.7</p><h2>Ships</h2><p class="lt-sub">same hooks as the LSMs</p></article>
+    </div>
+        </div>
+        <p class="lt-caption" id="lt-caption">eBPF landed in Linux 3.18 in 2014. bcc and bpftrace are tooling. KRSI was proposed in 2019, merged in March 2020, and shipped in Linux 5.7.</p>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      
+      tl.fromTo("#lt-glow-a", { rotation: 0, scale: 1 }, { rotation: 8, scale: 1.05, duration: 7.0, ease: "sine.inOut" }, 0.2);
+      tl.fromTo("#lt-glow-b", { y: 0 }, { y: -22, duration: 6.4, ease: "power1.inOut" }, 0.3);
+      tl.fromTo("#lt-ghost", { y: 16, opacity: 0 }, { y: 0, opacity: 0.07, duration: 0.8, ease: "power1.out" }, 0.2);
+      tl.fromTo("#lt-series", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "sine.out" }, 0.16);
+      tl.fromTo("#lt-index", { x: 12, opacity: 0 }, { x: 0, opacity: 1, duration: 0.34, ease: "power2.out" }, 0.22);
+      tl.fromTo("#lt-kicker", { opacity: 0 }, { opacity: 1, duration: 0.36, ease: "power1.out" }, 0.24);
+      tl.fromTo("#lt-title", { x: -36, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: "expo.out" }, 0.3);
+      tl.fromTo("#lt-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.42, ease: "power3.inOut" }, 0.48);
+      tl.fromTo("#lt-e318", { scale: 0.92, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.36, ease: "circ.out" }, 0.58);
+      tl.fromTo("#lt-a1", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.22, ease: "power2.inOut" }, 0.72);
+      tl.fromTo("#lt-bcc", { scale: 0.92, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.34, ease: "power4.out" }, 0.74);
+      tl.fromTo("#lt-a2", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.22, ease: "power3.inOut" }, 0.88);
+      tl.fromTo("#lt-bpf", { scale: 0.94, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.34, ease: "expo.out" }, 0.9);
+      tl.fromTo("#lt-join", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.inOut" }, 1.08);
+      tl.fromTo("#lt-krsi", { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 1.2);
+      tl.fromTo("#lt-a3", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.22, ease: "power2.inOut" }, 1.36);
+      tl.fromTo("#lt-merge", { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.38, ease: "circ.out" }, 1.38);
+      tl.fromTo("#lt-a4", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.22, ease: "sine.out" }, 1.52);
+      tl.fromTo("#lt-k57", { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.42, ease: "power4.out" }, 1.54);
+      tl.fromTo("#lt-caption", { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, 2.05);
+  
+      window.__timelines["linux-timeline"] = tl;
+    </script>
+  </template>
+</body>
+</html>

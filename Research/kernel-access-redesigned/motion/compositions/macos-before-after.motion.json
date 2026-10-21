@@ -1,0 +1,38 @@
+{
+  "duration": 8,
+  "assertions": [
+    {
+      "kind": "appearsBy",
+      "selector": "#mb-title",
+      "bySec": 1.3
+    },
+    {
+      "kind": "appearsBy",
+      "selector": "#mb-before",
+      "bySec": 2.4
+    },
+    {
+      "kind": "appearsBy",
+      "selector": "#mb-caption",
+      "bySec": 3.4
+    },
+    {
+      "kind": "before",
+      "a": "#mb-title",
+      "b": "#mb-before"
+    },
+    {
+      "kind": "before",
+      "a": "#mb-before",
+      "b": "#mb-caption"
+    },
+    {
+      "kind": "staysInFrame",
+      "selector": "#mb-title"
+    },
+    {
+      "kind": "keepsMoving",
+      "withinSelector": "#mb-scene"
+    }
+  ]
+}

@@ -60,8 +60,13 @@ th { text-align: left; font-size: 12px; font-weight: 700; color: var(--faint); p
 td { padding: 12px 14px 12px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
 td:first-child { font-weight: 700; color: var(--navy); white-space: nowrap; }
 .fig { margin: 8px 0 16px; max-width: 100%; }
-.fig img { display: block; width: 100%; height: auto; border-radius: var(--radius); }
+.fig img, .fig video { display: block; width: 100%; height: auto; border-radius: var(--radius); background: #0D1F3C; }
+.fig .still { display: none; }
 .fig figcaption { margin-top: 8px; font-size: 13px; color: var(--mute); line-height: 1.5; }
+@media (prefers-reduced-motion: reduce) {
+  .fig video { display: none; }
+  .fig .still { display: block; }
+}
 .callout { margin: 8px 0 16px; padding: 14px 16px; background: var(--navy); color: #fff; border-radius: var(--radius); font-size: 14.5px; }
 .callout strong { color: var(--teal); }
 blockquote { margin: 16px 0 0; padding: 12px 14px; border-left: 3px solid var(--teal); background: var(--bg); border-radius: 0 var(--radius) var(--radius) 0; color: var(--mute); }
@@ -142,14 +147,20 @@ a:focus-visible { outline: 2px solid var(--teal-dark); outline-offset: 2px; }
 <p>Linux went first, and it chose the cleverest route: keep the code in the kernel, but change what the code is allowed to be. According to the <a href="https://en.wikipedia.org/wiki/EBPF" target="_blank" rel="noopener">eBPF entry on Wikipedia</a>, the original authors were Alexei Starovoitov and Daniel Borkmann, and it landed in Linux 3.18 in 2014 (a December 2014 release, if you like your dates precise). Brendan Gregg gets plenty of credit for what came next — bcc in 2015, bpftrace in 2018 — but that's tooling and evangelism, not authorship, and it's a distinction I've seen blurred in more than one conference deck.</p>
 
 <figure class="fig">
-  <img src="diagrams/linux-timeline.png" alt="Timeline from Linux 3.18 in 2014, through bcc, bpftrace and the 2019 KRSI proposal, to the March 2020 merge and Linux 5.7." width="1380" height="1013">
+  <video autoplay muted playsinline controls poster="diagrams/linux-timeline.png" width="1920" height="1080" aria-label="Timeline from Linux 3.18 in 2014, through bcc, bpftrace and the 2019 KRSI proposal, to the March 2020 merge and Linux 5.7.">
+    <source src="diagrams/linux-timeline.mp4" type="video/mp4">
+  </video>
+  <img class="still" src="diagrams/linux-timeline.png" alt="Timeline from Linux 3.18 in 2014, through bcc, bpftrace and the 2019 KRSI proposal, to the March 2020 merge and Linux 5.7." width="1380" height="1013">
   <figcaption>eBPF landed in Linux 3.18 in 2014. bcc and bpftrace are tooling, not authorship. KRSI was proposed in 2019, merged in March 2020, and shipped in Linux 5.7. <a href="diagrams/linux-timeline.png">Static image</a></figcaption>
 </figure>
 
 <p>The mechanism, as I understand it, is that instead of loading native machine code into Ring 0, you submit bytecode. A verifier checks it before it runs, and a JIT compiler turns the approved result into native instructions. The security payoff arrived with BPF-LSM, also known as KRSI (Kernel Runtime Security Instrumentation). KP Singh proposed it in 2019, per the <a href="https://issa.mydigitalpublication.com/articles/mitigating-attacks-on-a-supercomputer-with-krsi" target="_blank" rel="noopener">ISSA Journal's write-up</a>, and it merged in March 2020 and shipped in the 5.7 kernel, letting you attach eBPF programs to the same hooks SELinux and AppArmor use. That's how tools like Cilium, Tetragon and Falco do inline enforcement without a loadable kernel module (LKM) to crash the host.</p>
 
 <figure class="fig">
-  <img src="diagrams/ebpf-pipeline.png" alt="Bytecode passes a verifier and a JIT, then runs as native code in the kernel. BPF-LSM sits on the same LSM hooks as SELinux and AppArmor." width="1694" height="1196">
+  <video autoplay muted playsinline controls poster="diagrams/ebpf-pipeline.png" width="1920" height="1080" aria-label="Bytecode passes a verifier and a JIT, then runs as native code in the kernel. BPF-LSM sits on the same LSM hooks as SELinux and AppArmor.">
+    <source src="diagrams/ebpf-pipeline.mp4" type="video/mp4">
+  </video>
+  <img class="still" src="diagrams/ebpf-pipeline.png" alt="Bytecode passes a verifier and a JIT, then runs as native code in the kernel. BPF-LSM sits on the same LSM hooks as SELinux and AppArmor." width="1694" height="1196">
   <figcaption>Bytecode, then the verifier, then the JIT, then native code in the kernel. BPF-LSM attaches to the same hooks SELinux and AppArmor use. <a href="diagrams/ebpf-pipeline.png">Static image</a></figcaption>
 </figure>
 
@@ -159,12 +170,18 @@ a:focus-visible { outline: 2px solid var(--teal-dark); outline-offset: 2px; }
 <p>Apple took the opposite bet: if third-party code is the problem, get it out. Apple announced the move at WWDC 2019, and <a href="https://developer.apple.com/support/kernel-extensions" target="_blank" rel="noopener">Apple's own developer page</a> shows the staging — the relevant kernel interfaces were deprecated in Catalina 10.15, and from Big Sur onward kernel extensions using those deprecated interfaces no longer load by default. The replacement is the Endpoint Security framework, with third-party code running in user space and getting events from the kernel. On Apple silicon it goes further. As <a href="https://eclecticlight.co/2024/09/09/mastering-secure-boot-on-apple-silicon/" target="_blank" rel="noopener">Eclectic Light's walkthrough</a> puts it, the default Full Security mode loads only Apple's own kernel extensions, and you have to drop to Reduced Security from Recovery to allow third-party ones.</p>
 
 <figure class="fig">
-  <img src="diagrams/macos-before-after.png" alt="Before: a third-party kernel extension in Ring 0. After: the kernel sends events to an Endpoint Security client in user space." width="1674" height="899">
+  <video autoplay muted playsinline controls poster="diagrams/macos-before-after.png" width="1920" height="1080" aria-label="Before: a third-party kernel extension in Ring 0. After: the kernel sends events to an Endpoint Security client in user space.">
+    <source src="diagrams/macos-before-after.mp4" type="video/mp4">
+  </video>
+  <img class="still" src="diagrams/macos-before-after.png" alt="Before: a third-party kernel extension in Ring 0. After: the kernel sends events to an Endpoint Security client in user space." width="1674" height="899">
   <figcaption>Before, third-party code sits in the kernel. After, an Endpoint Security client in user space receives events from the kernel. <a href="diagrams/macos-before-after.png">Static image</a></figcaption>
 </figure>
 
 <figure class="fig">
-  <img src="diagrams/macos-staging.png" alt="Staging strip: announced at WWDC 2019, deprecated in Catalina 10.15, no longer loaded by default from Big Sur." width="1300" height="761">
+  <video autoplay muted playsinline controls poster="diagrams/macos-staging.png" width="1920" height="1080" aria-label="Staging strip: announced at WWDC 2019, deprecated in Catalina 10.15, no longer loaded by default from Big Sur.">
+    <source src="diagrams/macos-staging.mp4" type="video/mp4">
+  </video>
+  <img class="still" src="diagrams/macos-staging.png" alt="Staging strip: announced at WWDC 2019, deprecated in Catalina 10.15, no longer loaded by default from Big Sur." width="1300" height="761">
   <figcaption>Announced at WWDC 2019. Deprecated in Catalina 10.15. From Big Sur, those kernel extensions no longer load by default. <a href="diagrams/macos-staging.png">Static image</a></figcaption>
 </figure>
 
@@ -184,21 +201,30 @@ a:focus-visible { outline: 2px solid var(--teal-dark); outline-offset: 2px; }
 <p>Now the bit that circulates wrongly. A lot of recent commentary treats WESP as already rolled out. It isn't. At Fal.Con in September, CrowdStrike's Alex Ionescu described it as still in private preview and expected to reach general availability soon, per <a href="https://www.investing.com/news/transcripts/crowdstrike-at-falcon-pushes-deeper-into-aidriven-security-93CH-4888375" target="_blank" rel="noopener">the keynote coverage on Investing.com</a>. That's CrowdStrike's own account, so take it with the usual vendor discount, but it matches Microsoft's own tense, and I couldn't find any Microsoft statement of general availability. Ionescu also framed WESP as the third big OS evolution after eBPF and Endpoint Security. That framing is the company's; I think it's a fair one, but it's theirs.</p>
 
 <figure class="fig">
-  <img src="diagrams/windows-timeline.png" alt="Timeline from Vista PatchGuard and the EU complaint, through the 19 July 2024 outage, WRI at Ignite in November 2024, the June 2025 WESP private preview, and Fal.Con 2026." width="1418" height="1111">
+  <video autoplay muted playsinline controls poster="diagrams/windows-timeline.png" width="1920" height="1080" aria-label="Timeline from Vista PatchGuard and the EU complaint, through the 19 July 2024 outage, WRI at Ignite in November 2024, the June 2025 WESP private preview, and Fal.Con 2026.">
+    <source src="diagrams/windows-timeline.mp4" type="video/mp4">
+  </video>
+  <img class="still" src="diagrams/windows-timeline.png" alt="Timeline from Vista PatchGuard and the EU complaint, through the 19 July 2024 outage, WRI at Ignite in November 2024, the June 2025 WESP private preview, and Fal.Con 2026." width="1418" height="1111">
   <figcaption>Vista PatchGuard, the EU complaint and the 2009 commitment, the 19 July 2024 outage, WRI at Ignite in November 2024, the WESP private preview in June 2025, and Fal.Con still calling it a preview. <a href="diagrams/windows-timeline.png">Static image</a></figcaption>
 </figure>
 
 <p>The same caution applies to the rest of the Windows package. Native Sysmon was announced at Ignite 2025 and, per <a href="https://bleepingcomputer.com/news/microsoft/microsoft-rolls-out-native-windows-11-sysmon-security-monitoring" target="_blank" rel="noopener">BleepingComputer</a>, it's only rolling out to Insiders on the Beta and Dev channels and is disabled by default. Memory integrity is moving faster: per <a href="https://www.helpnetsecurity.com/2026/09/03/windows-memory-integrity-update/" target="_blank" rel="noopener">Help Net Security</a>, quality updates starting October 2026 begin enabling it on eligible devices (and VBS too where needed), after a readiness check, and machines where it was already switched off are left alone. So it's a staged default, not enforcement. Quick Machine Recovery is real and shipping — per <a href="https://support.microsoft.com/windows/quick-machine-recovery-in-windows-aa2852f4-e04e-4af4-9508-0addda165304" target="_blank" rel="noopener">Microsoft Support</a>, it applies remediations through Windows Update from the recovery environment after boot failures — but it recovers boots, it doesn't stop an agent from taking the kernel down in the first place.</p>
 
 <figure class="fig">
-  <img src="diagrams/windows-status.png" alt="Status board: WESP in private preview, native Sysmon on Insiders and off by default, memory integrity a staged default from October 2026, Quick Machine Recovery shipping but only recovering boots." width="1180" height="1202">
+  <video autoplay muted playsinline controls poster="diagrams/windows-status.png" width="1920" height="1080" aria-label="Status board: WESP in private preview, native Sysmon on Insiders and off by default, memory integrity a staged default from October 2026, Quick Machine Recovery shipping but only recovering boots.">
+    <source src="diagrams/windows-status.mp4" type="video/mp4">
+  </video>
+  <img class="still" src="diagrams/windows-status.png" alt="Status board: WESP in private preview, native Sysmon on Insiders and off by default, memory integrity a staged default from October 2026, Quick Machine Recovery shipping but only recovering boots." width="1180" height="1202">
   <figcaption>WESP is a private preview. Native Sysmon is Insiders only and off by default. Memory integrity is a staged default from October 2026. Quick Machine Recovery ships, and it recovers boots. <a href="diagrams/windows-status.png">Static image</a></figcaption>
 </figure>
 
 <p>One more correction, because I've seen it repeated. eBPF for Windows isn't the user-mode escape hatch the story sometimes implies. The <a href="https://github.com/microsoft/ebpf-for-windows" target="_blank" rel="noopener">project's README</a> says the verifier runs in a secure user-mode environment, but verified programs then load into a kernel-mode execution context, and with HVCI enabled they can't be JIT-compiled and have to run in native mode, compiled into regular Windows drivers. Verified, yes. Out of the kernel, no.</p>
 
 <figure class="fig">
-  <img src="diagrams/ebpf-windows.png" alt="An eBPF program is verified in user mode, then loaded into a kernel-mode execution context. With HVCI it cannot be JIT-compiled and runs as a native Windows driver. Verified, yes. Out of the kernel, no." width="2074" height="1149">
+  <video autoplay muted playsinline controls poster="diagrams/ebpf-windows.png" width="1920" height="1080" aria-label="An eBPF program is verified in user mode, then loaded into a kernel-mode execution context. With HVCI it cannot be JIT-compiled and runs as a native Windows driver. Verified, yes. Out of the kernel, no.">
+    <source src="diagrams/ebpf-windows.mp4" type="video/mp4">
+  </video>
+  <img class="still" src="diagrams/ebpf-windows.png" alt="An eBPF program is verified in user mode, then loaded into a kernel-mode execution context. With HVCI it cannot be JIT-compiled and runs as a native Windows driver. Verified, yes. Out of the kernel, no." width="2074" height="1149">
   <figcaption>The verifier runs in user mode. Verified programs then load into a kernel-mode execution context. With HVCI on, no JIT: they run as regular Windows drivers. Verified, yes. Out of the kernel, no. <a href="diagrams/ebpf-windows.png">Static image</a></figcaption>
 </figure>
 
@@ -208,7 +234,10 @@ a:focus-visible { outline: 2px solid var(--teal-dark); outline-offset: 2px; }
 <p>Step back and the three platforms split into two philosophies. Apple and Microsoft chose spatial isolation: move the observer into an isolated fault domain in user space, and accept the cost of crossing the boundary. Linux chose language-level constraint: keep the observer in the kernel, but restrict what it can express so a verifier can reject anything dangerous. Same axiom, different currency — one pays in context switches and platform dependence, the other in expressiveness. (This is Rice's theorem showing up in practice: no checker can decide every interesting property of arbitrary programs, so a verifier has to be conservative and will turn away some programs that were actually safe.)</p>
 
 <figure class="fig">
-  <img src="diagrams/two-philosophies.png" alt="Spatial isolation, chosen by Apple and Microsoft, against language-level constraint, chosen by Linux, with Rice's theorem: a verifier has to be conservative and turns some safe programs away." width="2144" height="1150">
+  <video autoplay muted playsinline controls poster="diagrams/two-philosophies.png" width="1920" height="1080" aria-label="Spatial isolation, chosen by Apple and Microsoft, against language-level constraint, chosen by Linux, with Rice's theorem: a verifier has to be conservative and turns some safe programs away.">
+    <source src="diagrams/two-philosophies.mp4" type="video/mp4">
+  </video>
+  <img class="still" src="diagrams/two-philosophies.png" alt="Spatial isolation, chosen by Apple and Microsoft, against language-level constraint, chosen by Linux, with Rice's theorem: a verifier has to be conservative and turns some safe programs away." width="2144" height="1150">
   <figcaption>Spatial isolation pays in context switches and platform dependence. Language-level constraint pays in expressiveness. Rice's theorem is why the verifier has to be conservative. <a href="diagrams/two-philosophies.png">Static image</a></figcaption>
 </figure>
 
