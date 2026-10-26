@@ -1,0 +1,27 @@
+{
+  "title": "What this briefing read",
+  "eyebrow": "ThinkInfoSec · Limits",
+  "caption": "Read on 26 October 2026. Empty boxes are pages that did not return a usable text, or a corpus this briefing did not query. They are not silent findings.",
+  "alt": "Sources read: PHP project pages, three national alerts, and three vendor posts. Not quoted: NVD loader pages, the ACSC alert, an NCSC-NL product list, and ThinkThreats.",
+  "theme": "thinkinfosec",
+  "nodes": [
+    { "id": "php", "tag": "Read", "title": "PHP project", "sub": "php.net, two GHSAs, Foundation", "tone": "teal" },
+    { "id": "nat", "tag": "Read", "title": "Three alerts", "sub": "CISA, Cyber Centre, CERT/CC", "tone": "teal" },
+    { "id": "ven", "tag": "Read", "title": "Three vendors", "sub": "Wiz, Cloudflare, Vercel", "tone": "neutral" },
+    { "id": "nvd", "tag": "No text", "title": "NVD pages", "sub": "loader shell only", "tone": "magenta", "variant": "ghost" },
+    { "id": "acsc", "tag": "No text", "title": "ACSC alert", "sub": "HTTP 500 on 26 Oct", "tone": "magenta", "variant": "ghost" },
+    { "id": "list", "tag": "Not read", "title": "Product inventory", "sub": "NCSC-NL list, skipped", "tone": "magenta", "variant": "ghost" },
+    { "id": "tt", "tag": "Not used", "title": "ThinkThreats", "sub": "not an actor question", "tone": "neutral", "variant": "ghost" }
+  ],
+  "groups": [
+    { "id": "read", "label": "Quoted from a usable page", "tone": "teal", "rows": [["php", "nat", "ven"]] },
+    { "id": "gap", "label": "Not a finding", "tone": "magenta", "rows": [["nvd", "acsc", "list", "tt"]] }
+  ],
+  "rows": [["read"], ["gap"]],
+  "edges": [
+    { "from": "ven", "to": "nvd", "style": "reference", "label": "do not fill these gaps" }
+  ],
+  "legend": [
+    { "style": "reference", "label": "absence is not a result" }
+  ]
+}

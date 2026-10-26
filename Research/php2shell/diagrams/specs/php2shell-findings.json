@@ -1,0 +1,37 @@
+{
+  "title": "What agrees, and what must not be averaged",
+  "eyebrow": "ThinkInfoSec · How to read the sources",
+  "caption": "The top row is what php.net, both GitHub advisories, CISA, CERT/CC, and the Cyber Centre share. The bottom row is vendor framing or a split sentence. Patch FPM on either reading of that split.",
+  "alt": "Consensus is unauthenticated engine code execution, a score of 9.2, and update as the only complete fix. Separate from that: a 70 percent website estimate, four exploitation thresholds, and two sentences on PHP-FPM.",
+  "theme": "thinkinfosec",
+  "nodes": [
+    { "id": "rce", "tag": "01", "title": "Engine RCE", "sub": "not the application", "tone": "teal" },
+    { "id": "score", "tag": "02", "title": "9.2, not 10.0", "sub": "both advisories", "tone": "teal" },
+    { "id": "only", "tag": "Fix", "title": "Update only", "sub": "four fixed releases", "tone": "teal" },
+    { "id": "share", "tag": "03", "title": "~70% of websites", "sub": "Wiz, echoed by Cloudflare", "tone": "magenta" },
+    { "id": "status", "tag": "04", "title": "Status lines", "sub": "four thresholds", "tone": "magenta" },
+    { "id": "fpm", "tag": "05", "title": "FPM on 109618", "sub": "two sentences", "tone": "magenta" },
+    { "id": "anyway", "tag": "Either way", "title": "Patch FPM", "sub": "scope does not split", "tone": "teal" }
+  ],
+  "groups": [
+    {
+      "id": "agreed",
+      "label": "Established consensus",
+      "tone": "teal",
+      "rows": [["rce", "score", "only"]]
+    },
+    {
+      "id": "split",
+      "label": "Do not average these",
+      "tone": "magenta",
+      "rows": [["share", "status", "fpm"]]
+    }
+  ],
+  "rows": [["agreed"], ["split"], ["~", "anyway", "~"]],
+  "edges": [
+    { "from": "fpm", "to": "anyway", "style": "conditional", "label": "wording splits, patch either way" }
+  ],
+  "legend": [
+    { "style": "conditional", "label": "disputed wording, same action" }
+  ]
+}

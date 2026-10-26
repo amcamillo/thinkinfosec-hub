@@ -1,0 +1,28 @@
+{
+  "title": "Two bugs, one patch",
+  "eyebrow": "ThinkInfoSec · What the advisories show",
+  "caption": "php.net’s paraphrase of impact, not a reproduction. CVE-2026-109618 is cleanup trusting a partial request. CVE-2026-109619 is a later request on the same worker using freed state. Both close in the same four releases.",
+  "alt": "Two separate failure paths, out-of-memory cleanup and stale worker state, both end at one patched release set.",
+  "theme": "thinkinfosec",
+  "nodes": [
+    { "id": "oom1", "tag": "109618", "title": "OOM interrupt", "sub": "request data half set", "tone": "magenta" },
+    { "id": "oom2", "tag": "Then", "title": "Cleanup trusts it", "sub": "invalid data read as valid", "tone": "magenta" },
+    { "id": "st1", "tag": "109619", "title": "State survives", "sub": "memory already freed", "tone": "magenta" },
+    { "id": "st2", "tag": "Then", "title": "Same worker", "sub": "later request reuses it", "tone": "magenta" },
+    { "id": "patch", "tag": "Both", "title": "One patch", "sub": "four fixed releases", "tone": "teal" }
+  ],
+  "groups": [
+    { "id": "oom", "label": "CVE-2026-109618", "tone": "magenta", "rows": [["oom1", "oom2"]] },
+    { "id": "stale", "label": "CVE-2026-109619", "tone": "magenta", "rows": [["st1", "st2"]] }
+  ],
+  "rows": [["oom", "stale"], ["~", "patch", "~"]],
+  "edges": [
+    { "from": "oom1", "to": "oom2" },
+    { "from": "st1", "to": "st2" },
+    { "from": "oom2", "to": "patch", "label": "shown on mod_php" },
+    { "from": "st2", "to": "patch", "label": "mod_php and FPM" }
+  ],
+  "legend": [
+    { "style": "flow", "label": "advisory impact, not a procedure" }
+  ]
+}

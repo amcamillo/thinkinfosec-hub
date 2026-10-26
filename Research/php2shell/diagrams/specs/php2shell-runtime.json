@@ -1,0 +1,34 @@
+{
+  "title": "The request hits a server API",
+  "eyebrow": "ThinkInfoSec · The runtime",
+  "caption": "php.net names all four. mod_php is the highest demonstrated risk. FrankenPHP and LiteSpeed are source analysis, not a published end-to-end demonstration. The patched build is the same list for each.",
+  "alt": "An HTTP request reaches mod_php, PHP-FPM, FrankenPHP, or LiteSpeed. All four are in scope for the same patched PHP releases. An application update is not on this path.",
+  "theme": "thinkinfosec",
+  "nodes": [
+    { "id": "req", "tag": "In", "title": "HTTP request", "sub": "before your app runs", "tone": "neutral" },
+    { "id": "mod", "tag": "Highest", "title": "mod_php", "sub": "shown before app code", "tone": "magenta" },
+    { "id": "fpm", "tag": "In scope", "title": "PHP-FPM", "sub": "patch on either reading", "tone": "neutral" },
+    { "id": "other", "tag": "Analysis", "title": "FrankenPHP, LiteSpeed", "sub": "likely, not demonstrated", "tone": "neutral", "variant": "ghost" },
+    { "id": "app", "tag": "Not this", "title": "App or plugin update", "sub": "leaves the engine", "tone": "magenta", "variant": "ghost" },
+    { "id": "build", "tag": "Close", "title": "Patched releases", "sub": "8.2.35 through 8.5.12", "tone": "teal" }
+  ],
+  "groups": [
+    {
+      "id": "sapis",
+      "label": "Same patch list, weaker demonstration",
+      "tone": "neutral",
+      "rows": [["fpm", "other"]]
+    }
+  ],
+  "rows": [["req", "mod", "build"], ["sapis", "app"]],
+  "edges": [
+    { "from": "req", "to": "mod", "label": "highest demonstrated risk" },
+    { "from": "mod", "to": "build", "label": "same four releases" },
+    { "from": "build", "to": "fpm", "style": "conditional", "label": "also in scope" }
+  ],
+  "legend": [
+    { "style": "flow", "label": "highest demonstrated risk" },
+    { "style": "conditional", "label": "in scope, wording splits on one CVE" },
+    { "style": "optional", "label": "analysis only, or not a fix" }
+  ]
+}

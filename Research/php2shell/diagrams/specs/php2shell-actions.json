@@ -1,0 +1,22 @@
+{
+  "title": "Close the ticket on the build in production",
+  "eyebrow": "ThinkInfoSec · Actions",
+  "caption": "This week is the runtime that serves traffic. This month is for partial controls, labelled as partial. This budget cycle is unsupported PHP and the appliances that hide it.",
+  "alt": "Three stages: this week patch and restart internet-facing PHP, this month hold partial controls honestly, this budget cycle remove unsupported and embedded PHP.",
+  "theme": "thinkinfosec",
+  "nodes": [
+    { "id": "week", "tag": "Stage 1", "title": "This week", "sub": "name it, move it, restart", "tone": "teal" },
+    { "id": "month", "tag": "Stage 2", "title": "This month", "sub": "partials, labelled partial", "tone": "magenta" },
+    { "id": "budget", "tag": "Stage 3", "title": "This budget", "sub": "unsupported PHP leaves", "tone": "neutral" },
+    { "id": "done", "tag": "Done when", "title": "Production build", "sub": "not the CMS version", "tone": "teal" }
+  ],
+  "rows": [["week", "month", "budget"], ["~", "done", "~"]],
+  "edges": [
+    { "from": "week", "to": "month", "label": "if a window is still open" },
+    { "from": "month", "to": "budget" },
+    { "from": "week", "to": "done", "label": "the ticket closes here" }
+  ],
+  "legend": [
+    { "style": "flow", "label": "order of work" }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "title": "Three checks, then the runtime",
+  "eyebrow": "ThinkInfoSec · The argument",
+  "caption": "The CMS version, the leaked 10.0, and any one exploitation sentence each stop short. The patch is the PHP process that answers the request.",
+  "alt": "Three checks — CMS version, CVSS 9.2, and four status lines — all lead to patching the PHP runtime and restarting workers.",
+  "theme": "thinkinfosec",
+  "nodes": [
+    { "id": "cms", "tag": "01 · Inventory", "title": "CMS version", "sub": "wrong line on the ticket", "tone": "magenta", "variant": "ghost" },
+    { "id": "score", "tag": "02 · Score", "title": "CVSS 9.2", "sub": "high complexity is inside it", "tone": "neutral" },
+    { "id": "lines", "tag": "03 · Status", "title": "Four status lines", "sub": "different thresholds", "tone": "magenta" },
+    { "id": "patch", "tag": "The close", "title": "Patch the runtime", "sub": "then restart workers", "tone": "teal" }
+  ],
+  "rows": [["cms", "score", "lines", "patch"]],
+  "edges": [
+    { "from": "cms", "to": "score", "style": "optional", "label": "does not close it" },
+    { "from": "score", "to": "lines", "label": "not a wait" },
+    { "from": "lines", "to": "patch", "style": "conditional", "label": "still patch" }
+  ],
+  "legend": [
+    { "style": "flow", "label": "what the patch decision uses" },
+    { "style": "optional", "label": "does not close the bug" },
+    { "style": "conditional", "label": "true, and still not a delay" }
+  ]
+}

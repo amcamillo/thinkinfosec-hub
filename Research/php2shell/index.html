@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHP2Shell and the runtime — Thinkinfosec Hub</title>
+<meta name="description" content="Two critical bugs in the PHP engine, the 21 October 2026 patch set, and what a WAF rule or a ‘no exploitation observed’ line each actually proves.">
+<meta name="author" content="Andre Camillo">
+<link rel="canonical" href="https://amcamillo.github.io/thinkinfosec-hub/Research/php2shell/">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0D1F3C;
+  --teal: #00BFCF;
+  --teal-dark: #008A96;
+  --pink: #FF2D78;
+  --green: #00875A;
+  --bg: #f4f7f6;
+  --card: #ffffff;
+  --ink: #333333;
+  --mute: #555555;
+  --faint: #777777;
+  --line: #dddddd;
+  --radius: 8px;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
+  --focus: 2px solid var(--teal);
+  --col: 1040px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--teal-dark); }
+a:hover { text-decoration: underline; }
+a:focus-visible, button:focus-visible, summary:focus-visible {
+  outline: var(--focus); outline-offset: 3px;
+}
+.skip {
+  position: absolute; left: 0.75rem; top: -3rem;
+  background: var(--navy); color: #fff; padding: 0.5rem 0.85rem;
+  border-radius: var(--radius); z-index: 400; text-decoration: none;
+}
+.skip:focus { top: 0.75rem; }
+
+.topbar { background: var(--navy); color: #fff; }
+.topbar-inner {
+  max-width: var(--col); margin: 0 auto;
+  min-height: 52px; padding: 8px 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+.brand img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.brand-name { font-size: 15px; font-weight: 700; display: block; line-height: 1.15; }
+.brand-sub { font-size: 12px; color: var(--teal); font-weight: 500; }
+.topbar-meta { font-size: 13px; color: rgba(255,255,255,0.62); }
+
+.mast { background: var(--card); border-bottom: 1px solid var(--line); }
+.mast-inner { max-width: var(--col); margin: 0 auto; padding: 28px 24px 22px; }
+.crumb { font-size: 13px; color: var(--faint); margin-bottom: 18px; }
+.crumb a { color: var(--teal-dark); text-decoration: none; font-weight: 500; }
+.crumb a:hover { text-decoration: underline; }
+.sep { margin: 0 8px; color: var(--line); }
+.dateline { font-size: 13px; color: var(--teal-dark); font-weight: 600; margin-bottom: 8px; }
+.title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px 28px; }
+.mast h1 {
+  font-size: clamp(28px, 3.6vw, 38px);
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.title-row h1 { flex: 1 1 auto; min-width: 0; margin-bottom: 0; }
+.mast h1 em { font-style: normal; color: var(--teal-dark); }
+.title-side { flex: 0 1 260px; display: flex; flex-direction: column; gap: 8px; }
+.ai-disclose { margin: 0; font-size: 12px; line-height: 1.45; color: var(--mute); border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 10px; background: var(--bg); }
+.ai-disclose strong { display: block; color: var(--navy); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2px; }
+.advice-stamp { margin: 0; padding: 8px 10px; border: 1.5px solid #FF8B00; border-radius: var(--radius); background: #fff8f0; color: #9a4d00; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; line-height: 1.35; }
+.lede { max-width: 42rem; color: var(--mute); margin: 12px 0 10px; }
+.meta-line { font-size: 14px; color: var(--faint); margin-bottom: 18px; }
+
+.facts {
+  display: flex; flex-wrap: wrap; gap: 10px 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 14px; color: var(--mute);
+}
+.facts b { color: var(--navy); font-weight: 700; margin-right: 5px; }
+.facts a { text-decoration: none; font-size: 13px; }
+.facts a:hover { text-decoration: underline; }
+
+.toc {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+  padding: 8px 0;
+}
+.toc-inner {
+  max-width: var(--col); margin: 0 auto;
+  padding: 0 24px;
+  display: flex; gap: 4px; overflow-x: auto; width: 100%;
+}
+.toc a {
+  flex-shrink: 0;
+  color: var(--faint); text-decoration: none;
+  font-size: 13px; font-weight: 500;
+  min-height: 40px; padding: 0 12px;
+  display: inline-flex; align-items: center;
+  border-radius: 6px;
+}
+.toc a:hover { color: var(--navy); background: var(--bg); }
+.toc a.on { color: var(--navy); background: var(--bg); font-weight: 600; }
+
+.wrap { max-width: var(--col); margin: 0 auto; padding: 20px 24px 64px; display: grid; gap: 16px; }
+section {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px 28px 24px;
+  scroll-margin-top: 64px;
+  min-width: 0;
+}
+.kicker {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--teal-dark); margin-bottom: 6px;
+}
+h2 {
+  font-size: 1.45rem; font-weight: 700; color: var(--navy);
+  margin: 0 0 10px; letter-spacing: -0.02em; line-height: 1.25;
+}
+h3 { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin: 18px 0 6px; }
+section p { margin: 0 0 12px; }
+.blurb { color: var(--mute); margin-bottom: 18px; max-width: 44rem; }
+.note { font-size: 14px; color: var(--mute); }
+.fig { margin: 8px 0 16px; min-width: 0; max-width: 100%; }
+.fig img { display: block; width: 100%; max-width: 100%; height: auto; border-radius: var(--radius); }
+.fig figcaption { margin-top: 8px; font-size: 13px; color: var(--mute); line-height: 1.5; }
+
+.thesis {
+  background: var(--bg);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin: 0 0 20px;
+}
+.thesis p { font-size: 1.05rem; font-weight: 600; color: var(--navy); line-height: 1.5; max-width: 46rem; margin: 0; }
+.thesis span { color: var(--teal-dark); }
+
+.moves { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
+.move .n { font-size: 12px; font-weight: 700; color: var(--teal-dark); display: block; margin-bottom: 6px; }
+.move:nth-child(2) .n { color: var(--navy); }
+.move:nth-child(3) .n { color: var(--pink); }
+.move p { font-size: 14.5px; color: var(--mute); margin: 0; }
+
+.scroll { overflow-x: auto; max-width: 100%; min-width: 0; margin: 4px 0 8px; }
+.clock-table { width: 100%; border-collapse: collapse; font-size: 14.5px; margin-bottom: 8px; }
+.clock-table th {
+  text-align: left; font-size: 12px; font-weight: 700; color: var(--faint);
+  padding: 0 12px 10px 0; border-bottom: 2px solid var(--navy);
+}
+.clock-table td { padding: 12px 12px 12px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.clock-table .t { font-weight: 700; color: var(--navy); white-space: nowrap; }
+
+.callout {
+  margin-top: 16px; padding: 14px 16px;
+  background: var(--navy); color: #fff;
+  border-radius: var(--radius); font-size: 14.5px;
+}
+.callout strong { color: var(--teal); }
+.warn {
+  margin-top: 14px; padding: 12px 14px;
+  background: #fff8f0; border-left: 3px solid #FF8B00;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 14.5px; color: var(--mute);
+}
+.warn strong { color: var(--navy); }
+
+.grid-2 { display: grid; gap: 16px; }
+@media (min-width: 800px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+.card h3 { margin: 0 0 6px; }
+.card p, .card li { font-size: 14.5px; color: var(--mute); }
+.card ul { margin: 8px 0 0 1.1rem; display: grid; gap: 6px; }
+.src { font-size: 12px; color: var(--faint); margin-top: 10px; }
+.src a { color: var(--teal-dark); }
+code, .mono {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.86em; color: var(--navy);
+  overflow-wrap: anywhere;
+}
+sup.cite, .cite {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10px; font-weight: 500; line-height: 0; vertical-align: super;
+}
+.cite { color: var(--teal-dark); text-decoration: none; margin-left: 1px; }
+.cite:hover { text-decoration: underline; }
+
+.sourcelist { list-style: none; display: grid; gap: 12px; }
+.sourcelist li {
+  font-size: 14px; color: var(--mute);
+  padding-left: 2.4rem; position: relative; line-height: 1.55; scroll-margin-top: 72px;
+}
+.sourcelist li > .n {
+  position: absolute; left: 0; top: 0;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px; font-weight: 600; color: var(--navy);
+}
+.sourcelist a { word-break: break-word; }
+.sourcelist .meta {
+  display: block; margin-top: 2px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px; color: var(--faint);
+}
+.group-lbl {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--teal-dark); margin: 22px 0 10px;
+}
+.group-lbl:first-of-type { margin-top: 8px; }
+.sourcelist li:target { background: #eef8f9; border-radius: 6px; }
+
+.badge {
+  display: inline; font-size: 12px; font-weight: 600; font-style: italic;
+  border: 0; background: none; color: var(--faint); padding: 0; text-transform: none;
+}
+
+.finds { display: grid; gap: 0; }
+.find {
+  display: grid; grid-template-columns: 2.2rem 1fr; gap: 8px;
+  padding: 16px 0; border-top: 1px solid var(--line);
+}
+.find .n { font-size: 14px; font-weight: 700; color: var(--teal-dark); padding-top: 2px; }
+.find:nth-child(5) .n { color: var(--pink); }
+.find p { font-size: 15px; color: var(--ink); margin: 6px 0 0; }
+
+.recs { display: grid; gap: 16px; }
+@media (min-width: 800px) { .recs { grid-template-columns: 1fr 1fr 1fr; } }
+.rec .stage { font-size: 12px; font-weight: 700; color: var(--teal-dark); margin-bottom: 6px; display: block; }
+.rec:nth-child(2) .stage { color: var(--navy); }
+.rec:nth-child(3) .stage { color: var(--pink); }
+.rec h3 { margin-top: 0; }
+.rec ul { margin: 8px 0 0 1.05rem; display: grid; gap: 7px; }
+.rec li { font-size: 14.5px; color: var(--mute); }
+
+details.caveat { border-top: 1px solid var(--line); }
+details.caveat summary {
+  cursor: pointer; list-style: none; padding: 12px 0;
+  font-weight: 600; font-size: 15px; color: var(--navy);
+  display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px;
+}
+details.caveat summary::-webkit-details-marker { display: none; }
+details.caveat summary::after { content: "+"; color: var(--teal-dark); }
+details.caveat[open] summary::after { content: "–"; }
+details.caveat p { padding: 0 0 14px; font-size: 14.5px; color: var(--mute); }
+
+footer {
+  background: var(--navy); color: rgba(255,255,255,0.65);
+  padding: 24px; text-align: center;
+}
+footer .ft-main { font-size: 14px; max-width: var(--col); margin: 0 auto; }
+footer .ft-main a { color: var(--teal); text-decoration: none; }
+footer .ft-main a:hover { text-decoration: underline; }
+footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.4); max-width: 40rem; }
+
+@media (max-width: 800px) {
+  .topbar-meta { display: none; }
+  .title-row { flex-direction: column; }
+  .title-side { flex-basis: auto; }
+  .moves, .recs, .grid-2 { grid-template-columns: 1fr; }
+  .find { grid-template-columns: 1fr; }
+  section { padding: 20px 18px 18px; }
+  .clock-table { min-width: 640px; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../../index.html">
+      <img src="../../assets/learning-hub-logo.png" alt="Thinkinfosec Hub logo" width="28" height="28" onerror="this.style.display='none'">
+      <span>
+        <span class="brand-name">Thinkinfosec</span>
+        <span class="brand-sub">Research briefing</span>
+      </span>
+    </a>
+    <p class="topbar-meta">October 2026</p>
+  </div>
+</header>
+
+<div class="mast">
+  <div class="mast-inner">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="../../index.html">Hub</a><span class="sep">/</span>
+      <a href="../../index.html#research">Research</a><span class="sep">/</span>
+      PHP2Shell
+    </nav>
+    <p class="dateline">Independent research briefing · October 2026</p>
+    <div class="title-row">
+      <h1>PHP2Shell and the <em>runtime</em></h1>
+      <div class="title-side">
+        <p class="ai-disclose" role="note"><strong>AI-assisted research</strong> Minor inconsistencies can occur. Every claim remains grounded in the ThinkInfoSec ontology and the sources disclosed on this page.</p>
+        <p class="advice-stamp">This is not legal advice</p>
+      </div>
+    </div>
+    <p class="lede">Two critical bugs sit in the PHP engine, so an application update does not close them. This briefing sets the 21 October 2026 advisories against what a patch, a WAF rule, and a “no exploitation observed” line each actually prove.</p>
+    <p class="meta-line">Ten sources read · operators who serve PHP · patch the runtime</p>
+    <p class="facts">
+      <span><b>8.5.12</b> and three sibling releases · <a href="#fn1">php.net, 21 Oct 2026</a></span>
+      <span><b>9.2</b> CVSS v4.0 · <a href="#fn2">GHSA 109618</a> · <a href="#fn3">GHSA 109619</a></span>
+      <span><b>14:00 UTC</b> release, pulled forward · <a href="#fn4">PHP Foundation</a></span>
+      <span><b>~70%</b> of websites, vendor estimate · <a href="#fn5">Wiz</a></span>
+    </p>
+  </div>
+</div>
+
+<nav class="toc" aria-label="On this page"><div class="toc-inner">
+  <a href="#thesis">Thesis</a>
+  <a href="#clock">The clock</a>
+  <a href="#findings">Findings</a>
+  <a href="#runtime">The runtime</a>
+  <a href="#bugs">The two bugs</a>
+  <a href="#status">Exploitation</a>
+  <a href="#partial">Partial controls</a>
+  <a href="#recs">Actions</a>
+  <a href="#method">Method</a>
+  <a href="#sources">Sources</a>
+</div></nav>
+
+<main id="main" class="wrap">
+
+  <section id="thesis">
+    <p class="kicker">The argument</p>
+    <h2>The inventory that closes this is the PHP process</h2>
+    <div class="thesis">
+      <p>PHP2Shell is a pair of engine bugs. <span>The CMS version is the wrong line on the ticket.</span> Update the runtime that answers the request, restart the workers, and treat every other control as partial until that is done.</p>
+    </div>
+    <figure class="fig">
+      <img src="diagrams/php2shell-thesis.png" alt="Three checks, then the runtime. The CMS version does not close the bug. The 9.2 score is not a reason to wait. The status lines still end at a runtime patch." width="2800" height="870">
+      <figcaption>Three checks, then the runtime. The CMS version does not close the bug. The 9.2 already contains high complexity. The status lines still end at a patch and a worker restart. <a href="diagrams/php2shell-thesis.png">Static image</a></figcaption>
+    </figure>
+    <div class="moves">
+      <article class="move">
+        <span class="n">01 · The inventory</span>
+        <p>WordPress, Drupal, Joomla, and a one-file script share the bug when they share a vulnerable PHP. The demos were representative. The flaw is underneath them.</p>
+      </article>
+      <article class="move">
+        <span class="n">02 · The score</span>
+        <p>The project scored both issues 9.2, with high attack complexity. A leak the day before said 10.0. High complexity is already inside the 9.2. It is not a reason to wait out the week.</p>
+      </article>
+      <article class="move">
+        <span class="n">03 · The threshold</span>
+        <p>CISA has not seen successful exploitation. Vendors have seen public exploits and attack traffic. Those sentences can all be true. The patch decision sits above all of them.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="clock">
+    <p class="kicker">Disclosure</p>
+    <h2>The patch window opened under a leak</h2>
+    <p class="blurb">The useful clock is not “PHP patched on 21 October.” It is how little quiet time operators had between a public CVE number and a build they could install. Times below are as the PHP Foundation and the vendors stated them.</p>
+    <figure class="fig">
+      <img src="diagrams/php2shell-clock.png" alt="Disclosure timeline from the 2024 stalled fix to the 14:00 UTC releases on 21 October." width="2800" height="1118">
+      <figcaption>Order of events, not an attack chain. 14:00 UTC on 21 October is 01:00 AEDT and 03:00 NZDT on 22 October. <a href="diagrams/php2shell-clock.png">Static image</a></figcaption>
+    </figure>
+    <div class="scroll">
+    <table class="clock-table">
+      <thead>
+        <tr><th>When (UTC)</th><th>What changed</th><th>Source</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="t">2024</td>
+          <td>Quarkslab’s OSTIF audit. A core developer saw early signs of the out-of-memory problem behind CVE-2026-109618. A fix stalled on compatibility, denial-of-service, and extension trade-offs. The Foundation calls that delay a structural failure.</td>
+          <td><a href="#fn4">PHP Foundation</a></td>
+        </tr>
+        <tr>
+          <td class="t">11 Aug 2026</td>
+          <td>Calif’s Ryan A reports unconditional remote code execution on the same root cause. OpenAI reports it independently. Wiz’s own clock starts 19 August, with a report to PHP on 24 August and an acknowledgement on 21 September.</td>
+          <td><a href="#fn4">PHP Foundation</a> · <a href="#fn5">Wiz</a></td>
+        </tr>
+        <tr>
+          <td class="t">20 Oct, ~15:00</td>
+          <td>Both CVE IDs circulate with a wrong release time and a CVSS of 10.0. No technical detail in that leak. Pre-announcement moves to 19:30 UTC. The release moves from 22 October 14:00 UTC to 21 October 14:00 UTC.</td>
+          <td><a href="#fn4">PHP Foundation</a></td>
+        </tr>
+        <tr>
+          <td class="t">20 Oct, evening</td>
+          <td>Calif publishes a proof-of-concept video, then deletes it. Copies circulate. The Foundation says the video sped up other proof-of-concept work, and that the security team had not identified a functional exploit in those copies at the moment of public release.</td>
+          <td><a href="#fn4">PHP Foundation</a></td>
+        </tr>
+        <tr>
+          <td class="t">21 Oct, 03:02</td>
+          <td>Cloudflare states that free and paid WAF rules were already protecting customers, before the public release.</td>
+          <td><a href="#fn6">Cloudflare</a></td>
+        </tr>
+        <tr>
+          <td class="t">21 Oct, 07:41</td>
+          <td>Chainguard publishes images containing the fix, more than six hours before the coordinated release. The Foundation treats that as an embargo break: the fix was studyable while most users were still waiting.</td>
+          <td><a href="#fn4">PHP Foundation</a></td>
+        </tr>
+        <tr>
+          <td class="t">21 Oct, 14:00</td>
+          <td>Public disclosure. PHP 8.5.12, 8.4.27, 8.3.36, and 8.2.35. CISA and the Canadian Cyber Centre publish the same day. CERT/CC’s note is dated 22 October. CISA, Cyber Centre, and PHP’s informational follow-on are updated 23 October.</td>
+          <td><a href="#fn1">php.net</a> · <a href="#fn7">CISA</a> · <a href="#fn8">Cyber Centre</a> · <a href="#fn9">CERT/CC</a></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="callout"><strong>14:00 UTC on 21 October</strong> is 01:00 on 22 October in Australian eastern daylight time, and 03:00 on 22 October in New Zealand daylight time. A local headline dated the 22nd can be the same release. It can also be the original plan, which was 22 October 14:00 UTC. Read the zone before you brief the clock.</p>
+  </section>
+
+  <section id="findings">
+    <p class="kicker">How to read the sources</p>
+    <h2>What they agree on, and what they do not</h2>
+    <p class="blurb">php.net, both GitHub advisories, the PHP Foundation, CISA, CERT/CC, the Canadian Cyber Centre, Wiz, Cloudflare, and Vercel. Statistics and status lines below are flagged as established consensus or single-source. They do not average together.</p>
+    <figure class="fig">
+      <img src="diagrams/php2shell-findings.png" alt="Consensus on engine code execution, the 9.2 score, and the update. Separate from that: the 70 percent estimate, four status lines, and the PHP-FPM wording." width="2800" height="1812">
+      <figcaption>The top band is what the project and the national alerts share. The lower band is a vendor estimate or a split sentence. Patch PHP-FPM on either reading of that split. <a href="diagrams/php2shell-findings.png">Static image</a></figcaption>
+    </figure>
+    <div class="finds">
+      <article class="find">
+        <div class="n">01</div>
+        <div>
+          <span class="badge con">Established consensus</span>
+          <p>Both issues allow unauthenticated remote code execution in PHP itself, across installations that serve web requests. The project’s fixed releases are 8.5.12, 8.4.27, 8.3.36, and 8.2.35. Updating is the only complete fix. mod_php is the highest-risk server API, because a demonstrated path runs before application code.</p>
+          <p class="src"><a href="#fn1">php.net</a> · <a href="#fn2">GHSA-w8hw-w9fx-j79w</a> · <a href="#fn3">GHSA-6wmf-4rv5-p3rp</a> · <a href="#fn7">CISA</a> · <a href="#fn9">CERT/CC VU#763488</a> · <a href="#fn8">Cyber Centre AL26-026</a></p>
+        </div>
+      </article>
+      <article class="find">
+        <div class="n">02</div>
+        <div>
+          <span class="badge con">Established consensus</span>
+          <p>The published score is CVSS v4.0 9.2 on both advisories. The vector is network, high complexity, attack requirements present, no privileges, no user interaction, high impact on the vulnerable system. The 10.0 figure that travelled with the leaked CVE IDs was wrong.</p>
+          <p class="src"><a href="#fn2">GHSA-w8hw-w9fx-j79w</a> · <a href="#fn3">GHSA-6wmf-4rv5-p3rp</a> · <a href="#fn4">PHP Foundation</a> · vector <span class="mono">CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N</span></p>
+        </div>
+      </article>
+      <article class="find">
+        <div class="n">03</div>
+        <div>
+          <span class="badge one">Single-source · Wiz, echoed by Cloudflare</span>
+          <p>Wiz says PHP powers 70% of websites, then titles the same figure as 70% of the internet. Cloudflare says almost 70% of websites. That is an industry estimate of language share. It is not a count of vulnerable hosts, internet-facing workers, or patched estates. Wiz also says every PHP release of the last decade, back to 5.4, is affected by at least one issue. Vercel says 5.4 and later in default configurations. The PHP project’s own fix list is the four supported branches above.</p>
+          <p class="src"><a href="#fn5">Wiz</a> · <a href="#fn6">Cloudflare</a> · <a href="#fn10">Vercel</a> · <a href="#fn1">php.net</a></p>
+        </div>
+      </article>
+      <article class="find">
+        <div class="n">04</div>
+        <div>
+          <span class="badge one">Not one status line</span>
+          <p>As of the 23 October updates, CISA had not observed successful exploitation in the wild. The Cyber Centre had seen open-source reporting of a proof of concept and had not identified active exploitation. Vercel says working public exploits exist and that exploitation attempts have been reported across the industry. Cloudflare says it saw attack traffic mutating payloads against the WAF. Same week. Different thresholds.</p>
+          <p class="src"><a href="#fn7">CISA, revised 23 Oct 2026</a> · <a href="#fn8">Cyber Centre, Update 1</a> · <a href="#fn10">Vercel</a> · <a href="#fn6">Cloudflare</a></p>
+        </div>
+      </article>
+      <article class="find">
+        <div class="n">05</div>
+        <div>
+          <span class="badge one">Split · do not merge these sentences</span>
+          <p>On CVE-2026-109618, the GitHub advisory says source analysis supports PHP-FPM as susceptible and that no complete FPM exploit was demonstrated for that server API. The Foundation’s same-day post says remote code execution was also confirmed on PHP-FPM through application-level paths. On CVE-2026-109619, the GitHub advisory is direct: session-lifecycle code execution was validated on mod_php and on FPM. Patch FPM on either reading.</p>
+          <p class="src"><a href="#fn2">GHSA-w8hw-w9fx-j79w</a> · <a href="#fn4">PHP Foundation</a> · <a href="#fn3">GHSA-6wmf-4rv5-p3rp</a></p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="runtime">
+    <p class="kicker">Theme 1</p>
+    <h2>Application updates leave the engine where it was</h2>
+    <p>php.net’s risk line is the deployment, not the product name: PHP-FPM, Apache with mod_php, php-cgi, FrankenPHP, and LiteSpeed, with the highest risk on mod_php.<a class="cite" href="#fn1">1</a> CISA adds the operational fact that makes inventories fail. PHP is often a component of other software, and the install is not always obvious.<a class="cite" href="#fn7">7</a> The Cyber Centre asks for the same pass over third-party products, appliances, and containers.<a class="cite" href="#fn8">8</a></p>
+    <p>Wiz demonstrated code execution on then-current WordPress, Drupal, and Joomla container images, and says the same engine issue can reach a “Hello World” application.<a class="cite" href="#fn5">5</a> Vercel and Cloudflare both say an application or plugin update does not fix it. If a host runs PHP for you, the question to them is which runtime build is serving traffic.<a class="cite" href="#fn10">10</a><a class="cite" href="#fn6">6</a></p>
+    <figure class="fig">
+      <img src="diagrams/php2shell-runtime.png" alt="An HTTP request reaches mod_php first. PHP-FPM is on the same patch list. FrankenPHP and LiteSpeed are analysis, not a published demonstration. An application update is not the fix." width="2800" height="1308">
+      <figcaption>mod_php is the highest demonstrated risk. PHP-FPM is on the same release list. FrankenPHP and LiteSpeed are source analysis. An application or plugin update is off that list. <a href="diagrams/php2shell-runtime.png">Static image</a></figcaption>
+    </figure>
+    <h3>What each server API claim actually covers</h3>
+    <div class="scroll">
+    <table class="clock-table">
+      <thead>
+        <tr><th>Server API</th><th>What the advisories support</th><th>Where the claim stops</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="t">mod_php</td>
+          <td>Highest risk. Shutdown still runs when startup fails, so the out-of-memory bug can fire before application code. Both CVEs have confirmed code execution here.</td>
+          <td>Confirmed for the tested builds. Reliability still depends on build, extensions, frontend, and allocator layout.<a class="cite" href="#fn1">1</a><a class="cite" href="#fn2">2</a><a class="cite" href="#fn3">3</a></td>
+        </tr>
+        <tr>
+          <td class="t">PHP-FPM</td>
+          <td>In scope for the patch. CVE-2026-109619 session-lifecycle code execution was validated on FPM. A child that dies on startup failure removes one early path on CVE-2026-109618.</td>
+          <td>The 109618 GitHub advisory does not claim a complete FPM exploit. The Foundation post does claim application-level FPM code execution. See finding 05.<a class="cite" href="#fn2">2</a><a class="cite" href="#fn3">3</a><a class="cite" href="#fn4">4</a></td>
+        </tr>
+        <tr>
+          <td class="t">FrankenPHP</td>
+          <td>Named in the php.net risk list. The 109618 advisory’s source reading treats it as likely susceptible in the same way as mod_php.</td>
+          <td>That is source analysis, not a published end-to-end demonstration in the advisory.<a class="cite" href="#fn1">1</a><a class="cite" href="#fn2">2</a></td>
+        </tr>
+        <tr>
+          <td class="t">LiteSpeed / LSAPI</td>
+          <td>Named in the php.net risk list. The 109618 advisory says LSAPI behaves more like FPM.</td>
+          <td>Application-specific exploitation is described as likely and unvalidated.<a class="cite" href="#fn1">1</a><a class="cite" href="#fn2">2</a></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <p>Supported branches stop at 8.2. PHP 8.1 and older get no further releases from the project. Distributions and long-term-support vendors may ship backports. The security team also published minimal source backports for 7.4, 8.0, and 8.1 for people building from source.<a class="cite" href="#fn1">1</a> A PHP 8.6.0 release candidate shipped on 21 October with the same fixes. php.net says that build is for testing, not production.<a class="cite" href="#fn1">1</a></p>
+    <p class="callout">Triage shorthand that says “PHP RCE” is not specific enough. These two identifiers are <strong>CVE-2026-109618</strong> and <strong>CVE-2026-109619</strong>. They are not the 2012 PHP-CGI query-string issue, CVE-2012-1823. File the ticket on the 2026 pair.</p>
+  </section>
+
+  <section id="bugs">
+    <p class="kicker">Theme 2</p>
+    <h2>Two bugs, one patch, different proof</h2>
+    <p class="blurb">This is the project’s own paraphrase. It is enough to scope a patch and a hunt. The GitHub advisories and the Wiz post go further into how a request reaches the failure. That detail is not repeated here.</p>
+    <figure class="fig">
+      <img src="diagrams/php2shell-bugs.png" alt="Two impact paths. Out-of-memory cleanup, and stale state on a later request to the same worker. Both end at one set of patched releases." width="2800" height="1310">
+      <figcaption>Advisory impact, not a procedure. CVE-2026-109618 is cleanup trusting a half-initialised request, shown on mod_php. CVE-2026-109619 is a later request on the same worker, shown on mod_php and PHP-FPM. <a href="diagrams/php2shell-bugs.png">Static image</a></figcaption>
+    </figure>
+    <div class="grid-2">
+      <article class="card">
+        <h3>CVE-2026-109618 — out-of-memory corruption</h3>
+        <p>Out-of-memory handling can interrupt PHP while internal request data is only partly initialised. Cleanup may then treat that data as valid.<a class="cite" href="#fn1">1</a> The confirmed impact on the advisory is unauthenticated code execution as the web worker. Wiz also groups a remote memory-disclosure bug under this CVE, and its code-execution demos on the three CMSs.<a class="cite" href="#fn2">2</a><a class="cite" href="#fn5">5</a></p>
+        <p class="src"><a href="#fn1">php.net</a> · <a href="#fn2">GHSA-w8hw-w9fx-j79w</a> · <a href="#fn5">Wiz</a></p>
+      </article>
+      <article class="card">
+        <h3>CVE-2026-109619 — stale global state</h3>
+        <p>A worker can keep a reference to request-owned state after that memory is freed. A later request on the same worker can use the stale state before normal initialisation.<a class="cite" href="#fn1">1</a> Confirmed consumers in the advisory include early configuration diagnostics and session upload progress. On PHP 8.5, fatal-error backtraces are the strongest demonstrated mod_php case. Session-lifecycle code execution was validated on mod_php and FPM.<a class="cite" href="#fn3">3</a></p>
+        <p class="src"><a href="#fn1">php.net</a> · <a href="#fn3">GHSA-6wmf-4rv5-p3rp</a></p>
+      </article>
+    </div>
+    <p>Wiz’s account of why this surfaced in 2026 is a commercial narrative as well as a research note: frontier models made a decade-old memory bug practical to turn into an exploit, and Wiz names its own research stack in that story.<a class="cite" href="#fn5">5</a> The PHP Foundation’s account is the other half. The out-of-memory class was seen in 2024, without a concrete code-execution path, and the fix waited on trade-offs and a small team.<a class="cite" href="#fn4">4</a> Read them as two clocks on the same bug. One is “AI lowered the cost of the exploit.” One is “the project already knew the class and did not ship the fix.” Neither clock moves the remediation.</p>
+  </section>
+
+  <section id="status">
+    <p class="kicker">Theme 3</p>
+    <h2>Four statements, four thresholds</h2>
+    <p class="blurb">A board paper that picks one of these sentences and drops the date will be wrong by the end of the paragraph. Keep the verb each organisation actually used.</p>
+    <figure class="fig">
+      <img src="diagrams/php2shell-status.png" alt="Four dated statements about exploitation, drawn as different bars rather than one sequence, ending at patch this week." width="2800" height="870">
+      <figcaption>Dotted links are different bars, not a timeline. The PHP Foundation, CISA, and the Cyber Centre are narrower claims. Vercel and Cloudflare are attempts and traffic. The patch does not wait for the verbs to match. <a href="diagrams/php2shell-status.png">Static image</a></figcaption>
+    </figure>
+    <div class="scroll">
+    <table class="clock-table">
+      <thead>
+        <tr><th>Who</th><th>As of</th><th>The sentence they support</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="t">PHP Foundation</td>
+          <td>Public release, 21 Oct</td>
+          <td>PoCs were circulating after the deleted video. The security team had not identified a functional exploit in them at disclosure.<a class="cite" href="#fn4">4</a></td>
+        </tr>
+        <tr>
+          <td class="t">CISA</td>
+          <td>Alert revised 23 Oct</td>
+          <td>Has not observed successful exploitation in the wild. Still says patch immediately.<a class="cite" href="#fn7">7</a></td>
+        </tr>
+        <tr>
+          <td class="t">Cyber Centre</td>
+          <td>Update 1, 23 Oct</td>
+          <td>Open-source reporting of a proof of concept. No active exploitation identified at that time. That can change quickly.<a class="cite" href="#fn8">8</a></td>
+        </tr>
+        <tr>
+          <td class="t">Vercel</td>
+          <td>Bulletin, undated beyond the 21 Oct disclosure</td>
+          <td>Working public exploits are available. Exploitation attempts reported across the industry.<a class="cite" href="#fn10">10</a></td>
+        </tr>
+        <tr>
+          <td class="t">Cloudflare</td>
+          <td>21 Oct post, with a 23 Oct update</td>
+          <td>Observed attack traffic, including payloads changing to get past the WAF.<a class="cite" href="#fn6">6</a></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="callout">“No successful exploitation observed” and “attack traffic against a WAF” answer different questions. <strong>One is confirmed compromise. One is attempts.</strong> Hunt as if attempts are already on the wire from 20 October, when the CVE IDs leaked. Patch as if the attempts do not need to succeed in public before the control is late.</p>
+  </section>
+
+  <section id="partial">
+    <p class="kicker">Theme 4</p>
+    <h2>What a temporary control is allowed to claim</h2>
+    <p>The release notes are flat. “There are no complete mitigations, updating is the only safe choice.”<a class="cite" href="#fn1">1</a> php.net then lists measures that reduce specific paths and “do not make an installation safe.” CISA’s version of the same idea: a web application firewall may provide some protection until the update, and systems that cannot be updated — especially PHP 8.1 and earlier — should be taken offline until they can.<a class="cite" href="#fn7">7</a> The Cyber Centre says to isolate internet-facing applications from public networks where immediate remediation is not feasible.<a class="cite" href="#fn8">8</a></p>
+    <figure class="fig">
+      <img src="diagrams/php2shell-partial.png" alt="The only complete fix is the patched releases. Config limits and a WAF do not make an installation safe. Take the system offline if the build cannot land. CVE-2026-115560 stays open on 8.5.12." width="2800" height="1308">
+      <figcaption>Config limits and a WAF sit in the box php.net will not call safe. Taking the system offline is the move when the build cannot land. CVE-2026-115560 is a narrower follow-on the 21 October releases do not close. <a href="diagrams/php2shell-partial.png">Static image</a></figcaption>
+    </figure>
+    <div class="grid-2">
+      <article class="card">
+        <h3>Configuration, if the patch is not on yet</h3>
+        <ul>
+          <li>For CVE-2026-109618, set <code>memory_limit=-1</code> where the application cannot put a finite limit back. An underlying allocation failure can still hit the vulnerable path. Do not use <code>RLIMIT_AS</code> or <code>RLIMIT_DATA</code> as the substitute. Restart workers.<a class="cite" href="#fn1">1</a></li>
+          <li>Keep <code>post_max_size</code> low — 8M without uploads, 32M with them — and keep <code>upload_max_filesize</code> under it. Enforce size, field, part, header, and nesting limits at the proxy, including requests with no usable <code>Content-Length</code>.<a class="cite" href="#fn1">1</a></li>
+          <li>For CVE-2026-109619, set <code>session.upload_progress.enabled=0</code> in <code>php.ini</code>, the FPM pool, or server config that applies before request parsing. <code>ini_set</code> and <code>.user.ini</code> are the wrong place. On PHP 8.5, also set <code>fatal_error_backtraces=0</code>. Hiding warnings with <code>error_reporting</code>, <code>display_errors</code>, or <code>@</code> does not close this bug.<a class="cite" href="#fn1">1</a><a class="cite" href="#fn3">3</a></li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>Edge controls, after the leak</h3>
+        <ul>
+          <li>Cloudflare says free and paid managed rules were on from 03:02 UTC on 21 October, using a new full-transaction check that looks at the response as well as the request. Customers are still told to patch.<a class="cite" href="#fn6">6</a></li>
+          <li>Vercel deployed WAF rules before disclosure, for PHP on Vercel and for proxied PHP origins. Requests that reach the origin directly are outside that control.<a class="cite" href="#fn10">10</a></li>
+          <li>Wiz names a wider set of providers that prepared customer guidance, including AWS, Akamai, Fastly, Google, Imperva, Microsoft, and Automattic. That list is Wiz’s account of coordination. It is not a coverage statement for your tenant.<a class="cite" href="#fn5">5</a></li>
+        </ul>
+      </article>
+    </div>
+    <h3>What to look for while the estate is still mixed</h3>
+    <p>CISA: PHP worker processes launching shells or downloading tools. It also published a SIGMA rule with the 23 October update, and said that rule may change.<a class="cite" href="#fn7">7</a> The Cyber Centre: unexpected processes, commands, files, accounts, or outbound connections tied to PHP or the web server.<a class="cite" href="#fn8">8</a> Wiz, until the patch is on: unusual multipart requests followed by memory-limit errors or repeated HTTP 500s, unexpectedly large or malformed <code>PHPSESSID</code> cookies, and unexplained worker churn.<a class="cite" href="#fn5">5</a> Those are investigation signals. They are not proof of compromise, and they are not a substitute for the update.</p>
+    <h3>The adjacent identifier</h3>
+    <p>On 23 October PHP published an informational note for <span class="mono">CVE-2026-115560</span>, in session upload progress. The 21 October releases do not fix it. The condition is uncommon: the serialize handler is set to <code>php_binary</code> or <code>php_serialize</code> in configuration, then switched to <code>php</code> at runtime before <code>session_start()</code>, with upload progress still enabled. Applications that never change that handler at runtime are outside this path. The suggested setting is the same <code>session.upload_progress.enabled=0</code> already listed for CVE-2026-109619. A full advisory is promised with the next regular release.<a class="cite" href="#fn1">1</a> The Cyber Centre’s Update 1 matches that scope.<a class="cite" href="#fn8">8</a> Cloudflare’s 23 October note says the issue affects fully patched releases, including 8.5.12, and that its existing rule covers the default upload-progress field name. A site that changed <code>session.upload_progress.name</code> is outside that rule.<a class="cite" href="#fn6">6</a></p>
+    <p class="warn"><strong>Do not file CVE-2026-115560 as PHP2Shell.</strong> It is a narrower follow-on, with a configuration most applications do not use. It does change one sentence: “we are on 8.5.12” is the close for the 21 October pair, and it is not the close for this session path.</p>
+  </section>
+
+  <section id="recs">
+    <p class="kicker">What to do</p>
+    <h2>Actions while the builds are still new</h2>
+    <figure class="fig">
+      <img src="diagrams/php2shell-actions.png" alt="This week names and patches the runtime. This month holds partial controls as partial. This budget cycle removes unsupported PHP. The ticket closes on the production build." width="2800" height="1224">
+      <figcaption>The ticket closes on the build that is serving traffic, not on the CMS version. Partial controls are the month’s work, and only where a change window is still open. <a href="diagrams/php2shell-actions.png">Static image</a></figcaption>
+    </figure>
+    <div class="recs">
+      <article class="rec">
+        <span class="stage">Stage 1 · This week</span>
+        <h3>Name the runtime and move it</h3>
+        <ul>
+          <li>Inventory every PHP that serves a web request, including appliances, containers, and products that embed it.<a class="cite" href="#fn7">7</a><a class="cite" href="#fn8">8</a></li>
+          <li>Move internet-facing 8.2 through 8.5 to 8.2.35, 8.3.36, 8.4.27, or 8.5.12, or to the distro package that contains those fixes. Restart every worker.<a class="cite" href="#fn1">1</a></li>
+          <li>If you cannot patch, take the internet-facing system offline, especially on 8.1 and earlier.<a class="cite" href="#fn7">7</a> Isolating it from public networks is the Cyber Centre’s version of the same move.<a class="cite" href="#fn8">8</a></li>
+          <li>Close the ticket on the runtime build in production. A CMS or plugin update leaves the engine where it was.<a class="cite" href="#fn10">10</a><a class="cite" href="#fn6">6</a></li>
+        </ul>
+      </article>
+      <article class="rec">
+        <span class="stage">Stage 2 · This month</span>
+        <h3>Hold the partial controls honestly</h3>
+        <ul>
+          <li>Where a change window is still open, apply the php.net settings above and label them as exposure reduction. Confirm nothing puts a finite <code>memory_limit</code> back.<a class="cite" href="#fn1">1</a></li>
+          <li>Leave <code>session.upload_progress.enabled=0</code> in place through the CVE-2026-115560 follow-on, unless you have confirmed the uncommon handler path and accepted what remains.<a class="cite" href="#fn1">1</a></li>
+          <li>Turn on the WAF rules your edge already has, in block mode. Then check for origins that are reachable around that edge.<a class="cite" href="#fn6">6</a><a class="cite" href="#fn10">10</a></li>
+          <li>Hunt from 20 October, the leak, not only from 14:00 UTC on the 21st. Use the CISA, Cyber Centre, and Wiz signals as leads.<a class="cite" href="#fn4">4</a><a class="cite" href="#fn7">7</a><a class="cite" href="#fn5">5</a></li>
+        </ul>
+      </article>
+      <article class="rec">
+        <span class="stage">Stage 3 · This budget cycle</span>
+        <h3>Get unsupported PHP off the estate</h3>
+        <ul>
+          <li>8.1 and older need a named vendor backport or an upgrade. “PHP is in the image” is not a patch plan.<a class="cite" href="#fn1">1</a></li>
+          <li>Embedded PHP belongs on the asset inventory. The next engine bug will miss the same CMSs-only list.<a class="cite" href="#fn7">7</a><a class="cite" href="#fn8">8</a></li>
+          <li>Keep the WAF. Budget the runtime update as the control the WAF was covering.<a class="cite" href="#fn1">1</a><a class="cite" href="#fn6">6</a></li>
+        </ul>
+      </article>
+    </div>
+    <p class="warn"><strong>What would change this advice.</strong> A later PHP release that withdraws 8.5.12, 8.4.27, 8.3.36, or 8.2.35 as the fix for this pair. CVE-2026-115560 does not do that — it is a separate session path the 21 October builds do not close. A CISA or ACSC confirmation of successful exploitation would raise the hunt. It would not relax the patch. A measured patch-adoption figure would change the residual-risk sentence. None of the sources read here has one. If the GitHub advisory and the Foundation post are later aligned on FPM for CVE-2026-109618, drop finding 05 and keep the instruction to patch FPM.</p>
+  </section>
+
+  <section id="method">
+    <p class="kicker">Limits</p>
+    <h2>What this briefing did and did not read</h2>
+    <figure class="fig">
+      <img src="diagrams/php2shell-method.png" alt="Pages quoted: the PHP project, three national alerts, and three vendor posts. Not quoted: NVD loader pages, the ACSC alert, an NCSC-NL product list, and ThinkThreats." width="2800" height="1402">
+      <figcaption>Empty boxes are pages that did not return usable text, or a corpus this briefing did not query. They are not silent findings. <a href="diagrams/php2shell-method.png">Static image</a></figcaption>
+    </figure>
+    <details class="caveat" open>
+      <summary>Collection window</summary>
+      <p>Pages were read on 26 October 2026. The PHP advisory and release notes are the 21 October publications, including the 23 October informational note on the same archive page. CISA’s alert was last revised 23 October. CERT/CC VU#763488 is dated 22 October. The Cyber Centre alert is Update 1, 23 October. Cloudflare’s post includes a 23 October update. Wiz and Vercel are the disclosure write-ups. Nothing here is a claim about exploitation after those dates.</p>
+    </details>
+    <details class="caveat">
+      <summary>Pages that did not return a usable read</summary>
+      <p>Both NVD detail pages returned a loader shell only. No NVD wording is quoted, and those URLs are omitted. CISA lists partner alerts from NSA, NCSC-UK, ASD’s ACSC, NCSC-NL, and NCSC-NZ. Those full texts were not read. A direct request for the ACSC alert returned HTTP 500, so this briefing does not quote ACSC sentences and does not link that URL. CERT/CC and the Cyber Centre point at an NCSC-NL inventory of products that embed PHP. That list was not read. No product catalogue is claimed here.</p>
+    </details>
+    <details class="caveat">
+      <summary>Vendor incentive and the 70% figure</summary>
+      <p>Wiz, Cloudflare, and Vercel sell controls that sit in front of or beside this bug. Their patch advice matches the PHP project. Their footprint and “AI inflection” framing is theirs. The 70% line is cited as an estimate of PHP’s share of websites. It is not a ThinkInfoSec measurement, and it is not a statement that 70% of sites are exploitable today. No victim count, exploit-reliability rate, or patch-adoption percentage appears in the sources read. None is estimated here.</p>
+    </details>
+    <details class="caveat">
+      <summary>What was left out on purpose</summary>
+      <p>The GitHub advisories describe request patterns that reach the memory failure, and the Wiz post describes how those bugs were turned into code execution. This briefing does not repeat exploit steps, payloads, or reproduction procedures. Operators who need that detail should read the advisories. The ThinkThreats corpus was not queried. This is a runtime advisory, not a question of which actor or country a 2026 report named.</p>
+    </details>
+  </section>
+
+  <section id="sources">
+    <p class="kicker">Bibliography</p>
+    <h2>Sources</h2>
+    <p class="note">Accessed 26 October 2026. Official advisory first. Vendor posts are labelled.</p>
+
+    <p class="group-lbl">PHP project</p>
+    <ol class="sourcelist">
+      <li id="fn1"><span class="n">[1]</span> The PHP Group, security advisory “Critical remote code execution vulnerabilities, update now,” release notes for 8.5.12, 8.4.27, 8.3.36 and 8.2.35, and the 23 October informational note on CVE-2026-115560. <em>PHP News Archive — 2026</em>.<span class="meta"><a href="https://www.php.net/archive/2026.php#2026-10-21-5" target="_blank" rel="noopener">php.net/archive/2026.php</a></span></li>
+      <li id="fn2"><span class="n">[2]</span> PHP, <em>GHSA-w8hw-w9fx-j79w — RCE via OOM corruption</em> (CVE-2026-109618). Published 21 October 2026. CVSS v4.0 9.2.<span class="meta"><a href="https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w" target="_blank" rel="noopener">github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w</a></span></li>
+      <li id="fn3"><span class="n">[3]</span> PHP, <em>GHSA-6wmf-4rv5-p3rp — RCE via stale global state</em> (CVE-2026-109619). Published 21 October 2026. CVSS v4.0 9.2.<span class="meta"><a href="https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp" target="_blank" rel="noopener">github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp</a></span></li>
+      <li id="fn4"><span class="n">[4]</span> The PHP Foundation, “Today’s PHP Security Release, and How We’re Strengthening PHP Security.” 21 October 2026. Discovery history, the 10.0 leak, the moved release, the Calif video, and the Chainguard embargo break.<span class="meta"><a href="https://thephp.foundation/blog/2026/10/21/todays-php-security-release-and-how-were-strengthening-php-security/" target="_blank" rel="noopener">thephp.foundation/blog/2026/10/21/…</a></span></li>
+    </ol>
+
+    <p class="group-lbl">National advisories</p>
+    <ol class="sourcelist">
+      <li id="fn7"><span class="n">[7]</span> CISA, “Critical Vulnerabilities in PHP Require Immediate Patching.” Published 21 October 2026, last revised 23 October 2026. Includes the SIGMA-rule update and the partner list.<span class="meta"><a href="https://www.cisa.gov/news-events/alerts/2026/10/21/critical-vulnerabilities-php-require-immediate-patching" target="_blank" rel="noopener">cisa.gov/…/critical-vulnerabilities-php-require-immediate-patching</a></span></li>
+      <li id="fn8"><span class="n">[8]</span> Canadian Centre for Cyber Security, <em>AL26-026 — Critical vulnerabilities impacting PHP</em>, Update 1. 21 October 2026, updated 23 October 2026.<span class="meta"><a href="https://www.cyber.gc.ca/en/alerts-advisories/al26-026-critical-vulnerabilities-impacting-php-cve-2026-109618-cve-2026-109619" target="_blank" rel="noopener">cyber.gc.ca/…/al26-026-…</a></span></li>
+      <li id="fn9"><span class="n">[9]</span> CERT/CC, <em>VU#763488 — Memory corruption vulnerabilities in PHP</em>. Original release 22 October 2026.<span class="meta"><a href="https://www.kb.cert.org/vuls/id/763488" target="_blank" rel="noopener">kb.cert.org/vuls/id/763488</a></span></li>
+    </ol>
+
+    <p class="group-lbl">Researcher and vendor bulletins</p>
+    <ol class="sourcelist">
+      <li id="fn5"><span class="n">[5]</span> Wiz Research, “PHP2Shell: AI uncovers critical RCE vulnerabilities affecting 70% of the Internet.” 21 October 2026. Researcher write-up. The 70% figure and the CMS demos are this source. Wiz sells cloud security products.<span class="meta"><a href="https://www.wiz.io/blog/php2shell-php-rce" target="_blank" rel="noopener">wiz.io/blog/php2shell-php-rce</a></span></li>
+      <li id="fn6"><span class="n">[6]</span> Cloudflare, “Cloudflare deploys protections against php2shell vulnerability.” 21 October 2026, with a 23 October update on CVE-2026-115560. Vendor bulletin.<span class="meta"><a href="https://blog.cloudflare.com/php-vulnerabilities-waf-protection/" target="_blank" rel="noopener">blog.cloudflare.com/php-vulnerabilities-waf-protection</a></span></li>
+      <li id="fn10"><span class="n">[10]</span> Vercel Security, “PHP security advisory: php2shell (CVE-2026-109618, CVE-2026-109619).” Vendor bulletin. States working public exploits and industry exploitation attempts.<span class="meta"><a href="https://vercel.com/kb/bulletin/php2shell-security-bulletin" target="_blank" rel="noopener">vercel.com/kb/bulletin/php2shell-security-bulletin</a></span></li>
+    </ol>
+  </section>
+</main>
+
+<footer>
+  <p class="ft-main">ThinkInfoSec 2026 — <a href="https://www.linkedin.com/in/amcamillo/" target="_blank" rel="noopener">Andre Camillo</a> · <a href="../../index.html#research">Back to Research</a></p>
+  <p class="ft-sub">Independent briefing. Educational use. Numbered citations map to the source list. The three-movement thesis is ThinkInfoSec synthesis, not an official publication of the PHP project, CISA, CERT/CC, the Cyber Centre, Wiz, Cloudflare, or Vercel.</p>
+</footer>
+
+<script>
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll(".toc a"));
+  var sections = links.map(function (a) {
+    return document.querySelector(a.getAttribute("href"));
+  }).filter(Boolean);
+  if (!("IntersectionObserver" in window) || !sections.length) return;
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      links.forEach(function (l) { l.classList.remove("on"); l.removeAttribute("aria-current"); });
+      var active = document.querySelector('.toc a[href="#' + e.target.id + '"]');
+      if (active) { active.classList.add("on"); active.setAttribute("aria-current", "location"); }
+    });
+  }, { rootMargin: "-40% 0px -55% 0px" });
+  sections.forEach(function (s) { spy.observe(s); });
+})();
+</script>
+</body>
+</html>

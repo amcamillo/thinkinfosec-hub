@@ -1,0 +1,26 @@
+{
+  "title": "The patch window opened under a leak",
+  "eyebrow": "ThinkInfoSec · Disclosure",
+  "caption": "Times as the PHP Foundation, Cloudflare, and the release notes state them. 14:00 UTC on 21 October is 01:00 AEDT and 03:00 NZDT on 22 October.",
+  "alt": "Disclosure timeline from the 2024 stalled fix, through the 20 October leak and deleted proof-of-concept video, to Cloudflare’s WAF, an early image publish, and the 14:00 UTC releases.",
+  "theme": "thinkinfosec",
+  "nodes": [
+    { "id": "e1", "tag": "2024", "title": "Fix stalled", "sub": "seen, no RCE path yet", "tone": "neutral" },
+    { "id": "e2", "tag": "11 Aug", "title": "RCE reported", "sub": "Calif and OpenAI", "tone": "magenta" },
+    { "id": "e3", "tag": "20 Oct", "title": "CVE IDs leak", "sub": "wrong score, 10.0", "tone": "magenta" },
+    { "id": "e4", "tag": "20 Oct", "title": "PoC video", "sub": "deleted, copies spread", "tone": "magenta" },
+    { "id": "e5", "tag": "03:02 UTC", "title": "WAF already on", "sub": "Cloudflare, before release", "tone": "teal" },
+    { "id": "e6", "tag": "07:41 UTC", "title": "Images published", "sub": "embargo broken", "tone": "magenta" },
+    { "id": "e7", "tag": "14:00 UTC", "title": "Four releases", "sub": "public, 21 October", "tone": "teal" }
+  ],
+  "rows": [["e1", "e2", "e3", "e4"], ["e5", "e6", "e7"]],
+  "edges": [
+    { "from": "e1", "to": "e2" },
+    { "from": "e2", "to": "e3" },
+    { "from": "e3", "to": "e4" },
+    { "from": "e4", "to": "e5", "label": "quiet time already gone" },
+    { "from": "e5", "to": "e6" },
+    { "from": "e6", "to": "e7" }
+  ],
+  "legend": [{ "style": "flow", "label": "order of events, not an attack chain" }]
+}

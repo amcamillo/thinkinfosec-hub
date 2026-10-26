@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The request hits a server API</title>
+<style>
+:root { --tis-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+.tx-tag    { font: 700 9.5px var(--tis-font); letter-spacing: 1.3px; text-transform: uppercase; }
+.tx-title  { font: 700 15px var(--tis-font); letter-spacing: -.1px; }
+.tx-sub    { font: 400 11.5px var(--tis-font); }
+.tx-label  { font: 500 11px var(--tis-font); }
+.tx-glabel { font: 800 10.5px var(--tis-font); letter-spacing: 1.8px; text-transform: uppercase; }
+.tx-gnote  { font: 400 11px var(--tis-font); }
+.tx-pill   { font: 600 11px var(--tis-font); }
+.tx-gate   { font: 700 11px var(--tis-font); }
+.tx-note   { font: 500 11px var(--tis-font); font-style: italic; }
+
+:root {
+  --tis-magenta:#FF2D78; --tis-magenta-2:#D91E63; --tis-teal:#00BFCF; --tis-teal-2:#0B6459; --tis-navy:#0D1F3C;
+  --tis-ink:#FFFFFF; --tis-mute:rgba(255,255,255,.68); --tis-line:rgba(255,255,255,.16);
+  --tis-glass:rgba(6,10,18,.56); --tis-glass-2:rgba(6,10,18,.72);
+}
+* { box-sizing: border-box; }
+html, body { background: var(--tis-navy); }
+body { margin: 0; overflow-x: hidden; font-family: var(--tis-font); color: var(--tis-ink); }
+.stage { position: relative; overflow: hidden; background: var(--tis-navy); min-height: 100vh; }
+.stage .zone { position: absolute; inset: 0; }
+.stage .zone-magenta { background: linear-gradient(77deg, #FF2D78 0%, #D91E63 18%, #8C2060 38%, #4A1D52 58%, rgba(13,31,60,.35) 76%, rgba(13,31,60,0) 92%); }
+.stage .zone-teal { background: linear-gradient(57deg, rgba(13,31,60,0) 8%, rgba(13,31,60,.35) 24%, #0F3A4A 44%, #0B6459 64%, #009AAB 82%, #00BFCF 100%); }
+.stage .wash  { background: rgba(6,10,18,.14); }
+.stage .grain { background-image: radial-gradient(rgba(255,255,255,.5) .5px, transparent .5px); background-size: 4px 4px; opacity: .035; }
+.wrap { position: relative; z-index: 1; padding: 44px 16px; display: flex; justify-content: center; }
+.panel { background: var(--tis-glass-2); -webkit-backdrop-filter: blur(20px) saturate(140%); backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid var(--tis-line); border-radius: 18px; padding: 28px 30px 24px; width: 100%; }
+.eyebrow { display: flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--tis-mute); margin: 0 0 10px; }
+.eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #fff; }
+h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 900; letter-spacing: -.5px; margin: 0 0 8px; text-wrap: balance; }
+.caption { color: var(--tis-mute); font-size: .95rem; line-height: 1.6; margin: 0 0 22px; max-width: 78ch; }
+.diagram { overflow-x: auto; margin: 0 -6px; padding: 0 6px; }
+.diagram svg { display: block; width: 100%; height: auto; min-width: 760px; margin: 0 auto; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--tis-line); font-size: 12px; color: var(--tis-mute); }
+.legend span { display: inline-flex; align-items: center; gap: 9px; }
+.legend svg { flex: none; }
+/* diagram primitives */
+.n-box   { fill: rgba(8,14,26,.82); stroke: rgba(255,255,255,.15); stroke-width: 1; }
+.ghost .n-box { fill: rgba(8,14,26,.35); stroke: rgba(255,255,255,.34); stroke-dasharray: 5 4; }
+.tx-title { fill: #fff; }
+.tx-sub   { fill: rgba(255,255,255,.62); }
+.tx-gnote { fill: rgba(255,255,255,.55); }
+.tx-note  { fill: rgba(255,255,255,.6); }
+.g-box    { stroke-width: 1; }
+.port     { fill: #0b1422; stroke-width: 1.3; }
+
+.panel { max-width: 906px; }
+.diagram svg { min-width: 760px; }
+</style></head>
+<body><div class="stage"><div class="zone zone-magenta"></div><div class="zone zone-teal"></div><div class="zone wash"></div><div class="zone grain"></div>
+<main class="wrap"><section class="panel">
+<p class="eyebrow">ThinkInfoSec · The runtime</p>
+<h1>The request hits a server API</h1>
+<p class="caption">php.net names all four. mod_php is the highest demonstrated risk. FrankenPHP and LiteSpeed are source analysis, not a published end-to-end demonstration. The patched build is the same list for each.</p>
+<figure class="diagram" style="margin:0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-48 -28 844 320" width="844" style="max-width:844px" role="img" aria-label="An HTTP request reaches mod_php, PHP-FPM, FrankenPHP, or LiteSpeed. All four are in scope for the same patched PHP releases. An application update is not on this path."><defs><marker id="ah-flow" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="rgba(255,255,255,.58)"/></marker><marker id="ah-conditional" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#FF2D78"/></marker><marker id="ah-optional" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="rgba(255,255,255,.82)"/></marker><marker id="ah-reference" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#00BFCF"/></marker></defs>
+<g class="group" data-id="sapis"><rect class="g-box" x="0" y="126" width="435" height="138" rx="18" fill="rgba(255,255,255,.025)" stroke="rgba(255,255,255,.16)"/>
+<text class="tx-glabel" x="28" y="155" fill="rgba(255,255,255,.62)">Same patch list, weaker demonstration</text>
+</g>
+<path data-e="0" d="M148,33 L318.5,33" fill="none" stroke="rgba(255,255,255,.58)" stroke-width="1.4" marker-end="url(#ah-flow)"/>
+<path data-e="1" d="M466.5,33 L599.1,33" fill="none" stroke="rgba(255,255,255,.58)" stroke-width="1.4" marker-end="url(#ah-flow)"/>
+<path data-e="2" d="M747.1,33 L759.1,33 Q767.1,33 767.1,41 L767.1,88 Q767.1,96 759.1,96 L-12,96 Q-20,96 -20,104 L-20,201 Q-20,209 -12,209 L28,209" fill="none" stroke="#FF2D78" stroke-width="1.4" stroke-dasharray="6 4" marker-end="url(#ah-conditional)"/>
+<circle class="port" cx="148" cy="33" r="3.4" stroke="rgba(255,255,255,.58)"/>
+<circle class="port" cx="466.5" cy="33" r="3.4" stroke="rgba(255,255,255,.58)"/>
+<circle class="port" cx="747.1" cy="33" r="3.4" stroke="#FF2D78"/>
+<g class="node" data-id="req"><rect class="n-box" x="0" y="0" width="148" height="66" rx="10"/><circle cx="17" cy="17.5" r="3.2" fill="rgba(255,255,255,.62)"/><text class="tx-tag" x="26" y="21" fill="rgba(255,255,255,.62)">In</text><text class="tx-title" x="14" y="41">HTTP request</text><text class="tx-sub" x="14" y="56">before your app runs</text></g>
+<g class="node" data-id="mod"><rect class="n-box" x="318.5" y="0" width="148" height="66" rx="10"/><circle cx="335.5" cy="17.5" r="3.2" fill="#FF2D78"/><text class="tx-tag" x="344.5" y="21" fill="#FF2D78">Highest</text><text class="tx-title" x="332.5" y="41">mod_php</text><text class="tx-sub" x="332.5" y="56">shown before app code</text></g>
+<g class="node" data-id="fpm"><rect class="n-box" x="28" y="176" width="148" height="66" rx="10"/><circle cx="45" cy="193.5" r="3.2" fill="rgba(255,255,255,.62)"/><text class="tx-tag" x="54" y="197" fill="rgba(255,255,255,.62)">In scope</text><text class="tx-title" x="42" y="217">PHP-FPM</text><text class="tx-sub" x="42" y="232">patch on either reading</text></g>
+<g class="node ghost" data-id="other"><rect class="n-box" x="220" y="176" width="187" height="66" rx="10"/><circle cx="237" cy="193.5" r="3.2" fill="rgba(255,255,255,.62)"/><text class="tx-tag" x="246" y="197" fill="rgba(255,255,255,.62)">Analysis</text><text class="tx-title" x="234" y="217">FrankenPHP, LiteSpeed</text><text class="tx-sub" x="234" y="232">likely, not demonstrated</text></g>
+<g class="node ghost" data-id="app"><rect class="n-box" x="479" y="176" width="178" height="66" rx="10"/><circle cx="496" cy="193.5" r="3.2" fill="#FF2D78"/><text class="tx-tag" x="505" y="197" fill="#FF2D78">Not this</text><text class="tx-title" x="493" y="217">App or plugin update</text><text class="tx-sub" x="493" y="232">leaves the engine</text></g>
+<g class="node" data-id="build"><rect class="n-box" x="599.1" y="0" width="148" height="66" rx="10"/><circle cx="616.1" cy="17.5" r="3.2" fill="#00BFCF"/><text class="tx-tag" x="625.1" y="21" fill="#00BFCF">Close</text><text class="tx-title" x="613.1" y="41">Patched releases</text><text class="tx-sub" x="613.1" y="56">8.2.35 through 8.5.12</text></g>
+<text class="tx-label" x="168" y="22.5" fill="rgba(255,255,255,.66)">highest demonstrated risk</text>
+<text class="tx-label" x="486.5" y="22.5" fill="rgba(255,255,255,.66)">same four releases</text>
+<text class="tx-label" x="341.4" y="85.5" fill="#FF7FAA">also in scope</text></svg></figure>
+<div class="legend"><span><svg width="30" height="8" viewBox="0 0 30 8" aria-hidden="true"><line x1="1" y1="4" x2="29" y2="4" stroke="rgba(255,255,255,.58)" stroke-width="1.6"/></svg>highest demonstrated risk</span><span><svg width="30" height="8" viewBox="0 0 30 8" aria-hidden="true"><line x1="1" y1="4" x2="29" y2="4" stroke="#FF2D78" stroke-width="1.6" stroke-dasharray="6 4"/></svg>in scope, wording splits on one CVE</span><span><svg width="30" height="8" viewBox="0 0 30 8" aria-hidden="true"><line x1="1" y1="4" x2="29" y2="4" stroke="rgba(255,255,255,.82)" stroke-width="1.6" stroke-dasharray="9 4 2 4"/></svg>analysis only, or not a fix</span></div>
+</section></main></div></body></html>

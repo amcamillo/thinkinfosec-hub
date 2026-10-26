@@ -1,0 +1,34 @@
+{
+  "title": "What a temporary control may claim",
+  "eyebrow": "ThinkInfoSec · Partial controls",
+  "caption": "php.net: there is no complete mitigation except the update. Config limits and a WAF reduce paths. Taking an unpatched internet-facing system offline is the move when the build cannot land. CVE-2026-115560 is still open on 8.5.12.",
+  "alt": "From an unpatched runtime, configuration and a WAF leave the system exposed. Taking it offline or installing the patched releases closes the October pair. The patched releases do not close CVE-2026-115560.",
+  "theme": "thinkinfosec",
+  "nodes": [
+    { "id": "open", "tag": "Now", "title": "Unpatched runtime", "sub": "internet-facing PHP", "tone": "magenta" },
+    { "id": "cfg", "tag": "Partial", "title": "Config limits", "sub": "not safe", "tone": "magenta", "variant": "ghost" },
+    { "id": "waf", "tag": "Partial", "title": "Edge WAF", "sub": "known patterns", "tone": "magenta", "variant": "ghost" },
+    { "id": "off", "tag": "If you cannot", "title": "Take it offline", "sub": "until the build lands", "tone": "teal" },
+    { "id": "done", "tag": "Close", "title": "Patched releases", "sub": "restart every worker", "tone": "teal" },
+    { "id": "adj", "tag": "23 Oct", "title": "CVE-2026-115560", "sub": "8.5.12 does not close it", "tone": "magenta", "variant": "ghost" }
+  ],
+  "groups": [
+    {
+      "id": "partials",
+      "label": "Does not make an installation safe",
+      "tone": "magenta",
+      "rows": [["cfg", "waf"]]
+    }
+  ],
+  "rows": [["open", "done", "adj"], ["partials", "off"]],
+  "edges": [
+    { "from": "open", "to": "done", "label": "only complete fix" },
+    { "from": "done", "to": "adj", "style": "optional", "label": "narrower follow-on" },
+    { "from": "open", "to": "off", "style": "conditional", "label": "if the build cannot land" }
+  ],
+  "legend": [
+    { "style": "flow", "label": "closes the 21 October pair" },
+    { "style": "optional", "label": "partial, or a different CVE" },
+    { "style": "conditional", "label": "when the update cannot land" }
+  ]
+}

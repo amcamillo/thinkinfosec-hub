@@ -473,6 +473,18 @@
       "tech": [1, 2],
       "link": "Research/kernel-access-redesigned/",
       "description": "How Linux, macOS and Windows each got security tools out of Ring 0, and how finished each journey is."
+    },
+    {
+      "id": "research-php2shell",
+      "title": "PHP2Shell and the runtime",
+      "kind": "research",
+      "origin": "hub",
+      "pillar": "process",
+      "people": ["thought-leadership"],
+      "processes": ["threat-model", "detect-hunt", "respond-recover"],
+      "tech": [47, 53],
+      "link": "Research/php2shell/",
+      "description": "The 21 October 2026 PHP engine advisories: what the patch closes, and what a WAF does not prove."
     }
   ]
 }

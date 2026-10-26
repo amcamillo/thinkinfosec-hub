@@ -1,0 +1,25 @@
+{
+  "title": "Four sentences, four thresholds",
+  "eyebrow": "ThinkInfoSec · Exploitation",
+  "caption": "These are not steps in one story. Each box is the verb that source used, with its date. The patch decision does not wait for the verbs to match.",
+  "alt": "PHP Foundation, CISA, the Cyber Centre, and Vercel plus Cloudflare each describe a different exploitation threshold. All four still sit above a same-week patch.",
+  "theme": "thinkinfosec",
+  "nodes": [
+    { "id": "phpf", "tag": "21 Oct", "title": "PHP Foundation", "sub": "no functional PoC then", "tone": "neutral" },
+    { "id": "cisa", "tag": "23 Oct", "title": "CISA", "sub": "success not observed", "tone": "neutral" },
+    { "id": "cc", "tag": "23 Oct", "title": "Cyber Centre", "sub": "PoC, not identified", "tone": "neutral" },
+    { "id": "vend", "tag": "21 Oct", "title": "Vercel, Cloudflare", "sub": "exploits and traffic", "tone": "magenta" },
+    { "id": "go", "tag": "Decision", "title": "Patch this week", "sub": "above every line", "tone": "teal" }
+  ],
+  "rows": [["phpf", "cisa", "cc", "vend", "go"]],
+  "edges": [
+    { "from": "phpf", "to": "cisa", "style": "reference", "label": "different bar" },
+    { "from": "cisa", "to": "cc", "style": "reference" },
+    { "from": "cc", "to": "vend", "style": "reference" },
+    { "from": "vend", "to": "go", "style": "conditional", "label": "still patch" }
+  ],
+  "legend": [
+    { "style": "reference", "label": "a dated statement, not a sequence" },
+    { "style": "conditional", "label": "attempts are not confirmed compromise" }
+  ]
+}
