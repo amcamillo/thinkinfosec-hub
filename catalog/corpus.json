@@ -485,6 +485,18 @@
       "tech": [47, 53],
       "link": "Research/php2shell/",
       "description": "The 21 October 2026 PHP engine advisories: what the patch closes, and what a WAF does not prove."
+    },
+    {
+      "id": "research-where-agents-run",
+      "title": "Your agent is not the model",
+      "kind": "research",
+      "origin": "hub",
+      "pillar": "process",
+      "people": ["thought-leadership"],
+      "processes": ["govern-assure", "threat-model", "detect-hunt"],
+      "tech": [2, 62],
+      "link": "Research/where-agents-run/",
+      "description": "Harnesses, runtimes, and why your EDR is squinting: where the command runs, and who can see it."
     }
   ]
 }

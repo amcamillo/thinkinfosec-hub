@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your agent is not the model — Thinkinfosec Hub</title>
+<meta name="description" content="When Claude, Cursor or Codex runs a command on a developer machine, where does it run, and who can see it?">
+<meta name="author" content="Andre Camillo">
+<link rel="canonical" href="https://amcamillo.github.io/thinkinfosec-hub/Research/where-agents-run/">
+<style>
+:root { --ink:#0F1B33; --mute:#56627A; --line:#DCE3EE; --bg:#F5F7FB; --card:#FFFFFF; --teal:#008794; --magenta:#C4165A; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:17px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+main { max-width: 780px; margin: 0 auto; padding: 48px 20px 80px; }
+h1 { font-size: clamp(1.9rem, 4.5vw, 2.7rem); line-height:1.15; font-weight:900; letter-spacing:-.5px; margin:0 0 16px; text-wrap:balance; }
+h2 { font-size:1.5rem; line-height:1.25; font-weight:800; margin:52px 0 12px; padding-top:20px; border-top:3px solid var(--teal); }
+p { margin: 0 0 18px; }
+a { color: var(--teal); text-underline-offset: 3px; }
+strong { font-weight:700; }
+code { font:.88em ui-monospace,Consolas,monospace; background:#E9EEF6; padding:2px 6px; border-radius:5px; }
+pre { background:#0F1B33; color:#E8F1FF; padding:16px 18px; border-radius:10px; overflow-x:auto; margin:0 0 20px; }
+pre code { background:none; padding:0; color:inherit; }
+blockquote { margin:0 0 20px; padding:4px 0 4px 18px; border-left:4px solid var(--magenta); color:#2B3852; font-size:1.05em; }
+blockquote p:last-child { margin-bottom:0; }
+figure { margin: 28px -60px; }
+figure img { display:block; width:100%; height:auto; border-radius:14px; box-shadow:0 6px 24px rgba(15,27,51,.12); }
+.tbl { overflow-x:auto; margin:0 0 22px; }
+table { border-collapse:collapse; width:100%; font-size:.9rem; background:var(--card); }
+th, td { text-align:left; padding:10px 12px; border:1px solid var(--line); vertical-align:top; }
+th { background:#0F1B33; color:#fff; font-weight:700; }
+ol { padding-left:22px; margin:0 0 20px; } li { margin-bottom:10px; }
+main > p:first-of-type { color:var(--mute); font-size:.92rem; }
+@media (max-width: 920px) { figure { margin: 24px 0; } }
+</style>
+<style>
+.hub-bar { background:#0D1F3C; color:#fff; }
+.hub-bar-inner { max-width:1040px; margin:0 auto; min-height:52px; padding:8px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.hub-brand { display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit; }
+.hub-brand img { width:32px; height:32px; border-radius:50%; object-fit:cover; }
+.hub-brand b { display:block; font-size:15px; line-height:1.15; }
+.hub-brand span { display:block; font-size:12px; color:#00BFCF; font-weight:500; }
+.hub-meta { font-size:13px; color:rgba(255,255,255,.62); }
+.hub-note { max-width:1040px; margin:0 auto; padding:22px 24px 0; font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+.hub-crumb { font-size:13px; color:#777; margin-bottom:14px; }
+.hub-crumb a { color:#008A96; text-decoration:none; font-weight:500; }
+.hub-stamps { display:flex; flex-wrap:wrap; gap:8px; align-items:stretch; }
+.hub-ai { margin:0; flex:1 1 280px; font-size:12px; line-height:1.45; color:#555; border:1px solid #ddd; border-radius:8px; padding:8px 10px; background:#f4f7f6; }
+.hub-ai strong { display:block; color:#0D1F3C; font-size:11px; letter-spacing:.06em; text-transform:uppercase; margin-bottom:2px; }
+.hub-advice { margin:0; flex:0 1 220px; padding:8px 10px; border:1.5px solid #FF8B00; border-radius:8px; background:#fff8f0; color:#9a4d00; font-size:12px; font-weight:700; letter-spacing:.04em; }
+.hub-foot { background:#0D1F3C; color:rgba(255,255,255,.65); padding:24px; text-align:center; font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+.hub-foot a { color:#00BFCF; text-decoration:none; }
+.hub-foot p { margin:0 auto; max-width:1040px; font-size:14px; }
+.hub-foot .sub { margin-top:8px; font-size:12px; color:rgba(255,255,255,.4); }
+</style>
+</head>
+<body>
+<header class="hub-bar">
+  <div class="hub-bar-inner">
+    <a class="hub-brand" href="../../index.html">
+      <img src="../../assets/learning-hub-logo.png" alt="Thinkinfosec Hub logo" width="32" height="32">
+      <span><b>Thinkinfosec</b><span>Research briefing</span></span>
+    </a>
+    <p class="hub-meta">November 2026</p>
+  </div>
+</header>
+<div class="hub-note">
+  <nav class="hub-crumb" aria-label="Breadcrumb">
+    <a href="../../index.html">Hub</a> / <a href="../../index.html#research">Research</a> / Your agent is not the model
+  </nav>
+  <div class="hub-stamps">
+    <p class="hub-ai" role="note"><strong>AI-assisted research</strong> Minor inconsistencies can occur. Every claim remains grounded in the ThinkInfoSec ontology and the sources disclosed on this page.</p>
+    <p class="hub-advice">This is not legal advice</p>
+  </div>
+</div>
+<main>
+<h1>Your agent is not the model: harnesses, runtimes, and why your EDR is squinting</h1>
+<p><em>Research as of 13 November 2026. Vendor docs in this space change monthly, so treat every version number and default below as "true on the day I read it".</em></p>
+<p>If you ask five people what an "AI agent" is, you get six answers and a vendor slide. That would be fine if agents were still a demo. They aren't. They are on developer laptops right now, running shell commands under real user accounts, and most security teams I talk to can't answer a simple question: when Claude, Cursor or Codex runs a command on that machine, <em>where</em> does it run, and who can see it?</p>
+<p>So let's build this up properly, from the concept through to the bit that should bother you.</p>
+<h2>What an agent actually is</h2>
+<p>The cleanest definition I know of is still Anthropic's, from <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building effective agents</a> (December 2024). It separates two things that marketing tends to blend. Workflows are "systems where LLMs and tools are orchestrated through predefined code paths". Agents are "systems where LLMs dynamically direct their own processes and tool usage". And then the line that does all the work:</p>
+<blockquote><p>They are typically just LLMs using tools based on environmental feedback in a loop.</p></blockquote>
+<p>That's it. A loop. Worth pulling this apart into three pieces, because the whole security conversation depends on keeping them separate. The three-way split below is my framing, not Anthropic's, but it maps onto every product in this piece.</p>
+<p><strong>The model</strong> is a text predictor. It takes tokens in and produces tokens out. It has no hands. When it "runs a command", what it really does is emit a structured request that says, in effect, <em>please call the shell tool with this string</em>.</p>
+<p><strong>The harness</strong> is the program around the model. It assembles the context (system prompt, tool definitions, conversation history, file contents), sends it to the model, parses the tool call that comes back, decides whether that call is allowed, executes it, and feeds the result back in. Claude Code, Cursor's agent, Codex CLI and Antigravity are all harnesses. The harness is where permissions, memory, sub-agents and hooks live.</p>
+<p><strong>The runtime</strong> is where the tool call physically lands: your shell on your host, a kernel-level sandbox, a virtual machine (VM), or somebody else's cloud. This is the part that decides blast radius, and it's the part that varies wildly between products and between Windows and Mac.</p>
+<figure><img alt="The model only asks. The harness does the doing." src="diagrams/agent-loop.gif"></figure>
+<p>The loop in the diagram is worth staring at for a second, because of what flows along the bottom edge. Every tool result goes back into the model's context. A web page the agent fetched, a README in a cloned repo, a Slack message pulled through a connector: all of it becomes input the model reasons over on the next turn. There's no separate channel for "data" versus "instructions". That is prompt injection in one sentence, and it's structural, not a bug somebody forgot to fix.</p>
+<h2>Ollama is not an agent (and that matters)</h2>
+<p>There's a common confusion that goes "we run local models through Ollama, so our agent is local and contained". Half of that sentence is about the model and the other half is about the runtime, and they have nothing to do with each other.</p>
+<p>Ollama is a model provider. It loads weights, serves inference over an HTTP API on your machine, and that's where its job ends. Its own <a href="https://docs.ollama.com/capabilities/tool-calling" target="_blank" rel="noopener">tool calling documentation</a> shows this quite plainly if you read the example code: the model returns a tool call, and the <em>client application</em> runs the function and posts the result back. In the docs' words, "an agent loop allows the model to decide when to invoke tools and incorporate their results into its replies". Decide when. Not execute.</p>
+<p>Which means you can swap the brain without changing the hands. Per <a href="https://docs.ollama.com/integrations/claude-code" target="_blank" rel="noopener">Ollama's Claude Code integration page</a>, "Ollama connects Claude Code to local and cloud models through its Anthropic-compatible API", and the manual setup is three environment variables:</p>
+<pre><code>ANTHROPIC_BASE_URL=http://localhost:11434
+ANTHROPIC_AUTH_TOKEN=ollama
+ANTHROPIC_API_KEY=""</code></pre>
+<p>The harness thinks it's talking to Anthropic. It's talking to a model on your GPU. There's even a one-liner now, <code>ollama launch claude</code>, that wires it up for you. The same page recommends a context window of 64k or more for local models, which tells you how much of an agent's "intelligence" is really just the harness stuffing context in.</p>
+<p>Here's the security read, and it's mine. Going local changes exactly one thing: where your prompts and code get sent for inference. That's a real data-sovereignty win. It changes nothing about what the harness is allowed to execute. The same Bash tool, the same file writes, the same Model Context Protocol (MCP) servers, the same permissions. And you've arguably made one thing worse, because a small local model is the one deciding which commands to run, and the big frontier labs spend a lot of effort training their models to resist injected instructions. I haven't seen a rigorous independent comparison of injection resistance between frontier and small open-weight models inside the same harness, so take that as a reasoned worry rather than a measured fact.</p>
+<p>Long story short: Ollama versus a cloud API is a privacy decision. Sandbox versus no sandbox is a safety decision. Don't let one stand in for the other.</p>
+<h2>So where does the code run?</h2>
+<p>This is where the products genuinely differ, and where Windows and Mac part ways. The spectrum below is how I line them up.</p>
+<figure><img alt="Where the command lands decides what your EDR sees" src="diagrams/where-code-runs.gif"></figure>
+<p>Hold that picture, and let's go product by product, using each vendor's own documentation.</p>
+<p><strong>Claude Code</strong> runs on your host as you. Its <a href="https://code.claude.com/docs/en/sandboxing" target="_blank" rel="noopener">sandboxing docs</a> describe an optional OS-level sandbox: Seatbelt on macOS, bubblewrap on Linux and WSL2 (Windows Subsystem for Linux). Three sentences from that page deserve to be read slowly by anyone running a Windows fleet:</p>
+<blockquote><p>The sandbox runs on macOS, Linux, and WSL2. On native Windows, Claude Code runs commands unsandboxed.</p></blockquote>
+<p>And: "The sandbox is off by default." And on scope: "The sandbox covers shell commands only." The built-in file tools follow permission rules instead, and hooks, local MCP servers and a few other extension points, per the same page, "run with your full access". It also fails open by default: if the platform can't support the sandbox, commands run without it unless you set <code>sandbox.failIfUnavailable</code>. Even when it's on, the default policy allows reads of the whole machine, including <code>~/.ssh</code> and <code>~/.aws/credentials</code>, unless you deny them. Full credit to Anthropic for documenting all of this bluntly. But the honest summary for a Windows shop is that the control that exists is the permission prompt, not a kernel boundary. (The open-source <a href="https://github.com/anthropic-experimental/sandbox-runtime" target="_blank" rel="noopener">sandbox-runtime</a> repo reportedly carries an alpha Windows backend; I only have that second-hand, so I'm not counting it.)</p>
+<figure><img alt="Claude Code: a fence on Mac and Linux, none on native Windows" src="diagrams/runtime-claude-code.gif"></figure>
+<p><strong>Claude Cowork</strong> takes the opposite approach. Anthropic's <a href="https://support.claude.com/en/articles/14479288-claude-cowork-desktop-architecture-overview" target="_blank" rel="noopener">desktop architecture overview</a> says that for local sessions "the agent loop runs natively on the device", but "shell commands and any code Claude writes execute inside a dedicated Linux VM", isolated by "Apple Virtualization.framework on macOS, Hyper-V on Windows". So on both platforms the code runs in a Linux guest, not in your Windows or macOS userland. Note the split, though: file reads and writes in connected folders, web fetches and local plugin MCP servers still run natively, gated by an application-layer permission system rather than the hypervisor. The same article says Cowork sessions now run in the cloud by default, in a per-session sandbox on Anthropic's infrastructure, with local execution remaining for existing desktop deployments.</p>
+<figure><img alt="Cowork: code runs in a Linux guest, or off the machine" src="diagrams/runtime-cowork.gif"></figure>
+<p><strong>Cursor</strong> published a properly useful engineering write-up, <a href="https://cursor.com/blog/agent-sandboxing" target="_blank" rel="noopener">Agent sandboxing</a> (February 2026). On macOS it uses Seatbelt via <code>sandbox-exec</code> with a dynamically generated policy. On Linux it combines Landlock and seccomp directly. On Windows it runs that Linux sandbox inside WSL2, because, as the post puts it, native Windows primitives are mostly built for browsers, and "we're working with Microsoft to ensure the necessary primitives become available". They considered VMs and rejected them for startup latency and memory overhead. The motivation is the interesting part: per-command approval leads to "approval fatigue, which undermines the point of approvals in the first place". Cursor's own number is that sandboxed agents "stop 40% less often than unsandboxed ones". That's the company measuring its own product, so standard vendor discount applies, but the direction is believable to anyone who has clicked "allow" forty times before lunch.</p>
+<figure><img alt="Cursor: native fences on Mac and Linux, WSL2 on Windows" src="diagrams/runtime-cursor.gif"></figure>
+<p><strong>Codex</strong> is the one that went native on Windows. OpenAI's <a href="https://learn.chatgpt.com/docs/sandboxing" target="_blank" rel="noopener">sandboxing docs</a> state that "the default permissions mode applies sandboxing automatically", with Seatbelt on macOS, bubblewrap on Linux, and on Windows "the native Windows sandbox when you run in PowerShell" (or the Linux implementation under WSL2). Three modes: <code>read-only</code>, <code>workspace-write</code> and the helpfully named <code>danger-full-access</code>. The default Auto preset pairs <code>workspace-write</code> with approval on request, and the <a href="https://learn.chatgpt.com/docs/agent-approvals-security" target="_blank" rel="noopener">approvals and security docs</a> are blunt about the network: "By default, the agent runs with network access turned off." Two caveats sit in those same docs. The command proxy doesn't filter web search, connectors or MCP servers, and cloud tasks run in OpenAI's containers instead, with the agent phase offline by default.</p>
+<p>The Windows story has moved, too. OpenAI's <a href="https://learn.chatgpt.com/docs/windows/windows-sandbox" target="_blank" rel="noopener">Windows sandbox docs</a> now put Microsoft Execution Containers (MXC) first, on Windows 11 24H2 build 26100.9278 or 25H2 build 26200.9278 and later, and list two legacy fallbacks: <code>elevated</code>, which provisions dedicated sandbox users and firewall rules, and <code>unelevated</code>, which uses a restricted token and access control lists (ACLs). OpenAI's engineering post on how the original was built wouldn't load for me (a 403), so the background comes via <a href="https://codex.danielvaughan.com/2026/05/14/codex-cli-windows-sandbox-engineering-restricted-tokens-acls-elevated-architecture/" target="_blank" rel="noopener">Daniel Vaughan's write-up of it</a>, and gets treated accordingly: sandbox users and firewall rules were needed because a restricted token on its own can't block network traffic. If that account is right, it's a neat illustration of the Windows problem. On a Mac you write a Seatbelt profile. On Windows, until the OS grew a container primitive, you ended up provisioning user accounts and firewall rules to get the same outcome.</p>
+<figure><img alt="Codex: sandboxed by default, natively on all three" src="diagrams/runtime-codex.gif"></figure>
+<p><strong>Antigravity</strong> documents a <a href="https://antigravity.google/docs/sandbox/" target="_blank" rel="noopener">terminal sandbox</a> that uses <code>sandbox-exec</code> on macOS and kernel namespaces on Linux. On Windows, the CLI docs say "commands run in an AppContainer", and the requirement is specific: Windows 11 24H2 with the August 2026 update or later. Codex's MXC requirement lands on the same Windows 11 releases, so my read (and it is mine, no vendor says it) is that both are the "necessary primitives" Cursor was waiting on from Microsoft, finally showing up in the OS. The sandbox is on by default in the app and off by default in the CLI, and there's a Turbo preset that the <a href="https://antigravity.google/docs/agent-settings.md" target="_blank" rel="noopener">settings docs</a> describe as "run all commands without restrictions". Worth knowing as well: the Cloud Security Alliance published <a href="https://labs.cloudsecurityalliance.org/research/csa-research-note-agentic-ide-prompt-injection-sandbox-escap/" target="_blank" rel="noopener">a research note</a> describing a prompt injection that abused a native file-search tool, which fired before Strict Mode ever evaluated a command, and Google reportedly patched it in April. I've only read summaries of that one, but the lesson generalises: a sandbox around the shell does nothing for tools that never go through the shell.</p>
+<figure><img alt="Antigravity: three OS mechanisms, and a strict Windows build floor" src="diagrams/runtime-antigravity.gif"></figure>
+<p>Side by side, as documented today:</p>
+<div class="tbl"><table><thead><tr><th></th><th>macOS</th><th>Windows</th><th>Sandbox on by default?</th></tr></thead><tbody><tr><td>Claude Code</td><td>Seatbelt</td><td>None natively. bubblewrap under WSL2</td><td>No</td></tr><tr><td>Claude Cowork (local)</td><td>Linux VM on Virtualization.framework</td><td>Linux VM on Hyper-V</td><td>Yes, for shell and code (cloud is now the default)</td></tr><tr><td>Cursor</td><td>Seatbelt</td><td>Linux sandbox inside WSL2</td><td>Per Cursor's docs, yes where available</td></tr><tr><td>Codex</td><td>Seatbelt</td><td>Native: Microsoft Execution Containers; legacy sandbox users or restricted token</td><td>Yes</td></tr><tr><td>Antigravity</td><td>Seatbelt</td><td>AppContainer on recent Windows 11 builds</td><td>App yes, CLI no</td></tr></tbody></table></div>
+<p>Notice the Mac column. Everybody landed on Seatbelt, a mechanism Apple deprecated in 2016 and which Cursor points out is still what Chrome uses. Notice the Windows column: five products, four different answers. That inconsistency is the Windows story.</p>
+<h2>Why your EDR can't see it</h2>
+<p>"No EDR visibility" is actually three different problems wearing one label, and they map straight onto that spectrum diagram.</p>
+<p><strong>On the host, the EDR sees everything and understands nothing.</strong> When the agent runs directly as your user, endpoint detection and response (EDR) tooling gets the full process tree. The trouble is attribution. Elastic Security Labs put it well in <a href="https://www.elastic.co/security-labs/ai-coding-agent-audit-cursor-hooks" target="_blank" rel="noopener">a piece on auditing Cursor with hooks</a> (August 2026, Wieger van der Meulen): agent activity "happens under the developer's account inside processes the developer launched", so "this is indistinguishable from the developer doing the same things". The EDR sees <code>powershell.exe</code> spawned by a signed, trusted developer tool. It doesn't see the prompt, or the poisoned README that caused it.</p>
+<p>And the telemetry really does look like an intrusion. Sophos X-Ops published <a href="https://www.sophos.com/blog/2607_agents_vs_telemetry" target="_blank" rel="noopener">When AI agents look like attackers</a> in July, based on seven days of June telemetry from its Windows behavioural engine. By its own description it's "a first-pass, short signal dump", one vendor's fleet rather than a census, so read it as a signal. But the examples are vivid. Claude Code ran <code>cmdkey.exe /list</code> against Windows Credential Manager. A skill chain used PowerShell and the Data Protection API (DPAPI) to decrypt browser data. Codex tried to fetch a Python installer with <code>certutil</code>, got blocked, and pivoted to <code>bitsadmin</code>, which is exactly what a hands-on-keyboard attacker does. Cursor wrote a VBScript file into the Startup folder. Credential access made up 56.2% of the blocking detections. Sophos's position is the right one, I think: the rules were correct to fire, and an agent doing something risky does not make it safe. The temptation to allowlist <code>claude.exe</code> and <code>cursor.exe</code> to quiet the queue is exactly how you build the blind spot yourself.</p>
+<p><strong>In a local VM, the EDR is blind by design.</strong> This one isn't an inference, Anthropic says it outright in the Cowork architecture article:</p>
+<blockquote><p>The VM is isolated from host-based security tools by design, so an EDR sensor on the host can't see inside it.</p></blockquote>
+<p>Your Windows sensor sees a Hyper-V worker process using CPU. What runs inside the Linux guest is opaque. Anthropic's answer is that admins can run an approved vendor's sensor inside the VM, which the article says is in beta on macOS and Windows. Good that it exists. It's also a second sensor deployment, on a different OS, for a guest your endpoint team didn't build.</p>
+<p><strong>In the cloud, there is no endpoint.</strong> Same article: "Sessions in the cloud run entirely outside your endpoints, so EDR tools can't observe them", followed by a sentence I wish more vendor docs had the nerve to write: "If your compliance posture depends on endpoint visibility, account for this before rolling out Cowork."</p>
+<p>There's a fourth gap that sits across all three. A lot of what an agent does never spawns a process at all. A file edit is the harness's own process writing to disk. A web fetch or an MCP call is an HTTPS request from inside a trusted binary. The reasoning that led to the action lives in a TLS session to a model API. Process telemetry was built to catch programs, and the interesting part of an agent is the conversation.</p>
+<h2>The complexity, honestly</h2>
+<p>Here's where I land on why this is hard, and none of it is solved by picking the "right" product.</p>
+<p>Isolation and visibility trade against each other. The safest place to run untrusted code (a VM, or someone else's cloud) is the place your endpoint stack can't look. The most observable place (the bare host) is the one where a mistake costs the most. Every vendor in the table has picked a different point on that line, sometimes a different point per OS.</p>
+<p>The sandbox usually covers the shell and not much else. Claude Code's docs are explicit that hooks and local MCP servers run with full access. CurXecute (<a href="https://www.tenable.com/cve/CVE-2025-54135" target="_blank" rel="noopener">CVE-2025-54135</a>) is the textbook case: a message arriving through a Slack MCP server persuaded Cursor's agent to rewrite its own MCP configuration, which then launched attacker-chosen commands. No shell sandbox sits in that path. It was fixed in the 1.3 line, and the pattern has resurfaced in other products since.</p>
+<p>Defaults do the real work, and they are all over the place. Sandbox off by default here, on by default there, fail-open in one, unavailable on older Windows builds in another. And every product ships a "just let it run" switch, whether it's called <code>--dangerously-skip-permissions</code>, <code>danger-full-access</code> or Turbo. The Sophos credential-dumping example involved exactly that flag.</p>
+<p>And the Windows gap is real. On macOS there's one mature primitive that everyone uses. On Windows, depending on the tool, you get nothing, a Linux sandbox inside WSL2 (itself a VM your EDR has limited sight into), a bespoke token-and-ACL construction, or an AppContainer that needs a very recent build. If your fleet is Windows 11 Enterprise, as mine is, you cannot assume the Mac-centric blog post you read about agent sandboxing describes your machines.</p>
+<p>All of this to say: treat the agent as a non-human identity operating on a human's credentials, and build controls accordingly. If I were doing this on Monday:</p>
+<ol><li><strong>Inventory the harnesses, then the modes.</strong> Knowing Cursor is installed is step one. Knowing which machines run it with the sandbox off is the useful bit.</li><li><strong>Pin the defaults centrally.</strong> Each of these tools has managed settings. Turn the sandbox on where it exists, set fail-closed where it's offered, and disable the bypass flags.</li><li><strong>Take the harness's own telemetry.</strong> Hooks, OpenTelemetry export and compliance APIs are the only place intent is recorded. Elastic's caveat applies: hooks are "tamper-evident" rather than tamper-proof, and they don't cover a personal login.</li><li><strong>Don't allowlist the binary.</strong> Scope tuning by parent process and workspace path, and keep credential-access and persistence rules firing no matter who the parent is.</li><li><strong>Decide your position on VMs and cloud sessions on purpose.</strong> Either get a sensor into the guest, or accept the gap in writing with compensating controls at the identity and network layers.</li><li><strong>Keep secrets out of reach.</strong> An agent that can read <code>~/.aws/credentials</code> can be talked into sending it somewhere. Short-lived credentials and deny-read rules cost little.</li></ol>
+<p>A couple of honest limits on this research. I couldn't load OpenAI's own Windows sandbox engineering post or The Hacker News coverage of the Antigravity fix, so those two points rest on secondary accounts and are flagged as such above. And I've described what the documentation says, not what I've tested on a bench. Verifying each sandbox with a canary file and a blocked outbound connection, on both Windows and Mac, is the obvious follow-up piece.</p>
+<blockquote><p>Learn more about my Cloud and Security Projects: [Links to platforms]</p><p>Thank you for reading and leave your thoughts/comments!</p></blockquote>
+</main>
+<footer class="hub-foot">
+  <p>ThinkInfoSec 2026 — <a href="https://www.linkedin.com/in/amcamillo/">Andre Camillo</a> · <a href="../../index.html#research">Back to Research</a></p>
+  <p class="sub">The article below is the original research text, published here with its diagrams.</p>
+</footer>
+</body>
+</html>
