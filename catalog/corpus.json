@@ -496,7 +496,7 @@
       "processes": ["govern-assure", "threat-model", "detect-hunt"],
       "tech": [2, 62],
       "link": "Research/where-agents-run/",
-      "description": "Harnesses, runtimes, and why your EDR is squinting: where the command runs, and who can see it."
+      "description": "Harnesses, runtimes, and the controls that can actually stop them."
     }
   ]
 }
