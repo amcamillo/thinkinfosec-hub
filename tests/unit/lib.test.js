@@ -112,6 +112,20 @@ test('toolItems puts featured first; guideItems groups', () => {
   assert.deepEqual(g.map(i => [i.title, i.group]), [['Resource Library', 'guide'], ['Board pack', 'template']]);
 });
 
+test('frontPage leads with the newest cyber story', () => {
+  const news = L.newsItems({ items: [
+    { cat: 'geo', title: 'Football', ts: 5, source: 'S' },
+    { cat: 'ai', title: 'Model', ts: 4, source: 'S' },
+    { cat: 'cyber', title: 'Breach', ts: 3, source: 'S' },
+    { cat: 'geo', title: 'Trade', ts: 2, source: 'S' }
+  ] });
+  const f = L.frontPage(news, 2);
+  assert.equal(f.lead.title, 'Breach');
+  assert.deepEqual(f.wire.map(n => n.title), ['Football', 'Model']);
+  assert.equal(L.frontPage(news.filter(n => n.cat !== 'cyber'), 4).lead.title, 'Football');
+  assert.deepEqual(L.frontPage([], 4), { lead: null, wire: [] });
+});
+
 test('filterBy and search', () => {
   const items = [{ k: 'a', title: 'x' }, { k: 'b', title: 'y' }];
   assert.equal(L.filterBy(items, 'k', 'all').length, 2);

@@ -123,6 +123,12 @@
     }));
   }
 
+  // Lead with the newest cyber story (this is a security hub); the wire takes the next newest from any lane.
+  function frontPage(news, wireSize) {
+    const lead = news.find(n => n.cat === 'cyber') || news[0] || null;
+    return { lead, wire: news.filter(n => n !== lead).slice(0, wireSize) };
+  }
+
   function filterBy(items, key, value) { return value === 'all' ? items : items.filter(i => i[key] === value); }
 
   function searchEntries(s) {
@@ -156,6 +162,6 @@
   return {
     LANES, ORIGINS, GUIDE_GROUPS, safeUrl, isExternal, clip, timeAgo, formatDay, formatDate, formatTime, isStale,
     mediumKey, youtubeId, newsItems, mediaItems, researchItems, videoItems, toolItems, guideItems,
-    filterBy, searchEntries, search, signalStatus
+    frontPage, filterBy, searchEntries, search, signalStatus
   };
 });

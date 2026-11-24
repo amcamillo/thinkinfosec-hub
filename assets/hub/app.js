@@ -33,8 +33,9 @@
     R.list($('newsList'), L.filterBy(news, 'cat', lane), (n, i) => R.headlineRow(n, i, now), 'No headlines right now.');
   }
   function renderFront() {
-    R.lead($('leadStory'), news[0], now);
-    R.list($('liveWire'), news.slice(1, 5), (n, i) => R.headlineRow(n, i + 1, now), 'Waiting for Signal.');
+    const front = L.frontPage(news, 4);
+    R.lead($('leadStory'), front.lead, now);
+    R.list($('liveWire'), front.wire, (n, i) => R.headlineRow(n, i + 1, now), 'Waiting for Signal.');
     const latest = [
       ['Research', research.find(r => r.source === 'hub'), null],
       ['Medium', research.find(r => r.source === 'medium'), 'mag'],
