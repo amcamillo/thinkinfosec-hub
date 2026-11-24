@@ -9,8 +9,12 @@
       "origin": "hub",
       "pillar": "technology",
       "people": [],
-      "processes": ["build-demo"],
-      "tech": [12],
+      "processes": [
+        "build-demo"
+      ],
+      "tech": [
+        12
+      ],
       "link": "tools/password-hasher/",
       "description": "Password generator and hashing utility."
     },
@@ -20,9 +24,17 @@
       "kind": "tool",
       "origin": "hub",
       "pillar": "technology",
-      "people": ["teaching"],
-      "processes": ["build-demo", "threat-model"],
-      "tech": [62, 63],
+      "people": [
+        "teaching"
+      ],
+      "processes": [
+        "build-demo",
+        "threat-model"
+      ],
+      "tech": [
+        62,
+        63
+      ],
       "link": "tools/prompt-injection/",
       "description": "Catalog of common prompt-injection techniques."
     },
@@ -33,8 +45,14 @@
       "origin": "hub",
       "pillar": "process",
       "people": [],
-      "processes": ["architect-zt", "build-demo", "channel-mssp"],
-      "tech": [64],
+      "processes": [
+        "architect-zt",
+        "build-demo",
+        "channel-mssp"
+      ],
+      "tech": [
+        64
+      ],
       "link": "tools/diagram-builder/",
       "description": "Build CrowdStrike architecture diagrams from alliance landscape blocks and export PNG, SVG, Mermaid, or D2."
     },
@@ -44,9 +62,16 @@
       "kind": "tool",
       "origin": "hub",
       "pillar": "process",
-      "people": ["thought-leadership"],
-      "processes": ["architect-zt", "channel-mssp"],
-      "tech": [64],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "architect-zt",
+        "channel-mssp"
+      ],
+      "tech": [
+        64
+      ],
       "link": "tools/infosec-landscape/",
       "description": "Interactive map of 70 technology domains across CrowdStrike, Microsoft, and Palo Alto ecosystems."
     },
@@ -57,8 +82,12 @@
       "origin": "hub",
       "pillar": "technology",
       "people": [],
-      "processes": ["build-demo"],
-      "tech": [57],
+      "processes": [
+        "build-demo"
+      ],
+      "tech": [
+        57
+      ],
       "link": "tools/mdv/",
       "description": "Zero-egress offline markdown viewer with a sandboxed preview."
     },
@@ -68,9 +97,16 @@
       "kind": "tool",
       "origin": "hub",
       "pillar": "technology",
-      "people": ["teaching"],
-      "processes": ["threat-model", "build-demo"],
-      "tech": [62],
+      "people": [
+        "teaching"
+      ],
+      "processes": [
+        "threat-model",
+        "build-demo"
+      ],
+      "tech": [
+        62
+      ],
       "link": "tools/aidr-lab/",
       "description": "Searchable browser for CrowdStrike's public AIDR AI Guard test prompts (injection, jailbreak, PII)."
     },
@@ -82,8 +118,13 @@
       "note": "Fenced demo environment",
       "pillar": "technology",
       "people": [],
-      "processes": ["build-demo", "threat-model"],
-      "tech": [62],
+      "processes": [
+        "build-demo",
+        "threat-model"
+      ],
+      "tech": [
+        62
+      ],
       "link": "https://aiapp.acrmai.org",
       "description": "Demo environment for analysing AI-application security risk."
     },
@@ -95,8 +136,12 @@
       "note": "Fenced",
       "pillar": "technology",
       "people": [],
-      "processes": ["detect-hunt"],
-      "tech": [43],
+      "processes": [
+        "detect-hunt"
+      ],
+      "tech": [
+        43
+      ],
       "link": "https://thinkthreatsapp.pages.dev/",
       "description": "Document-grounded map of threat actors and targeting."
     },
@@ -107,10 +152,20 @@
       "origin": "elsewhere",
       "pillar": "process",
       "people": [],
-      "processes": ["govern-assure"],
-      "tech": [57],
+      "processes": [
+        "govern-assure"
+      ],
+      "tech": [
+        57
+      ],
       "link": "https://cyber-roadmap.acrmai.org",
-      "description": "Program outcomes and framework compliance mapping."
+      "description": "Program outcomes and framework compliance mapping.",
+      "featured": true,
+      "points": [
+        "Track program outcomes against the work actually delivered",
+        "Visualise framework and control coverage in one place",
+        "Brief stakeholders on security value, not a tool inventory"
+      ]
     },
     {
       "id": "crowdstrike-custom",
@@ -119,8 +174,14 @@
       "origin": "source",
       "pillar": "technology",
       "people": [],
-      "processes": ["detect-hunt", "build-demo"],
-      "tech": [2, 3],
+      "processes": [
+        "detect-hunt",
+        "build-demo"
+      ],
+      "tech": [
+        2,
+        3
+      ],
       "link": "https://github.com/amcamillo/CrowdStrike-custom",
       "description": "Custom Falcon scripts and integrations."
     },
@@ -131,8 +192,12 @@
       "origin": "source",
       "pillar": "technology",
       "people": [],
-      "processes": ["build-demo"],
-      "tech": [52],
+      "processes": [
+        "build-demo"
+      ],
+      "tech": [
+        52
+      ],
       "link": "https://github.com/amcamillo/Meraki-Computer-Vision",
       "description": "Meraki MV with AWS Rekognition via Node-RED."
     },
@@ -142,9 +207,15 @@
       "kind": "tool",
       "origin": "elsewhere",
       "pillar": "people",
-      "people": ["teaching"],
-      "processes": ["build-demo"],
-      "tech": [65],
+      "people": [
+        "teaching"
+      ],
+      "processes": [
+        "build-demo"
+      ],
+      "tech": [
+        65
+      ],
       "link": "https://amcamillo.github.io/Playground/",
       "description": "Educational web games."
     },
@@ -154,11 +225,22 @@
       "kind": "research",
       "origin": "hub",
       "pillar": "process",
-      "people": ["thought-leadership"],
-      "processes": ["govern-assure", "threat-model", "channel-mssp"],
-      "tech": [57, 62, 43],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "govern-assure",
+        "threat-model",
+        "channel-mssp"
+      ],
+      "tech": [
+        57,
+        62,
+        43
+      ],
       "link": "Research/preparing-for-2027/",
-      "description": "Twelve 2025/26 benchmark reports against Australia’s 2026–27 regulatory spine."
+      "description": "Twelve 2025/26 benchmark reports against Australia’s 2026–27 regulatory spine.",
+      "date": "2026-09-18"
     },
     {
       "id": "research-anz-mssp",
@@ -166,11 +248,18 @@
       "kind": "research",
       "origin": "hub",
       "pillar": "process",
-      "people": ["thought-leadership"],
-      "processes": ["channel-mssp"],
-      "tech": [64],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "channel-mssp"
+      ],
+      "tech": [
+        64
+      ],
       "link": "Research/anz-mssp/",
-      "description": "Managed security market across Australia and New Zealand."
+      "description": "Managed security market across Australia and New Zealand.",
+      "date": "2026-08-24"
     },
     {
       "id": "research-alliance-map",
@@ -178,11 +267,19 @@
       "kind": "research",
       "origin": "hub",
       "pillar": "process",
-      "people": ["thought-leadership"],
-      "processes": ["architect-zt", "channel-mssp"],
-      "tech": [64],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "architect-zt",
+        "channel-mssp"
+      ],
+      "tech": [
+        64
+      ],
       "link": "Research/infosec-solutions-map/",
-      "description": "70 technology domains across the Falcon ecosystem."
+      "description": "70 technology domains across the Falcon ecosystem.",
+      "date": "2026-08-24"
     },
     {
       "id": "learn-helpful-links",
@@ -190,11 +287,19 @@
       "kind": "learn",
       "origin": "hub",
       "pillar": "people",
-      "people": ["teaching"],
-      "processes": ["enable-certify", "channel-mssp"],
-      "tech": [64],
+      "people": [
+        "teaching"
+      ],
+      "processes": [
+        "enable-certify",
+        "channel-mssp"
+      ],
+      "tech": [
+        64
+      ],
       "link": "Learn/helpful-links/",
-      "description": "Updated public CrowdStrike datasheets and helpful links grouped by the 14 GTM pillars."
+      "description": "Updated public CrowdStrike datasheets and helpful links grouped by the 14 GTM pillars.",
+      "group": "guide"
     },
     {
       "id": "video-falcon-skills",
@@ -202,9 +307,15 @@
       "kind": "learn",
       "origin": "youtube",
       "pillar": "people",
-      "people": ["teaching"],
-      "processes": ["enable-certify"],
-      "tech": [2],
+      "people": [
+        "teaching"
+      ],
+      "processes": [
+        "enable-certify"
+      ],
+      "tech": [
+        2
+      ],
       "link": "https://www.youtube.com/watch?v=aQANe1ZJCds",
       "description": "CrowdStrike University certification courses."
     },
@@ -214,9 +325,15 @@
       "kind": "learn",
       "origin": "youtube",
       "pillar": "people",
-      "people": ["teaching"],
-      "processes": ["build-demo"],
-      "tech": [56],
+      "people": [
+        "teaching"
+      ],
+      "processes": [
+        "build-demo"
+      ],
+      "tech": [
+        56
+      ],
       "link": "https://www.youtube.com/watch?v=fRlxZIalUec",
       "description": "Auditing browser cookies with a custom extension."
     },
@@ -226,9 +343,15 @@
       "kind": "learn",
       "origin": "youtube",
       "pillar": "people",
-      "people": ["teaching"],
-      "processes": ["enable-certify"],
-      "tech": [61],
+      "people": [
+        "teaching"
+      ],
+      "processes": [
+        "enable-certify"
+      ],
+      "tech": [
+        61
+      ],
       "link": "https://www.youtube.com/watch?v=H_bfuq6fJr8",
       "description": "AI Security Series, episode one."
     },
@@ -238,9 +361,15 @@
       "kind": "learn",
       "origin": "youtube",
       "pillar": "people",
-      "people": ["teaching"],
-      "processes": ["govern-assure"],
-      "tech": [57],
+      "people": [
+        "teaching"
+      ],
+      "processes": [
+        "govern-assure"
+      ],
+      "tech": [
+        57
+      ],
       "link": "https://www.youtube.com/watch?v=oiizHlYcbsw",
       "description": "Strategic planning with CISO mindmapping."
     },
@@ -250,9 +379,16 @@
       "kind": "writing",
       "origin": "medium",
       "pillar": "people",
-      "people": ["thought-leadership"],
-      "processes": ["architect-zt"],
-      "tech": [61, 62],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "architect-zt"
+      ],
+      "tech": [
+        61,
+        62
+      ],
       "link": "https://andrecamillo.medium.com/crowdstrike-fal-con-2025-and-why-cyber-security-will-never-be-the-same-after-agentic-ai-9cbc6097077c",
       "description": "Notes on Fal.con 25 announcements."
     },
@@ -262,9 +398,16 @@
       "kind": "writing",
       "origin": "medium",
       "pillar": "people",
-      "people": ["thought-leadership"],
-      "processes": ["threat-model", "respond-recover"],
-      "tech": [43],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "threat-model",
+        "respond-recover"
+      ],
+      "tech": [
+        43
+      ],
       "link": "https://andrecamillo.medium.com/a-look-at-brazils-largest-financial-hack-junior-developer-sells-access-for-900-over-a-couple-of-cb95df61771d",
       "description": "Case write-up of a major financial access broker incident."
     },
@@ -274,9 +417,16 @@
       "kind": "writing",
       "origin": "medium",
       "pillar": "process",
-      "people": ["thought-leadership"],
-      "processes": ["threat-model"],
-      "tech": [55, 62],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "threat-model"
+      ],
+      "tech": [
+        55,
+        62
+      ],
       "link": "https://andrecamillo.medium.com/making-real-strides-tothreat-model-a-self-developed-application-a00f87d7018e",
       "description": "Updated STRIDES threat-modelling for self-developed apps."
     },
@@ -286,9 +436,16 @@
       "kind": "writing",
       "origin": "medium",
       "pillar": "people",
-      "people": ["skills-career", "teaching"],
-      "processes": ["enable-certify"],
-      "tech": [2],
+      "people": [
+        "skills-career",
+        "teaching"
+      ],
+      "processes": [
+        "enable-certify"
+      ],
+      "tech": [
+        2
+      ],
       "link": "https://andrecamillo.medium.com/crowdstrike-certified-falcon-administrator-certification-tips-c0ae9bf8ee19",
       "description": "CCFA certification journey."
     },
@@ -298,9 +455,18 @@
       "kind": "writing",
       "origin": "medium",
       "pillar": "people",
-      "people": ["teaching", "skills-career"],
-      "processes": ["detect-hunt", "enable-certify"],
-      "tech": [1, 2],
+      "people": [
+        "teaching",
+        "skills-career"
+      ],
+      "processes": [
+        "detect-hunt",
+        "enable-certify"
+      ],
+      "tech": [
+        1,
+        2
+      ],
       "link": "https://medium.com/cloudnsec/supporting-crowdstrike-falcon-platform-like-a-pro-e39b2e3233bf",
       "description": "Operating Falcon NGAV/EDR in production."
     },
@@ -310,9 +476,17 @@
       "kind": "writing",
       "origin": "medium",
       "pillar": "people",
-      "people": ["thought-leadership", "skills-career"],
-      "processes": ["enable-certify", "architect-zt"],
-      "tech": [64],
+      "people": [
+        "thought-leadership",
+        "skills-career"
+      ],
+      "processes": [
+        "enable-certify",
+        "architect-zt"
+      ],
+      "tech": [
+        64
+      ],
       "link": "https://medium.com/cloudnsec/crowdstrike-portfolio-overview-2024-and-how-to-skill-up-for-it-efb4fa410fed",
       "description": "Platform overview and how to skill up."
     },
@@ -322,9 +496,15 @@
       "kind": "writing",
       "origin": "medium",
       "pillar": "people",
-      "people": ["thought-leadership"],
-      "processes": ["architect-zt"],
-      "tech": [57],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "architect-zt"
+      ],
+      "tech": [
+        57
+      ],
       "link": "https://andrecamillo.medium.com/how-industries-evolve-and-wheres-information-security-at-the-moment-7c2c995e1c27",
       "description": "Industry structure and InfoSec’s place in it."
     },
@@ -334,9 +514,15 @@
       "kind": "writing",
       "origin": "medium",
       "pillar": "people",
-      "people": ["teaching"],
-      "processes": ["enable-certify"],
-      "tech": [1],
+      "people": [
+        "teaching"
+      ],
+      "processes": [
+        "enable-certify"
+      ],
+      "tech": [
+        1
+      ],
       "link": "https://infosecwriteups.com/operating-systems-types-and-common-archetypes-8db81455e1ac",
       "description": "OS archetypes for security practitioners."
     },
@@ -346,8 +532,12 @@
       "kind": "writing",
       "origin": "medium",
       "pillar": "people",
-      "people": ["skills-career"],
-      "processes": ["enable-certify"],
+      "people": [
+        "skills-career"
+      ],
+      "processes": [
+        "enable-certify"
+      ],
       "tech": [],
       "link": "https://medium.com/cloudnsec/i-left-microsoft-here-are-my-takeaways-from-the-whole-experience-in-gifs-9a27a1aaf95f",
       "description": "Career reflection after leaving Microsoft."
@@ -358,9 +548,18 @@
       "kind": "writing",
       "origin": "medium",
       "pillar": "people",
-      "people": ["thought-leadership"],
-      "processes": ["architect-zt", "threat-model"],
-      "tech": [61, 62, 63],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "architect-zt",
+        "threat-model"
+      ],
+      "tech": [
+        61,
+        62,
+        63
+      ],
       "link": "https://medium.com/cloudnsec/the-future-of-security-for-ai-labs-and-superintelligence-situational-awareness-takes-on-bff85fbe11fc",
       "description": "Notes on situational awareness and AI-lab security."
     },
@@ -370,9 +569,15 @@
       "kind": "writing",
       "origin": "medium",
       "pillar": "process",
-      "people": ["thought-leadership"],
-      "processes": ["architect-zt"],
-      "tech": [11],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "architect-zt"
+      ],
+      "tech": [
+        11
+      ],
       "link": "https://andrecamillo.medium.com/",
       "description": "Pinned ‘to the letter’ series on NIST 800-207. Confirm canonical URL.",
       "note": "URL needs confirming — activity page is login-walled"
@@ -383,9 +588,16 @@
       "kind": "writing",
       "origin": "medium",
       "pillar": "people",
-      "people": ["teaching"],
-      "processes": ["detect-hunt"],
-      "tech": [32, 28],
+      "people": [
+        "teaching"
+      ],
+      "processes": [
+        "detect-hunt"
+      ],
+      "tech": [
+        32,
+        28
+      ],
       "link": "https://andrecamillo.medium.com/",
       "description": "Pinned wireless-attack detection post. Confirm canonical URL.",
       "note": "URL needs confirming — activity page is login-walled"
@@ -396,9 +608,17 @@
       "kind": "writing",
       "origin": "medium",
       "pillar": "process",
-      "people": ["thought-leadership"],
-      "processes": ["threat-model", "architect-zt"],
-      "tech": [43, 49],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "threat-model",
+        "architect-zt"
+      ],
+      "tech": [
+        43,
+        49
+      ],
       "link": "https://andrecamillo.medium.com/leveraging-mitre-tools-for-effective-threat-informed-archite-99f425567edd",
       "description": "Pinned MITRE-informed architecture post."
     },
@@ -408,11 +628,25 @@
       "kind": "research",
       "origin": "hub",
       "pillar": "process",
-      "people": ["thought-leadership"],
-      "processes": ["govern-assure", "threat-model", "respond-recover"],
-      "tech": [57, 1, 8, 12, 47, 67],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "govern-assure",
+        "threat-model",
+        "respond-recover"
+      ],
+      "tech": [
+        57,
+        1,
+        8,
+        12,
+        47,
+        67
+      ],
       "link": "Research/essential-eight-crowdstrike/",
-      "description": "CrowdStrike capability against the Essential Eight: native scope, dependencies, and residual gaps."
+      "description": "CrowdStrike capability against the Essential Eight: native scope, dependencies, and residual gaps.",
+      "date": "2026-09-22"
     },
     {
       "id": "research-ncsc-top-10-crowdstrike",
@@ -420,11 +654,25 @@
       "kind": "research",
       "origin": "hub",
       "pillar": "process",
-      "people": ["thought-leadership"],
-      "processes": ["govern-assure", "threat-model", "respond-recover"],
-      "tech": [57, 1, 12, 37, 47, 67],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "govern-assure",
+        "threat-model",
+        "respond-recover"
+      ],
+      "tech": [
+        57,
+        1,
+        12,
+        37,
+        47,
+        67
+      ],
       "link": "Research/ncsc-top-10-crowdstrike/",
-      "description": "CrowdStrike capability against New Zealand’s NCSC Critical Controls: native scope, dependencies, and residual obligations."
+      "description": "CrowdStrike capability against New Zealand’s NCSC Critical Controls: native scope, dependencies, and residual obligations.",
+      "date": "2026-09-22"
     },
     {
       "id": "research-openai-medicare-portal",
@@ -432,11 +680,21 @@
       "kind": "research",
       "origin": "hub",
       "pillar": "process",
-      "people": ["thought-leadership"],
-      "processes": ["govern-assure", "threat-model"],
-      "tech": [57, 62, 43],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "govern-assure",
+        "threat-model"
+      ],
+      "tech": [
+        57,
+        62,
+        43
+      ],
       "link": "Research/openai-medicare-portal/",
-      "description": "Agentic threat research: an OpenAI evaluation agent, the Medicare statistics portal, and the goal that outranked the block."
+      "description": "Agentic threat research: an OpenAI evaluation agent, the Medicare statistics portal, and the goal that outranked the block.",
+      "date": "2026-09-28"
     },
     {
       "id": "research-ai-harness-engineering",
@@ -444,11 +702,20 @@
       "kind": "research",
       "origin": "hub",
       "pillar": "process",
-      "people": ["thought-leadership"],
-      "processes": ["govern-assure", "threat-model"],
-      "tech": [57, 62],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "govern-assure",
+        "threat-model"
+      ],
+      "tech": [
+        57,
+        62
+      ],
       "link": "Research/ai-harness-engineering/",
-      "description": "A controls reading of Zhong and Zhu’s harness ladder, and the trust boundaries the preprint leaves open."
+      "description": "A controls reading of Zhong and Zhu’s harness ladder, and the trust boundaries the preprint leaves open.",
+      "date": "2026-10-02"
     },
     {
       "id": "research-always-on-agents",
@@ -456,11 +723,20 @@
       "kind": "research",
       "origin": "hub",
       "pillar": "process",
-      "people": ["thought-leadership"],
-      "processes": ["govern-assure", "threat-model"],
-      "tech": [57, 62],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "govern-assure",
+        "threat-model"
+      ],
+      "tech": [
+        57,
+        62
+      ],
       "link": "Research/always-on-agents/",
-      "description": "A security reading of OpenAI dots, Meta Muse and xAI Grok Bot: published controls, and what an ANZ team should do this sprint."
+      "description": "A security reading of OpenAI dots, Meta Muse and xAI Grok Bot: published controls, and what an ANZ team should do this sprint.",
+      "date": "2026-10-03"
     },
     {
       "id": "research-kernel-access-redesigned",
@@ -468,11 +744,20 @@
       "kind": "research",
       "origin": "hub",
       "pillar": "process",
-      "people": ["thought-leadership"],
-      "processes": ["threat-model", "respond-recover"],
-      "tech": [1, 2],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "threat-model",
+        "respond-recover"
+      ],
+      "tech": [
+        1,
+        2
+      ],
       "link": "Research/kernel-access-redesigned/",
-      "description": "How Linux, macOS and Windows each got security tools out of Ring 0, and how finished each journey is."
+      "description": "How Linux, macOS and Windows each got security tools out of Ring 0, and how finished each journey is.",
+      "date": "2026-10-21"
     },
     {
       "id": "research-php2shell",
@@ -480,11 +765,21 @@
       "kind": "research",
       "origin": "hub",
       "pillar": "process",
-      "people": ["thought-leadership"],
-      "processes": ["threat-model", "detect-hunt", "respond-recover"],
-      "tech": [47, 53],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "threat-model",
+        "detect-hunt",
+        "respond-recover"
+      ],
+      "tech": [
+        47,
+        53
+      ],
       "link": "Research/php2shell/",
-      "description": "The 21 October 2026 PHP engine advisories: what the patch closes, and what a WAF does not prove."
+      "description": "The 21 October 2026 PHP engine advisories: what the patch closes, and what a WAF does not prove.",
+      "date": "2026-10-26"
     },
     {
       "id": "research-where-agents-run",
@@ -492,11 +787,21 @@
       "kind": "research",
       "origin": "hub",
       "pillar": "process",
-      "people": ["thought-leadership"],
-      "processes": ["govern-assure", "threat-model", "detect-hunt"],
-      "tech": [2, 62],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "govern-assure",
+        "threat-model",
+        "detect-hunt"
+      ],
+      "tech": [
+        2,
+        62
+      ],
       "link": "Research/where-agents-run/",
-      "description": "Harnesses, runtimes, and the controls that can actually stop them."
+      "description": "Harnesses, runtimes, and the controls that can actually stop them.",
+      "date": "2026-11-13"
     },
     {
       "id": "research-double-agents",
@@ -504,11 +809,20 @@
       "kind": "research",
       "origin": "hub",
       "pillar": "process",
-      "people": ["thought-leadership"],
-      "processes": ["threat-model", "detect-hunt"],
-      "tech": [43, 62],
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "threat-model",
+        "detect-hunt"
+      ],
+      "tech": [
+        43,
+        62
+      ],
       "link": "Research/double-agents/",
-      "description": "ARTEX, the pen-test harness in the November 2026 FBI FLASH, and the agents already on the estate."
+      "description": "ARTEX, the pen-test harness in the November 2026 FBI FLASH, and the agents already on the estate.",
+      "date": "2026-11-25"
     }
   ]
 }
