@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>From pen-test repo to FBI alert in four months</title>
+<style>
+:root { --tis-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+.tx-tag    { font: 700 9.5px var(--tis-font); letter-spacing: 1.3px; text-transform: uppercase; }
+.tx-title  { font: 700 15px var(--tis-font); letter-spacing: -.1px; }
+.tx-sub    { font: 400 11.5px var(--tis-font); }
+.tx-label  { font: 600 11px var(--tis-font); }
+.tx-glabel { font: 800 10.5px var(--tis-font); letter-spacing: 1.8px; text-transform: uppercase; }
+.tx-gnote  { font: 400 11px var(--tis-font); }
+.tx-pill   { font: 600 11px var(--tis-font); }
+.tx-gate   { font: 700 11px var(--tis-font); }
+.tx-note   { font: 500 11px var(--tis-font); font-style: italic; }
+.tx-axis   { font: 600 10px var(--tis-font); letter-spacing: 1px; text-transform: uppercase; }
+.tx-lane   { font: 800 10.5px var(--tis-font); letter-spacing: 1.8px; text-transform: uppercase; }
+.tx-stat   { font: 900 34px var(--tis-font); letter-spacing: -1px; }
+.tx-step   { font: 500 12px var(--tis-font); }
+.tx-src    { font: italic 400 10.5px var(--tis-font); }
+
+:root {
+  --tis-magenta: #c2185b; --tis-teal: #00838f; --tis-navy: #0f172a;
+  --tis-ink: #0f172a; --tis-mute: #475569; --tis-line: rgba(15,23,42,.12);
+  --tis-glass: rgba(255,255,255,.94); --tis-glass-2: rgba(255,255,255,.98);
+}
+* { box-sizing: border-box; }
+html, body { background: #f8fafc; }
+body { margin: 0; overflow-x: hidden; font-family: var(--tis-font); color: var(--tis-ink); }
+.stage { position: relative; overflow: hidden; background: #f1f5f9; min-height: 100vh; }
+.stage .zone { position: absolute; inset: 0; }
+.stage .zone-magenta { background: linear-gradient(77deg, rgba(194,24,91,0.06) 0%, rgba(194,24,91,0.02) 40%, transparent 80%); }
+.stage .zone-teal { background: linear-gradient(57deg, transparent 20%, rgba(0,131,143,0.03) 60%, rgba(0,131,143,0.08) 100%); }
+.stage .wash  { background: rgba(255,255,255,.4); }
+.stage .grain { background-image: radial-gradient(rgba(15,23,42,.15) .5px, transparent .5px); background-size: 6px 6px; opacity: .15; }
+.wrap { position: relative; z-index: 1; padding: 44px 16px; display: flex; justify-content: center; }
+.panel { background: var(--tis-glass-2); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+  border: 1px solid var(--tis-line); border-radius: 18px; padding: 28px 30px 24px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.04); }
+.eyebrow { display: flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--tis-mute); margin: 0 0 10px; font-weight: 700; }
+.eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #00838f; }
+h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 900; letter-spacing: -.5px; margin: 0 0 8px; color: #0f172a; text-wrap: balance; }
+.caption { color: var(--tis-mute); font-size: .95rem; line-height: 1.6; margin: 0 0 22px; max-width: 78ch; }
+.diagram { overflow-x: auto; margin: 0 -6px; padding: 0 6px; }
+.diagram svg { display: block; width: 100%; height: auto; min-width: 760px; margin: 0 auto; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--tis-line); font-size: 12px; color: var(--tis-mute); }
+.legend span { display: inline-flex; align-items: center; gap: 9px; }
+.legend svg { flex: none; }
+/* diagram primitives */
+.n-box   { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.03)); }
+.ghost .n-box { fill: rgba(248,250,252,.7); stroke: #94a3b8; stroke-dasharray: 5 4; }
+.tx-title { fill: #0f172a; }
+.tx-sub   { fill: #475569; }
+.tx-gnote { fill: #64748b; }
+.tx-note  { fill: #64748b; }
+.tx-label { fill: #0f172a; }
+.g-box    { fill: rgba(241,245,249,.6); stroke: #cbd5e1; stroke-width: 1.2; stroke-dasharray: 6 4; }
+.port     { fill: #f8fafc; stroke: #94a3b8; stroke-width: 1.3; }
+
+.panel { max-width: 1458px; }
+.diagram svg { min-width: 760px; }
+</style><style>
+.stage { background: #f6f8fc; min-height: 0; }
+.stage .zone-magenta { background: linear-gradient(77deg, rgba(255,45,120,.62) 0%, rgba(255,45,120,.34) 10%, rgba(255,45,120,.14) 22%, rgba(255,45,120,.04) 34%, rgba(255,45,120,0) 46%); }
+.stage .zone-teal { background: linear-gradient(57deg, rgba(0,191,207,0) 54%, rgba(0,191,207,.04) 66%, rgba(0,191,207,.14) 78%, rgba(0,191,207,.34) 90%, rgba(0,191,207,.62) 100%); }
+.stage .wash { background: rgba(255,255,255,.12); }
+.wrap { padding: 44px 40px; }
+.panel { background: #ffffff; box-shadow: 0 12px 36px rgba(15,23,42,.10); }
+</style><style>html.embed .eyebrow,html.embed h1,html.embed .caption{display:none}html.embed .stage{min-height:0}
+html.embed body{overflow:hidden}html.embed .wrap{width:1456px;padding:10px}html.embed .panel{padding:14px 16px 12px;max-width:none}
+html.embed .diagram{overflow:visible}html.embed .diagram svg{min-width:0}</style>
+<script>if (/[?&]embed\b/.test(location.search)) { const h = document.documentElement; h.classList.add('embed');
+  const fit = () => { h.style.zoom = innerWidth / 1456; }; addEventListener('resize', fit); fit(); }</script>
+</head>
+<body><div class="stage"><div class="zone zone-magenta"></div><div class="zone zone-teal"></div><div class="zone wash"></div><div class="zone grain"></div>
+<main class="wrap"><section class="panel">
+<p class="eyebrow">ThinkInfoSec · Double Agents</p>
+<h1>From pen-test repo to FBI alert in four months</h1>
+<p class="caption">Dates per the FBI FLASH and each source's own publication date. Pulling the repo did not pull the tool.</p>
+<figure class="diagram" style="margin:0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1396 720" width="1396" style="max-width:1396px" role="img" aria-label="From pen-test repo to FBI alert in four months: timeline visual"><defs></defs>
+<rect data-a="lanes" x="28" y="92.8" width="1340" height="96" fill="#f8fafc"/>
+<text data-a="lanes" class="tx-lane" x="38" y="166.8" fill="#334155">ARTEX</text>
+<path data-a="lanes" d="M240,162.8 L1336,162.8" fill="none" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2 4"/>
+<text data-a="lanes" class="tx-lane" x="38" y="262.8" fill="#c2185b">Attackers</text>
+<path data-a="lanes" d="M240,258.8 L1336,258.8" fill="none" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2 4"/>
+<rect data-a="lanes" x="28" y="300.8" width="1340" height="148" fill="#f8fafc"/>
+<text data-a="lanes" class="tx-lane" x="38" y="374.8" fill="#00838f">CrowdStrike</text>
+<path data-a="lanes" d="M240,370.8 L1336,370.8" fill="none" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2 4"/>
+<text data-a="lanes" class="tx-lane" x="38" y="522.8" fill="#00838f">Microsoft, Unit 42, FBI</text>
+<path data-a="lanes" d="M240,518.8 L1336,518.8" fill="none" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2 4"/>
+<path data-a="axis" d="M288,92.8 L288,668.8" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+<text data-a="axis" class="tx-axis" x="288" y="688.8" text-anchor="middle" fill="#64748b">Jul 2026</text>
+<path data-a="axis" d="M517.6,92.8 L517.6,668.8" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+<text data-a="axis" class="tx-axis" x="517.6" y="688.8" text-anchor="middle" fill="#64748b">Aug</text>
+<path data-a="axis" d="M747.3,92.8 L747.3,668.8" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+<text data-a="axis" class="tx-axis" x="747.3" y="688.8" text-anchor="middle" fill="#64748b">Sep</text>
+<path data-a="axis" d="M969.5,92.8 L969.5,668.8" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+<text data-a="axis" class="tx-axis" x="969.5" y="688.8" text-anchor="middle" fill="#64748b">Oct</text>
+<path data-a="axis" d="M1199.1,92.8 L1199.1,668.8" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+<text data-a="axis" class="tx-axis" x="1199.1" y="688.8" text-anchor="middle" fill="#64748b">Nov</text>
+<path data-a="axis" d="M240,668.8 L1336,668.8" fill="none" stroke="#94a3b8" stroke-width="1.2"/>
+<circle data-a="ev0" data-id="ev0" data-glow="#64748b" cx="288" cy="162.8" r="5" fill="#334155"/>
+<path data-a="ev0c" d="M288,155.8 L288,154.8" fill="none" stroke="rgba(51,65,85,.25)" stroke-width="1.2"/>
+<text data-a="ev0l" class="tx-tag" x="290" y="117.8" fill="#334155">Jul 2026</text>
+<text data-a="ev0l" class="tx-title" x="290" y="134.8" fill="#0f172a">Released on GitHub</text>
+<text data-a="ev0l" class="tx-sub" x="290" y="148.8" fill="#475569">open source, for authorised testing</text>
+<rect data-a="ev1" data-id="ev1" data-glow="#e91e63" x="517.6" y="252.8" width="770.4" height="12" rx="6" fill="rgba(233,30,99,.08)" stroke="#c2185b" stroke-width="1.4"/>
+<path data-a="ev1c" d="M517.6,251.8 L517.6,250.8" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<text data-a="ev1l" class="tx-tag" x="519.6" y="213.8" fill="#c2185b">Aug 2026 – 13 Nov</text>
+<text data-a="ev1l" class="tx-title" x="519.6" y="230.8" fill="#0f172a">Abuse in the wild</text>
+<text data-a="ev1l" class="tx-sub" x="519.6" y="244.8" fill="#475569">FBI: since at least August</text>
+<circle data-a="ev2" data-id="ev2" data-glow="#00acc1" cx="1013.9" cy="370.8" r="5" fill="#00838f"/>
+<path data-a="ev2c" d="M1013.9,363.8 L1013.9,362.8" fill="none" stroke="rgba(0,131,143,.32)" stroke-width="1.2"/>
+<text data-a="ev2l" class="tx-tag" x="1015.9" y="325.8" fill="#00838f">07 Oct</text>
+<text data-a="ev2l" class="tx-title" x="1015.9" y="342.8" fill="#0f172a">Korean bank attacks exposed</text>
+<text data-a="ev2l" class="tx-sub" x="1015.9" y="356.8" fill="#475569">the operator's own logs</text>
+<circle data-a="ev3" data-id="ev3" data-glow="#64748b" cx="1021.3" cy="162.8" r="5" fill="#334155"/>
+<path data-a="ev3c" d="M1021.3,155.8 L1021.3,154.8" fill="none" stroke="rgba(51,65,85,.25)" stroke-width="1.2"/>
+<text data-a="ev3l" class="tx-tag" x="1023.3" y="117.8" fill="#334155">08 Oct</text>
+<text data-a="ev3l" class="tx-title" x="1023.3" y="134.8" fill="#0f172a">Repo pulled</text>
+<text data-a="ev3l" class="tx-sub" x="1023.3" y="148.8" fill="#475569">forks and ARTEX PRO live on</text>
+<rect data-a="ev4" data-id="ev4" data-glow="#e91e63" x="1036.1" y="268.8" width="29.6" height="12" rx="6" fill="rgba(233,30,99,.08)" stroke="#c2185b" stroke-width="1.4"/>
+<path data-a="ev4c" d="M1036.1,267.8 L1036.1,250.8" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<text data-a="ev4l" class="tx-tag" x="1038.1" y="213.8" fill="#c2185b">10 Oct – 14 Oct</text>
+<text data-a="ev4l" class="tx-title" x="1038.1" y="230.8" fill="#0f172a">Storm-0940 password spray</text>
+<text data-a="ev4l" class="tx-sub" x="1038.1" y="244.8" fill="#475569">151,000+ failed logons</text>
+<circle data-a="ev5" data-id="ev5" data-glow="#00acc1" cx="1117.6" cy="518.8" r="5" fill="#00838f"/>
+<path data-a="ev5c" d="M1117.6,511.8 L1117.6,510.8" fill="none" stroke="rgba(0,131,143,.32)" stroke-width="1.2"/>
+<text data-a="ev5l" class="tx-tag" x="1119.6" y="473.8" fill="#00838f">21 Oct</text>
+<text data-a="ev5l" class="tx-title" x="1119.6" y="490.8" fill="#0f172a">Microsoft names Storm-0940</text>
+<text data-a="ev5l" class="tx-sub" x="1119.6" y="504.8" fill="#475569">ConnectWise supply chain</text>
+<circle data-a="ev6" data-id="ev6" data-glow="#00acc1" cx="1176.9" cy="370.8" r="5" fill="#00838f"/>
+<path data-a="ev6c" d="M1176.9,377.8 L1176.9,382.8" fill="none" stroke="rgba(0,131,143,.32)" stroke-width="1.2"/>
+<text data-a="ev6l" class="tx-tag" x="1178.9" y="395.8" fill="#00838f">29 Oct</text>
+<text data-a="ev6l" class="tx-title" x="1178.9" y="412.8" fill="#0f172a">VAPOR PANDA named</text>
+<text data-a="ev6l" class="tx-sub" x="1178.9" y="426.8" fill="#475569">espionage at scale</text>
+<circle data-a="ev7" data-id="ev7" data-glow="#00acc1" cx="1273.2" cy="518.8" r="5" fill="#00838f"/>
+<path data-a="ev7c" d="M1273.2,525.8 L1273.2,546.8" fill="none" stroke="rgba(0,131,143,.32)" stroke-width="1.2"/>
+<text data-a="ev7l" class="tx-tag" x="1271.2" y="559.8" text-anchor="end" fill="#00838f">11 Nov</text>
+<text data-a="ev7l" class="tx-title" x="1271.2" y="576.8" text-anchor="end" fill="#0f172a">Unit 42 counts consoles</text>
+<text data-a="ev7l" class="tx-sub" x="1271.2" y="590.8" text-anchor="end" fill="#475569">609 ARTEX hosts in October</text>
+<circle data-a="ev8" data-id="ev8" data-glow="#00acc1" cx="1288" cy="534.8" r="5" fill="#00838f"/>
+<path data-a="ev8c" d="M1288,541.8 L1288,602.8" fill="none" stroke="rgba(0,131,143,.32)" stroke-width="1.2"/>
+<text data-a="ev8l" class="tx-tag" x="1286" y="615.8" text-anchor="end" fill="#00838f">13 Nov</text>
+<text data-a="ev8l" class="tx-title" x="1286" y="632.8" text-anchor="end" fill="#0f172a">FBI FLASH</text>
+<text data-a="ev8l" class="tx-sub" x="1286" y="646.8" text-anchor="end" fill="#475569">FLASH-20261113-001</text>
+<path data-a="ann0" d="M288,44.8 L1288,44.8" fill="none" stroke="#334155" stroke-width="1.2"/>
+<path data-a="ann0" d="M288,39.8 L288,49.8" fill="none" stroke="#334155" stroke-width="1.2"/>
+<path data-a="ann0" d="M1288,39.8 L1288,49.8" fill="none" stroke="#334155" stroke-width="1.2"/>
+<text data-a="ann0" class="tx-label" x="788" y="36.8" text-anchor="middle" fill="#0f172a">four months, release to FBI alert</text>
+<path data-a="ann1" d="M1021.3,74.8 L1288,74.8" fill="none" stroke="#334155" stroke-width="1.2"/>
+<path data-a="ann1" d="M1021.3,69.8 L1021.3,79.8" fill="none" stroke="#334155" stroke-width="1.2"/>
+<path data-a="ann1" d="M1288,69.8 L1288,79.8" fill="none" stroke="#334155" stroke-width="1.2"/>
+<text data-a="ann1" class="tx-label" x="1154.7" y="66.8" text-anchor="middle" fill="#0f172a">deleted, not gone</text></svg></figure>
+<div class="legend"><span><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="#c2185b"/></svg>attacker activity</span><span><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="#00838f"/></svg>research and response</span></div>
+</section></main></div><script type="application/json" id="tv-anim">{"steps":[{"a":"lanes","effect":"fade","at":0,"dur":400},{"a":"axis","effect":"fade","at":200,"dur":600},{"a":"ev0","effect":"pop","at":893,"dur":350},{"a":"ev0c","effect":"draw","at":1043,"dur":250},{"a":"ev0l","effect":"pop","at":1143,"dur":350},{"a":"ev1","effect":"grow","at":1998,"dur":700},{"a":"ev1c","effect":"draw","at":2148,"dur":250},{"a":"ev1l","effect":"pop","at":2248,"dur":350},{"a":"ev2","effect":"pop","at":4388,"dur":350},{"a":"ev2c","effect":"draw","at":4538,"dur":250},{"a":"ev2l","effect":"pop","at":4638,"dur":350},{"a":"ev3","effect":"pop","at":4568,"dur":350},{"a":"ev3c","effect":"draw","at":4718,"dur":250},{"a":"ev3l","effect":"pop","at":4818,"dur":350},{"a":"ev4","effect":"grow","at":4748,"dur":700},{"a":"ev4c","effect":"draw","at":4898,"dur":250},{"a":"ev4l","effect":"pop","at":4998,"dur":350},{"a":"ev5","effect":"pop","at":4928,"dur":350},{"a":"ev5c","effect":"draw","at":5078,"dur":250},{"a":"ev5l","effect":"pop","at":5178,"dur":350},{"a":"ev6","effect":"pop","at":5172,"dur":350},{"a":"ev6c","effect":"draw","at":5322,"dur":250},{"a":"ev6l","effect":"pop","at":5422,"dur":350},{"a":"ev7","effect":"pop","at":5636,"dur":350},{"a":"ev7c","effect":"draw","at":5786,"dur":250},{"a":"ev7l","effect":"pop","at":5886,"dur":350},{"a":"ev8","effect":"pop","at":5816,"dur":350},{"a":"ev8c","effect":"draw","at":5966,"dur":250},{"a":"ev8l","effect":"pop","at":6066,"dur":350},{"a":"ann0","effect":"fade","at":6316,"dur":500},{"a":"ann1","effect":"fade","at":6566,"dur":500}],"hold":2500,"fade":700,"gap":500}</script>
+<script>// thinkinfosec-visuals animation runtime, inlined into <name>.animated.html for every type except flow.
+// Data: JSON in a tv-anim data block: { steps:[{a,effect,at,dur}], hold, fade, gap }
+// Shapes opt in with data-a="<target>". Rendering is a pure function of time, so the GIF capture can seek.
+// API: window.flowAnim = { period, end, seek(ms), play(), pause() }, the same contract as the flow runtime.
+(() => {
+  const D = JSON.parse(document.getElementById('tv-anim').textContent);
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.querySelector('.diagram svg');
+  const ease = p => 1 - Math.pow(1 - p, 3);
+  const clamp = v => Math.max(0, Math.min(1, v));
+  const fmt = (el, v) => {
+    const [ip, fp] = v.toFixed(+(el.dataset.decimals || 0)).split('.');
+    const s = (el.dataset.sep ? ip.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ip) + (fp != null ? '.' + fp : '');
+    return (el.dataset.prefix || '') + s + (el.dataset.suffix || '');
+  };
+  const colorOf = el => el.dataset.glow || el.getAttribute('stroke') || el.getAttribute('fill') || '#fff';
+
+  const byEl = new Map();
+  for (const s of D.steps) for (const el of svg.querySelectorAll(`[data-a="${CSS.escape(s.a)}"]`)) {
+    if (!byEl.has(el)) byEl.set(el, []);
+    byEl.get(el).push(s);
+  }
+  for (const [el, list] of byEl) {
+    const grows = list.some(s => s.effect === 'grow'), bottom = el.dataset.origin === 'bottom';
+    el.style.transformBox = 'fill-box';
+    el.style.transformOrigin = grows ? (bottom ? 'center bottom' : 'left center') : 'center';
+    if (list.some(s => s.effect === 'draw') && el.getTotalLength && !el.getAttribute('stroke-dasharray')) {
+      const L = el.getTotalLength(); el.dataset.len = L; el.style.strokeDasharray = `${L} ${L}`;
+      el.dataset.marker = el.getAttribute('marker-end') || '';
+    }
+    if (list.some(s => s.effect === 'travel') && el.getTotalLength) {
+      const dot = document.createElementNS(NS, 'circle');
+      dot.setAttribute('r', '3.6'); dot.setAttribute('fill', colorOf(el));
+      dot.style.filter = `drop-shadow(0 0 4px ${colorOf(el)})`;
+      el.parentNode.appendChild(dot); el._dot = dot;
+    }
+  }
+
+  const end = Math.max(0, ...D.steps.map(s => s.at + s.dur));
+  const period = end + D.hold + D.fade + D.gap;
+
+  function render(t) {
+    svg.style.opacity = String(1 - (t > end + D.hold ? clamp((t - end - D.hold) / D.fade) : 0));
+    for (const [el, list] of byEl) {
+      let opacity = 1, scale = 1, sx = 1, glow = 0;
+      for (const s of list) {
+        const raw = clamp((t - s.at) / s.dur), p = ease(raw), started = raw > 0;
+        if (s.effect === 'pop') { opacity *= started ? p : 0; scale *= 0.9 + 0.1 * p; }
+        else if (s.effect === 'fade') opacity *= started ? p : 0;
+        else if (s.effect === 'grow') { sx *= p; if (!started) opacity = 0; }
+        else if (s.effect === 'draw') {
+          if (el.dataset.len) {
+            el.style.strokeDashoffset = String(+el.dataset.len * (1 - p)); if (!started) opacity = 0;
+            // the arrowhead appears only once the line has reached it
+            if (el.dataset.marker) { if (raw >= 1) el.setAttribute('marker-end', el.dataset.marker); else el.removeAttribute('marker-end'); }
+          }
+          else opacity *= started ? p : 0;
+        }
+        else if (s.effect === 'count' && el.dataset.count != null) el.textContent = fmt(el, +el.dataset.count * p);
+        else if (s.effect === 'travel' && el._dot) {
+          const pt = el.getPointAtLength(el.getTotalLength() * p);
+          el._dot.style.display = started && raw < 1 ? '' : 'none';
+          el._dot.setAttribute('cx', pt.x); el._dot.setAttribute('cy', pt.y);
+        }
+        else if (s.effect === 'glow') glow = Math.max(glow, !started ? 0 : raw < 0.5 ? raw * 2 : Math.max(0.35, 1 - (raw - 0.5) * 1.3));
+      }
+      el.style.opacity = String(opacity);
+      el.style.transform = [sx !== 1 ? (el.dataset.origin === 'bottom' ? `scaleY(${sx})` : `scaleX(${sx})`) : '', scale !== 1 ? `scale(${scale})` : ''].join(' ').trim();
+      el.style.filter = glow > 0 ? `drop-shadow(0 0 ${(8 * glow).toFixed(1)}px ${colorOf(el)})` : '';
+    }
+  }
+
+  let raf = 0, t0 = null, playing = false;
+  const loop = now => { if (t0 == null) t0 = now; render((now - t0) % period); raf = requestAnimationFrame(loop); };
+  const api = {
+    period, end,
+    seek(ms) { cancelAnimationFrame(raf); render(((ms % period) + period) % period); },
+    play() { cancelAnimationFrame(raf); t0 = null; raf = requestAnimationFrame(loop); },
+    pause() { cancelAnimationFrame(raf); },
+  };
+  window.flowAnim = api;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { render(end); return; }
+  render(0);
+  if (/[?&]capture\b/.test(location.search)) return;
+  new IntersectionObserver(es => { for (const e of es) {
+    if (e.isIntersecting && !playing) { playing = true; api.play(); }
+    else if (!e.isIntersecting && playing) { playing = false; api.pause(); render(0); }
+  } }, { threshold: 0.25 }).observe(svg);
+  svg.addEventListener('click', () => { playing = !playing; playing ? api.play() : api.pause(); });
+})();
+</script>
+</body></html>

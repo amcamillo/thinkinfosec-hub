@@ -497,6 +497,18 @@
       "tech": [2, 62],
       "link": "Research/where-agents-run/",
       "description": "Harnesses, runtimes, and the controls that can actually stop them."
+    },
+    {
+      "id": "research-double-agents",
+      "title": "Double agents",
+      "kind": "research",
+      "origin": "hub",
+      "pillar": "process",
+      "people": ["thought-leadership"],
+      "processes": ["threat-model", "detect-hunt"],
+      "tech": [43, 62],
+      "link": "Research/double-agents/",
+      "description": "ARTEX, the pen-test harness in the November 2026 FBI FLASH, and the agents already on the estate."
     }
   ]
 }

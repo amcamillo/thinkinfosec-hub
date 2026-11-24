@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How an ARTEX intrusion moves</title>
+<style>
+:root { --tis-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+.tx-tag    { font: 700 9.5px var(--tis-font); letter-spacing: 1.3px; text-transform: uppercase; }
+.tx-title  { font: 700 15px var(--tis-font); letter-spacing: -.1px; }
+.tx-sub    { font: 400 11.5px var(--tis-font); }
+.tx-label  { font: 600 11px var(--tis-font); }
+.tx-glabel { font: 800 10.5px var(--tis-font); letter-spacing: 1.8px; text-transform: uppercase; }
+.tx-gnote  { font: 400 11px var(--tis-font); }
+.tx-pill   { font: 600 11px var(--tis-font); }
+.tx-gate   { font: 700 11px var(--tis-font); }
+.tx-note   { font: 500 11px var(--tis-font); font-style: italic; }
+.tx-axis   { font: 600 10px var(--tis-font); letter-spacing: 1px; text-transform: uppercase; }
+.tx-lane   { font: 800 10.5px var(--tis-font); letter-spacing: 1.8px; text-transform: uppercase; }
+.tx-stat   { font: 900 34px var(--tis-font); letter-spacing: -1px; }
+.tx-step   { font: 500 12px var(--tis-font); }
+.tx-src    { font: italic 400 10.5px var(--tis-font); }
+
+:root {
+  --tis-magenta: #c2185b; --tis-teal: #00838f; --tis-navy: #0f172a;
+  --tis-ink: #0f172a; --tis-mute: #475569; --tis-line: rgba(15,23,42,.12);
+  --tis-glass: rgba(255,255,255,.94); --tis-glass-2: rgba(255,255,255,.98);
+}
+* { box-sizing: border-box; }
+html, body { background: #f8fafc; }
+body { margin: 0; overflow-x: hidden; font-family: var(--tis-font); color: var(--tis-ink); }
+.stage { position: relative; overflow: hidden; background: #f1f5f9; min-height: 100vh; }
+.stage .zone { position: absolute; inset: 0; }
+.stage .zone-magenta { background: linear-gradient(77deg, rgba(194,24,91,0.06) 0%, rgba(194,24,91,0.02) 40%, transparent 80%); }
+.stage .zone-teal { background: linear-gradient(57deg, transparent 20%, rgba(0,131,143,0.03) 60%, rgba(0,131,143,0.08) 100%); }
+.stage .wash  { background: rgba(255,255,255,.4); }
+.stage .grain { background-image: radial-gradient(rgba(15,23,42,.15) .5px, transparent .5px); background-size: 6px 6px; opacity: .15; }
+.wrap { position: relative; z-index: 1; padding: 44px 16px; display: flex; justify-content: center; }
+.panel { background: var(--tis-glass-2); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+  border: 1px solid var(--tis-line); border-radius: 18px; padding: 28px 30px 24px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.04); }
+.eyebrow { display: flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--tis-mute); margin: 0 0 10px; font-weight: 700; }
+.eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #00838f; }
+h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 900; letter-spacing: -.5px; margin: 0 0 8px; color: #0f172a; text-wrap: balance; }
+.caption { color: var(--tis-mute); font-size: .95rem; line-height: 1.6; margin: 0 0 22px; max-width: 78ch; }
+.diagram { overflow-x: auto; margin: 0 -6px; padding: 0 6px; }
+.diagram svg { display: block; width: 100%; height: auto; min-width: 760px; margin: 0 auto; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--tis-line); font-size: 12px; color: var(--tis-mute); }
+.legend span { display: inline-flex; align-items: center; gap: 9px; }
+.legend svg { flex: none; }
+/* diagram primitives */
+.n-box   { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.03)); }
+.ghost .n-box { fill: rgba(248,250,252,.7); stroke: #94a3b8; stroke-dasharray: 5 4; }
+.tx-title { fill: #0f172a; }
+.tx-sub   { fill: #475569; }
+.tx-gnote { fill: #64748b; }
+.tx-note  { fill: #64748b; }
+.tx-label { fill: #0f172a; }
+.g-box    { fill: rgba(241,245,249,.6); stroke: #cbd5e1; stroke-width: 1.2; stroke-dasharray: 6 4; }
+.port     { fill: #f8fafc; stroke: #94a3b8; stroke-width: 1.3; }
+
+.panel { max-width: 1654px; }
+.diagram svg { min-width: 760px; }
+</style><style>
+.stage { background: #f6f8fc; min-height: 0; }
+.stage .zone-magenta { background: linear-gradient(77deg, rgba(255,45,120,.62) 0%, rgba(255,45,120,.34) 10%, rgba(255,45,120,.14) 22%, rgba(255,45,120,.04) 34%, rgba(255,45,120,0) 46%); }
+.stage .zone-teal { background: linear-gradient(57deg, rgba(0,191,207,0) 54%, rgba(0,191,207,.04) 66%, rgba(0,191,207,.14) 78%, rgba(0,191,207,.34) 90%, rgba(0,191,207,.62) 100%); }
+.stage .wash { background: rgba(255,255,255,.12); }
+.wrap { padding: 44px 40px; }
+.panel { background: #ffffff; box-shadow: 0 12px 36px rgba(15,23,42,.10); }
+</style><style>html.embed .eyebrow,html.embed h1,html.embed .caption{display:none}html.embed .stage{min-height:0}
+html.embed body{overflow:hidden}html.embed .wrap{width:1652px;padding:10px}html.embed .panel{padding:14px 16px 12px;max-width:none}
+html.embed .diagram{overflow:visible}html.embed .diagram svg{min-width:0}</style>
+<script>if (/[?&]embed\b/.test(location.search)) { const h = document.documentElement; h.classList.add('embed');
+  const fit = () => { h.style.zoom = innerWidth / 1652; }; addEventListener('resize', fit); fit(); }</script>
+</head>
+<body><div class="stage"><div class="zone zone-magenta"></div><div class="zone zone-teal"></div><div class="zone wash"></div><div class="zone grain"></div>
+<main class="wrap"><section class="panel">
+<p class="eyebrow">ThinkInfoSec · Double Agents</p>
+<h1>How an ARTEX intrusion moves</h1>
+<p class="caption">Activity as listed in the FBI FLASH's ATT&amp;CK table; the plain-English stage names are mine. The three-hour bracket follows the FBI's and Microsoft's wording: initial targeting to privileged access.</p>
+<figure class="diagram" style="margin:0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1592 357" width="1592" style="max-width:1592px" role="img" aria-label="How an ARTEX intrusion moves: phases visual"><defs><marker id="ah0" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#94a3b8"/></marker></defs>
+<rect data-a="ph0" data-id="ph0" data-glow="#e91e63" x="28" y="58.4" width="226" height="50" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<circle data-a="ph0" cx="45" cy="75.9" r="3.2" fill="#c2185b"/>
+<text data-a="ph0" class="tx-tag" x="54" y="79.4" fill="#c2185b">01 · recon</text>
+<text data-a="ph0" class="tx-title" x="42" y="99.4" fill="#0f172a">Map the edges</text>
+<path data-a="ph0s" d="M44,108.4 L44,217.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<rect data-a="ph0s0" data-id="ph0s0" x="56" y="126.4" width="198" height="30" rx="8" fill="#ffffff" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<path data-a="ph0s0" d="M44,141.4 L56,141.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<text data-a="ph0s0" class="tx-step" x="66" y="145.9" fill="#0f172a">Directory fuzzing, 500+ requests</text>
+<rect data-a="ph0s1" data-id="ph0s1" x="56" y="164.4" width="198" height="30" rx="8" fill="#ffffff" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<path data-a="ph0s1" d="M44,179.4 L56,179.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<text data-a="ph0s1" class="tx-step" x="66" y="183.9" fill="#0f172a">Partner and supplier portals</text>
+<rect data-a="ph0s2" data-id="ph0s2" x="56" y="202.4" width="198" height="30" rx="8" fill="#ffffff" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<path data-a="ph0s2" d="M44,217.4 L56,217.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<text data-a="ph0s2" class="tx-step" x="66" y="221.9" fill="#0f172a">WHOIS asset mapping</text>
+<rect data-a="ph0t" data-id="ph0t0" x="28" y="244.4" width="46" height="20" rx="10" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<text data-a="ph0t" class="tx-axis" x="35" y="258.4" fill="#c2185b">T1595</text>
+<rect data-a="ph0t" data-id="ph0t1" x="80" y="244.4" width="46" height="20" rx="10" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<text data-a="ph0t" class="tx-axis" x="87" y="258.4" fill="#c2185b">T1580</text>
+<path data-a="ph0n" d="M260,83.4 L294,83.4" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#ah0)"/>
+<rect data-a="ph1" data-id="ph1" data-glow="#e91e63" x="300" y="58.4" width="201" height="50" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<circle data-a="ph1" cx="317" cy="75.9" r="3.2" fill="#c2185b"/>
+<text data-a="ph1" class="tx-tag" x="326" y="79.4" fill="#c2185b">02 · access</text>
+<text data-a="ph1" class="tx-title" x="314" y="99.4" fill="#0f172a">Front door first</text>
+<path data-a="ph1s" d="M316,108.4 L316,255.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<rect data-a="ph1s0" data-id="ph1s0" x="328" y="126.4" width="173" height="30" rx="8" fill="#ffffff" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<path data-a="ph1s0" d="M316,141.4 L328,141.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<text data-a="ph1s0" class="tx-step" x="338" y="145.9" fill="#0f172a">Leaked keys and SAS tokens</text>
+<rect data-a="ph1s1" data-id="ph1s1" x="328" y="164.4" width="173" height="30" rx="8" fill="#ffffff" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<path data-a="ph1s1" d="M316,179.4 L328,179.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<text data-a="ph1s1" class="tx-step" x="338" y="183.9" fill="#0f172a">Unsigned SAML assertions</text>
+<rect data-a="ph1s2" data-id="ph1s2" x="328" y="202.4" width="173" height="30" rx="8" fill="#ffffff" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<path data-a="ph1s2" d="M316,217.4 L328,217.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<text data-a="ph1s2" class="tx-step" x="338" y="221.9" fill="#0f172a">SSRF, XXE, file upload</text>
+<rect data-a="ph1s3" data-id="ph1s3" x="328" y="240.4" width="173" height="30" rx="8" fill="#ffffff" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<path data-a="ph1s3" d="M316,255.4 L328,255.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<text data-a="ph1s3" class="tx-step" x="338" y="259.9" fill="#0f172a">Cross-tenant trust abuse</text>
+<rect data-a="ph1t" data-id="ph1t0" x="300" y="282.4" width="46" height="20" rx="10" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<text data-a="ph1t" class="tx-axis" x="307" y="296.4" fill="#c2185b">T1078</text>
+<rect data-a="ph1t" data-id="ph1t1" x="352" y="282.4" width="44" height="20" rx="10" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<text data-a="ph1t" class="tx-axis" x="359" y="296.4" fill="#c2185b">T1190</text>
+<rect data-a="ph1t" data-id="ph1t2" x="402" y="282.4" width="44" height="20" rx="10" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<text data-a="ph1t" class="tx-axis" x="409" y="296.4" fill="#c2185b">T1199</text>
+<rect data-a="ph1t" data-id="ph1t3" x="300" y="308.4" width="69" height="20" rx="10" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<text data-a="ph1t" class="tx-axis" x="307" y="322.4" fill="#c2185b">T1606.002</text>
+<path data-a="ph1n" d="M507,83.4 L541,83.4" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#ah0)"/>
+<rect data-a="ph2" data-id="ph2" data-glow="#e91e63" x="547" y="58.4" width="229" height="50" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<circle data-a="ph2" cx="564" cy="75.9" r="3.2" fill="#c2185b"/>
+<text data-a="ph2" class="tx-tag" x="573" y="79.4" fill="#c2185b">03 · escalate</text>
+<text data-a="ph2" class="tx-title" x="561" y="99.4" fill="#0f172a">Promote itself</text>
+<path data-a="ph2s" d="M563,108.4 L563,217.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<rect data-a="ph2s0" data-id="ph2s0" x="575" y="126.4" width="201" height="30" rx="8" fill="#ffffff" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<path data-a="ph2s0" d="M563,141.4 L575,141.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<text data-a="ph2s0" class="tx-step" x="585" y="145.9" fill="#0f172a">Credentials added to OAuth apps</text>
+<rect data-a="ph2s1" data-id="ph2s1" x="575" y="164.4" width="201" height="30" rx="8" fill="#ffffff" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<path data-a="ph2s1" d="M563,179.4 L575,179.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<text data-a="ph2s1" class="tx-step" x="585" y="183.9" fill="#0f172a">Cloud roles on new instances</text>
+<rect data-a="ph2s2" data-id="ph2s2" x="575" y="202.4" width="201" height="30" rx="8" fill="#ffffff" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<path data-a="ph2s2" d="M563,217.4 L575,217.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<text data-a="ph2s2" class="tx-step" x="585" y="221.9" fill="#0f172a">Kerberoasting, DCSync</text>
+<rect data-a="ph2t" data-id="ph2t0" x="547" y="244.4" width="67" height="20" rx="10" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<text data-a="ph2t" class="tx-axis" x="554" y="258.4" fill="#c2185b">T1098.001</text>
+<rect data-a="ph2t" data-id="ph2t1" x="620" y="244.4" width="69" height="20" rx="10" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<text data-a="ph2t" class="tx-axis" x="627" y="258.4" fill="#c2185b">T1078.004</text>
+<rect data-a="ph2t" data-id="ph2t2" x="695" y="244.4" width="69" height="20" rx="10" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<text data-a="ph2t" class="tx-axis" x="702" y="258.4" fill="#c2185b">T1558.003</text>
+<path data-a="ph2n" d="M782,83.4 L816,83.4" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#ah0)"/>
+<rect data-a="ph3" data-id="ph3" data-glow="#e91e63" x="822" y="58.4" width="228" height="50" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<circle data-a="ph3" cx="839" cy="75.9" r="3.2" fill="#c2185b"/>
+<text data-a="ph3" class="tx-tag" x="848" y="79.4" fill="#c2185b">04 · internal recon</text>
+<text data-a="ph3" class="tx-title" x="836" y="99.4" fill="#0f172a">Find the blind spots</text>
+<path data-a="ph3s" d="M838,108.4 L838,217.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<rect data-a="ph3s0" data-id="ph3s0" x="850" y="126.4" width="200" height="30" rx="8" fill="#ffffff" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<path data-a="ph3s0" d="M838,141.4 L850,141.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<text data-a="ph3s0" class="tx-step" x="860" y="145.9" fill="#0f172a">110,000+ AD objects enumerated</text>
+<rect data-a="ph3s1" data-id="ph3s1" x="850" y="164.4" width="200" height="30" rx="8" fill="#ffffff" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<path data-a="ph3s1" d="M838,179.4 L850,179.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<text data-a="ph3s1" class="tx-step" x="860" y="183.9" fill="#0f172a">LAPS passwords read</text>
+<rect data-a="ph3s2" data-id="ph3s2" x="850" y="202.4" width="200" height="30" rx="8" fill="#ffffff" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<path data-a="ph3s2" d="M838,217.4 L850,217.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<text data-a="ph3s2" class="tx-step" x="860" y="221.9" fill="#0f172a">Hosts without an EDR sensor</text>
+<rect data-a="ph3t" data-id="ph3t0" x="822" y="244.4" width="69" height="20" rx="10" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<text data-a="ph3t" class="tx-axis" x="829" y="258.4" fill="#c2185b">T1087.002</text>
+<rect data-a="ph3t" data-id="ph3t1" x="897" y="244.4" width="66" height="20" rx="10" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<text data-a="ph3t" class="tx-axis" x="904" y="258.4" fill="#c2185b">T1518.001</text>
+<path data-a="ph3n" d="M1056,83.4 L1090,83.4" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#ah0)"/>
+<rect data-a="ph4" data-id="ph4" data-glow="#e91e63" x="1096" y="58.4" width="178" height="50" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<circle data-a="ph4" cx="1113" cy="75.9" r="3.2" fill="#c2185b"/>
+<text data-a="ph4" class="tx-tag" x="1122" y="79.4" fill="#c2185b">05 · collect + stage</text>
+<text data-a="ph4" class="tx-title" x="1110" y="99.4" fill="#0f172a">Stage the data</text>
+<path data-a="ph4s" d="M1112,108.4 L1112,217.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<rect data-a="ph4s0" data-id="ph4s0" x="1124" y="126.4" width="150" height="30" rx="8" fill="#ffffff" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<path data-a="ph4s0" d="M1112,141.4 L1124,141.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<text data-a="ph4s0" class="tx-step" x="1134" y="145.9" fill="#0f172a">Mass blob reads</text>
+<rect data-a="ph4s1" data-id="ph4s1" x="1124" y="164.4" width="150" height="30" rx="8" fill="#ffffff" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<path data-a="ph4s1" d="M1112,179.4 L1124,179.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<text data-a="ph4s1" class="tx-step" x="1134" y="183.9" fill="#0f172a">Mailboxes read</text>
+<rect data-a="ph4s2" data-id="ph4s2" x="1124" y="202.4" width="150" height="30" rx="8" fill="#ffffff" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<path data-a="ph4s2" d="M1112,217.4 L1124,217.4" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1.2"/>
+<text data-a="ph4s2" class="tx-step" x="1134" y="221.9" fill="#0f172a">100 GB staging volumes</text>
+<rect data-a="ph4t" data-id="ph4t0" x="1096" y="244.4" width="46" height="20" rx="10" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<text data-a="ph4t" class="tx-axis" x="1103" y="258.4" fill="#c2185b">T1530</text>
+<rect data-a="ph4t" data-id="ph4t1" x="1148" y="244.4" width="66" height="20" rx="10" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<text data-a="ph4t" class="tx-axis" x="1155" y="258.4" fill="#c2185b">T1114.002</text>
+<rect data-a="ph4t" data-id="ph4t2" x="1096" y="270.4" width="69" height="20" rx="10" fill="none" stroke="rgba(194,24,91,.32)" stroke-width="1"/>
+<text data-a="ph4t" class="tx-axis" x="1103" y="284.4" fill="#c2185b">T1074.002</text>
+<path data-a="ph4n" d="M1280,83.4 L1314,83.4" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#ah0)"/>
+<rect data-a="ph5" data-id="ph5" data-glow="#64748b" x="1320" y="58.4" width="244" height="50" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<circle data-a="ph5" cx="1337" cy="75.9" r="3.2" fill="#334155"/>
+<text data-a="ph5" class="tx-tag" x="1346" y="79.4" fill="#334155">06 · command &amp; control</text>
+<text data-a="ph5" class="tx-title" x="1334" y="99.4" fill="#0f172a">Hide the traffic</text>
+<path data-a="ph5s" d="M1336,108.4 L1336,217.4" fill="none" stroke="rgba(51,65,85,.25)" stroke-width="1.2"/>
+<rect data-a="ph5s0" data-id="ph5s0" x="1348" y="126.4" width="216" height="30" rx="8" fill="#ffffff" stroke="rgba(51,65,85,.25)" stroke-width="1"/>
+<path data-a="ph5s0" d="M1336,141.4 L1348,141.4" fill="none" stroke="rgba(51,65,85,.25)" stroke-width="1.2"/>
+<text data-a="ph5s0" class="tx-step" x="1358" y="145.9" fill="#0f172a">Residential proxies, Tor</text>
+<rect data-a="ph5s1" data-id="ph5s1" x="1348" y="164.4" width="216" height="30" rx="8" fill="#ffffff" stroke="rgba(51,65,85,.25)" stroke-width="1"/>
+<path data-a="ph5s1" d="M1336,179.4 L1348,179.4" fill="none" stroke="rgba(51,65,85,.25)" stroke-width="1.2"/>
+<text data-a="ph5s1" class="tx-step" x="1358" y="183.9" fill="#0f172a">SOCKS proxies, compromised relays</text>
+<rect data-a="ph5s2" data-id="ph5s2" x="1348" y="202.4" width="216" height="30" rx="8" fill="#ffffff" stroke="rgba(51,65,85,.25)" stroke-width="1"/>
+<path data-a="ph5s2" d="M1336,217.4 L1348,217.4" fill="none" stroke="rgba(51,65,85,.25)" stroke-width="1.2"/>
+<text data-a="ph5s2" class="tx-step" x="1358" y="221.9" fill="#0f172a">Chisel, SoftEther tunnels</text>
+<rect data-a="ph5t" data-id="ph5t0" x="1320" y="244.4" width="69" height="20" rx="10" fill="none" stroke="rgba(51,65,85,.25)" stroke-width="1"/>
+<text data-a="ph5t" class="tx-axis" x="1327" y="258.4" fill="#334155">T1090.003</text>
+<rect data-a="ph5t" data-id="ph5t1" x="1395" y="244.4" width="46" height="20" rx="10" fill="none" stroke="rgba(51,65,85,.25)" stroke-width="1"/>
+<text data-a="ph5t" class="tx-axis" x="1402" y="258.4" fill="#334155">T1572</text>
+<rect data-a="ph5t" data-id="ph5t2" x="1447" y="244.4" width="66" height="20" rx="10" fill="none" stroke="rgba(51,65,85,.25)" stroke-width="1"/>
+<text data-a="ph5t" class="tx-axis" x="1454" y="258.4" fill="#334155">T1071.001</text>
+<path data-a="span" data-glow="#e91e63" d="M28,52.4 L28,44.4 L776,44.4 L776,52.4" fill="none" stroke="#c2185b" stroke-width="1.4"/>
+<text data-a="span" class="tx-lane" x="402" y="36.4" text-anchor="middle" fill="#c2185b">Under three hours, in some intrusions</text></svg></figure>
+
+</section></main></div><script type="application/json" id="tv-anim">{"steps":[{"a":"ph0","effect":"pop","at":0,"dur":400},{"a":"ph0s","effect":"draw","at":300,"dur":300},{"a":"ph0s0","effect":"pop","at":380,"dur":300},{"a":"ph0s1","effect":"pop","at":520,"dur":300},{"a":"ph0s2","effect":"pop","at":660,"dur":300},{"a":"ph0t","effect":"fade","at":800,"dur":400},{"a":"ph0n","effect":"draw","at":600,"dur":300},{"a":"ph1","effect":"pop","at":900,"dur":400},{"a":"ph1s","effect":"draw","at":1200,"dur":300},{"a":"ph1s0","effect":"pop","at":1280,"dur":300},{"a":"ph1s1","effect":"pop","at":1420,"dur":300},{"a":"ph1s2","effect":"pop","at":1560,"dur":300},{"a":"ph1s3","effect":"pop","at":1700,"dur":300},{"a":"ph1t","effect":"fade","at":1840,"dur":400},{"a":"ph1n","effect":"draw","at":1500,"dur":300},{"a":"ph2","effect":"pop","at":1800,"dur":400},{"a":"ph2s","effect":"draw","at":2100,"dur":300},{"a":"ph2s0","effect":"pop","at":2180,"dur":300},{"a":"ph2s1","effect":"pop","at":2320,"dur":300},{"a":"ph2s2","effect":"pop","at":2460,"dur":300},{"a":"ph2t","effect":"fade","at":2600,"dur":400},{"a":"ph2n","effect":"draw","at":2400,"dur":300},{"a":"ph3","effect":"pop","at":2700,"dur":400},{"a":"ph3s","effect":"draw","at":3000,"dur":300},{"a":"ph3s0","effect":"pop","at":3080,"dur":300},{"a":"ph3s1","effect":"pop","at":3220,"dur":300},{"a":"ph3s2","effect":"pop","at":3360,"dur":300},{"a":"ph3t","effect":"fade","at":3500,"dur":400},{"a":"ph3n","effect":"draw","at":3300,"dur":300},{"a":"ph4","effect":"pop","at":3600,"dur":400},{"a":"ph4s","effect":"draw","at":3900,"dur":300},{"a":"ph4s0","effect":"pop","at":3980,"dur":300},{"a":"ph4s1","effect":"pop","at":4120,"dur":300},{"a":"ph4s2","effect":"pop","at":4260,"dur":300},{"a":"ph4t","effect":"fade","at":4400,"dur":400},{"a":"ph4n","effect":"draw","at":4200,"dur":300},{"a":"ph5","effect":"pop","at":4500,"dur":400},{"a":"ph5s","effect":"draw","at":4800,"dur":300},{"a":"ph5s0","effect":"pop","at":4880,"dur":300},{"a":"ph5s1","effect":"pop","at":5020,"dur":300},{"a":"ph5s2","effect":"pop","at":5160,"dur":300},{"a":"ph5t","effect":"fade","at":5300,"dur":400},{"a":"span","effect":"draw","at":2700,"dur":600},{"a":"span","effect":"glow","at":3000,"dur":900}],"hold":2500,"fade":700,"gap":500}</script>
+<script>// thinkinfosec-visuals animation runtime, inlined into <name>.animated.html for every type except flow.
+// Data: JSON in a tv-anim data block: { steps:[{a,effect,at,dur}], hold, fade, gap }
+// Shapes opt in with data-a="<target>". Rendering is a pure function of time, so the GIF capture can seek.
+// API: window.flowAnim = { period, end, seek(ms), play(), pause() }, the same contract as the flow runtime.
+(() => {
+  const D = JSON.parse(document.getElementById('tv-anim').textContent);
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.querySelector('.diagram svg');
+  const ease = p => 1 - Math.pow(1 - p, 3);
+  const clamp = v => Math.max(0, Math.min(1, v));
+  const fmt = (el, v) => {
+    const [ip, fp] = v.toFixed(+(el.dataset.decimals || 0)).split('.');
+    const s = (el.dataset.sep ? ip.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ip) + (fp != null ? '.' + fp : '');
+    return (el.dataset.prefix || '') + s + (el.dataset.suffix || '');
+  };
+  const colorOf = el => el.dataset.glow || el.getAttribute('stroke') || el.getAttribute('fill') || '#fff';
+
+  const byEl = new Map();
+  for (const s of D.steps) for (const el of svg.querySelectorAll(`[data-a="${CSS.escape(s.a)}"]`)) {
+    if (!byEl.has(el)) byEl.set(el, []);
+    byEl.get(el).push(s);
+  }
+  for (const [el, list] of byEl) {
+    const grows = list.some(s => s.effect === 'grow'), bottom = el.dataset.origin === 'bottom';
+    el.style.transformBox = 'fill-box';
+    el.style.transformOrigin = grows ? (bottom ? 'center bottom' : 'left center') : 'center';
+    if (list.some(s => s.effect === 'draw') && el.getTotalLength && !el.getAttribute('stroke-dasharray')) {
+      const L = el.getTotalLength(); el.dataset.len = L; el.style.strokeDasharray = `${L} ${L}`;
+      el.dataset.marker = el.getAttribute('marker-end') || '';
+    }
+    if (list.some(s => s.effect === 'travel') && el.getTotalLength) {
+      const dot = document.createElementNS(NS, 'circle');
+      dot.setAttribute('r', '3.6'); dot.setAttribute('fill', colorOf(el));
+      dot.style.filter = `drop-shadow(0 0 4px ${colorOf(el)})`;
+      el.parentNode.appendChild(dot); el._dot = dot;
+    }
+  }
+
+  const end = Math.max(0, ...D.steps.map(s => s.at + s.dur));
+  const period = end + D.hold + D.fade + D.gap;
+
+  function render(t) {
+    svg.style.opacity = String(1 - (t > end + D.hold ? clamp((t - end - D.hold) / D.fade) : 0));
+    for (const [el, list] of byEl) {
+      let opacity = 1, scale = 1, sx = 1, glow = 0;
+      for (const s of list) {
+        const raw = clamp((t - s.at) / s.dur), p = ease(raw), started = raw > 0;
+        if (s.effect === 'pop') { opacity *= started ? p : 0; scale *= 0.9 + 0.1 * p; }
+        else if (s.effect === 'fade') opacity *= started ? p : 0;
+        else if (s.effect === 'grow') { sx *= p; if (!started) opacity = 0; }
+        else if (s.effect === 'draw') {
+          if (el.dataset.len) {
+            el.style.strokeDashoffset = String(+el.dataset.len * (1 - p)); if (!started) opacity = 0;
+            // the arrowhead appears only once the line has reached it
+            if (el.dataset.marker) { if (raw >= 1) el.setAttribute('marker-end', el.dataset.marker); else el.removeAttribute('marker-end'); }
+          }
+          else opacity *= started ? p : 0;
+        }
+        else if (s.effect === 'count' && el.dataset.count != null) el.textContent = fmt(el, +el.dataset.count * p);
+        else if (s.effect === 'travel' && el._dot) {
+          const pt = el.getPointAtLength(el.getTotalLength() * p);
+          el._dot.style.display = started && raw < 1 ? '' : 'none';
+          el._dot.setAttribute('cx', pt.x); el._dot.setAttribute('cy', pt.y);
+        }
+        else if (s.effect === 'glow') glow = Math.max(glow, !started ? 0 : raw < 0.5 ? raw * 2 : Math.max(0.35, 1 - (raw - 0.5) * 1.3));
+      }
+      el.style.opacity = String(opacity);
+      el.style.transform = [sx !== 1 ? (el.dataset.origin === 'bottom' ? `scaleY(${sx})` : `scaleX(${sx})`) : '', scale !== 1 ? `scale(${scale})` : ''].join(' ').trim();
+      el.style.filter = glow > 0 ? `drop-shadow(0 0 ${(8 * glow).toFixed(1)}px ${colorOf(el)})` : '';
+    }
+  }
+
+  let raf = 0, t0 = null, playing = false;
+  const loop = now => { if (t0 == null) t0 = now; render((now - t0) % period); raf = requestAnimationFrame(loop); };
+  const api = {
+    period, end,
+    seek(ms) { cancelAnimationFrame(raf); render(((ms % period) + period) % period); },
+    play() { cancelAnimationFrame(raf); t0 = null; raf = requestAnimationFrame(loop); },
+    pause() { cancelAnimationFrame(raf); },
+  };
+  window.flowAnim = api;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { render(end); return; }
+  render(0);
+  if (/[?&]capture\b/.test(location.search)) return;
+  new IntersectionObserver(es => { for (const e of es) {
+    if (e.isIntersecting && !playing) { playing = true; api.play(); }
+    else if (!e.isIntersecting && playing) { playing = false; api.pause(); render(0); }
+  } }, { threshold: 0.25 }).observe(svg);
+  svg.addEventListener('click', () => { playing = !playing; playing ? api.play() : api.pause(); });
+})();
+</script>
+</body></html>
