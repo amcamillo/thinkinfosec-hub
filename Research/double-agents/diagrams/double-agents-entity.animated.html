@@ -38,7 +38,8 @@ body { margin: 0; overflow-x: hidden; font-family: var(--tis-font); color: var(-
 .eyebrow { display: flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--tis-mute); margin: 0 0 10px; font-weight: 700; }
 .eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #00838f; }
 h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 900; letter-spacing: -.5px; margin: 0 0 8px; color: #0f172a; text-wrap: balance; }
-.caption { color: var(--tis-mute); font-size: .95rem; line-height: 1.6; margin: 0 0 22px; max-width: 78ch; }
+.subtitle { color: #334155; font-size: clamp(1rem, 1.6vw, 1.15rem); line-height: 1.5; font-weight: 500; margin: 0 0 22px; max-width: 72ch; text-wrap: pretty; }
+.caption { color: var(--tis-mute); font-size: .85rem; line-height: 1.55; margin: 14px 0 0; max-width: 90ch; }
 .diagram { overflow-x: auto; margin: 0 -6px; padding: 0 6px; }
 .diagram svg { display: block; width: 100%; height: auto; min-width: 760px; margin: 0 auto; }
 .legend { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--tis-line); font-size: 12px; color: var(--tis-mute); }
@@ -64,7 +65,7 @@ h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 900; letter-spacing: 
 .stage .wash { background: rgba(255,255,255,.12); }
 .wrap { padding: 44px 40px; }
 .panel { background: #ffffff; box-shadow: 0 12px 36px rgba(15,23,42,.10); }
-</style><style>html.embed .eyebrow,html.embed h1,html.embed .caption{display:none}html.embed .stage{min-height:0}
+</style><style>html.embed .eyebrow,html.embed h1,html.embed .subtitle,html.embed .caption{display:none}html.embed .stage{min-height:0}
 html.embed body{overflow:hidden}html.embed .wrap{width:872px;padding:10px}html.embed .panel{padding:14px 16px 12px;max-width:none}
 html.embed .diagram{overflow:visible}html.embed .diagram svg{min-width:0}</style>
 <script>if (/[?&]embed\b/.test(location.search)) { const h = document.documentElement; h.classList.add('embed');
@@ -74,7 +75,7 @@ html.embed .diagram{overflow:visible}html.embed .diagram svg{min-width:0}</style
 <main class="wrap"><section class="panel">
 <p class="eyebrow">ThinkInfoSec · Double Agents</p>
 <h1>Three double agents</h1>
-<p class="caption">The tool, the model and the cover your own agents provide. The 'looks like' link is my read, not any vendor's claim.</p>
+<p class="subtitle">Who and what an ARTEX intrusion connects, and why its traffic can look like your own AI agents doing their jobs.</p>
 <figure class="diagram" style="margin:0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 812 502" width="812" style="max-width:812px" role="img" aria-label="Three double agents: entity visual"><defs><marker id="ah0" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#c2185b"/></marker><marker id="ah1" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#334155"/></marker><marker id="ah2" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#64748b"/></marker><marker id="ah3" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#00838f"/></marker></defs>
 <path data-a="rel0" data-glow="#e11d48" d="M410.6,98 L410.6,234" fill="none" stroke="#c2185b" stroke-width="1.4" stroke-dasharray="6 4" marker-end="url(#ah0)"/>
 <rect data-a="rel0l" data-id="rel0l" x="348.6" y="156" width="124" height="20" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
@@ -123,6 +124,7 @@ html.embed .diagram{overflow:visible}html.embed .diagram svg{min-width:0}</style
 <text data-a="ent_res" class="tx-title" x="42" y="214.1" fill="#0f172a">Researchers</text>
 <text data-a="ent_res" class="tx-sub" x="42" y="229.1" fill="#475569">CrowdStrike, Microsoft, Unit 42</text></svg></figure>
 <div class="legend"><span><svg width="30" height="8" viewBox="0 0 30 8" aria-hidden="true"><line x1="1" y1="4" x2="29" y2="4" stroke="#c2185b" stroke-width="1.6" stroke-dasharray="6 4"/></svg>hostile action</span><span><svg width="30" height="8" viewBox="0 0 30 8" aria-hidden="true"><line x1="1" y1="4" x2="29" y2="4" stroke="#64748b" stroke-width="1.6" stroke-dasharray="9 4 2 4"/></svg>my read</span><span><svg width="30" height="8" viewBox="0 0 30 8" aria-hidden="true"><line x1="1" y1="4" x2="29" y2="4" stroke="#00838f" stroke-width="1.6" stroke-dasharray="1.5 4.5"/></svg>research</span></div>
+<p class="caption">The tool, the model and the cover your own agents provide. The 'looks like' link is my read, not any vendor's claim.</p>
 </section></main></div><script type="application/json" id="tv-anim">{"steps":[{"a":"ent_artex","effect":"pop","at":0,"dur":450},{"a":"ent_artex","effect":"glow","at":200,"dur":900},{"a":"rel0","effect":"draw","at":500,"dur":600},{"a":"rel0","effect":"travel","at":500,"dur":600},{"a":"rel0l","effect":"fade","at":950,"dur":300},{"a":"rel1","effect":"draw","at":500,"dur":600},{"a":"rel1","effect":"travel","at":500,"dur":600},{"a":"rel1l","effect":"fade","at":950,"dur":300},{"a":"rel2","effect":"draw","at":500,"dur":600},{"a":"rel2","effect":"travel","at":500,"dur":600},{"a":"rel2l","effect":"fade","at":950,"dur":300},{"a":"rel3","effect":"draw","at":500,"dur":600},{"a":"rel3","effect":"travel","at":500,"dur":600},{"a":"rel3l","effect":"fade","at":950,"dur":300},{"a":"rel4","effect":"draw","at":500,"dur":600},{"a":"rel4","effect":"travel","at":500,"dur":600},{"a":"rel4l","effect":"fade","at":950,"dur":300},{"a":"ent_op","effect":"pop","at":1050,"dur":400},{"a":"ent_llm","effect":"pop","at":1050,"dur":400},{"a":"ent_edge","effect":"pop","at":1050,"dur":400},{"a":"ent_mine","effect":"pop","at":1050,"dur":400},{"a":"ent_res","effect":"pop","at":1050,"dur":400}],"hold":2500,"fade":700,"gap":500}</script>
 <script>// thinkinfosec-visuals animation runtime, inlined into <name>.animated.html for every type except flow.
 // Data: JSON in a tv-anim data block: { steps:[{a,effect,at,dur}], hold, fade, gap }

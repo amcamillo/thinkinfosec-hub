@@ -66,6 +66,11 @@ blockquote { margin: 4px 0 14px; padding: 12px 16px; background: var(--bg); bord
 blockquote p { color: var(--navy); font-weight: 600; margin: 0; }
 ol, ul { margin: 0 0 12px 1.2rem; display: grid; gap: 10px; }
 li { color: var(--ink); }
+.scroll { overflow-x: auto; max-width: 100%; margin: 4px 0 14px; }
+.clock-table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+.clock-table th { text-align: left; font-size: 12px; font-weight: 700; color: var(--faint); padding: 0 12px 10px 0; border-bottom: 2px solid var(--navy); }
+.clock-table td { padding: 12px 12px 12px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.clock-table td:first-child { font-weight: 700; color: var(--navy); white-space: nowrap; }
 footer { background: var(--navy); color: rgba(255,255,255,0.65); padding: 24px; text-align: center; }
 footer .ft-main { font-size: 14px; max-width: var(--col); margin: 0 auto; }
 footer .ft-main a { color: var(--teal); text-decoration: none; }
@@ -76,6 +81,7 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
   .title-row { flex-direction: column; }
   .title-side { flex-basis: auto; }
   section { padding: 20px 18px 18px; }
+  .clock-table { min-width: 720px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .fig .motion { display: none; }
@@ -116,6 +122,7 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
   <a href="#open">The briefing</a>
   <a href="#tool">The other side</a>
   <a href="#models">The models</a>
+  <a href="#landscape">The landscape</a>
   <a href="#clocks">Machine speed</a>
   <a href="#intrusion">The intrusion</a>
   <a href="#estate">Your own agents</a>
@@ -131,6 +138,7 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
   <p>So that raised a few questions worth answering properly, rather than in passing:</p>
   <ul>
     <li>What actually is ARTEX, and how did a red-team tool end up in an FBI alert?</li>
+    <li>Is this an ARTEX problem, or a whole category of tools?</li>
     <li>How fast is "machine speed" really, and how does it square with the numbers I already show customers?</li>
     <li>What does an agentic intrusion look like from the defender's side of the glass?</li>
     <li>And what do we do about it, beyond panic-buying "AI security"?</li>
@@ -149,13 +157,13 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
   <p>The problem is that the tool doesn't care who's holding it. The FBI says malicious actors have been using ARTEX since at least August 2026, against financial services, government, technology, defence, healthcare, energy, telecoms, legal and more. That's how a red-team tool becomes a <strong>double agent</strong>: same code, same capability, new handler.</p>
   <p>The timeline below shows how quickly that turned around, and how little difference pulling the repo made.</p>
   <figure class="fig">
-    <iframe class="motion" src="diagrams/double-agents-timeline.animated.html?embed" style="aspect-ratio:1456/1018" loading="lazy" title="From pen-test repo to FBI alert in four months"></iframe>
+    <iframe class="motion" src="diagrams/double-agents-timeline.animated.html?embed" style="aspect-ratio:1456/816" loading="lazy" title="From pen-test repo to FBI alert in four months"></iframe>
     <img class="still" src="diagrams/double-agents-timeline.png" alt="Swimlane timeline on a true date scale from ARTEX's July 2026 release to the FBI FLASH on 13 November 2026: an attacker abuse range from August, the repo pulled on 8 October, the Storm-0940 password spray, and reports from CrowdStrike, Microsoft, Unit 42 and the FBI.">
     <figcaption>Swimlane timeline on a true date scale from ARTEX's July 2026 release to the FBI FLASH on 13 November 2026: an attacker abuse range from August, the repo pulled on 8 October, the Storm-0940 password spray, and reports from CrowdStrike, Microsoft, Unit 42 and the FBI. <a href="diagrams/double-agents-timeline.png">Static image</a></figcaption>
   </figure>
   <p>The developer took the repository down on 8 October 2026 after reports of abuse. Per the FBI, it hasn't mattered much. ARTEX "continues to proliferate through community forks, localized variations, archived copies, and a commercial version (ARTEX PRO)". CrowdStrike has since published a second ARTEX case, "VAPOR PANDA Uses AI-Driven ARTEX to Scale a Global Espionage Campaign" (29 October 2026), so it's not just financially motivated crews. Two counts of exposed instances give a feel for the scale, and they come from different sources at different times, so I'll keep them apart. Palo Alto Networks' Unit 42 counted 609 internet-facing ARTEX hosts as of October 2026, alongside 1,323 running a similar tool called CyberStrikeAI (21 hosts were running both). By early November, the FBI, citing Censys, puts it at over 1,600 publicly exposed ARTEX consoles, and notes the real number is likely "significantly higher" once you count deployments behind firewalls.</p>
   <figure class="fig">
-    <iframe class="motion" src="diagrams/double-agents-stats.animated.html?embed" style="aspect-ratio:1234/441" loading="lazy" title="How far it spread"></iframe>
+    <iframe class="motion" src="diagrams/double-agents-stats.animated.html?embed" style="aspect-ratio:1234/231" loading="lazy" title="How far it spread"></iframe>
     <img class="still" src="diagrams/double-agents-stats.png" alt="Four sourced numbers: 1,600+ exposed ARTEX consoles, 2,250+ tenants with attempted sign-ins, 0 vulnerabilities needed in one Unit 42 campaign, about 67,000 people's data exfiltrated.">
     <figcaption>Four sourced numbers: 1,600+ exposed ARTEX consoles, 2,250+ tenants with attempted sign-ins, 0 vulnerabilities needed in one Unit 42 campaign, about 67,000 people's data exfiltrated. <a href="diagrams/double-agents-stats.png">Static image</a></figcaption>
   </figure>
@@ -173,6 +181,88 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
   <p>Here's my favourite twist, and it's my read rather than anything CrowdStrike says. Agents keep notes. Session histories, memory files and config files are how these tools stay coherent across a long task, and they turned out to be exactly what told the defenders what the operator was doing. The double agent informed on its handler. I wouldn't count on that every time, but it's a good reminder that agentic tradecraft leaves a very different kind of trail from a human operator.</p>
 </section>
 
+<section id="landscape">
+  <p class="kicker">The landscape</p>
+  <h2>Not the only double agent: the agentic framework landscape</h2>
+  <p>ARTEX got the FBI FLASH, but it'd be a mistake to read this as a one-tool problem. ARTEX is just the best-known tool in a growing category, and the category is growing faster than anyone's signature set.</p>
+  <p>The best framing I've read on this comes from Florian Roth, Head of R&amp;D at Nextron Systems, in <a href="https://www.nextron-systems.com/2026/10/29/beyond-framework-signatures-understanding-ai-driven-intrusions/" target="_blank" rel="noopener">"Beyond Framework Signatures: Understanding AI-Driven Intrusions"</a> (29 October 2026). His argument is that these frameworks automate the attacker's <em>decisions</em>: what to look at, which tool to run, how to read the result and what to try next. That's why "framework coverage" is the wrong mental model, and why this isn't like tracking a new malware family. One of his section headings sums it up:</p>
+  <blockquote><p>The framework is not the payload.</p></blockquote>
+  <p>The framework runs on the attacker's side of the wire. What reaches you is requests, commands, scripts, payloads and system changes. Swap the model, the prompt or the skills, and two operators running the same framework can produce very different intrusions. Meanwhile, different frameworks can run identical commands and drop identical malware. As Roth puts it, "A webshell does not become an ARTEX-specific artifact because an ARTEX agent chose to deploy it." (Nextron sells compromise-assessment tooling built around exactly that idea, so it has a horse in this race. The argument still holds up on its own.)</p>
+  <p>With that in mind, here's the landscape as it stands in public reporting. The "type" column is my own sorting, not Nextron's:</p>
+  <div class="scroll">
+  <table class="clock-table">
+    <thead>
+      <tr><th>Framework</th><th>Type</th><th>What it is</th><th>Where it's turned up</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ARTEX</td>
+        <td>Pen-test harness</td>
+        <td>Open-source multi-agent pen-test platform, released July 2026</td>
+        <td>Storm-0940's ConnectWise campaign (Microsoft); South Korean banks and VAPOR PANDA (CrowdStrike); exposed hosts with attack tooling on them (<a href="https://asec.ahnlab.com/en/95845/" target="_blank" rel="noopener">AhnLab ASEC</a>)</td>
+      </tr>
+      <tr>
+        <td>Cairn</td>
+        <td>Pen-test harness</td>
+        <td>"A general-purpose AI state-space search engine, validated first on autonomous penetration testing" (<a href="https://github.com/oritera/Cairn" target="_blank" rel="noopener">its README</a>), AGPL-3.0 with a commercial licence</td>
+        <td>The exploitation stage of a retail card-skimming campaign (Gambit Security, below)</td>
+      </tr>
+      <tr>
+        <td>Strix</td>
+        <td>Pen-test harness</td>
+        <td>Open-source agentic app-security tester (Apache-2.0), with a commercial cloud version</td>
+        <td>Vulnerability search in the same campaign</td>
+      </tr>
+      <tr>
+        <td>CyberStrikeAI</td>
+        <td>Pen-test harness</td>
+        <td>Open-source AI pen-test tool</td>
+        <td>1,323 internet-facing hosts (Unit 42, October 2026)</td>
+      </tr>
+      <tr>
+        <td>Villager</td>
+        <td>Pen-test harness</td>
+        <td>AI pen-test framework attributed to Cyberspike, published on PyPI in July 2025</td>
+        <td><a href="https://thehackernews.com/2025/09/ai-powered-villager-pen-testing-tool.html" target="_blank" rel="noopener">10,030 downloads in about two months</a>; Straiker found AsyncRAT integrated into Cyberspike's product</td>
+      </tr>
+      <tr>
+        <td>HexStrike AI</td>
+        <td>Pen-test harness</td>
+        <td>Orchestration layer that Check Point says directs 150+ specialised agents</td>
+        <td><a href="https://blog.checkpoint.com/executive-insights/hexstrike-ai-when-llms-meet-zero-day-exploitation/" target="_blank" rel="noopener">Underground forums discussed using it against NetScaler within hours of release</a> (Check Point, 2025)</td>
+      </tr>
+      <tr>
+        <td>Hermes Agent</td>
+        <td>General-purpose agent</td>
+        <td>Nous Research's MIT-licensed personal agent with a reusable skills system</td>
+        <td>Orchestrated the whole retail campaign</td>
+      </tr>
+      <tr>
+        <td>Claude Code</td>
+        <td>General-purpose agent</td>
+        <td>Anthropic's coding agent harness</td>
+        <td>Sat alongside ARTEX in the South Korean bank operation, pointed at GLM and Grok (CrowdStrike)</td>
+      </tr>
+      <tr>
+        <td>Norma</td>
+        <td>Agent engine</td>
+        <td>General-purpose agent library that ARTEX builds on</td>
+        <td>Per Nextron, "neither exclusive to ARTEX nor malicious on its own"</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Only the first six were built for offensive work. The last three are general-purpose tools that someone pointed at a target. That's the real shape of the landscape: the harness is interchangeable, and so is the model underneath it.</p>
+  <p>The clearest example of tools being mixed and matched is <a href="https://gambit.security/blog-posts/autonomous-ai-agents-online-retailers-25-a-company" target="_blank" rel="noopener">Gambit Security's interim report</a> (Eyal Sela, 22 September 2026). Gambit recovered a financially motivated operator's staging server and found three open-source harnesses working together. Strix did the vulnerability search, Cairn did end-to-end exploitation, and Hermes Agent orchestrated the lot with 121 skills loaded, 78 of them for attack. Between 10 and 15 September, Gambit counts 105 attack projects launched and at least 27 companies compromised, with card skimmers confirmed on 19 of them. The mean cost was $25.46 per target across 101 completed scans. Gambit is upfront that some of this rests on the attacker's own AI logs, and that the real impact is probably larger.</p>
+  <figure class="fig">
+    <iframe class="motion" src="diagrams/double-agents-stack.animated.html?embed" style="aspect-ratio:1004/417" loading="lazy" title="Three open-source agents, one skimming campaign"></iframe>
+    <img class="still" src="diagrams/double-agents-stack.png" alt="A pasted list of 301 retail domains feeds Strix for vulnerability search, then Cairn for end-to-end exploitation, both orchestrated by Hermes Agent; Cairn's access leads to card skimmers on 19 sites and, as a side effect at one victim, a database wipe.">
+    <figcaption>A pasted list of 301 retail domains feeds Strix for vulnerability search, then Cairn for end-to-end exploitation, both orchestrated by Hermes Agent; Cairn's access leads to card skimmers on 19 sites and, as a side effect at one victim, a database wipe. <a href="diagrams/double-agents-stack.png">Static image</a></figcaption>
+  </figure>
+  <p>Two details from that report tie straight back to the models section. Per Gambit, Hermes ran on Anthropic's Opus 4.6 "after newer models refused its requests", and the operator added a skill that stripped out Hermes's own content filters. My read is that guardrails on the newest model only go so far while the previous model is still an API call away. The second detail is the cleanup. A "Database Wipe After Extraction" skill erased card data, and at one bicycle retailer the cleanup dropped 180 tables, including the victim's backups. Gambit's line on that is worth pinning up somewhere: "Organizations planning against this should assume data loss can arrive as a side effect of someone else's cleanup routine."</p>
+  <p>So what about framework fingerprints? They exist, and they're worth having. Nextron, AhnLab and the ARTEX Global Edition's own <a href="https://github.com/jiwoochris/artex-global/blob/main/docs/defense-en.md" target="_blank" rel="noopener">defence guide</a> all list user agents such as <code>artex-selfupdate</code> and <code>norma/0.4</code>, plus default ports and config markers. But AhnLab itself says user-agent detection is unreliable, and Norma's string isn't even ARTEX-specific. Fork the repo, change a string, and the fingerprint's gone. I'd treat framework signatures as a bonus catch, not a control. Roth makes the same point from the forensics side: "We do not need to identify the model or prompt before recognizing a malicious artifact." He also flags a quieter consequence for threat intel. When an agent picks the tradecraft, "the behavior generated during an intrusion will become a less dependable actor fingerprint on its own". Two crews sharing a skill pack will look alike.</p>
+</section>
+
 <section id="clocks">
   <p class="kicker">Two clocks</p>
   <h2>So how fast is "machine speed"?</h2>
@@ -182,7 +272,7 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
   <blockquote><p>multiple instances where the time from initial targeting to privileged access was less than 3 hours.</p></blockquote>
   <p>The FBI repeats that framing ("some intrusions progressing from initial targeting to privileged access in under three hours"). So the two numbers don't contradict each other. Twenty-nine minutes is from <em>inside</em> to <em>moving</em>. Three hours is from <em>picking a target</em> to <em>owning admin</em>, and that includes all the recon and access work a human crew might once have spent days or weeks on.</p>
   <figure class="fig">
-    <iframe class="motion" src="diagrams/double-agents-clocks.animated.html?embed" style="aspect-ratio:918/519" loading="lazy" title="Two different clocks"></iframe>
+    <iframe class="motion" src="diagrams/double-agents-clocks.animated.html?embed" style="aspect-ratio:918/305" loading="lazy" title="Two different clocks"></iframe>
     <img class="still" src="diagrams/double-agents-clocks.png" alt="Log-scale bars: 27 seconds fastest breakout, 29 minutes average breakout, under 3 hours from targeting to privileged access.">
     <figcaption>Log-scale bars: 27 seconds fastest breakout, 29 minutes average breakout, under 3 hours from targeting to privileged access. <a href="diagrams/double-agents-clocks.png">Static image</a></figcaption>
   </figure>
@@ -196,7 +286,7 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
   <h2>What an agentic intrusion looks like</h2>
   <p>The FBI FLASH includes a fairly long table mapping observed ARTEX activity to MITRE ATT&amp;CK. I've laid it out as six stages below, with the actions and ATT&amp;CK techniques the FBI lists under each. The stage names are mine. The activity is the FBI's.</p>
   <figure class="fig">
-    <iframe class="motion" src="diagrams/double-agents-phases.animated.html?embed" style="aspect-ratio:1652/656" loading="lazy" title="How an ARTEX intrusion moves"></iframe>
+    <iframe class="motion" src="diagrams/double-agents-phases.animated.html?embed" style="aspect-ratio:1652/404" loading="lazy" title="How an ARTEX intrusion moves"></iframe>
     <img class="still" src="diagrams/double-agents-phases.png" alt="Six-stage ARTEX intrusion from recon to command and control, with the steps and ATT&amp;CK techniques for each stage; the first three stages sit under a bracket marked under three hours in some intrusions.">
     <figcaption>Six-stage ARTEX intrusion from recon to command and control, with the steps and ATT&amp;CK techniques for each stage; the first three stages sit under a bracket marked under three hours in some intrusions. <a href="diagrams/double-agents-phases.png">Static image</a></figcaption>
   </figure>
@@ -206,7 +296,7 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
   <p><strong>It checks where your sensors aren't.</strong> This one made me sit up, for obvious reasons. Under internal recon, the FBI lists that the agent "inventoried endpoint sensor coverage to identify Windows machines without CrowdStrike Falcon". The same table notes that attempted lateral movement to domain controllers (Pass-the-Ticket, WinRM, Kerberos relay, Pass-the-Hash) was "blocked by endpoint protection". The FBI doesn't name whose protection, so I won't spin that one. The point I'd take into any customer conversation, whatever's on your endpoints, is that the agent is actively mapping your <strong>coverage gaps</strong>. An unmanaged host is something it goes looking for, not something it stumbles across.</p>
   <p><strong>It's noisy, and that doesn't save you.</strong> The FBI says ARTEX generates "high volumes of forensically noisy traffic that may trigger alerts, but attack speed provides limited time for coordinated defender response before objective completion". Detection isn't the hard part here. Response time is. If your alert-to-action loop is measured in hours, you're losing a race the attacker finishes in under three.</p>
   <figure class="fig">
-    <iframe class="motion" src="diagrams/double-agents-race.animated.html?embed" style="aspect-ratio:775/574" loading="lazy" title="Detection isn't the hard part. Response time is."></iframe>
+    <iframe class="motion" src="diagrams/double-agents-race.animated.html?embed" style="aspect-ratio:775/338" loading="lazy" title="Detection isn't the hard part. Response time is."></iframe>
     <img class="still" src="diagrams/double-agents-race.png" alt="Two tracks on one time axis: an ARTEX intrusion reaches privileged access before 3 hours; an illustrative response loop is still escalating.">
     <figcaption>Two tracks on one time axis: an ARTEX intrusion reaches privileged access before 3 hours; an illustrative response loop is still escalating. <a href="diagrams/double-agents-race.png">Static image</a></figcaption>
   </figure>
@@ -219,7 +309,7 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
   <p><a href="https://crowdstrike.com/en-us/blog/crowdstrike-2026-threat-hunting-report" target="_blank" rel="noopener">CrowdStrike's 2026 Threat Hunting Report</a> was the first edition to count automated attacks alongside interactive, hands-on-keyboard intrusions. That's a methodology change in itself, and it tells you how the hunters see the problem. It also reported that during parts of Q1 2026, detection leads triggered by AI agents ran at 2.5 times the rate of human-triggered leads. That's a CrowdStrike number from a specific window, not a full-year figure, so treat it accordingly. But the direction is hard to argue with. Your estate is filling up with legitimate agents: coding assistants, automation, copilots, service principals doing things at machine speed on someone's behalf.</p>
   <p>So when an ARTEX agent logs in with a stolen service-principal secret, enumerates the tenant through Microsoft Graph and adds a credential to an OAuth app, what does that look like in your logs? Uncomfortably like one of your own agents doing its job. The attacker's agent hides in the noise your agents make. That's the double agent problem in its purest form. It's not a foreign body. It's indistinguishable from staff.</p>
   <figure class="fig">
-    <iframe class="motion" src="diagrams/double-agents-entity.animated.html?embed" style="aspect-ratio:872/806" loading="lazy" title="Three double agents"></iframe>
+    <iframe class="motion" src="diagrams/double-agents-entity.animated.html?embed" style="aspect-ratio:872/597" loading="lazy" title="Three double agents"></iframe>
     <img class="still" src="diagrams/double-agents-entity.png" alt="ARTEX in the centre, linked to the operator, cheap LLMs, your edge, your own agents and the researchers tracking it.">
     <figcaption>ARTEX in the centre, linked to the operator, cheap LLMs, your edge, your own agents and the researchers tracking it. <a href="diagrams/double-agents-entity.png">Static image</a></figcaption>
   </figure>
@@ -236,7 +326,7 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
     <li><strong>Require authentication on every write endpoint.</strong> That includes dev and staging. Rate-limit and bot-protect registration, password reset and verification flows. Remove unauthenticated account-existence checks. Unit 42's campaign got into the cloud through password-reset pages and exposed APIs without a single CVE.</li>
     <li><strong>Watch your non-human identities like they're privileged users, because they are.</strong> The FBI calls out monitoring credential additions, privilege assignments, consent grants and anomalous app-only activity. Review successful and failed service-principal sign-ins separately, and search by application ID, not display name. That's where the Storm-0940 campaign lived.</li>
     <li><strong>Close your sensor coverage gaps.</strong> The agent is literally enumerating which hosts aren't protected. Whatever endpoint platform you run, run a coverage report this week and treat every unmanaged Windows host as the agent's preferred landing spot.</li>
-    <li><strong>Hunt behaviour, not indicators.</strong> Unit 42 puts it bluntly: "Because the framework is open source and widely forked, indicator-based detection will not keep up." Build detections around operator behaviour, such as first use of a cloud key from a new IP, write-then-delete storage tests, canary usernames in IdP logs and bursts of Graph enumeration. And get honest about your response clock. If containment takes longer than three hours, that's the number to work on.</li>
+    <li><strong>Hunt behaviour, not indicators.</strong> Unit 42 puts it bluntly: "Because the framework is open source and widely forked, indicator-based detection will not keep up." Build detections around operator behaviour, such as first use of a cloud key from a new IP, write-then-delete storage tests, canary usernames in IdP logs and bursts of Graph enumeration. Then hunt for what the intrusion leaves behind (webshells, loaders, new persistence, credential-harvesting tools), because those look the same whichever framework or model chose them. Keep the ARTEX and Norma user-agent rules too, but as a bonus catch, not a strategy. And get honest about your response clock. If containment takes longer than three hours, that's the number to work on.</li>
     <li><strong>Baseline your own agents.</strong> This is the forward-looking one. If you can't tell your own agents' normal behaviour from an attacker's agent, you can't catch the double agent. Start inventorying the agents and service principals running in your environment, what they're allowed to touch, and what "normal" looks like for each.</li>
   </ol>
   <p>All of this to say: the attacker got an automation upgrade. Our job is to make sure the agent finds nothing worth chaining together, and that if it does, we notice inside the window.</p>

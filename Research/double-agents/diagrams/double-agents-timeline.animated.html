@@ -38,7 +38,8 @@ body { margin: 0; overflow-x: hidden; font-family: var(--tis-font); color: var(-
 .eyebrow { display: flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--tis-mute); margin: 0 0 10px; font-weight: 700; }
 .eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #00838f; }
 h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 900; letter-spacing: -.5px; margin: 0 0 8px; color: #0f172a; text-wrap: balance; }
-.caption { color: var(--tis-mute); font-size: .95rem; line-height: 1.6; margin: 0 0 22px; max-width: 78ch; }
+.subtitle { color: #334155; font-size: clamp(1rem, 1.6vw, 1.15rem); line-height: 1.5; font-weight: 500; margin: 0 0 22px; max-width: 72ch; text-wrap: pretty; }
+.caption { color: var(--tis-mute); font-size: .85rem; line-height: 1.55; margin: 14px 0 0; max-width: 90ch; }
 .diagram { overflow-x: auto; margin: 0 -6px; padding: 0 6px; }
 .diagram svg { display: block; width: 100%; height: auto; min-width: 760px; margin: 0 auto; }
 .legend { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--tis-line); font-size: 12px; color: var(--tis-mute); }
@@ -64,7 +65,7 @@ h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 900; letter-spacing: 
 .stage .wash { background: rgba(255,255,255,.12); }
 .wrap { padding: 44px 40px; }
 .panel { background: #ffffff; box-shadow: 0 12px 36px rgba(15,23,42,.10); }
-</style><style>html.embed .eyebrow,html.embed h1,html.embed .caption{display:none}html.embed .stage{min-height:0}
+</style><style>html.embed .eyebrow,html.embed h1,html.embed .subtitle,html.embed .caption{display:none}html.embed .stage{min-height:0}
 html.embed body{overflow:hidden}html.embed .wrap{width:1456px;padding:10px}html.embed .panel{padding:14px 16px 12px;max-width:none}
 html.embed .diagram{overflow:visible}html.embed .diagram svg{min-width:0}</style>
 <script>if (/[?&]embed\b/.test(location.search)) { const h = document.documentElement; h.classList.add('embed');
@@ -74,7 +75,7 @@ html.embed .diagram{overflow:visible}html.embed .diagram svg{min-width:0}</style
 <main class="wrap"><section class="panel">
 <p class="eyebrow">ThinkInfoSec · Double Agents</p>
 <h1>From pen-test repo to FBI alert in four months</h1>
-<p class="caption">Dates per the FBI FLASH and each source's own publication date. Pulling the repo did not pull the tool.</p>
+<p class="subtitle">How an open-source pen-test tool went from a GitHub release in July to an FBI FLASH in November, with abuse and research in between.</p>
 <figure class="diagram" style="margin:0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1396 720" width="1396" style="max-width:1396px" role="img" aria-label="From pen-test repo to FBI alert in four months: timeline visual"><defs></defs>
 <rect data-a="lanes" x="28" y="92.8" width="1340" height="96" fill="#f8fafc"/>
 <text data-a="lanes" class="tx-lane" x="38" y="166.8" fill="#334155">ARTEX</text>
@@ -151,6 +152,7 @@ html.embed .diagram{overflow:visible}html.embed .diagram svg{min-width:0}</style
 <path data-a="ann1" d="M1288,69.8 L1288,79.8" fill="none" stroke="#334155" stroke-width="1.2"/>
 <text data-a="ann1" class="tx-label" x="1154.7" y="66.8" text-anchor="middle" fill="#0f172a">deleted, not gone</text></svg></figure>
 <div class="legend"><span><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="#c2185b"/></svg>attacker activity</span><span><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="#00838f"/></svg>research and response</span></div>
+<p class="caption">Dates per the FBI FLASH and each source's own publication date. Pulling the repo did not pull the tool.</p>
 </section></main></div><script type="application/json" id="tv-anim">{"steps":[{"a":"lanes","effect":"fade","at":0,"dur":400},{"a":"axis","effect":"fade","at":200,"dur":600},{"a":"ev0","effect":"pop","at":893,"dur":350},{"a":"ev0c","effect":"draw","at":1043,"dur":250},{"a":"ev0l","effect":"pop","at":1143,"dur":350},{"a":"ev1","effect":"grow","at":1998,"dur":700},{"a":"ev1c","effect":"draw","at":2148,"dur":250},{"a":"ev1l","effect":"pop","at":2248,"dur":350},{"a":"ev2","effect":"pop","at":4388,"dur":350},{"a":"ev2c","effect":"draw","at":4538,"dur":250},{"a":"ev2l","effect":"pop","at":4638,"dur":350},{"a":"ev3","effect":"pop","at":4568,"dur":350},{"a":"ev3c","effect":"draw","at":4718,"dur":250},{"a":"ev3l","effect":"pop","at":4818,"dur":350},{"a":"ev4","effect":"grow","at":4748,"dur":700},{"a":"ev4c","effect":"draw","at":4898,"dur":250},{"a":"ev4l","effect":"pop","at":4998,"dur":350},{"a":"ev5","effect":"pop","at":4928,"dur":350},{"a":"ev5c","effect":"draw","at":5078,"dur":250},{"a":"ev5l","effect":"pop","at":5178,"dur":350},{"a":"ev6","effect":"pop","at":5172,"dur":350},{"a":"ev6c","effect":"draw","at":5322,"dur":250},{"a":"ev6l","effect":"pop","at":5422,"dur":350},{"a":"ev7","effect":"pop","at":5636,"dur":350},{"a":"ev7c","effect":"draw","at":5786,"dur":250},{"a":"ev7l","effect":"pop","at":5886,"dur":350},{"a":"ev8","effect":"pop","at":5816,"dur":350},{"a":"ev8c","effect":"draw","at":5966,"dur":250},{"a":"ev8l","effect":"pop","at":6066,"dur":350},{"a":"ann0","effect":"fade","at":6316,"dur":500},{"a":"ann1","effect":"fade","at":6566,"dur":500}],"hold":2500,"fade":700,"gap":500}</script>
 <script>// thinkinfosec-visuals animation runtime, inlined into <name>.animated.html for every type except flow.
 // Data: JSON in a tv-anim data block: { steps:[{a,effect,at,dur}], hold, fade, gap }

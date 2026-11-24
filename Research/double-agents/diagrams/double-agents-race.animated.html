@@ -38,7 +38,8 @@ body { margin: 0; overflow-x: hidden; font-family: var(--tis-font); color: var(-
 .eyebrow { display: flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--tis-mute); margin: 0 0 10px; font-weight: 700; }
 .eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #00838f; }
 h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 900; letter-spacing: -.5px; margin: 0 0 8px; color: #0f172a; text-wrap: balance; }
-.caption { color: var(--tis-mute); font-size: .95rem; line-height: 1.6; margin: 0 0 22px; max-width: 78ch; }
+.subtitle { color: #334155; font-size: clamp(1rem, 1.6vw, 1.15rem); line-height: 1.5; font-weight: 500; margin: 0 0 22px; max-width: 72ch; text-wrap: pretty; }
+.caption { color: var(--tis-mute); font-size: .85rem; line-height: 1.55; margin: 14px 0 0; max-width: 90ch; }
 .diagram { overflow-x: auto; margin: 0 -6px; padding: 0 6px; }
 .diagram svg { display: block; width: 100%; height: auto; min-width: 760px; margin: 0 auto; }
 .legend { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--tis-line); font-size: 12px; color: var(--tis-mute); }
@@ -64,7 +65,7 @@ h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 900; letter-spacing: 
 .stage .wash { background: rgba(255,255,255,.12); }
 .wrap { padding: 44px 40px; }
 .panel { background: #ffffff; box-shadow: 0 12px 36px rgba(15,23,42,.10); }
-</style><style>html.embed .eyebrow,html.embed h1,html.embed .caption{display:none}html.embed .stage{min-height:0}
+</style><style>html.embed .eyebrow,html.embed h1,html.embed .subtitle,html.embed .caption{display:none}html.embed .stage{min-height:0}
 html.embed body{overflow:hidden}html.embed .wrap{width:775px;padding:10px}html.embed .panel{padding:14px 16px 12px;max-width:none}
 html.embed .diagram{overflow:visible}html.embed .diagram svg{min-width:0}</style>
 <script>if (/[?&]embed\b/.test(location.search)) { const h = document.documentElement; h.classList.add('embed');
@@ -74,7 +75,7 @@ html.embed .diagram{overflow:visible}html.embed .diagram svg{min-width:0}</style
 <main class="wrap"><section class="panel">
 <p class="eyebrow">ThinkInfoSec · Double Agents</p>
 <h1>Detection isn't the hard part. Response time is.</h1>
-<p class="caption">The attacker track uses Microsoft's and the FBI's 'under three hours'. The response track is illustrative, a hypothetical loop rather than measured data.</p>
+<p class="subtitle">Some ARTEX intrusions reach privileged access in under three hours. An alert-to-action loop measured in hours loses that race.</p>
 <figure class="diagram" style="margin:0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 715 292" width="715" style="max-width:715px" role="img" aria-label="Detection isn't the hard part. Response time is.: race visual"><defs></defs>
 <path data-a="axis" d="M37.3,48.8 L37.3,240.8" fill="none" stroke="#e2e8f0" stroke-width="1"/>
 <text data-a="axis" class="tx-axis" x="37.3" y="260.8" text-anchor="middle" fill="#64748b">0 h</text>
@@ -108,6 +109,7 @@ html.embed .diagram{overflow:visible}html.embed .diagram svg{min-width:0}</style
 <path data-a="finish" d="M277.3,42.8 L277.3,240.8" fill="none" stroke="#0f172a" stroke-width="1.2" stroke-dasharray="3 4"/>
 <text data-a="finish" class="tx-label" x="277.3" y="36.8" text-anchor="middle" fill="#0f172a">privileged access: under 3 h</text></svg></figure>
 
+<p class="caption">The attacker track uses Microsoft's and the FBI's 'under three hours'. The response track is illustrative, a hypothetical loop rather than measured data.</p>
 </section></main></div><script type="application/json" id="tv-anim">{"steps":[{"a":"axis","effect":"fade","at":0,"dur":500},{"a":"track0","effect":"fade","at":200,"dur":400},{"a":"track1","effect":"fade","at":200,"dur":400},{"a":"seg0_0","effect":"grow","at":600,"dur":1575},{"a":"seg0_0t","effect":"fade","at":2095,"dur":300},{"a":"seg1_0","effect":"grow","at":600,"dur":1050},{"a":"seg1_0t","effect":"fade","at":1570,"dur":300},{"a":"seg1_1","effect":"grow","at":1650,"dur":1050},{"a":"seg1_1t","effect":"fade","at":2620,"dur":300},{"a":"seg1_2","effect":"grow","at":2700,"dur":2100},{"a":"seg1_2t","effect":"fade","at":4720,"dur":300},{"a":"finish","effect":"pop","at":2175,"dur":400},{"a":"finish","effect":"glow","at":2175,"dur":900}],"hold":2500,"fade":700,"gap":500}</script>
 <script>// thinkinfosec-visuals animation runtime, inlined into <name>.animated.html for every type except flow.
 // Data: JSON in a tv-anim data block: { steps:[{a,effect,at,dur}], hold, fade, gap }
