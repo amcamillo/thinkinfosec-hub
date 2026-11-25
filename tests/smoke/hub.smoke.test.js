@@ -50,6 +50,7 @@ async function open(hash, opts = {}) {
   page.on('console', m => { if (m.type() === 'error' && !/Failed to load resource|ERR_FAILED/.test(m.text())) errors.push(m.text()); });
   await page.goto(base + (hash || ''));
   await page.waitForFunction(() => document.getElementById('signalPill').dataset.state !== 'none' || /NO SIGNAL/.test(document.getElementById('pillText').textContent));
+  await page.waitForFunction(() => !document.documentElement.classList.contains('booting')); // load screen gone
   return { context, page, errors };
 }
 
@@ -283,5 +284,21 @@ test('signal pill keeps its detail on desktop and shows one line on mobile', asy
   await page.setViewportSize({ width: 390, height: 844 });
   assert.equal(await page.isVisible('#pillText .pill-detail'), false);
   assert.ok(await page.$eval('#signalPill', p => p.getBoundingClientRect().height < 32), 'pill is one line');
+  await context.close();
+});
+
+test('load screen covers the hub until feeds render, then is removed', async () => {
+  const context = await browser.newContext();
+  let release;
+  const gate = new Promise(r => { release = r; });
+  await context.route('https://thinkinfosec.github.io/Signal/*', async r => { await gate; return r.fulfill({ body: '{}', contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' } }); });
+  const page = await context.newPage();
+  await page.goto(base + '#front');
+  await page.waitForTimeout(300);
+  assert.ok(await page.isVisible('#boot'), 'loader visible while feeds are pending');
+  assert.equal(await page.$eval('main', m => getComputedStyle(m).opacity), '0');
+  release();
+  await page.waitForFunction(() => !document.getElementById('boot') && !document.documentElement.classList.contains('booting'), null, { timeout: 7000 });
+  assert.equal(await page.$eval('main', m => getComputedStyle(m).opacity), '1');
   await context.close();
 });

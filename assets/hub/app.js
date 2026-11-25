@@ -84,4 +84,5 @@
   } catch (err) {
     R.pill($('signalPill'), L.signalPill(null, now, 0));
   }
+  if (window.HubBoot) window.HubBoot.done(); // feeds are rendered: lift the load screen
 })();

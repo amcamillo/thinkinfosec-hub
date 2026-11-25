@@ -250,3 +250,39 @@ main.wrap::before { content: ""; position: absolute; inset: -28px -56px; z-index
   -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent, #000 56px, #000 calc(100% - 56px), transparent), linear-gradient(180deg, transparent, #000 28px, #000 calc(100% - 28px), transparent);
   mask-composite: intersect; }
 @media (max-width: 760px) { main.wrap::before { inset: -20px -16px; -webkit-mask-image: linear-gradient(180deg, transparent, #000 20px, #000 calc(100% - 20px), transparent); mask-image: linear-gradient(180deg, transparent, #000 20px, #000 calc(100% - 20px), transparent); } }
+
+/* Load screen (boot.js): navy scope with a glowing signal trace. The hub waits underneath, faded, blurred
+   then crossfades in (no scale: the tab wave measures tab positions), the same move as Enter Signal in reverse. */
+.boot { display: none; }
+.booting .boot { display: grid; place-items: center; position: fixed; inset: 0; z-index: 100; overflow: hidden;
+  background: radial-gradient(ellipse 70% 60% at 50% 48%, #12305A 0%, #0B1B36 46%, #050C1A 100%);
+  transition: opacity 1s ease, filter 1s ease, transform 1.1s cubic-bezier(.2, .7, .2, 1); }
+.booted .boot { opacity: 0; filter: blur(10px); transform: scale(1.06); pointer-events: none; }
+.boot-glow i { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .55; animation: boot-drift 7s ease-in-out infinite alternate; }
+.boot-glow i:nth-child(1) { width: 46vmax; height: 46vmax; left: -12vmax; top: -16vmax; background: #1D6FD8; }
+.boot-glow i:nth-child(2) { width: 38vmax; height: 38vmax; right: -10vmax; bottom: -14vmax; background: #00A3C4; animation-delay: -3s; }
+.boot-glow i:nth-child(3) { width: 22vmax; height: 22vmax; left: 52%; top: 58%; background: #6A4DFF; opacity: .35; animation-delay: -5s; }
+@keyframes boot-drift { to { transform: translate(4vmax, 3vmax) scale(1.12); } }
+.boot-core { position: relative; display: grid; justify-items: center; gap: 22px; width: min(440px, 82vw); }
+.boot-badge { width: 84px; height: 84px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(120, 190, 255, .55), 0 0 28px 6px rgba(40, 140, 255, .45); animation: boot-pulse 2.4s ease-in-out infinite; }
+@keyframes boot-pulse { 50% { box-shadow: 0 0 0 2px rgba(120, 190, 255, .8), 0 0 46px 12px rgba(40, 160, 255, .6); } }
+.boot-scope { width: 100%; height: 80px; overflow: visible; }
+.boot-grid { stroke: rgba(150, 190, 255, .14); stroke-width: 1; fill: none; vector-effect: non-scaling-stroke; }
+.boot-trace { fill: none; stroke: #5CC8FF; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke;
+  stroke-dasharray: 34 66; animation: boot-sweep 1.8s linear infinite; }
+.boot-trace-glow { stroke: #2E9BFF; stroke-width: 9; opacity: .45; filter: blur(4px); }
+@keyframes boot-sweep { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+.boot-label { margin: 0; font: 700 .78rem/1 var(--mono); letter-spacing: .32em; color: #EAF2FA; text-shadow: 0 0 14px rgba(60, 160, 255, .6); }
+.boot-label b { color: #FFFFFF; opacity: .6; }
+.booting:not(.booted) :is(.masthead, main, .site-foot) { opacity: 0; filter: blur(8px); }
+.booted :is(.masthead, main, .site-foot) { transition-duration: 1s; }
+.booted main { transition-delay: .12s; }
+.booted .site-foot { transition-delay: .24s; }
+@media (prefers-reduced-motion: reduce) {
+  .boot-glow i, .boot-badge, .boot-trace { animation: none; }
+  .boot-trace { stroke-dasharray: none; }
+  .booting .boot { transition: opacity .25s ease; }
+  .booted .boot { filter: none; transform: none; }
+  .booting:not(.booted) :is(.masthead, main, .site-foot) { filter: none; }
+  .booted :is(.masthead, main, .site-foot) { transition-delay: 0s; }
+}
