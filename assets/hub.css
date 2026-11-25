@@ -49,7 +49,7 @@
   --gold-ink: var(--sheet-gold); --panel-kicker: var(--sheet-acc); --line: var(--sheet-line); --glass-bd: rgba(18, 36, 74, .10);
   box-shadow: 0 10px 40px rgba(0, 0, 0, .35);
 }
-html { scroll-padding-top: 140px; }
+html { scroll-padding-top: 180px; }
 html { background: var(--bg); }
 body { color: var(--ink); background: radial-gradient(900px 640px at 10% 6%, color-mix(in srgb, var(--mag) 14%, transparent), transparent 62%), radial-gradient(1000px 700px at 92% 14%, color-mix(in srgb, var(--acc) 18%, transparent), transparent 62%), linear-gradient(160deg, var(--bg), var(--bg2)) fixed; isolation: isolate; }
 body { margin: 0; font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
@@ -61,7 +61,7 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 .skip { position: absolute; left: -999px; top: 8px; background: var(--acc); color: var(--on-acc); padding: 8px 12px; z-index: 20; }
 .skip:focus { left: 8px; }
 
-.masthead { position: sticky; top: 0; z-index: 10; background: var(--glass); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.masthead { position: sticky; top: 0; z-index: 10; padding-bottom: 40px; background: linear-gradient(180deg, var(--top) 0%, var(--top) 55%, color-mix(in srgb, var(--top) 70%, transparent) 78%, transparent 100%); }
 .masthead-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-top: 16px; }
 .brand { font-family: "DM Sans", -apple-system, "Segoe UI", sans-serif; font-weight: 300; font-size: 1.9rem; letter-spacing: -0.01em; white-space: nowrap; text-decoration: none; }
 .brand span { color: var(--mag-ink); }
@@ -189,3 +189,8 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 nav { position: relative; }
 /* Readout mono is for short labels; sentences stay in the sans. */
 .band p.meta { font-family: inherit; letter-spacing: normal; }
+
+/* Signal blend: painted field, vignette, and a wash that fades it to near-white (navy in dark) at the top. */
+.paint { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; mix-blend-mode: var(--orb-blend); filter: blur(9px) saturate(1.3); }
+.vignette { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(ellipse 80% 76% at 50% 45%, transparent 60%, color-mix(in srgb, var(--bg) 60%, transparent) 100%); }
+.top-wash { position: fixed; inset: 0 0 auto 0; height: 340px; z-index: -1; pointer-events: none; background: linear-gradient(180deg, var(--top) 0%, var(--top) 30%, color-mix(in srgb, var(--top) 55%, transparent) 62%, transparent 100%); }

@@ -232,3 +232,11 @@ test('wordmark font is loaded', async () => {
   assert.ok(await page.evaluate(() => document.fonts.check('300 16px "DM Sans"')));
   await context.close();
 });
+test('masthead has no glass slab and the paint layer is running', async () => {
+  const { page, context, errors } = await open('#front');
+  assert.equal(await page.$eval('.masthead', el => getComputedStyle(el).backdropFilter), 'none');
+  assert.ok(await page.$eval('#paint', c => c.width > 0 && c.height > 0), 'paint canvas sized');
+  assert.equal(await page.isVisible('.top-wash'), true);
+  assert.deepEqual(errors, []);
+  await context.close();
+});
