@@ -30,6 +30,7 @@ after(async () => { await browser.close(); server.close(); });
 async function feeds(context, mode) {
   await context.unroute('https://thinkinfosec.github.io/Signal/*').catch(() => {});
   await context.route('https://thinkinfosec.github.io/Signal/*', route => {
+    if (route.request().resourceType() === 'document') return route.fulfill({ body: '<!doctype html><title>Signal</title><p>Signal stub</p>', contentType: 'text/html' });
     if (mode === 'down') return route.abort();
     if (mode === 'empty') return route.fulfill({ body: '{}', contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' } });
     const name = path.basename(new URL(route.request().url()).pathname);
@@ -259,5 +260,20 @@ test('About shows the photo and LinkedIn is linked from masthead, About and foot
     assert.equal(await a.getAttribute('target'), '_blank', sel);
     assert.match(await a.getAttribute('rel'), /noopener/, sel);
   }
+  await context.close();
+});
+
+test('Enter Signal crossfades to the full-screen stage and Back returns', async () => {
+  const { page, context, errors } = await open('#front');
+  assert.equal(await page.isHidden('#signalStage'), true);
+  await page.click('#enterSignal');
+  await page.waitForSelector('#signalStage.on');
+  assert.equal(await page.getAttribute('#signalStage iframe', 'src'), 'https://thinkinfosec.github.io/Signal/');
+  assert.equal(await page.evaluate(() => document.getElementById('main').inert), true);
+  await page.waitForFunction(() => document.activeElement && document.activeElement.id === 'stageBack');
+  await page.click('#stageBack');
+  await page.waitForFunction(() => document.getElementById('signalStage').hidden && document.activeElement.id === 'enterSignal');
+  assert.equal(await page.evaluate(() => document.body.classList.contains('leaving')), false);
+  assert.deepEqual(errors, [], 'no CSP or script errors');
   await context.close();
 });
