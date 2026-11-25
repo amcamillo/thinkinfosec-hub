@@ -217,3 +217,12 @@ test('traceSpec stays inside the plate and marks the highest peak', () => {
     assert.equal(s.orbs.length, 3);
   }
 });
+test('traceSpec scales amplitude to the plate so thumbnails are not clipped flat', () => {
+  for (const cat of ['cyber', 'ai', 'geo']) {
+    for (const title of ['Fixture Medium article on agent identity', 'CrowdStrike Public Resource Library', 'Double agents']) {
+      const s = L.traceSpec({ title, cat }, 200, 60);
+      const clipped = s.points.filter(p => p.y <= 8 || p.y >= 52).length;
+      assert.equal(clipped, 0, `${cat} "${title}" has ${clipped} points pinned to the edge`);
+    }
+  }
+});

@@ -56,7 +56,7 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 
 .masthead { position: sticky; top: 0; z-index: 10; background: var(--glass); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
 .masthead-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-top: 16px; }
-.brand { font-family: "DM Sans", -apple-system, "Segoe UI", sans-serif; font-weight: 300; font-size: 1.9rem; letter-spacing: -0.01em; text-decoration: none; }
+.brand { font-family: "DM Sans", -apple-system, "Segoe UI", sans-serif; font-weight: 300; font-size: 1.9rem; letter-spacing: -0.01em; white-space: nowrap; text-decoration: none; }
 .brand span { color: var(--mag-ink); }
 .brand small { font-size: 0.6em; letter-spacing: 0.04em; color: var(--muted); }
 .dateline { color: var(--muted); font-size: 0.72rem; margin: 2px 0 8px; }
@@ -117,7 +117,7 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 .trace-banner, .trace-thumb { position: absolute; inset: 0; overflow: hidden; isolation: isolate; color: #EAF2FA; background: linear-gradient(160deg, #070F1F, #0D1F3C); }
 .trace-thumb { position: relative; display: block; }
 .trace-thumb.row-thumb { width: 96px; height: 64px; border-radius: 6px; border: 0; }
-.trace-thumb.thumb { width: 100%; aspect-ratio: 16 / 9; border-radius: 8px; margin-bottom: 6px; }
+.trace-thumb.thumb { background: linear-gradient(160deg, #070F1F, #0D1F3C); width: 100%; aspect-ratio: 16 / 9; border-radius: 8px; margin-bottom: 6px; }
 .trace-banner svg, .trace-thumb svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .trace-line { filter: drop-shadow(0 0 7px var(--trace-glow, #00BFCF)); }
 .trace-orbs { position: absolute; inset: -20%; z-index: -1; filter: blur(30px); mix-blend-mode: screen; }
@@ -180,3 +180,5 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 .listening svg { width: 120px; height: 22px; flex: none; filter: var(--glow); }
 .listening path { transform-origin: 50% 50%; animation: wave-ripple 1.8s ease-in-out infinite alternate; }
 nav { position: relative; }
+/* Readout mono is for short labels; sentences stay in the sans. */
+.band p.meta { font-family: inherit; letter-spacing: normal; }

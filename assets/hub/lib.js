@@ -187,20 +187,21 @@
     const cat = TRACE_COLORS[item && item.cat] ? item.cat : 'cyber';
     const r = rng(seedOf((item && item.title) || ''));
     const base = h * 0.55, lo = 8, hi = h - 8;
+    const k = h / 240; // amplitudes are designed for a 240px plate
     const clampY = y => Math.min(hi, Math.max(lo, y));
     const r1 = v => Math.round(v * 10) / 10;
     let pts = [];
     if (cat === 'cyber') {
       const n = 16, spikeA = 4 + Math.floor(r() * 4), spikeB = spikeA + 2 + Math.floor(r() * 4);
       for (let i = 0; i < n; i++) {
-        let y = base + (r() - 0.5) * 16;
-        if (i === spikeA) y = base - (55 + r() * 35);
-        if (i === spikeA + 1) y = base + (40 + r() * 30);
-        if (i === spikeB) y = base - (30 + r() * 30);
+        let y = base + (r() - 0.5) * 16 * k;
+        if (i === spikeA) y = base - (55 + r() * 35) * k;
+        if (i === spikeA + 1) y = base + (40 + r() * 30) * k;
+        if (i === spikeB) y = base - (30 + r() * 30) * k;
         pts.push({ x: (w * i) / (n - 1), y: clampY(y) });
       }
     } else if (cat === 'ai') {
-      const n = 24, amp = 25 + r() * 20, freq = 1.5 + r() * 1.5, phase = r() * Math.PI * 2;
+      const n = 24, amp = (25 + r() * 20) * k, freq = 1.5 + r() * 1.5, phase = r() * Math.PI * 2;
       for (let i = 0; i < n; i++) {
         const x = (w * i) / (n - 1);
         pts.push({ x, y: clampY(base + amp * Math.sin((2 * Math.PI * freq * x) / w + phase)) });
@@ -209,7 +210,7 @@
       const steps = 6;
       let x = 0;
       for (let s = 0; s < steps; s++) {
-        const y = clampY(base + (r() - 0.5) * 90);
+        const y = clampY(base + (r() - 0.5) * 90 * k);
         const nx = s === steps - 1 ? w : x + w / steps;
         pts.push({ x, y }, { x: nx, y });
         x = nx;
