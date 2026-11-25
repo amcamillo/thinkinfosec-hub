@@ -4,9 +4,11 @@
   const ids = tabs.map(t => t.dataset.tab);
   const tablist = document.querySelector('[role="tablist"]');
   const pulse = document.querySelector('.wave-pulse');
-  function placePulse() {
+  function placePulse(animate) {
     const on = tabs.find(t => t.getAttribute('aria-selected') === 'true');
     if (!pulse || !on) return;
+    // Slide only on a tab change; load, resize and scroll snap so the pulse never lags.
+    pulse.style.transition = animate === true ? '' : 'none';
     const x = on.offsetLeft - tablist.scrollLeft + on.offsetWidth / 2 - 120;
     pulse.style.transform = 'translateX(' + Math.round(x) + 'px)';
   }
@@ -16,7 +18,7 @@
     const real = ALIASES[id] || id;
     return ids.includes(real) ? real : 'front';
   }
-  function select(id, focus) {
+  function select(id, focus, animate) {
     tabs.forEach(t => {
       const on = t.dataset.tab === id;
       t.setAttribute('aria-selected', String(on));
@@ -25,11 +27,11 @@
       if (on && focus) t.focus();
     });
     document.title = (id === 'front' ? '' : tabs[ids.indexOf(id)].textContent + ' · ') + 'ThinkInfoSec Hub';
-    placePulse();
+    placePulse(animate);
   }
   function go(id, focus, replace) {
     if (location.hash !== '#' + id) history[replace ? 'replaceState' : 'pushState'](null, '', '#' + id);
-    select(id, focus);
+    select(id, focus, true);
   }
   tabs.forEach((t, i) => {
     t.addEventListener('click', () => go(t.dataset.tab, false));
@@ -59,8 +61,8 @@
   const initial = resolve(location.hash);
   if (location.hash && location.hash !== '#' + initial) history.replaceState(null, '', '#' + initial);
   select(initial, false);
-  window.addEventListener('resize', placePulse);
-  tablist.addEventListener('scroll', placePulse, { passive: true });
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(placePulse);
+  window.addEventListener('resize', () => placePulse());
+  tablist.addEventListener('scroll', () => placePulse(), { passive: true });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => placePulse());
   root.HubTabs = { go, placePulse };
 })(window);

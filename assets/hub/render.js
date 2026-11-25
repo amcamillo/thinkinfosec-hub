@@ -117,7 +117,7 @@
   }
 
   function card(item, kicker, accent, opts) {
-    const c = el('article', 'card' + (accent === 'mag' ? ' accent-mag' : ''));
+    const c = el('article', 'card');
     const thumb = L.safeUrl(item.thumb);
     if (thumb) c.append(pic(thumb, 'thumb', true));
     else if (opts && opts.trace) c.append(traceThumb({ title: item.title, cat: accent === 'mag' ? 'ai' : 'cyber' }, 'thumb'));
