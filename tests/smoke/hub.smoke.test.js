@@ -182,3 +182,21 @@ test('a lead image that fails to load is removed and the gradient remains', asyn
   assert.equal(await page.locator('#leadStory .lead-art').count(), 1);
   await context.close();
 });
+
+test('lead shows the Signal trace behind the image, and keeps it when the image 404s', async () => {
+  const { page, context } = await open('#front');
+  await page.waitForSelector('#leadStory .trace-banner svg path');
+  assert.ok(await page.$('#leadStory .trace-banner .trace-readout'));
+  assert.match(await page.textContent('#leadStory .trace-readout'), /CYBER · CH-01 · \d\d:\d\d UTC/);
+  await context.close();
+});
+test('cards without images get a mini trace', async () => {
+  const { page, context } = await open('#front');
+  await page.waitForSelector('#latestRail .card .trace-thumb svg');
+  await context.close();
+});
+test('News rows without an image get a mini trace thumb', async () => {
+  const { page, context } = await open('#news');
+  await page.waitForSelector('#newsList li.has-thumb .trace-thumb');
+  await context.close();
+});

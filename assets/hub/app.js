@@ -20,11 +20,11 @@
   }
   function renderGuides(group) {
     R.list($('guideGrid'), L.filterBy(guides, 'group', group),
-      g => R.card(g, L.GUIDE_GROUPS[g.group]), 'Nothing in this group yet. New items land here as they are published.');
+      g => R.card(g, L.GUIDE_GROUPS[g.group], null, { trace: true }), 'Nothing in this group yet. New items land here as they are published.');
   }
   function renderResearch(source) {
     R.list($('researchList'), L.filterBy(research, 'source', source),
-      r => R.card(r, r.source === 'medium' ? 'Medium' : 'Hub research', r.source === 'medium' ? 'mag' : null), 'No research yet.');
+      r => R.card(r, r.source === 'medium' ? 'Medium' : 'Hub research', r.source === 'medium' ? 'mag' : null, { trace: true }), 'No research yet.');
   }
   function renderVideos() {
     R.list($('videoGrid'), videos, v => R.card(v, 'YouTube'), 'Videos appear here when the feed is reachable.');
@@ -42,7 +42,7 @@
       ['YouTube', videos[0], null],
       ['Guide', guides[0], 'mag']
     ].filter(x => x[1]);
-    R.list($('latestRail'), latest, x => R.card(Object.assign({}, x[1], { summary: '', thumb: null }), x[0], x[2]), 'Nothing new yet.');
+    R.list($('latestRail'), latest, x => R.card(Object.assign({}, x[1], { summary: '' }), x[0], x[2], { trace: true }), 'Nothing new yet.');
   }
 
   R.outcomes($('outcomesBand'), tools);
