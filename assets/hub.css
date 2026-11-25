@@ -1,3 +1,6 @@
+@font-face { font-family: "DM Sans"; font-weight: 300; font-style: normal; font-display: swap; src: url("fonts/dm-sans-300.woff2") format("woff2"); }
+@font-face { font-family: "Space Mono"; font-weight: 400; font-style: normal; font-display: swap; src: url("fonts/space-mono-400.woff2") format("woff2"); }
+@font-face { font-family: "Space Mono"; font-weight: 700; font-style: normal; font-display: swap; src: url("fonts/space-mono-700.woff2") format("woff2"); }
 /* ThinkInfoSec Hub.
    Rule: in dark, accent text (--acc-ink) sits only on --bg, never on --panel (no cyan on blue).
    Labels on panels use --panel-kicker. */
