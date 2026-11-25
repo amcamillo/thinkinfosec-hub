@@ -2,6 +2,7 @@
   "$schema": "../../catalog/research.schema.json",
   "id": "research-php2shell",
   "slug": "php2shell",
+  "cover": "cover.webp",
   "title": "PHP2Shell and the runtime",
   "summary": "The 21 October 2026 PHP engine advisories: what the patch closes, and what a WAF does not prove.",
   "published": "2026-10-26",

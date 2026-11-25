@@ -779,7 +779,8 @@
       ],
       "link": "Research/php2shell/",
       "description": "The 21 October 2026 PHP engine advisories: what the patch closes, and what a WAF does not prove.",
-      "date": "2026-10-26"
+      "date": "2026-10-26",
+      "thumb": "Research/php2shell/cover.webp"
     },
     {
       "id": "research-where-agents-run",
