@@ -1,0 +1,58 @@
+{
+  "$schema": "../../catalog/research.schema.json",
+  "id": "research-where-agents-run",
+  "slug": "where-agents-run",
+  "title": "Your agent is not the model",
+  "headline": "Your agent is not the model: where it runs, and what can stop it",
+  "summary": "Harnesses, runtimes, and the controls that can actually stop them.",
+  "published": "2026-11-13",
+  "author": "Andre Camillo",
+  "pillar": "process",
+  "people": [
+    "thought-leadership"
+  ],
+  "processes": [
+    "govern-assure",
+    "threat-model",
+    "detect-hunt"
+  ],
+  "tech": [
+    2,
+    62
+  ],
+  "themes": [
+    "securing-ai",
+    "detection-response",
+    "identity-access"
+  ],
+  "frameworks": [
+    "owasp-agentic",
+    "owasp-llm-top-10",
+    "mitre-atlas"
+  ],
+  "regions": [
+    "global"
+  ],
+  "tags": [
+    "agent-harness",
+    "agent-runtime",
+    "mcp",
+    "lethal-trifecta",
+    "ollama",
+    "coding-agents",
+    "non-human-identity",
+    "aidr"
+  ],
+  "vendors": [
+    "crowdstrike",
+    "microsoft",
+    "palo-alto-networks",
+    "google",
+    "anthropic",
+    "openai"
+  ],
+  "caveats": {
+    "ai_assisted": true,
+    "not_legal_advice": true
+  }
+}

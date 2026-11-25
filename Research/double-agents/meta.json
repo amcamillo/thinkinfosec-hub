@@ -1,0 +1,59 @@
+{
+  "$schema": "../../catalog/research.schema.json",
+  "id": "research-double-agents",
+  "slug": "double-agents",
+  "title": "Double agents",
+  "headline": "Double Agents: ARTEX and the Day the Pen-Test Tool Switched Sides",
+  "summary": "ARTEX, the pen-test harness in the November 2026 FBI FLASH, and the agents already on the estate.",
+  "published": "2026-11-25",
+  "author": "Andre Camillo",
+  "cover": "cover.webp",
+  "pillar": "process",
+  "people": [
+    "thought-leadership"
+  ],
+  "processes": [
+    "threat-model",
+    "detect-hunt"
+  ],
+  "tech": [
+    43,
+    62
+  ],
+  "themes": [
+    "agentic-threats",
+    "detection-response",
+    "securing-ai"
+  ],
+  "frameworks": [
+    "mitre-attack"
+  ],
+  "regions": [
+    "global",
+    "us"
+  ],
+  "tags": [
+    "artex",
+    "fbi-flash",
+    "cyberstrikeai",
+    "vapor-panda",
+    "storm-0940",
+    "breakout-time",
+    "agentic-intrusion",
+    "red-team-tools"
+  ],
+  "vendors": [
+    "crowdstrike",
+    "microsoft",
+    "palo-alto-networks",
+    "nextron-systems",
+    "ahnlab",
+    "anthropic",
+    "openai",
+    "deepseek"
+  ],
+  "caveats": {
+    "ai_assisted": true,
+    "not_legal_advice": true
+  }
+}

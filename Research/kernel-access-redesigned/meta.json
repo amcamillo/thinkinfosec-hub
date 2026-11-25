@@ -1,0 +1,50 @@
+{
+  "$schema": "../../catalog/research.schema.json",
+  "id": "research-kernel-access-redesigned",
+  "slug": "kernel-access-redesigned",
+  "title": "Kernel-Access Redesigned",
+  "summary": "How Linux, macOS and Windows each got security tools out of Ring 0, and how finished each journey is.",
+  "published": "2026-10-15",
+  "updated": "2026-10-21",
+  "author": "Andre Camillo",
+  "pillar": "process",
+  "people": [
+    "thought-leadership"
+  ],
+  "processes": [
+    "threat-model",
+    "respond-recover"
+  ],
+  "tech": [
+    1,
+    2
+  ],
+  "themes": [
+    "kernel-endpoint",
+    "strategy-outlook"
+  ],
+  "frameworks": [],
+  "regions": [
+    "global",
+    "eu"
+  ],
+  "tags": [
+    "ring-0",
+    "ebpf",
+    "endpoint-security-framework",
+    "patchguard",
+    "windows-resiliency-initiative",
+    "wesp",
+    "hvci",
+    "lsm"
+  ],
+  "vendors": [
+    "microsoft",
+    "apple",
+    "crowdstrike"
+  ],
+  "caveats": {
+    "ai_assisted": true,
+    "not_legal_advice": true
+  }
+}

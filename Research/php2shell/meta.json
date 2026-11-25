@@ -1,0 +1,47 @@
+{
+  "$schema": "../../catalog/research.schema.json",
+  "id": "research-php2shell",
+  "slug": "php2shell",
+  "title": "PHP2Shell and the runtime",
+  "summary": "The 21 October 2026 PHP engine advisories: what the patch closes, and what a WAF does not prove.",
+  "published": "2026-10-26",
+  "author": "Andre Camillo",
+  "pillar": "process",
+  "people": [
+    "thought-leadership"
+  ],
+  "processes": [
+    "threat-model",
+    "detect-hunt",
+    "respond-recover"
+  ],
+  "tech": [
+    47,
+    53
+  ],
+  "themes": [
+    "vulnerabilities-exploitation",
+    "detection-response"
+  ],
+  "frameworks": [],
+  "regions": [
+    "global"
+  ],
+  "tags": [
+    "php",
+    "php2shell",
+    "waf",
+    "patch-management",
+    "runtime-inventory",
+    "cve"
+  ],
+  "vendors": [
+    "cloudflare",
+    "akamai",
+    "imperva"
+  ],
+  "caveats": {
+    "ai_assisted": true,
+    "not_legal_advice": true
+  }
+}

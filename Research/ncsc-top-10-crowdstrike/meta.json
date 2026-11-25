@@ -1,0 +1,49 @@
+{
+  "$schema": "../../catalog/research.schema.json",
+  "id": "research-ncsc-top-10-crowdstrike",
+  "slug": "ncsc-top-10-crowdstrike",
+  "title": "NCSC Top 10 and the Falcon boundary",
+  "summary": "CrowdStrike capability against New Zealand’s NCSC Critical Controls: native scope, dependencies, and residual obligations.",
+  "published": "2026-09-22",
+  "author": "Andre Camillo",
+  "pillar": "process",
+  "people": [
+    "thought-leadership"
+  ],
+  "processes": [
+    "govern-assure",
+    "threat-model",
+    "respond-recover"
+  ],
+  "tech": [
+    57,
+    1,
+    12,
+    37,
+    47,
+    67
+  ],
+  "themes": [
+    "control-frameworks",
+    "regulation-compliance"
+  ],
+  "frameworks": [
+    "nz-ncsc-critical-controls"
+  ],
+  "regions": [
+    "nz"
+  ],
+  "tags": [
+    "crosswalk",
+    "critical-controls",
+    "residual-obligations",
+    "falcon-platform"
+  ],
+  "vendors": [
+    "crowdstrike"
+  ],
+  "caveats": {
+    "ai_assisted": true,
+    "not_legal_advice": true
+  }
+}

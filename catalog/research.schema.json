@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://amcamillo.github.io/thinkinfosec-hub/catalog/research.schema.json",
+  "title": "ThinkInfoSec research briefing metadata",
+  "description": "One meta.json per Research/<slug>/ folder. Controlled ids come from catalog/taxonomy.json; scripts/research.cjs checks them and generates the corpus entry, the page's schema.org block and Research/index.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "slug", "title", "summary", "published", "author", "pillar", "people", "processes", "tech", "themes", "tags", "regions", "caveats"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "type": "string", "pattern": "^research-[a-z0-9-]+$", "description": "Stable id; also the corpus.json item id." },
+    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "Must equal the folder name." },
+    "title": { "type": "string", "minLength": 3, "maxLength": 90, "description": "Short card title." },
+    "headline": { "type": "string", "maxLength": 140, "description": "Full article headline, if longer than the card title." },
+    "summary": { "type": "string", "minLength": 30, "maxLength": 240, "description": "One or two sentences for cards, previews and search." },
+    "published": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "updated": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "author": { "type": "string" },
+    "cover": { "type": "string", "pattern": "^[a-z0-9._/-]+\\.(webp|png|jpg|jpeg|svg)$", "description": "Path relative to the article folder." },
+    "pillar": { "enum": ["people", "process", "technology"] },
+    "people": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "description": "taxonomy.people ids" },
+    "processes": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "description": "taxonomy.processes ids" },
+    "tech": { "type": "array", "items": { "type": "integer" }, "minItems": 1, "uniqueItems": true, "description": "taxonomy.techDomains ids" },
+    "themes": { "type": "array", "items": { "type": "string" }, "minItems": 1, "maxItems": 4, "uniqueItems": true, "description": "taxonomy.themes ids" },
+    "frameworks": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "description": "taxonomy.frameworks ids" },
+    "regions": { "type": "array", "items": { "type": "string" }, "minItems": 1, "uniqueItems": true, "description": "taxonomy.regions ids" },
+    "tags": { "type": "array", "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" }, "uniqueItems": true, "maxItems": 12, "description": "Free lowercase tags: named tools, actors, products, events." },
+    "vendors": { "type": "array", "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" }, "uniqueItems": true, "description": "Organisations discussed, as lowercase slugs." },
+    "featured": { "type": "boolean" },
+    "caveats": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ai_assisted", "not_legal_advice"],
+      "properties": {
+        "ai_assisted": { "type": "boolean" },
+        "not_legal_advice": { "type": "boolean" }
+      }
+    }
+  }
+}

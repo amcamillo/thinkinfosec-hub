@@ -1,0 +1,44 @@
+{
+  "$schema": "../../catalog/research.schema.json",
+  "id": "research-alliance-map",
+  "slug": "infosec-solutions-map",
+  "title": "CrowdStrike Alliance Landscape",
+  "headline": "Infosec Solution Landscape",
+  "summary": "70 technology domains across the Falcon ecosystem.",
+  "published": "2026-08-24",
+  "author": "Andre Camillo",
+  "pillar": "process",
+  "people": [
+    "thought-leadership"
+  ],
+  "processes": [
+    "architect-zt",
+    "channel-mssp"
+  ],
+  "tech": [
+    64
+  ],
+  "themes": [
+    "market-landscape",
+    "channel-mssp"
+  ],
+  "frameworks": [],
+  "regions": [
+    "global"
+  ],
+  "tags": [
+    "solution-map",
+    "technology-domains",
+    "alliance-partners",
+    "vendor-ecosystems"
+  ],
+  "vendors": [
+    "crowdstrike",
+    "microsoft",
+    "palo-alto-networks"
+  ],
+  "caveats": {
+    "ai_assisted": true,
+    "not_legal_advice": true
+  }
+}

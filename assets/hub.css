@@ -286,3 +286,5 @@ main.wrap::before { content: ""; position: absolute; inset: -28px -56px; z-index
   .booting:not(.booted) :is(.masthead, main, .site-foot) { filter: none; }
   .booted :is(.masthead, main, .site-foot) { transition-delay: 0s; }
 }
+
+.lib-link { margin: 18px 0 0; font: 700 .78rem "Space Mono", ui-monospace, monospace; letter-spacing: .06em; text-transform: uppercase; }

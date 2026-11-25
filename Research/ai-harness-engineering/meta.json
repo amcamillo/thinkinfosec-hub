@@ -1,0 +1,49 @@
+{
+  "$schema": "../../catalog/research.schema.json",
+  "id": "research-ai-harness-engineering",
+  "slug": "ai-harness-engineering",
+  "title": "The harness is the control plane",
+  "summary": "A controls reading of Zhong and Zhu’s harness ladder, and the trust boundaries the preprint leaves open.",
+  "published": "2026-10-02",
+  "author": "Andre Camillo",
+  "pillar": "process",
+  "people": [
+    "thought-leadership"
+  ],
+  "processes": [
+    "govern-assure",
+    "threat-model"
+  ],
+  "tech": [
+    57,
+    62
+  ],
+  "themes": [
+    "securing-ai",
+    "strategy-outlook"
+  ],
+  "frameworks": [
+    "owasp-llm-top-10",
+    "nist-ai-rmf",
+    "eu-ai-act"
+  ],
+  "regions": [
+    "global"
+  ],
+  "tags": [
+    "harness-engineering",
+    "agent-harness",
+    "h0-h3-ladder",
+    "preprint-review",
+    "trust-boundaries",
+    "control-plane"
+  ],
+  "vendors": [
+    "openai",
+    "anthropic"
+  ],
+  "caveats": {
+    "ai_assisted": true,
+    "not_legal_advice": true
+  }
+}

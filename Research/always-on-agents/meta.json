@@ -1,0 +1,53 @@
+{
+  "$schema": "../../catalog/research.schema.json",
+  "id": "research-always-on-agents",
+  "slug": "always-on-agents",
+  "title": "Always-on agents",
+  "headline": "Always-on agents: dots, Muse and Grok Bot through a security lens",
+  "summary": "A security reading of OpenAI dots, Meta Muse and xAI Grok Bot: published controls, and what an ANZ team should do this sprint.",
+  "published": "2026-10-03",
+  "author": "Andre Camillo",
+  "pillar": "process",
+  "people": [
+    "thought-leadership"
+  ],
+  "processes": [
+    "govern-assure",
+    "threat-model"
+  ],
+  "tech": [
+    57,
+    62
+  ],
+  "themes": [
+    "securing-ai",
+    "identity-access",
+    "strategy-outlook"
+  ],
+  "frameworks": [
+    "owasp-llm-top-10"
+  ],
+  "regions": [
+    "au",
+    "nz"
+  ],
+  "tags": [
+    "openai-dots",
+    "meta-muse",
+    "grok-bot",
+    "always-on-agents",
+    "oauth",
+    "excessive-agency",
+    "prompt-injection"
+  ],
+  "vendors": [
+    "openai",
+    "meta",
+    "xai",
+    "microsoft"
+  ],
+  "caveats": {
+    "ai_assisted": true,
+    "not_legal_advice": true
+  }
+}

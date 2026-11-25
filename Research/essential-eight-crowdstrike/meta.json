@@ -1,0 +1,49 @@
+{
+  "$schema": "../../catalog/research.schema.json",
+  "id": "research-essential-eight-crowdstrike",
+  "slug": "essential-eight-crowdstrike",
+  "title": "Essential 8 and CrowdStrike Falcon Ecosystem",
+  "summary": "CrowdStrike capability against the Essential Eight: native scope, dependencies, and residual gaps.",
+  "published": "2026-09-22",
+  "author": "Andre Camillo",
+  "pillar": "process",
+  "people": [
+    "thought-leadership"
+  ],
+  "processes": [
+    "govern-assure",
+    "threat-model",
+    "respond-recover"
+  ],
+  "tech": [
+    57,
+    1,
+    8,
+    12,
+    47,
+    67
+  ],
+  "themes": [
+    "control-frameworks",
+    "regulation-compliance"
+  ],
+  "frameworks": [
+    "essential-eight"
+  ],
+  "regions": [
+    "au"
+  ],
+  "tags": [
+    "crosswalk",
+    "maturity-model",
+    "residual-obligations",
+    "falcon-platform"
+  ],
+  "vendors": [
+    "crowdstrike"
+  ],
+  "caveats": {
+    "ai_assisted": true,
+    "not_legal_advice": true
+  }
+}

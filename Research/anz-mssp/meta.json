@@ -1,0 +1,46 @@
+{
+  "$schema": "../../catalog/research.schema.json",
+  "id": "research-anz-mssp",
+  "slug": "anz-mssp",
+  "title": "ANZ MSSP Landscape",
+  "headline": "2025: The State of MSSP across Australia and New Zealand",
+  "summary": "Managed security market across Australia and New Zealand.",
+  "published": "2026-08-24",
+  "author": "Andre Camillo",
+  "pillar": "process",
+  "people": [
+    "thought-leadership"
+  ],
+  "processes": [
+    "channel-mssp"
+  ],
+  "tech": [
+    64
+  ],
+  "themes": [
+    "channel-mssp",
+    "market-landscape"
+  ],
+  "frameworks": [
+    "essential-eight",
+    "soci-act",
+    "au-privacy-act"
+  ],
+  "regions": [
+    "au",
+    "nz"
+  ],
+  "tags": [
+    "mssp",
+    "managed-security",
+    "market-landscape",
+    "sovereign-capability"
+  ],
+  "vendors": [
+    "cybercx"
+  ],
+  "caveats": {
+    "ai_assisted": true,
+    "not_legal_advice": true
+  }
+}

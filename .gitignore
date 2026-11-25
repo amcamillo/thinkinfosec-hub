@@ -3,3 +3,6 @@
 
 tests/node_modules/
 tests/artifacts/
+
+# Local deliverables (may reference private tooling) — never publish
+.output/

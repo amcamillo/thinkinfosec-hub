@@ -730,5 +730,167 @@
       "name": "Security Data Pipeline",
       "description": "Collect, parse, enrich, route and reduce security telemetry before it reaches SIEM/XDR. CrowdStrike coverage: Falcon Onum (acquired data-pipeline platform). Distinct from SIEM storage/analytics and from generic data lakehouse."
     }
+  ],
+  "themes": [
+    {
+      "id": "agentic-threats",
+      "label": "Agentic threats",
+      "blurb": "Attackers using AI agents and automation against you."
+    },
+    {
+      "id": "securing-ai",
+      "label": "Securing AI and agents",
+      "blurb": "Harnesses, runtimes and guardrails for the agents you run."
+    },
+    {
+      "id": "regulation-compliance",
+      "label": "Regulation and compliance",
+      "blurb": "Laws, regulators and what they require."
+    },
+    {
+      "id": "control-frameworks",
+      "label": "Control frameworks",
+      "blurb": "Mapping controls to Essential Eight, NCSC, NIST and similar."
+    },
+    {
+      "id": "kernel-endpoint",
+      "label": "Kernel and endpoint",
+      "blurb": "How security tools run on the operating system."
+    },
+    {
+      "id": "vulnerabilities-exploitation",
+      "label": "Vulnerabilities and exploitation",
+      "blurb": "Bugs, exploit chains and how they get used."
+    },
+    {
+      "id": "incident-analysis",
+      "label": "Incident analysis",
+      "blurb": "Breaches and campaigns, read through a defender's lens."
+    },
+    {
+      "id": "detection-response",
+      "label": "Detection and response",
+      "blurb": "Telemetry, hunting and how fast you can act."
+    },
+    {
+      "id": "identity-access",
+      "label": "Identity and access",
+      "blurb": "Accounts, credentials and non-human identities."
+    },
+    {
+      "id": "market-landscape",
+      "label": "Market landscape",
+      "blurb": "Vendors, platforms and how the market is shaped."
+    },
+    {
+      "id": "channel-mssp",
+      "label": "MSSP and channel",
+      "blurb": "Partners, managed services and how security is delivered."
+    },
+    {
+      "id": "strategy-outlook",
+      "label": "Strategy and outlook",
+      "blurb": "Where things are heading and what to plan for."
+    }
+  ],
+  "frameworks": [
+    {
+      "id": "mitre-attack",
+      "label": "MITRE ATT&CK"
+    },
+    {
+      "id": "mitre-atlas",
+      "label": "MITRE ATLAS"
+    },
+    {
+      "id": "owasp-llm-top-10",
+      "label": "OWASP Top 10 for LLM Applications"
+    },
+    {
+      "id": "owasp-agentic",
+      "label": "OWASP Agentic AI Top 10"
+    },
+    {
+      "id": "essential-eight",
+      "label": "ASD Essential Eight"
+    },
+    {
+      "id": "ncsc-caf",
+      "label": "NCSC Cyber Assessment Framework (UK)"
+    },
+    {
+      "id": "ncsc-top-10",
+      "label": "NCSC 10 Steps (UK)"
+    },
+    {
+      "id": "nist-csf",
+      "label": "NIST CSF 2.0"
+    },
+    {
+      "id": "nist-ai-rmf",
+      "label": "NIST AI RMF"
+    },
+    {
+      "id": "iso-27001",
+      "label": "ISO/IEC 27001"
+    },
+    {
+      "id": "iso-42001",
+      "label": "ISO/IEC 42001"
+    },
+    {
+      "id": "apra-cps-234",
+      "label": "APRA CPS 234"
+    },
+    {
+      "id": "soci-act",
+      "label": "SOCI Act"
+    },
+    {
+      "id": "au-privacy-act",
+      "label": "Privacy Act 1988 (AU)"
+    },
+    {
+      "id": "eu-ai-act",
+      "label": "EU AI Act"
+    },
+    {
+      "id": "nz-ncsc-critical-controls",
+      "label": "NCSC NZ Critical Controls"
+    },
+    {
+      "id": "au-cyber-security-act",
+      "label": "Cyber Security Act 2024 (AU)"
+    }
+  ],
+  "regions": [
+    {
+      "id": "global",
+      "label": "Global"
+    },
+    {
+      "id": "au",
+      "label": "Australia"
+    },
+    {
+      "id": "nz",
+      "label": "New Zealand"
+    },
+    {
+      "id": "uk",
+      "label": "United Kingdom"
+    },
+    {
+      "id": "us",
+      "label": "United States"
+    },
+    {
+      "id": "eu",
+      "label": "European Union"
+    },
+    {
+      "id": "apac",
+      "label": "Asia-Pacific"
+    }
   ]
 }
