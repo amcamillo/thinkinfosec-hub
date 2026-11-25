@@ -62,7 +62,7 @@
     const h = el('h4', 'headline');
     h.append(titleNode(item));
     body.append(el('span', 'kicker lane-' + item.cat, L.LANES[item.cat]), h, el('span', 'meta', item.source + ' · ' + L.timeAgo(item.ts, now)));
-    li.append(el('span', 'num', String(index + 1).padStart(2, '0')), body);
+    li.append(el('span', 'num', L.channel(index + 1)), body);
     if (opts && opts.thumb && item.image) {
       li.classList.add('has-thumb');
       li.append(pic(item.image, 'row-thumb', true));

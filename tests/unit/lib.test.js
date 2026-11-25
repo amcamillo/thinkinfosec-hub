@@ -180,3 +180,12 @@ test('newsItems keeps https images and drops everything else', () => {
   assert.equal(img('assets/local.png'), null);
   assert.equal(img(undefined), null);
 });
+
+test('channel', () => {
+  assert.equal(L.channel(1), 'CH-01');
+  assert.equal(L.channel(12), 'CH-12');
+});
+test('utcTime', () => {
+  assert.equal(L.utcTime(Date.parse('2026-11-25T14:32:09Z')), '14:32 UTC');
+  assert.equal(L.utcTime(Date.parse('2026-11-25T03:05:00Z')), '03:05 UTC');
+});

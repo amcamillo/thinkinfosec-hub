@@ -174,9 +174,12 @@
     return { state: 'live', label: 'SIGNAL LIVE', detail: stories + ' · ' + (ago === 'just now' ? 'JUST NOW' : ago.toUpperCase() + ' AGO') };
   }
 
+  function channel(n) { return 'CH-' + String(n).padStart(2, '0'); }
+  function utcTime(ts) { const d = new Date(ts); return String(d.getUTCHours()).padStart(2, '0') + ':' + String(d.getUTCMinutes()).padStart(2, '0') + ' UTC'; }
+
   return {
     LANES, ORIGINS, GUIDE_GROUPS, safeUrl, isExternal, clip, timeAgo, formatDay, formatDate, formatTime, isStale,
     mediumKey, youtubeId, newsItems, mediaItems, researchItems, videoItems, toolItems, guideItems,
-    isRelevant, frontPage, filterBy, searchEntries, search, signalPill
+    isRelevant, frontPage, filterBy, searchEntries, search, signalPill, channel, utcTime
   };
 });
