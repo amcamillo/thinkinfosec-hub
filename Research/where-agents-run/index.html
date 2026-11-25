@@ -7,89 +7,11 @@
 <meta name="description" content="Harnesses, runtimes, and the controls that can actually stop an agent: where the command runs, and what can stop it.">
 <meta name="author" content="Andre Camillo">
 <link rel="canonical" href="https://amcamillo.github.io/thinkinfosec-hub/Research/where-agents-run/">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
-<style>
-:root {
-  --navy: #0D1F3C; --teal: #00BFCF; --teal-dark: #008A96; --pink: #FF2D78; --green: #00875A;
-  --bg: #f4f7f6; --card: #ffffff; --ink: #333333; --mute: #555555; --faint: #777777; --line: #dddddd;
-  --radius: 8px; --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07); --focus: 2px solid var(--teal); --col: 1040px;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-body { background: var(--bg); color: var(--ink); font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
-a { color: var(--teal-dark); }
-a:hover { text-decoration: underline; }
-a:focus-visible { outline: var(--focus); outline-offset: 3px; }
-.skip { position: absolute; left: 0.75rem; top: -3rem; background: var(--navy); color: #fff; padding: 0.5rem 0.85rem; border-radius: var(--radius); z-index: 400; text-decoration: none; }
-.skip:focus { top: 0.75rem; }
-.topbar { background: var(--navy); color: #fff; }
-.topbar-inner { max-width: var(--col); margin: 0 auto; min-height: 52px; padding: 8px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
-.brand img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
-.brand-name { font-size: 15px; font-weight: 700; display: block; line-height: 1.15; }
-.brand-sub { font-size: 12px; color: var(--teal); font-weight: 500; }
-.topbar-meta { font-size: 13px; color: rgba(255,255,255,0.62); }
-.mast { background: var(--card); border-bottom: 1px solid var(--line); }
-.mast-inner { max-width: var(--col); margin: 0 auto; padding: 28px 24px 22px; }
-.crumb { font-size: 13px; color: var(--faint); margin-bottom: 18px; }
-.crumb a { color: var(--teal-dark); text-decoration: none; font-weight: 500; }
-.crumb a:hover { text-decoration: underline; }
-.sep { margin: 0 8px; color: var(--line); }
-.dateline { font-size: 13px; color: var(--teal-dark); font-weight: 600; margin-bottom: 8px; }
-.title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px 28px; }
-.mast h1 { font-size: clamp(28px, 3.6vw, 38px); font-weight: 700; color: var(--navy); letter-spacing: -0.02em; line-height: 1.2; }
-.title-row h1 { flex: 1 1 auto; min-width: 0; margin-bottom: 0; }
-.mast h1 em { font-style: normal; color: var(--teal-dark); }
-.title-side { flex: 0 1 260px; display: flex; flex-direction: column; gap: 8px; }
-.ai-disclose { margin: 0; font-size: 12px; line-height: 1.45; color: var(--mute); border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 10px; background: var(--bg); }
-.ai-disclose strong { display: block; color: var(--navy); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2px; }
-.advice-stamp { margin: 0; padding: 8px 10px; border: 1.5px solid #FF8B00; border-radius: var(--radius); background: #fff8f0; color: #9a4d00; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; line-height: 1.35; }
-.lede { max-width: 42rem; color: var(--mute); margin: 12px 0 10px; }
-.meta-line { font-size: 14px; color: var(--faint); margin-bottom: 18px; }
-.facts { display: flex; flex-wrap: wrap; gap: 10px 32px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 14px; color: var(--mute); }
-.facts b { color: var(--navy); font-weight: 700; margin-right: 5px; }
-.facts a { text-decoration: none; font-size: 13px; }
-.facts a:hover { text-decoration: underline; }
-.toc { position: sticky; top: 0; z-index: 200; background: var(--card); border-bottom: 1px solid var(--line); padding: 8px 0; }
-.toc-inner { max-width: var(--col); margin: 0 auto; padding: 0 24px; display: flex; gap: 4px; overflow-x: auto; width: 100%; }
-.toc a { flex-shrink: 0; color: var(--faint); text-decoration: none; font-size: 13px; font-weight: 500; min-height: 40px; padding: 0 12px; display: inline-flex; align-items: center; border-radius: 6px; }
-.toc a:hover { color: var(--navy); background: var(--bg); }
-.toc a.on { color: var(--navy); background: var(--bg); font-weight: 600; }
-.wrap { max-width: var(--col); margin: 0 auto; padding: 20px 24px 64px; display: grid; gap: 16px; }
-section { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px 28px 24px; scroll-margin-top: 64px; min-width: 0; }
-.kicker { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal-dark); margin-bottom: 6px; }
-h2 { font-size: 1.45rem; font-weight: 700; color: var(--navy); margin: 0 0 10px; letter-spacing: -0.02em; line-height: 1.25; }
-section p { margin: 0 0 12px; }
-.fig { margin: 8px 0 16px; min-width: 0; max-width: 100%; }
-.fig img { display: block; width: 100%; max-width: 100%; height: auto; border-radius: var(--radius); }
-.fig figcaption { margin-top: 8px; font-size: 13px; color: var(--mute); line-height: 1.5; }
-blockquote { margin: 4px 0 14px; padding: 12px 16px; background: var(--bg); border-left: 3px solid var(--navy); border-radius: 0 var(--radius) var(--radius) 0; }
-blockquote p { color: var(--navy); font-weight: 600; margin: 0 0 8px; }
-blockquote p:last-child { margin: 0; }
-pre { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; overflow-x: auto; margin: 0 0 14px; }
-pre code { background: none; padding: 0; font-size: 13px; }
-code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.86em; color: var(--navy); overflow-wrap: anywhere; }
-ol, ul { margin: 0 0 12px 1.2rem; display: grid; gap: 10px; }
-li { color: var(--ink); }
-.scroll { overflow-x: auto; max-width: 100%; min-width: 0; margin: 4px 0 8px; }
-.clock-table { width: 100%; border-collapse: collapse; font-size: 14.5px; margin-bottom: 8px; }
-.clock-table th { text-align: left; font-size: 12px; font-weight: 700; color: var(--faint); padding: 0 12px 10px 0; border-bottom: 2px solid var(--navy); }
-.clock-table td { padding: 12px 12px 12px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
-.clock-table .t { font-weight: 700; color: var(--navy); }
-footer { background: var(--navy); color: rgba(255,255,255,0.65); padding: 24px; text-align: center; }
-footer .ft-main { font-size: 14px; max-width: var(--col); margin: 0 auto; }
-footer .ft-main a { color: var(--teal); text-decoration: none; }
-footer .ft-main a:hover { text-decoration: underline; }
-footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.4); max-width: 44rem; }
-@media (max-width: 800px) {
-  .topbar-meta { display: none; }
-  .title-row { flex-direction: column; }
-  .title-side { flex-basis: auto; }
-  section { padding: 20px 18px 18px; }
-  .clock-table { min-width: 720px; }
-}
-</style>
+<meta property="og:image" content="https://amcamillo.github.io/thinkinfosec-hub/Research/where-agents-run/cover.webp">
+<link rel="icon" href="../../assets/brand/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/brand/favicon-180.png">
+<link rel="stylesheet" href="../../assets/research.css">
+<script src="../../assets/hub/theme-init.js"></script>
 <!-- research-meta:start (generated by scripts/research.cjs) -->
 <script type="application/ld+json">
 {
@@ -102,6 +24,7 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
   "mainEntityOfPage": "https://amcamillo.github.io/thinkinfosec-hub/Research/where-agents-run/",
   "datePublished": "2026-11-13",
   "dateModified": "2026-11-13",
+  "image": "https://amcamillo.github.io/thinkinfosec-hub/Research/where-agents-run/cover.webp",
   "author": {
     "@type": "Person",
     "name": "Andre Camillo",
@@ -173,41 +96,45 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="topbar">
-  <div class="topbar-inner">
-    <a class="brand" href="../../index.html">
-      <img src="../../assets/learning-hub-logo.png" alt="Thinkinfosec Hub logo" width="28" height="28" onerror="this.style.display='none'">
-      <span><span class="brand-name">Thinkinfosec</span><span class="brand-sub">Research briefing</span></span>
-    </a>
-    <p class="topbar-meta">November 2026</p>
+<div class="orbs" aria-hidden="true"><span class="orb orb-1"></span><span class="orb orb-2"></span><span class="orb orb-3"></span></div>
+<header class="col r-top">
+  <a class="brand-block" href="../../index.html">
+    <img class="brand-badge" src="../../assets/brand/logo-96.webp" width="40" height="40" alt="ThinkInfoSec logo">
+    <span class="brand">Think<span>InfoSec</span> <small>Hub</small></span>
+  </a>
+  <div class="r-tools">
+    <a class="r-back" href="../">&larr; Research</a>
+    <div class="theme-toggle" role="group" aria-label="Colour theme">
+      <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
+      <button type="button" data-theme-set="light" aria-pressed="true">Light</button>
+    </div>
   </div>
 </header>
-<div class="mast">
-  <div class="mast-inner">
-    <nav class="crumb" aria-label="Breadcrumb">
-      <a href="../../index.html">Hub</a><span class="sep">/</span>
-      <a href="../../index.html#research">Research</a><span class="sep">/</span>
-      Your agent is not the model
-    </nav>
-    <p class="dateline">Independent research briefing · November 2026</p>
-    <div class="title-row">
-      <h1>Your agent is not the <em>model</em></h1>
-      <div class="title-side">
-        <p class="ai-disclose" role="note"><strong>AI-assisted research</strong> Minor inconsistencies can occur. Every claim remains grounded in the ThinkInfoSec ontology and the sources disclosed on this page.</p>
-        <p class="advice-stamp">This is not legal advice</p>
-      </div>
-    </div>
-    <p class="lede">Harnesses, runtimes, and the controls that can actually stop them.</p>
-    <p class="meta-line">Research as of 18 November 2026. Vendor docs in this space change monthly, so treat every version number, default and "documented" below as "true on the day I read it".</p>
-    <p class="facts">
-      <span><b>56.2%</b> of blocking detections were credential access · <a href="#edr">Sophos, seven days in June</a></span>
-      <span><b>36</b> control points across nine stages · <a href="#controls">the catalogue</a></span>
-      <span><b>Four vendors</b> read against those points · <a href="#controls">Microsoft, CrowdStrike, Palo Alto, Check Point</a></span>
-      <span><b>30 November 2026</b> AIDR console moves · <a href="#hands">Falcon Guardian</a></span>
-    </p>
+<div class="col cover">
+  <nav class="crumb" aria-label="Breadcrumb">
+    <a href="../../index.html">Hub</a><span class="sep">/</span><a href="../">Research</a><span class="sep">/</span>Your agent is not the model
+  </nav>
+  <figure class="cover-art cover-art-wide"><img src="cover.webp" width="1000" height="857" alt="Engraving of a cut-away Greek temple: the oracle of Delphi sits on a marble chair above, speaking into a brass horn, while magenta mechanical arms work gears, servers, a keyboard and a door in the hidden room below"></figure>
+  <p class="kicker">AI &middot; Independent research briefing</p>
+  <h1>Your agent is not the <em>model</em></h1>
+  <p class="lede">Harnesses, runtimes, and the controls that can actually stop them. Where the command really runs, why your EDR can&rsquo;t see it, and which control points close the gap.</p>
+  <div class="rail">
+    <span>BY <b>ANDRE CAMILLO</b></span>
+    <span><b>NOV 2026</b> &middot; 31 MIN READ</span>
+    <span class="ai" role="note"><b>&#9670; AI-ASSISTED RESEARCH</b></span>
+    <span class="law" role="note"><b>&#9888; THIS IS NOT LEGAL ADVICE</b></span>
   </div>
+  <p class="disclose">AI-assisted research: minor inconsistencies can occur. Every claim remains grounded in the ThinkInfoSec ontology and the sources disclosed on this page.</p>
+  <ul class="facts" aria-label="Key figures">
+    <li><a href="#edr"><b>56.2%</b><span>of blocking detections were credential access</span><small>Sophos, seven days in June</small></a></li>
+    <li><a href="#controls"><b>36</b><span>control points across nine stages</span><small>The catalogue</small></a></li>
+    <li><a href="#controls"><b>4</b><span>vendors read against those points</span><small>Microsoft, CrowdStrike, Palo Alto, Check Point</small></a></li>
+    <li><a href="#hands"><b>30 Nov</b><span>2026: the AIDR console moves</span><small>Falcon Guardian</small></a></li>
+  </ul>
+  <p class="asof">Research as of 18 November 2026. Vendor docs in this space change monthly, so treat every version number, default and &ldquo;documented&rdquo; below as &ldquo;true on the day I read it&rdquo;.</p>
 </div>
-<nav class="toc" aria-label="On this page"><div class="toc-inner">
+<div class="r-body">
+<nav class="toc" aria-label="On this page"><p class="toc-label">On this page</p><div class="toc-inner">
   <a href="#question">The question</a>
   <a href="#loop">The loop</a>
   <a href="#ollama">The model</a>
@@ -225,7 +152,7 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
   <a href="#landing">The landing</a>
   <a href="#monday">Monday</a>
 </div></nav>
-<main id="main" class="wrap">
+<main id="main" class="col article">
 <section id="question"><p class="kicker">The question</p><h2>Where it runs, and what can stop it</h2><p>This research started with a chat between colleagues. A fellow SE at CrowdStrike asked me how AI agents actually work. Not the slide version, the mechanics: what's doing the thinking, what's doing the doing, and where it all runs. I gave a reasonable answer. Not a great one.</p><p>And it's the same question sitting underneath almost every customer conversation I have about securing AI. You can't explain how to secure something until the person across the table understands what it is, where it runs, and where a control could even sit. Every time I walk a customer through AI security, we end up back at the anatomy of the agent first. So I went and did the research properly, mostly so that the next time someone asks, the answer is a great one. This is that research.</p><p>(Quick disclosure, since CrowdStrike's products come up alongside its competitors' below: I work at CrowdStrike. Everything here comes from each vendor's public documentation, and the views are mine, not my employer's.)</p><p>If you ask five people what an "AI agent" is, you get six answers and a vendor slide. That would be fine if agents were still a demo. They aren't. They are on developer laptops right now, running shell commands under real user accounts. The customer questions I hear boil down to two. When Claude, Cursor or Codex runs a command on that machine, <em>where</em> does it run, and who can see it? And when it's about to do something it shouldn't, <em>what</em> can actually stop it?</p><p>Those two questions turn out to be the same question asked from different ends. So let's build this up properly: from the concept, through where the code lands, to the controls that exist, and finally to how you architect around what's still missing.</p></section>
 
 <section id="loop"><p class="kicker">The loop</p><h2>What an agent actually is</h2><p>The cleanest definition I know of is still Anthropic's, from <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building effective agents</a> (December 2024). It separates two things that marketing tends to blend. Workflows are "systems where LLMs and tools are orchestrated through predefined code paths". Agents are "systems where LLMs dynamically direct their own processes and tool usage". And then the line that does all the work:</p><blockquote><p>They are typically just LLMs using tools based on environmental feedback in a loop.</p></blockquote><p>That's it. A loop. Worth pulling this apart into three pieces, because the whole security conversation depends on keeping them separate. The three-way split below is my framing, not Anthropic's, but it maps onto every product in this piece.</p><p><strong>The model</strong> is a text predictor. It takes tokens in and produces tokens out. It has no hands. When it "runs a command", what it really does is emit a structured request that says, in effect, <em>please call the shell tool with this string</em>.</p><p><strong>The harness</strong> is the program around the model. It assembles the context (system prompt, tool definitions, conversation history, file contents), sends it to the model, parses the tool call that comes back, decides whether that call is allowed, executes it, and feeds the result back in. Claude Code, Cursor's agent, Codex CLI and Antigravity are all harnesses. The harness is where permissions, memory, sub-agents and hooks live.</p><p><strong>The runtime</strong> is where the tool call physically lands: your shell on your host, a kernel-level sandbox, a virtual machine (VM), or somebody else's cloud. This is the part that decides blast radius, and it's the part that varies wildly between products and between Windows and Mac.</p><figure class="fig"><img alt="The model only asks. The harness does the doing." src="diagrams/agent-loop.gif"><figcaption>The model only asks. The harness does the doing.</figcaption></figure><p>The loop in the diagram is worth staring at for a second, because of what flows along the bottom edge. Every tool result goes back into the model's context. A web page the agent fetched, a README in a cloned repo, a Slack message pulled through a connector: all of it becomes input the model reasons over on the next turn. There's no separate channel for "data" versus "instructions". That is prompt injection in one sentence, and it's structural, not a bug somebody forgot to fix. Keep this loop in your head, because later in the piece we'll lay every security control onto it.</p></section>
@@ -262,25 +189,15 @@ PostToolUse       -&gt;  tool output checked before it re-enters context</code><
 
 <section id="monday"><p class="kicker">Monday</p><h2>Architecting for Effective Solutions</h2><p>No single product closes this today, so the answer is architecture: layering the controls the products do provide with the ones you own in the harness, the identity provider and the network. Here's how I'd build it, roughly in order.</p><ol><li><strong>Inventory the harnesses, then the modes.</strong> Knowing Cursor is installed is step one. Knowing which machines run it with the sandbox off is the useful bit.</li><li><strong>Own the harness settings as security controls.</strong> Each of these tools has managed settings. Turn the sandbox on where it exists, set fail-closed where it's offered, disable the bypass flags, enforce hooks centrally, and alert on changes to any of it. This is the empty middle, and no vendor will do it for you.</li><li><strong>Pick a trifecta leg to cut for each agent you run.</strong> For coding agents, egress is usually the cheapest: network off by default, allow-list what's needed. For agents reading email or the web, it's isolation and least privilege. You don't need all three legs closed, you need one closed reliably.</li><li><strong>Put your MCP servers on an allow-list.</strong> On the host if your tooling supports it, at the network if it doesn't, ideally both. Unvetted MCP servers are how CurXecute happened.</li><li><strong>Take the harness's own telemetry, and use it to enforce where you can.</strong> Hooks, OpenTelemetry export and compliance APIs are the only place intent is recorded. Remember they're tamper-evident, not tamper-proof, and they don't cover a personal login.</li><li><strong>Don't allowlist the binary.</strong> Scope EDR tuning by parent process and workspace path, and keep credential-access and persistence rules firing no matter who the parent is.</li><li><strong>Run every "AI security" control through the four questions.</strong> Block or report, fail open or closed, streaming or not, prompt-only or tools too. Write the answers into the risk register next to the control.</li><li><strong>Decide your position on VMs and cloud sessions on purpose.</strong> Either get a sensor into the guest, or accept the gap in writing with compensating controls at the identity and network layers.</li><li><strong>Give agents identities where your IdP allows it, name a human owner for each, and keep secrets out of reach.</strong> Where agents can't have their own identity, at least make their activity attributable in logs, and use short-lived credentials and deny-read rules so an agent that can be talked into anything can't read <code>~/.aws/credentials</code>.</li><li><strong>If you're on CrowdStrike AIDR, sort out the Falcon Guardian move before 30 November</strong>, especially browser coverage.</li></ol><p>A couple of honest limits on this research. I couldn't load OpenAI's own Windows sandbox engineering post or The Hacker News coverage of the Antigravity fix, so those two points rest on secondary accounts and are flagged as such above. The control-point half is four vendors' public documentation, read once, against a catalogue that's still under review. Some docs were gated and I've attributed them in prose without links, and where a vendor says nothing I've said "undocumented", not "absent". I'd genuinely welcome corrections from anyone at these vendors who can point me at docs I missed. And all of it is what the documentation says, not what I've tested on a bench. Verifying each sandbox and each control with a canary file, a blocked outbound connection and a poisoned README, on both Windows and Mac, is the obvious follow-up piece.</p><blockquote><p>Learn more about my Cloud and Security Projects: <a href="https://thinkinfosec.org" target="_blank" rel="noopener">https://thinkinfosec.org</a></p><p>Thank you for reading and leave your thoughts/comments!</p></blockquote></section>
 </main>
-<footer>
-  <p class="ft-main">ThinkInfoSec 2026 — <a href="https://www.linkedin.com/in/amcamillo/" target="_blank" rel="noopener">Andre Camillo</a> · <a href="../../index.html#research">Back to Research</a></p>
-  <p class="ft-sub">Independent briefing. The article text and diagrams are the original research, set in the hub shell. Not an official publication of CrowdStrike, Microsoft, Palo Alto Networks, Check Point, Anthropic, or the other vendors named.</p>
+</div>
+<footer class="col r-foot">
+  <img src="../../assets/brand/logo-96.webp" width="28" height="28" alt="">
+  <div>
+    <p class="ft-main">ThinkInfoSec 2026 &middot; Andre Camillo &middot; <a href="../">Back to Research</a></p>
+    <p class="ft-sub">Independent briefing. The article text and diagrams are the original research, set in the hub shell. Not an official publication of CrowdStrike, Microsoft, Palo Alto Networks, Check Point, Anthropic, or the other vendors named. AI-assisted research; this is not legal advice.</p>
+  </div>
+  <a class="cta-li" href="https://www.linkedin.com/in/amcamillo/" target="_blank" rel="noopener noreferrer"><span class="li-mark" aria-hidden="true">in</span>LinkedIn</a>
 </footer>
-<script>
-(function () {
-  var links = Array.prototype.slice.call(document.querySelectorAll(".toc a"));
-  var sections = links.map(function (a) { return document.querySelector(a.getAttribute("href")); }).filter(Boolean);
-  if (!("IntersectionObserver" in window) || !sections.length) return;
-  var spy = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (!e.isIntersecting) return;
-      links.forEach(function (l) { l.classList.remove("on"); l.removeAttribute("aria-current"); });
-      var active = document.querySelector('.toc a[href="#' + e.target.id + '"]');
-      if (active) { active.classList.add("on"); active.setAttribute("aria-current", "location"); }
-    });
-  }, { rootMargin: "-40% 0px -55% 0px" });
-  sections.forEach(function (s) { spy.observe(s); });
-})();
-</script>
+<script src="../../assets/research.js"></script>
 </body>
 </html>
