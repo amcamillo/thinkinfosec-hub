@@ -127,11 +127,6 @@
           "url": "https://crowdstrike.com/en-us/blog/crowdstrike-2026-threat-hunting-report",
           "host": "crowdstrike.com",
           "text": "CrowdStrike's 2026 Threat Hunting Report"
-        },
-        {
-          "url": "https://thinkinfosec.org",
-          "host": "thinkinfosec.org",
-          "text": "ThinkInfoSec"
         }
       ]
     },
@@ -350,11 +345,6 @@
           "url": "https://www.checkpoint.com/press-releases/check-point-acquires-lakera-to-deliver-end-to-end-ai-security-for-enterprises/",
           "host": "checkpoint.com",
           "text": "announced in September 2025"
-        },
-        {
-          "url": "https://thinkinfosec.org",
-          "host": "thinkinfosec.org",
-          "text": "https://thinkinfosec.org"
         }
       ]
     },

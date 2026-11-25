@@ -10,7 +10,8 @@
     { key: 'framework', label: 'Framework', field: 'frameworks' },
     { key: 'region', label: 'Region', field: 'regions' }
   ];
-  var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var SORTS = ['newest', 'oldest', 'short'];
+  var MONTHS =['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   var $ = function (id) { return document.getElementById(id); };
   var grid = $('results'), facetsEl = $('facets'), countEl = $('libCount'), emptyEl = $('libEmpty');
@@ -41,8 +42,13 @@
   function readUrl() {
     var p = new URLSearchParams(location.search);
     state.q = p.get('q') || '';
-    state.sort = p.get('sort') || 'newest';
-    FACETS.forEach(function (f) { state.sel[f.key] = (p.get(f.key) || '').split(',').filter(Boolean); });
+    state.sort = SORTS.indexOf(p.get('sort')) !== -1 ? p.get('sort') : 'newest';
+    // Drop ids no briefing carries, so a typo in a shared link cannot hide every result behind an invisible filter.
+    FACETS.forEach(function (f) {
+      state.sel[f.key] = (p.get(f.key) || '').split(',').filter(function (v, i, a) {
+        return v && a.indexOf(v) === i && items.some(function (it) { return it[f.field].indexOf(v) !== -1; });
+      });
+    });
   }
   function writeUrl() {
     var p = new URLSearchParams();
@@ -100,6 +106,8 @@
         var on = state.sel[f.key].indexOf(id) !== -1;
         var b = el('button', 'chip' + (on ? ' on' : ''));
         b.type = 'button';
+        b.dataset.facet = f.key;
+        b.dataset.id = id;
         b.setAttribute('aria-pressed', String(on));
         b.disabled = !on && counts[id] === 0;
         b.appendChild(el('span', null, label(f.field, id)));
@@ -108,6 +116,9 @@
           var s = state.sel[f.key], i = s.indexOf(id);
           if (i === -1) s.push(id); else s.splice(i, 1);
           update();
+          // The chips are rebuilt, so put keyboard focus back on the one just pressed.
+          var again = facetsEl.querySelector('[data-facet="' + f.key + '"][data-id="' + CSS.escape(id) + '"]');
+          if (again) again.focus();
         });
         group.appendChild(b);
       });
@@ -202,10 +213,13 @@
     update();
   }
 
+  function fail(msg, err) {
+    if (window.console) console.error('research library:', err);
+    countEl.textContent = msg;
+    emptyEl.hidden = true;
+  }
   Promise.all([FEED, TAXONOMY].map(function (u) { return fetch(u).then(function (r) { if (!r.ok) throw new Error(u + ' ' + r.status); return r.json(); }); }))
-    .then(function (r) { init(r[0], r[1]); })
-    .catch(function () {
-      countEl.textContent = 'The research list could not be loaded.';
-      emptyEl.hidden = true;
-    });
+    .then(function (r) {
+      try { init(r[0], r[1]); } catch (err) { fail('The research list could not be displayed.', err); }
+    }, function (err) { fail('The research list could not be loaded.', err); });
 })();

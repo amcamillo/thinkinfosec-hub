@@ -60,6 +60,21 @@ test('source extraction keeps external citations only, de-duplicated', () => {
   assert.deepEqual(R.extractSources(html), [{ url: 'https://example.org/a', host: 'example.org', text: 'A' }]);
 });
 
+test('cover must stay inside the article folder', () => {
+  for (const ok of ['cover.webp', 'img/cover-1.png', 'a_b/c.jpeg']) {
+    assert.deepEqual(R.validate(Object.assign(good(), { cover: ok }), tax, 'sample'), [], ok);
+  }
+  for (const bad of ['../other/x.png', '../../assets/brand/logo.png', '/abs.png', 'img/../x.png', '.hidden.png', 'cover.gif']) {
+    assert.ok(R.validate(Object.assign(good(), { cover: bad }), tax, 'sample').some((e) => e.includes('cover')), bad);
+  }
+});
+
+test("the publisher's own site is not listed as a source", () => {
+  const html = '<main><a href="https://thinkinfosec.org">site</a><a href="https://www.thinkinfosec.org/x">x</a>' +
+    '<a href="https://example.org/b">B</a></main>';
+  assert.deepEqual(R.extractSources(html).map((s) => s.host), ['example.org']);
+});
+
 // Public files must never describe private tooling or its schema.
 test('public research files carry no private-tooling identifiers', () => {
   const banned = /cyberdoc|\bDOM-\d{3}\b|\bprod_[a-z]|\bdoc_type\b|\bcontent_basis\b|\breview_after\b|\bsource_type\b|multivendor-catalogue/i;
