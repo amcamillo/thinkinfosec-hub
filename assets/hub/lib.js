@@ -94,7 +94,7 @@
     const map = new Map();
     corpus.forEach(c => {
       if (c.kind === 'research') {
-        map.set('hub:' + c.id, { key: 'hub:' + c.id, source: 'hub', title: c.title, url: c.link, summary: c.description || '', ts: dated(c) });
+        map.set('hub:' + c.id, { key: 'hub:' + c.id, source: 'hub', title: c.title, url: c.link, summary: c.description || '', ts: dated(c), thumb: safeUrl(c.thumb) || undefined });
       } else if (c.kind === 'writing') {
         // Rows that link only to the profile root have no post id: key them by corpus id so none overwrite each other.
         const mk = mediumKey(c.link);

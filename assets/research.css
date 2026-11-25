@@ -69,6 +69,7 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 .crumb a { text-decoration: none; }
 .crumb .sep { margin: 0 6px; opacity: .6; }
 .cover-art { position: relative; width: min(440px, 78%); margin: 0 auto 26px; }
+.cover-art-wide { width: min(620px, 94%); } /* detailed illustrations need more room than an emblem */
 .cover-art::before { content: ""; position: absolute; inset: -14% -22%; z-index: -1; filter: blur(30px);
   background: radial-gradient(closest-side at 30% 55%, rgba(0, 191, 207, .45), transparent), radial-gradient(closest-side at 70% 55%, rgba(255, 45, 120, .40), transparent); }
 .cover-art img { display: block; width: 100%; height: auto; mix-blend-mode: multiply; }
@@ -89,6 +90,18 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 .rail .law { background: var(--law-bg); color: var(--law-ink); }
 .rail .law b { color: var(--law-ink); }
 .disclose { max-width: 40rem; margin: 10px auto 0; font-size: .82rem; line-height: 1.5; color: var(--muted); }
+/* Key-figure strip: used on the cover when a briefing has no artwork */
+.facts { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 28px 0 0; text-align: left; }
+.facts a { display: flex; flex-direction: column; gap: 4px; height: 100%; padding: 16px 18px; border-radius: 14px; text-decoration: none; color: var(--ink);
+  background: color-mix(in srgb, var(--top) 72%, transparent); border: 1px solid var(--glass-bd); border-top: 3px solid var(--acc); transition: transform .2s, border-color .2s; }
+.facts li:nth-child(even) a { border-top-color: var(--mag); }
+.facts a:hover { transform: translateY(-2px); border-color: var(--acc); }
+.facts b { font: 300 2.2rem/1 var(--serif-light); letter-spacing: -0.02em; }
+.facts span { font-size: .88rem; line-height: 1.4; }
+.facts small { margin-top: auto; padding-top: 6px; font: 400 .66rem/1.4 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.asof { max-width: 40rem; margin: 18px auto 0; font: 400 .72rem/1.6 var(--mono); color: var(--muted); }
+@media (max-width: 800px) { .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } .facts b { font-size: 1.8rem; } }
+@media (prefers-reduced-motion: reduce) { .facts a { transition: none; } .facts a:hover { transform: none; } }
 
 /* Section nav: a reading-progress wave in the hub's tab-wave style.
    research.js builds .toc-bar (compact bar, < 1440px) and .toc-rail (vertical wave list) from the links.
@@ -186,6 +199,7 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 .clock-table th { text-align: left; font: 700 .7rem var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 0 14px 10px 0; border-bottom: 2px solid var(--ink); }
 .clock-table td { padding: 12px 14px 12px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
 .clock-table td:first-child { font-weight: 700; white-space: nowrap; }
+.clock-table .t { font-weight: 700; }
 
 /* Footer */
 .r-foot { display: flex; align-items: flex-start; gap: 14px; padding: 26px 0 40px; border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); color: var(--muted); font-size: .85rem; }
@@ -198,7 +212,7 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 @media (max-width: 800px) {
   .brand { font-size: 1.3rem; }
   .r-back { display: none; }
-  .rail > * { padding: 8px 12px; }
+  .rail > * { padding: 8px 12px; border-right: 0; }
   .article > section { padding: 26px 18px 22px; }
   .clock-table { min-width: 720px; }
   .r-foot { flex-wrap: wrap; }
@@ -239,8 +253,9 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 :root[data-theme="dark"] .lib-card { --solid: rgba(236, 242, 250, .95); box-shadow: 0 10px 40px rgba(0, 0, 0, .35); }
 .lib-card:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(18, 36, 74, .16); text-decoration: none; }
 .lib-card:hover .lib-title { color: var(--acc-ink); }
-.lib-art { aspect-ratio: 16 / 7; background: #fff; display: grid; place-items: center; overflow: hidden; border-bottom: 1px solid rgba(18, 36, 74, .08); }
-.lib-art img { width: 100%; height: 100%; object-fit: contain; }
+.lib-art { aspect-ratio: 16 / 9; background: #fff; display: grid; place-items: center; overflow: hidden; border-bottom: 1px solid rgba(18, 36, 74, .08); }
+.lib-art { position: relative; }
+.lib-art img { position: absolute; inset: 8px; width: calc(100% - 16px); height: calc(100% - 16px); object-fit: contain; }
 .lib-art-trace { background:
   radial-gradient(circle at 18% 30%, rgba(0, 191, 207, .35), transparent 55%),
   radial-gradient(circle at 85% 75%, rgba(255, 45, 120, .28), transparent 55%),

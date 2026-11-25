@@ -127,6 +127,7 @@ function corpusItem(meta) {
     people: meta.people, processes: meta.processes, tech: meta.tech,
     link: `Research/${meta.slug}/`, description: meta.summary, date: meta.updated || meta.published,
   };
+  if (meta.cover) item.thumb = `Research/${meta.slug}/${meta.cover}`; // the hub's research cards show it
   if (meta.featured) item.featured = true;
   return item;
 }

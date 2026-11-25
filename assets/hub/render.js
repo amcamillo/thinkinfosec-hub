@@ -126,7 +126,8 @@
   function card(item, kicker, accent, opts) {
     const c = el('article', 'card');
     const thumb = L.safeUrl(item.thumb);
-    if (thumb) c.append(pic(thumb, 'thumb', true));
+    // Hub research covers are artwork on white: show all of it rather than cropping to fill.
+    if (thumb) c.append(pic(thumb, item.source === 'hub' ? 'thumb thumb-cover' : 'thumb', true));
     else if (opts && opts.trace) c.append(traceThumb({ title: item.title, cat: accent === 'mag' ? 'ai' : 'cyber' }, 'thumb'));
     const h = el('h4');
     h.append(titleNode(item));
