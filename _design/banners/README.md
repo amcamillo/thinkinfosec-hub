@@ -6,3 +6,4 @@ Every research briefing cover, so new banners don't repeat a primary motif, a re
 |---|---|---|---|---|---|
 | double-agents | A defender's tool switching sides | Two mirrored faces in profile, a circuit joining them | Cyber + human duality (Janus-like) | Flat geometric vector | Live |
 | where-agents-run | The model only speaks; hidden machinery does the acting | The Delphic oracle seated on a marble chair, speaking into a wall horn; a cut-away machine room under the temple floor | Philosophical/classical + cyber | Engraving with ink-and-wash colour | Live (main prompt, revised) |
+| php2shell | Many fruits, one root: the flaw is below what you prune | A grafted fruit tree with many fruits, a gardener pruning a branch, roots turning to cables with a glowing fracture | Nature/botanical + cyber | Vintage botanical gouache | Live (main prompt) |

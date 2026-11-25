@@ -7,276 +7,11 @@
 <meta name="description" content="Two critical bugs in the PHP engine, the 21 October 2026 patch set, and what a WAF rule or a ‘no exploitation observed’ line each actually proves.">
 <meta name="author" content="Andre Camillo">
 <link rel="canonical" href="https://amcamillo.github.io/thinkinfosec-hub/Research/php2shell/">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
-<style>
-:root {
-  --navy: #0D1F3C;
-  --teal: #00BFCF;
-  --teal-dark: #008A96;
-  --pink: #FF2D78;
-  --green: #00875A;
-  --bg: #f4f7f6;
-  --card: #ffffff;
-  --ink: #333333;
-  --mute: #555555;
-  --faint: #777777;
-  --line: #dddddd;
-  --radius: 8px;
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
-  --focus: 2px solid var(--teal);
-  --col: 1040px;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 16px;
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-}
-a { color: var(--teal-dark); }
-a:hover { text-decoration: underline; }
-a:focus-visible, button:focus-visible, summary:focus-visible {
-  outline: var(--focus); outline-offset: 3px;
-}
-.skip {
-  position: absolute; left: 0.75rem; top: -3rem;
-  background: var(--navy); color: #fff; padding: 0.5rem 0.85rem;
-  border-radius: var(--radius); z-index: 400; text-decoration: none;
-}
-.skip:focus { top: 0.75rem; }
-
-.topbar { background: var(--navy); color: #fff; }
-.topbar-inner {
-  max-width: var(--col); margin: 0 auto;
-  min-height: 52px; padding: 8px 24px;
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
-}
-.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
-.brand img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
-.brand-name { font-size: 15px; font-weight: 700; display: block; line-height: 1.15; }
-.brand-sub { font-size: 12px; color: var(--teal); font-weight: 500; }
-.topbar-meta { font-size: 13px; color: rgba(255,255,255,0.62); }
-
-.mast { background: var(--card); border-bottom: 1px solid var(--line); }
-.mast-inner { max-width: var(--col); margin: 0 auto; padding: 28px 24px 22px; }
-.crumb { font-size: 13px; color: var(--faint); margin-bottom: 18px; }
-.crumb a { color: var(--teal-dark); text-decoration: none; font-weight: 500; }
-.crumb a:hover { text-decoration: underline; }
-.sep { margin: 0 8px; color: var(--line); }
-.dateline { font-size: 13px; color: var(--teal-dark); font-weight: 600; margin-bottom: 8px; }
-.title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px 28px; }
-.mast h1 {
-  font-size: clamp(28px, 3.6vw, 38px);
-  font-weight: 700;
-  color: var(--navy);
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  margin-bottom: 12px;
-}
-.title-row h1 { flex: 1 1 auto; min-width: 0; margin-bottom: 0; }
-.mast h1 em { font-style: normal; color: var(--teal-dark); }
-.title-side { flex: 0 1 260px; display: flex; flex-direction: column; gap: 8px; }
-.ai-disclose { margin: 0; font-size: 12px; line-height: 1.45; color: var(--mute); border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 10px; background: var(--bg); }
-.ai-disclose strong { display: block; color: var(--navy); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2px; }
-.advice-stamp { margin: 0; padding: 8px 10px; border: 1.5px solid #FF8B00; border-radius: var(--radius); background: #fff8f0; color: #9a4d00; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; line-height: 1.35; }
-.lede { max-width: 42rem; color: var(--mute); margin: 12px 0 10px; }
-.meta-line { font-size: 14px; color: var(--faint); margin-bottom: 18px; }
-
-.facts {
-  display: flex; flex-wrap: wrap; gap: 10px 32px;
-  padding-top: 16px;
-  border-top: 1px solid var(--line);
-  font-size: 14px; color: var(--mute);
-}
-.facts b { color: var(--navy); font-weight: 700; margin-right: 5px; }
-.facts a { text-decoration: none; font-size: 13px; }
-.facts a:hover { text-decoration: underline; }
-
-.toc {
-  position: sticky; top: 0; z-index: 200;
-  background: var(--card);
-  border-bottom: 1px solid var(--line);
-  padding: 8px 0;
-}
-.toc-inner {
-  max-width: var(--col); margin: 0 auto;
-  padding: 0 24px;
-  display: flex; gap: 4px; overflow-x: auto; width: 100%;
-}
-.toc a {
-  flex-shrink: 0;
-  color: var(--faint); text-decoration: none;
-  font-size: 13px; font-weight: 500;
-  min-height: 40px; padding: 0 12px;
-  display: inline-flex; align-items: center;
-  border-radius: 6px;
-}
-.toc a:hover { color: var(--navy); background: var(--bg); }
-.toc a.on { color: var(--navy); background: var(--bg); font-weight: 600; }
-
-.wrap { max-width: var(--col); margin: 0 auto; padding: 20px 24px 64px; display: grid; gap: 16px; }
-section {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 28px 28px 24px;
-  scroll-margin-top: 64px;
-  min-width: 0;
-}
-.kicker {
-  font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--teal-dark); margin-bottom: 6px;
-}
-h2 {
-  font-size: 1.45rem; font-weight: 700; color: var(--navy);
-  margin: 0 0 10px; letter-spacing: -0.02em; line-height: 1.25;
-}
-h3 { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin: 18px 0 6px; }
-section p { margin: 0 0 12px; }
-.blurb { color: var(--mute); margin-bottom: 18px; max-width: 44rem; }
-.note { font-size: 14px; color: var(--mute); }
-.fig { margin: 8px 0 16px; min-width: 0; max-width: 100%; }
-.fig img { display: block; width: 100%; max-width: 100%; height: auto; border-radius: var(--radius); }
-.fig figcaption { margin-top: 8px; font-size: 13px; color: var(--mute); line-height: 1.5; }
-
-.thesis {
-  background: var(--bg);
-  border-radius: var(--radius);
-  padding: 16px 18px;
-  margin: 0 0 20px;
-}
-.thesis p { font-size: 1.05rem; font-weight: 600; color: var(--navy); line-height: 1.5; max-width: 46rem; margin: 0; }
-.thesis span { color: var(--teal-dark); }
-
-.moves { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
-.move .n { font-size: 12px; font-weight: 700; color: var(--teal-dark); display: block; margin-bottom: 6px; }
-.move:nth-child(2) .n { color: var(--navy); }
-.move:nth-child(3) .n { color: var(--pink); }
-.move p { font-size: 14.5px; color: var(--mute); margin: 0; }
-
-.scroll { overflow-x: auto; max-width: 100%; min-width: 0; margin: 4px 0 8px; }
-.clock-table { width: 100%; border-collapse: collapse; font-size: 14.5px; margin-bottom: 8px; }
-.clock-table th {
-  text-align: left; font-size: 12px; font-weight: 700; color: var(--faint);
-  padding: 0 12px 10px 0; border-bottom: 2px solid var(--navy);
-}
-.clock-table td { padding: 12px 12px 12px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
-.clock-table .t { font-weight: 700; color: var(--navy); white-space: nowrap; }
-
-.callout {
-  margin-top: 16px; padding: 14px 16px;
-  background: var(--navy); color: #fff;
-  border-radius: var(--radius); font-size: 14.5px;
-}
-.callout strong { color: var(--teal); }
-.warn {
-  margin-top: 14px; padding: 12px 14px;
-  background: #fff8f0; border-left: 3px solid #FF8B00;
-  border-radius: 0 var(--radius) var(--radius) 0;
-  font-size: 14.5px; color: var(--mute);
-}
-.warn strong { color: var(--navy); }
-
-.grid-2 { display: grid; gap: 16px; }
-@media (min-width: 800px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
-.card h3 { margin: 0 0 6px; }
-.card p, .card li { font-size: 14.5px; color: var(--mute); }
-.card ul { margin: 8px 0 0 1.1rem; display: grid; gap: 6px; }
-.src { font-size: 12px; color: var(--faint); margin-top: 10px; }
-.src a { color: var(--teal-dark); }
-code, .mono {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.86em; color: var(--navy);
-  overflow-wrap: anywhere;
-}
-sup.cite, .cite {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 10px; font-weight: 500; line-height: 0; vertical-align: super;
-}
-.cite { color: var(--teal-dark); text-decoration: none; margin-left: 1px; }
-.cite:hover { text-decoration: underline; }
-
-.sourcelist { list-style: none; display: grid; gap: 12px; }
-.sourcelist li {
-  font-size: 14px; color: var(--mute);
-  padding-left: 2.4rem; position: relative; line-height: 1.55; scroll-margin-top: 72px;
-}
-.sourcelist li > .n {
-  position: absolute; left: 0; top: 0;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 12px; font-weight: 600; color: var(--navy);
-}
-.sourcelist a { word-break: break-word; }
-.sourcelist .meta {
-  display: block; margin-top: 2px;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 11px; color: var(--faint);
-}
-.group-lbl {
-  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
-  text-transform: uppercase; color: var(--teal-dark); margin: 22px 0 10px;
-}
-.group-lbl:first-of-type { margin-top: 8px; }
-.sourcelist li:target { background: #eef8f9; border-radius: 6px; }
-
-.badge {
-  display: inline; font-size: 12px; font-weight: 600; font-style: italic;
-  border: 0; background: none; color: var(--faint); padding: 0; text-transform: none;
-}
-
-.finds { display: grid; gap: 0; }
-.find {
-  display: grid; grid-template-columns: 2.2rem 1fr; gap: 8px;
-  padding: 16px 0; border-top: 1px solid var(--line);
-}
-.find .n { font-size: 14px; font-weight: 700; color: var(--teal-dark); padding-top: 2px; }
-.find:nth-child(5) .n { color: var(--pink); }
-.find p { font-size: 15px; color: var(--ink); margin: 6px 0 0; }
-
-.recs { display: grid; gap: 16px; }
-@media (min-width: 800px) { .recs { grid-template-columns: 1fr 1fr 1fr; } }
-.rec .stage { font-size: 12px; font-weight: 700; color: var(--teal-dark); margin-bottom: 6px; display: block; }
-.rec:nth-child(2) .stage { color: var(--navy); }
-.rec:nth-child(3) .stage { color: var(--pink); }
-.rec h3 { margin-top: 0; }
-.rec ul { margin: 8px 0 0 1.05rem; display: grid; gap: 7px; }
-.rec li { font-size: 14.5px; color: var(--mute); }
-
-details.caveat { border-top: 1px solid var(--line); }
-details.caveat summary {
-  cursor: pointer; list-style: none; padding: 12px 0;
-  font-weight: 600; font-size: 15px; color: var(--navy);
-  display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px;
-}
-details.caveat summary::-webkit-details-marker { display: none; }
-details.caveat summary::after { content: "+"; color: var(--teal-dark); }
-details.caveat[open] summary::after { content: "–"; }
-details.caveat p { padding: 0 0 14px; font-size: 14.5px; color: var(--mute); }
-
-footer {
-  background: var(--navy); color: rgba(255,255,255,0.65);
-  padding: 24px; text-align: center;
-}
-footer .ft-main { font-size: 14px; max-width: var(--col); margin: 0 auto; }
-footer .ft-main a { color: var(--teal); text-decoration: none; }
-footer .ft-main a:hover { text-decoration: underline; }
-footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.4); max-width: 40rem; }
-
-@media (max-width: 800px) {
-  .topbar-meta { display: none; }
-  .title-row { flex-direction: column; }
-  .title-side { flex-basis: auto; }
-  .moves, .recs, .grid-2 { grid-template-columns: 1fr; }
-  .find { grid-template-columns: 1fr; }
-  section { padding: 20px 18px 18px; }
-  .clock-table { min-width: 640px; }
-}
-</style>
+<meta property="og:image" content="https://amcamillo.github.io/thinkinfosec-hub/Research/php2shell/cover.webp">
+<link rel="icon" href="../../assets/brand/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/brand/favicon-180.png">
+<link rel="stylesheet" href="../../assets/research.css">
+<script src="../../assets/hub/theme-init.js"></script>
 <!-- research-meta:start (generated by scripts/research.cjs) -->
 <script type="application/ld+json">
 {
@@ -288,6 +23,7 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
   "mainEntityOfPage": "https://amcamillo.github.io/thinkinfosec-hub/Research/php2shell/",
   "datePublished": "2026-10-26",
   "dateModified": "2026-10-26",
+  "image": "https://amcamillo.github.io/thinkinfosec-hub/Research/php2shell/cover.webp",
   "author": {
     "@type": "Person",
     "name": "Andre Camillo",
@@ -338,47 +74,45 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-
-<header class="topbar">
-  <div class="topbar-inner">
-    <a class="brand" href="../../index.html">
-      <img src="../../assets/learning-hub-logo.png" alt="Thinkinfosec Hub logo" width="28" height="28" onerror="this.style.display='none'">
-      <span>
-        <span class="brand-name">Thinkinfosec</span>
-        <span class="brand-sub">Research briefing</span>
-      </span>
-    </a>
-    <p class="topbar-meta">October 2026</p>
+<div class="orbs" aria-hidden="true"><span class="orb orb-1"></span><span class="orb orb-2"></span><span class="orb orb-3"></span></div>
+<header class="col r-top">
+  <a class="brand-block" href="../../index.html">
+    <img class="brand-badge" src="../../assets/brand/logo-96.webp" width="40" height="40" alt="ThinkInfoSec logo">
+    <span class="brand">Think<span>InfoSec</span> <small>Hub</small></span>
+  </a>
+  <div class="r-tools">
+    <a class="r-back" href="../">&larr; Research</a>
+    <div class="theme-toggle" role="group" aria-label="Colour theme">
+      <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
+      <button type="button" data-theme-set="light" aria-pressed="true">Light</button>
+    </div>
   </div>
 </header>
-
-<div class="mast">
-  <div class="mast-inner">
-    <nav class="crumb" aria-label="Breadcrumb">
-      <a href="../../index.html">Hub</a><span class="sep">/</span>
-      <a href="../../index.html#research">Research</a><span class="sep">/</span>
-      PHP2Shell
-    </nav>
-    <p class="dateline">Independent research briefing · October 2026</p>
-    <div class="title-row">
-      <h1>PHP2Shell and the <em>runtime</em></h1>
-      <div class="title-side">
-        <p class="ai-disclose" role="note"><strong>AI-assisted research</strong> Minor inconsistencies can occur. Every claim remains grounded in the ThinkInfoSec ontology and the sources disclosed on this page.</p>
-        <p class="advice-stamp">This is not legal advice</p>
-      </div>
-    </div>
-    <p class="lede">Two critical bugs sit in the PHP engine, so an application update does not close them. This briefing sets the 21 October 2026 advisories against what a patch, a WAF rule, and a “no exploitation observed” line each actually prove.</p>
-    <p class="meta-line">Ten sources read · operators who serve PHP · patch the runtime</p>
-    <p class="facts">
-      <span><b>8.5.12</b> and three sibling releases · <a href="#fn1">php.net, 21 Oct 2026</a></span>
-      <span><b>9.2</b> CVSS v4.0 · <a href="#fn2">GHSA 109618</a> · <a href="#fn3">GHSA 109619</a></span>
-      <span><b>14:00 UTC</b> release, pulled forward · <a href="#fn4">PHP Foundation</a></span>
-      <span><b>~70%</b> of websites, vendor estimate · <a href="#fn5">Wiz</a></span>
-    </p>
+<div class="col cover">
+  <nav class="crumb" aria-label="Breadcrumb">
+    <a href="../../index.html">Hub</a><span class="sep">/</span><a href="../">Research</a><span class="sep">/</span>PHP2Shell
+  </nav>
+  <figure class="cover-art cover-art-wide"><img src="cover.webp" width="1000" height="857" alt="Painting of an old grafted fruit tree bearing pears, plums, lemons, apples and figs, a gardener pruning one branch from a ladder, while below ground the roots turn into bundled cables and a magenta crack glows through the main root."></figure>
+  <p class="kicker">Vulnerabilities &middot; Independent research briefing</p>
+  <h1>PHP2Shell and the <em>runtime</em></h1>
+  <p class="lede">Two critical bugs sit in the PHP engine, so an application update does not close them. This briefing sets the 21 October 2026 advisories against what a patch, a WAF rule, and a &ldquo;no exploitation observed&rdquo; line each actually prove.</p>
+  <div class="rail">
+    <span>BY <b>ANDRE CAMILLO</b></span>
+    <span><b>OCT 2026</b> &middot; 16 MIN READ</span>
+    <span class="ai" role="note"><b>&#9670; AI-ASSISTED RESEARCH</b></span>
+    <span class="law" role="note"><b>&#9888; THIS IS NOT LEGAL ADVICE</b></span>
   </div>
+  <p class="disclose">AI-assisted research: minor inconsistencies can occur. Every claim remains grounded in the ThinkInfoSec ontology and the sources disclosed on this page.</p>
+  <ul class="facts" aria-label="Key figures">
+    <li><a href="#fn1"><b>8.5.12</b><span>and three sibling releases fix both bugs</span><small>php.net, 21 Oct 2026</small></a></li>
+    <li><a href="#fn2"><b>9.2</b><span>CVSS v4.0 on each advisory</span><small>GHSA 109618 &middot; 109619</small></a></li>
+    <li><a href="#fn4"><b>14:00</b><span>UTC release, pulled forward</span><small>PHP Foundation</small></a></li>
+    <li><a href="#fn5"><b>~70%</b><span>of websites exposed, by one vendor&rsquo;s estimate</span><small>Wiz</small></a></li>
+  </ul>
+  <p class="asof">Ten sources read &middot; written for operators who serve PHP &middot; the fix is to patch the runtime.</p>
 </div>
-
-<nav class="toc" aria-label="On this page"><div class="toc-inner">
+<div class="r-body">
+<nav class="toc" aria-label="On this page"><p class="toc-label">On this page</p><div class="toc-inner">
   <a href="#thesis">Thesis</a>
   <a href="#clock">The clock</a>
   <a href="#findings">Findings</a>
@@ -390,9 +124,7 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
   <a href="#method">Method</a>
   <a href="#sources">Sources</a>
 </div></nav>
-
-<main id="main" class="wrap">
-
+<main id="main" class="col article">
   <section id="thesis">
     <p class="kicker">The argument</p>
     <h2>The inventory that closes this is the PHP process</h2>
@@ -764,29 +496,15 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
     </ol>
   </section>
 </main>
-
-<footer>
-  <p class="ft-main">ThinkInfoSec 2026 — <a href="https://www.linkedin.com/in/amcamillo/" target="_blank" rel="noopener">Andre Camillo</a> · <a href="../../index.html#research">Back to Research</a></p>
-  <p class="ft-sub">Independent briefing. Educational use. Numbered citations map to the source list. The three-movement thesis is ThinkInfoSec synthesis, not an official publication of the PHP project, CISA, CERT/CC, the Cyber Centre, Wiz, Cloudflare, or Vercel.</p>
+</div>
+<footer class="col r-foot">
+  <img src="../../assets/brand/logo-96.webp" width="28" height="28" alt="">
+  <div>
+    <p class="ft-main">ThinkInfoSec 2026 &middot; Andre Camillo &middot; <a href="../">Back to Research</a></p>
+    <p class="ft-sub">Independent briefing. Educational use. Numbered citations map to the source list. The three-movement thesis is ThinkInfoSec synthesis, not an official publication of the PHP project, CISA, CERT/CC, the Cyber Centre, Wiz, Cloudflare, or Vercel. AI-assisted research; this is not legal advice.</p>
+  </div>
+  <a class="cta-li" href="https://www.linkedin.com/in/amcamillo/" target="_blank" rel="noopener noreferrer"><span class="li-mark" aria-hidden="true">in</span>LinkedIn</a>
 </footer>
-
-<script>
-(function () {
-  var links = Array.prototype.slice.call(document.querySelectorAll(".toc a"));
-  var sections = links.map(function (a) {
-    return document.querySelector(a.getAttribute("href"));
-  }).filter(Boolean);
-  if (!("IntersectionObserver" in window) || !sections.length) return;
-  var spy = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (!e.isIntersecting) return;
-      links.forEach(function (l) { l.classList.remove("on"); l.removeAttribute("aria-current"); });
-      var active = document.querySelector('.toc a[href="#' + e.target.id + '"]');
-      if (active) { active.classList.add("on"); active.setAttribute("aria-current", "location"); }
-    });
-  }, { rootMargin: "-40% 0px -55% 0px" });
-  sections.forEach(function (s) { spy.observe(s); });
-})();
-</script>
+<script src="../../assets/research.js"></script>
 </body>
 </html>
