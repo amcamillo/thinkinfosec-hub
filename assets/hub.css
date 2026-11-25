@@ -69,9 +69,17 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 .theme-toggle { display: flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
 .theme-toggle button { background: none; border: 0; color: var(--muted); font: inherit; font-size: 0.85rem; padding: 4px 12px; cursor: pointer; }
 .theme-toggle button[aria-pressed="true"] { background: var(--acc); color: var(--on-acc); font-weight: 700; }
-.tabs { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
-.tabs [role="tab"] { background: none; border: 0; color: var(--muted); font: inherit; font-weight: 600; padding: 10px 12px; white-space: nowrap; cursor: pointer; box-shadow: inset 0 -3px 0 transparent; }
-.tabs [role="tab"][aria-selected="true"] { color: var(--ink); box-shadow: inset 0 -3px 0 var(--acc); }
+.tabs { position: relative; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+.tabs [role="tab"] { background: none; border: 0; color: var(--muted); font: inherit; font-weight: 600; padding: 10px 12px; white-space: nowrap; cursor: pointer; }
+.tabs [role="tab"][aria-selected="true"] { color: var(--ink); font-weight: 700; }
+.tab-wave { position: relative; height: 22px; overflow: hidden; }
+.tab-wave svg { position: absolute; top: 0; left: 0; height: 22px; }
+.wave-base { width: calc(100% + 120px); }
+.wave-base path { fill: none; stroke: #4C8DE0; stroke-opacity: .4; stroke-width: 1.5; animation: wave-drift 6s ease-in-out infinite alternate; }
+.wave-pulse { width: 240px; transition: transform .7s cubic-bezier(.65, 0, .35, 1); filter: var(--glow); }
+.wave-pulse path { fill: none; stroke: url(#wavePulseGrad); stroke-width: 2.4; stroke-linecap: round; transform-origin: 50% 55%; animation: wave-ripple 1.8s ease-in-out infinite alternate; }
+@keyframes wave-drift { to { transform: translateX(-120px); } }
+@keyframes wave-ripple { from { transform: scaleY(.55); } to { transform: scaleY(1.15); } }
 
 .search { margin: 20px 0 12px; }
 .search input { width: 100%; padding: 10px 14px; font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
@@ -171,3 +179,4 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 .listening { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; color: var(--muted); font-size: 0.78rem; }
 .listening svg { width: 120px; height: 22px; flex: none; filter: var(--glow); }
 .listening path { transform-origin: 50% 50%; animation: wave-ripple 1.8s ease-in-out infinite alternate; }
+nav { position: relative; }

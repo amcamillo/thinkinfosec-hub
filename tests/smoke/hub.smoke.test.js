@@ -207,3 +207,28 @@ test('feed-dependent empty states say Listening for signal', async () => {
   assert.match(await page.textContent('#leadStory'), /LISTENING FOR SIGNAL/);
   await context.close();
 });
+
+test('wave pulse moves under the selected tab', async () => {
+  const { page, context } = await open('#front');
+  await page.waitForSelector('.wave-pulse');
+  const before = await page.$eval('.wave-pulse', n => n.style.transform);
+  await page.click('#tab-tools');
+  await page.waitForFunction(b => document.querySelector('.wave-pulse').style.transform !== b, before);
+  const box = await page.$eval('#tab-tools', t => { const r = t.getBoundingClientRect(); return r.left + r.width / 2; });
+  const pulse = await page.$eval('.wave-pulse', n => { const m = /translateX\(([-\d.]+)px\)/.exec(n.style.transform); return Number(m[1]) + 120 + n.parentElement.getBoundingClientRect().left; });
+  assert.ok(Math.abs(pulse - box) < 2, `pulse centre ${pulse} vs tab centre ${box}`);
+  await context.close();
+});
+test('reduced motion stops the bubbles and waves', async () => {
+  const { page, context } = await open('#front');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  const running = await page.evaluate(() => document.getAnimations().filter(a => a.playState === 'running').map(a => a.effect.target.className.baseVal ?? a.effect.target.className));
+  assert.deepEqual(running, []);
+  await context.close();
+});
+test('wordmark font is loaded', async () => {
+  const { page, context } = await open('#front');
+  await page.evaluate(() => document.fonts.ready);
+  assert.ok(await page.evaluate(() => document.fonts.check('300 16px "DM Sans"')));
+  await context.close();
+});

@@ -2,6 +2,14 @@
   const ALIASES = { outcomes: 'tools', projects: 'tools', learn: 'guides', connect: 'about' };
   const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
   const ids = tabs.map(t => t.dataset.tab);
+  const tablist = document.querySelector('[role="tablist"]');
+  const pulse = document.querySelector('.wave-pulse');
+  function placePulse() {
+    const on = tabs.find(t => t.getAttribute('aria-selected') === 'true');
+    if (!pulse || !on) return;
+    const x = on.offsetLeft - tablist.scrollLeft + on.offsetWidth / 2 - 120;
+    pulse.style.transform = 'translateX(' + Math.round(x) + 'px)';
+  }
 
   function resolve(hash) {
     const id = String(hash || '').replace(/^#/, '');
@@ -17,6 +25,7 @@
       if (on && focus) t.focus();
     });
     document.title = (id === 'front' ? '' : tabs[ids.indexOf(id)].textContent + ' · ') + 'ThinkInfoSec Hub';
+    placePulse();
   }
   function go(id, focus, replace) {
     if (location.hash !== '#' + id) history[replace ? 'replaceState' : 'pushState'](null, '', '#' + id);
@@ -50,5 +59,8 @@
   const initial = resolve(location.hash);
   if (location.hash && location.hash !== '#' + initial) history.replaceState(null, '', '#' + initial);
   select(initial, false);
-  root.HubTabs = { go };
+  window.addEventListener('resize', placePulse);
+  tablist.addEventListener('scroll', placePulse, { passive: true });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(placePulse);
+  root.HubTabs = { go, placePulse };
 })(window);
