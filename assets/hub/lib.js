@@ -177,9 +177,65 @@
   function channel(n) { return 'CH-' + String(n).padStart(2, '0'); }
   function utcTime(ts) { const d = new Date(ts); return String(d.getUTCHours()).padStart(2, '0') + ':' + String(d.getUTCMinutes()).padStart(2, '0') + ' UTC'; }
 
+  // Signal trace for stories without an image: a lane-shaped line, seeded by the title so every story differs.
+  const TRACE_COLORS = { cyber: ['#5fe9f5', '#00BFCF'], ai: ['#ff8cc0', '#FF2D78'], geo: ['#f5c542', '#f5c542'] };
+  const ORB_COLORS = ['rgba(0,191,207,.65)', 'rgba(255,45,120,.45)', 'rgba(76,141,224,.5)', 'rgba(130,90,215,.45)'];
+  function seedOf(str) { let h = 2166136261; for (const ch of String(str)) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+  function rng(seed) { return function () { seed = (seed + 0x6D2B79F5) >>> 0; let t = seed; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function traceSpec(item, w, h) {
+    w = w || 640; h = h || 240;
+    const cat = TRACE_COLORS[item && item.cat] ? item.cat : 'cyber';
+    const r = rng(seedOf((item && item.title) || ''));
+    const base = h * 0.55, lo = 8, hi = h - 8;
+    const clampY = y => Math.min(hi, Math.max(lo, y));
+    const r1 = v => Math.round(v * 10) / 10;
+    let pts = [];
+    if (cat === 'cyber') {
+      const n = 16, spikeA = 4 + Math.floor(r() * 4), spikeB = spikeA + 2 + Math.floor(r() * 4);
+      for (let i = 0; i < n; i++) {
+        let y = base + (r() - 0.5) * 16;
+        if (i === spikeA) y = base - (55 + r() * 35);
+        if (i === spikeA + 1) y = base + (40 + r() * 30);
+        if (i === spikeB) y = base - (30 + r() * 30);
+        pts.push({ x: (w * i) / (n - 1), y: clampY(y) });
+      }
+    } else if (cat === 'ai') {
+      const n = 24, amp = 25 + r() * 20, freq = 1.5 + r() * 1.5, phase = r() * Math.PI * 2;
+      for (let i = 0; i < n; i++) {
+        const x = (w * i) / (n - 1);
+        pts.push({ x, y: clampY(base + amp * Math.sin((2 * Math.PI * freq * x) / w + phase)) });
+      }
+    } else {
+      const steps = 6;
+      let x = 0;
+      for (let s = 0; s < steps; s++) {
+        const y = clampY(base + (r() - 0.5) * 90);
+        const nx = s === steps - 1 ? w : x + w / steps;
+        pts.push({ x, y }, { x: nx, y });
+        x = nx;
+      }
+    }
+    pts = pts.map(p => ({ x: r1(Math.min(w, Math.max(0, p.x))), y: r1(p.y) }));
+    let d = 'M' + pts[0].x + ' ' + pts[0].y;
+    if (cat === 'geo') {
+      for (let i = 1; i < pts.length; i++) d += ' L' + pts[i].x + ' ' + pts[i].y;
+    } else {
+      // Catmull-Rom to cubic Bezier, control points clamped into the plate.
+      for (let i = 0; i < pts.length - 1; i++) {
+        const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+        const c1x = r1(Math.min(w, Math.max(0, p1.x + (p2.x - p0.x) / 6))), c1y = r1(clampY(p1.y + (p2.y - p0.y) / 6));
+        const c2x = r1(Math.min(w, Math.max(0, p2.x - (p3.x - p1.x) / 6))), c2y = r1(clampY(p2.y - (p3.y - p1.y) / 6));
+        d += ' C' + c1x + ' ' + c1y + ' ' + c2x + ' ' + c2y + ' ' + p2.x + ' ' + p2.y;
+      }
+    }
+    const peak = pts.reduce((a, b) => (b.y < a.y ? b : a));
+    const orbs = [0, 1, 2].map(() => ({ x: r1(r() * 100), y: r1(r() * 100), size: r1(40 + r() * 25), color: ORB_COLORS[Math.floor(r() * ORB_COLORS.length)] }));
+    return { cat, d, points: pts, peak, color: TRACE_COLORS[cat][0], glow: TRACE_COLORS[cat][1], orbs };
+  }
+
   return {
     LANES, ORIGINS, GUIDE_GROUPS, safeUrl, isExternal, clip, timeAgo, formatDay, formatDate, formatTime, isStale,
     mediumKey, youtubeId, newsItems, mediaItems, researchItems, videoItems, toolItems, guideItems,
-    isRelevant, frontPage, filterBy, searchEntries, search, signalPill, channel, utcTime
+    isRelevant, frontPage, filterBy, searchEntries, search, signalPill, channel, utcTime, traceSpec
   };
 });

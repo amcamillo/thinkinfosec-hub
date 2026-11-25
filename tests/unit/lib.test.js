@@ -189,3 +189,31 @@ test('utcTime', () => {
   assert.equal(L.utcTime(Date.parse('2026-11-25T14:32:09Z')), '14:32 UTC');
   assert.equal(L.utcTime(Date.parse('2026-11-25T03:05:00Z')), '03:05 UTC');
 });
+
+test('traceSpec is deterministic per title and differs between titles', () => {
+  const a = L.traceSpec({ title: 'Ransomware hits hospitals', cat: 'cyber' });
+  assert.deepEqual(L.traceSpec({ title: 'Ransomware hits hospitals', cat: 'cyber' }), a);
+  assert.notEqual(L.traceSpec({ title: 'Different story', cat: 'cyber' }).d, a.d);
+});
+test('traceSpec shapes follow the lane', () => {
+  const cyber = L.traceSpec({ title: 't', cat: 'cyber' });
+  const ai = L.traceSpec({ title: 't', cat: 'ai' });
+  const geo = L.traceSpec({ title: 't', cat: 'geo' });
+  assert.match(cyber.d, /^M[\d. ]+C/);
+  assert.match(ai.d, /^M[\d. ]+C/);
+  assert.match(geo.d, /^M[\d. ]+(L[\d. ]+)+$/);
+  assert.notEqual(cyber.d, ai.d);
+  assert.equal(cyber.color, '#5fe9f5'); assert.equal(ai.color, '#ff8cc0'); assert.equal(geo.color, '#f5c542');
+});
+test('traceSpec stays inside the plate and marks the highest peak', () => {
+  for (const cat of ['cyber', 'ai', 'geo', 'unknown']) {
+    const s = L.traceSpec({ title: 'Bounds check ' + cat, cat }, 640, 240);
+    const nums = s.d.match(/-?[\d.]+/g).map(Number);
+    for (let i = 0; i < nums.length; i += 2) {
+      assert.ok(nums[i] >= 0 && nums[i] <= 640, cat + ' x out of bounds: ' + nums[i]);
+      assert.ok(nums[i + 1] >= 8 && nums[i + 1] <= 232, cat + ' y out of bounds: ' + nums[i + 1]);
+    }
+    assert.equal(s.peak.y, Math.min(...s.points.map(p => p.y)));
+    assert.equal(s.orbs.length, 3);
+  }
+});
