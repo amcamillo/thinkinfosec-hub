@@ -170,10 +170,11 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 .notice { border-left: 4px solid var(--gold-ink); padding: 6px 12px; color: var(--muted); }
 .stamp { color: var(--muted); font-size: 0.85rem; margin-top: 12px; }
 
-.about { max-width: 70ch; }
 .connect { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; }
 .connect a { display: inline-block; border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; text-decoration: none; }
-.site-foot { color: var(--muted); font-size: 0.85rem; padding: 20px 0 40px; }
+.site-foot { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 0.85rem; padding: 20px 0 40px; }
+.site-foot p { margin: 0; flex: 1; }
+.foot-badge { border-radius: 50%; flex: none; }
 
 @media (max-width: 760px) {
   .lead-grid, .band { grid-template-columns: 1fr; }
@@ -211,4 +212,16 @@ a.cta-li .li-mark { background: #fff; color: #0A66C2; }
   .mast-btn { padding: 6px 10px; }
   .mast-btn .btn-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .brand-badge { width: 36px; height: 36px; }
+}
+
+/* About card: photo, name, bio, LinkedIn first. */
+.about-card { display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center; padding: 24px; border-radius: 20px; max-width: 900px; }
+.about-photo { width: 150px; height: 150px; border-radius: 50%; box-shadow: 0 0 0 3px color-mix(in srgb, var(--mag) 60%, transparent), 0 0 40px color-mix(in srgb, var(--acc) 35%, transparent); }
+.about-name { font-family: "DM Sans", -apple-system, "Segoe UI", sans-serif; font-weight: 300; font-size: 1.7rem; margin: 0; }
+.about-role { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; margin: 4px 0 12px; }
+.about-body p { max-width: 70ch; }
+.about-card .connect { margin: 16px 0 0; }
+@media (max-width: 640px) {
+  .about-card { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .about-card .connect { justify-content: center; }
 }

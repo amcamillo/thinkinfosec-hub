@@ -250,3 +250,14 @@ test('masthead shows the logo, LinkedIn and Enter Signal; favicon is served', as
   assert.equal(await page.getAttribute('link[rel="icon"]', 'href'), 'assets/brand/favicon-32.png');
   await context.close();
 });
+test('About shows the photo and LinkedIn is linked from masthead, About and footer', async () => {
+  const { page, context } = await open('#about');
+  await page.waitForFunction(() => [...document.querySelectorAll('.about-photo, .foot-badge')].every(i => i.complete && i.naturalWidth > 0) && document.querySelector('.about-photo'));
+  for (const sel of ['.masthead', '#panel-about', '.site-foot']) {
+    const a = page.locator(sel + ' a[href="https://www.linkedin.com/in/amcamillo/"]');
+    assert.equal(await a.count(), 1, sel);
+    assert.equal(await a.getAttribute('target'), '_blank', sel);
+    assert.match(await a.getAttribute('rel'), /noopener/, sel);
+  }
+  await context.close();
+});
