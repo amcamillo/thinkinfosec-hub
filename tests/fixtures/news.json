@@ -3,6 +3,6 @@
   "items": [
     { "source": "Fixture Wire", "cat": "cyber", "title": "Fixture cyber headline on ransomware crews", "summary": "Cyber summary text.", "ts": 1795597200000, "link": "https://example.com/cyber" },
     { "source": "Fixture Lab", "cat": "ai", "title": "Fixture AI headline on model releases", "summary": "AI summary text.", "ts": 1795593600000, "link": "https://example.com/ai" },
-    { "source": "Fixture World", "cat": "geo", "title": "Fixture world headline on trade talks", "summary": "World summary text.", "ts": 1795590000000 }
+    { "source": "Fixture World", "cat": "geo", "title": "Fixture geopolitics headline on chip export controls", "summary": "Geopolitics summary text.", "ts": 1795590000000 }
   ]
 }

@@ -5,6 +5,6 @@
     buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.themeSet === theme)));
     if (save) { try { localStorage.setItem('hub-theme', theme); } catch (e) {} }
   }
-  apply(document.documentElement.getAttribute('data-theme') || 'dark', false);
+  apply(document.documentElement.getAttribute('data-theme') || 'light', false);
   buttons.forEach(b => b.addEventListener('click', () => apply(b.dataset.themeSet, true)));
 })();

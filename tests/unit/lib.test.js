@@ -63,9 +63,9 @@ test('newsItems validates and sorts', () => {
     { cat: 'cyber', title: 'A', ts: 2, source: 'S', link: 'https://x.example/a' },
     { cat: 'sport', title: 'drop', ts: 3 },
     { cat: 'geo', title: '', ts: 4 },
-    { cat: 'geo', title: 'bad link', ts: 0, link: 'javascript:x' }
+    { cat: 'geo', title: 'bad link on China sanctions', ts: 0, link: 'javascript:x' }
   ] });
-  assert.deepEqual(items.map(i => i.title), ['A', 'B', 'bad link']);
+  assert.deepEqual(items.map(i => i.title), ['A', 'B', 'bad link on China sanctions']);
   assert.equal(items[0].url, 'https://x.example/a');
   assert.equal(items[2].url, null);
   assert.deepEqual(L.newsItems(null), []);
@@ -117,17 +117,30 @@ test('toolItems puts featured first; guideItems groups', () => {
   assert.deepEqual(g.map(i => [i.title, i.group]), [['Resource Library', 'guide'], ['Board pack', 'template']]);
 });
 
+test('geopolitics stories are kept only when they bear on cyber or AI', () => {
+  const titles = L.newsItems({ items: [
+    { cat: 'geo', title: 'Bellingham stunner, Mbappe brace help Real Madrid rout PSV', ts: 6, source: 'S' },
+    { cat: 'geo', title: 'Colombian president blames ex-FARC rebels for car bomb blast', ts: 5, source: 'S' },
+    { cat: 'geo', title: 'Huawei found guilty of stealing trade secrets', ts: 4, source: 'S' },
+    { cat: 'geo', title: 'Todd Blanche declines to confirm if Nvidia boss was investigated', ts: 3, source: 'S' },
+    { cat: 'geo', title: 'Summit ends', summary: 'Leaders agree new export controls on AI accelerators.', ts: 2, source: 'S' },
+    { cat: 'ai', title: 'Lab raises funding round', ts: 1, source: 'S' }
+  ] }).map(i => i.title);
+  assert.deepEqual(titles, ['Huawei found guilty of stealing trade secrets',
+    'Todd Blanche declines to confirm if Nvidia boss was investigated', 'Summit ends', 'Lab raises funding round']);
+});
+
 test('frontPage leads with the newest cyber story', () => {
   const news = L.newsItems({ items: [
-    { cat: 'geo', title: 'Football', ts: 5, source: 'S' },
+    { cat: 'geo', title: 'Taiwan chip curbs', ts: 5, source: 'S' },
     { cat: 'ai', title: 'Model', ts: 4, source: 'S' },
     { cat: 'cyber', title: 'Breach', ts: 3, source: 'S' },
-    { cat: 'geo', title: 'Trade', ts: 2, source: 'S' }
+    { cat: 'geo', title: 'Russia sanctions', ts: 2, source: 'S' }
   ] });
   const f = L.frontPage(news, 2);
   assert.equal(f.lead.title, 'Breach');
-  assert.deepEqual(f.wire.map(n => n.title), ['Football', 'Model']);
-  assert.equal(L.frontPage(news.filter(n => n.cat !== 'cyber'), 4).lead.title, 'Football');
+  assert.deepEqual(f.wire.map(n => n.title), ['Taiwan chip curbs', 'Model']);
+  assert.equal(L.frontPage(news.filter(n => n.cat !== 'cyber'), 4).lead.title, 'Taiwan chip curbs');
   assert.deepEqual(L.frontPage([], 4), { lead: null, wire: [] });
 });
 

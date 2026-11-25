@@ -4,7 +4,19 @@
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.HubLib = api;
 })(typeof self !== 'undefined' ? self : this, function () {
-  const LANES = { cyber: 'Cyber', geo: 'World', ai: 'AI' };
+  const LANES = { cyber: 'Cyber', geo: 'Geopolitics', ai: 'AI' };
+  // Signal's world lane carries all world news; the hub keeps only stories that bear on cyber or AI.
+  const GEO_RELEVANT = new RegExp('\\b(?:' + [
+    'cyber\\w*', 'hack(?:s|er|ers|ed|ing)?', 'breach(?:es|ed)?', 'ransomware', 'malware', 'spyware', 'phishing',
+    'espionage', 'spy', 'spies', 'surveillance', 'intelligence', 'sanction(?:s|ed)?', 'export controls?',
+    'chips?', 'chipmakers?', 'semiconductors?', 'nvidia', 'tsmc', 'huawei', 'tiktok', '5g', 'telecoms?',
+    'satellites?', 'undersea cables?', 'critical infrastructure', 'power grid', 'data (?:breach|centres?|centers?|protection)',
+    'privacy', 'encryption', 'disinformation', 'misinformation', 'election (?:interference|security)',
+    'ai', 'artificial intelligence', 'tech', 'technology', 'trade secrets?', 'china', 'chinese', 'beijing',
+    'taiwan', 'russia', 'russian', 'kremlin', 'iran', 'iranian', 'north korea', 'pyongyang', 'nato',
+    'drones?', 'military', 'defen[cs]e', 'pentagon', 'nsa', 'gchq', 'fbi', 'cia', 'tariffs?', 'quantum', 'crypto\\w*'
+  ].join('|') + ')\\b', 'i');
+  function isRelevant(item) { return item.cat !== 'geo' || GEO_RELEVANT.test(item.title + ' ' + item.summary); }
   const ORIGINS = { hub: 'This site', elsewhere: 'Live elsewhere', source: 'Source' };
   const GUIDE_GROUPS = { guide: 'Guides & how-tos', diagram: 'Diagrams & cheat sheets', template: 'Templates & downloads' };
 
@@ -68,6 +80,7 @@
         key: 'news:' + i.ts + ':' + i.title, title: i.title, cat: i.cat, ts: i.ts,
         summary: typeof i.summary === 'string' ? i.summary : '', source: String(i.source || ''), url: isExternal(safeUrl(i.link)) ? safeUrl(i.link) : null
       }))
+      .filter(isRelevant)
       .sort(byTs);
   }
   function mediaItems(feed) {
@@ -162,6 +175,6 @@
   return {
     LANES, ORIGINS, GUIDE_GROUPS, safeUrl, isExternal, clip, timeAgo, formatDay, formatDate, formatTime, isStale,
     mediumKey, youtubeId, newsItems, mediaItems, researchItems, videoItems, toolItems, guideItems,
-    frontPage, filterBy, searchEntries, search, signalStatus
+    isRelevant, frontPage, filterBy, searchEntries, search, signalStatus
   };
 });

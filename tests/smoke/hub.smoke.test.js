@@ -95,8 +95,8 @@ test('arrow keys move between tabs', async () => {
   await context.close();
 });
 
-test('theme follows the system setting, then remembers the choice', async () => {
-  const { context, page } = await open('', { scheme: 'light' });
+test('theme defaults to light even on a dark system, then remembers the choice', async () => {
+  const { context, page } = await open('', { scheme: 'dark' });
   assert.equal(await page.getAttribute('html', 'data-theme'), 'light');
   await page.click('[data-theme-set="dark"]');
   await page.reload();

@@ -11,7 +11,7 @@ Approved mockups are in `.superpowers/brainstorm/582-1795555081/content/` (`fron
 ## Decisions
 
 - Layout: "Front page" (option A). A masthead, a top tab bar, a large lead story and a numbered live wire beside it.
-- Themes: dark and light, using the higher-contrast dark set. The theme follows the system setting at first and then remembers the user's choice in `localStorage`. This replaces the Legacy/Modern switch.
+- Themes: dark and light, using the higher-contrast dark set. Light is the default for every first visit (owner decision, 2026-11-25); the user's choice is then remembered in `localStorage`. This replaces the Legacy/Modern switch.
 - Build: a tabbed shell with split files and hash routing. No build step. The site stays static on GitHub Pages.
 - Medium and YouTube data: a GitHub Actions workflow in Signal writes `media.json`.
 
@@ -44,7 +44,7 @@ An unknown hash falls back to `#front`. The old anchors `#outcomes` and `#learn`
 ## Tabs
 
 - **Front page:** the Outcomes band, the lead Signal story with summary, source and age, a live wire of the next four headlines, and a row with the latest research, Medium article, YouTube video and guide.
-- **News:** the full Signal feed, with chips for All / Cyber / World / AI. Each item shows its lane label, headline, source and how long ago it was published. A footer shows when the snapshot was built.
+- **News:** the full Signal feed, with chips for All / Cyber / Geopolitics / AI. Signal's world lane is filtered in the hub to stories that bear on cyber or AI (a keyword list in `lib.js`); sport and unrelated world news are dropped. The Signal display itself is unchanged. Each item shows its lane label, headline, source and how long ago it was published. A footer shows when the snapshot was built.
 - **Research:** hub briefings and Medium articles merged and sorted newest first, with chips for All / Hub / Medium. Medium items carry an external ↗ marker.
 - **Videos:** a grid of 16:9 thumbnails with title, date and a link that opens on YouTube. Nothing is embedded, so no YouTube script loads.
 - **Tools:** Outcomes tools first, then the origin filters.
