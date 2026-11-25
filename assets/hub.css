@@ -11,6 +11,9 @@
   --mag: #FF2D78; --mag-ink: #ff8cc0;
   --gold-ink: #f5c542;
   --panel-kicker: #ffffff;
+  --solid: rgba(236, 242, 250, .94); --top: #070F1F;
+  --sheet: #ECF2FA; --sheet-tint: #DCE3EC; --sheet-ink: #0D1F3C; --sheet-muted: #3D4B66;
+  --sheet-mag: #B0125B; --sheet-acc: #036A7C; --sheet-gold: #7a4f00; --sheet-line: #C5D0DE;
   --orb-blend: screen; --orb-opacity: .8; --glow: drop-shadow(0 0 6px #00BFCF);
   color-scheme: dark;
 }
@@ -22,6 +25,7 @@
   --mag: #FF2D78; --mag-ink: #B0125B;
   --gold-ink: #7a4f00;
   --panel-kicker: #036A7C;
+  --solid: rgba(255, 255, 255, .92); --top: #FFFDFE;
   --orb-blend: multiply; --orb-opacity: .7; --glow: none;
   color-scheme: light;
 }
@@ -38,14 +42,17 @@
   50%  { transform: translate(var(--x), var(--y)) scale(1.25); }
   100% { transform: translate(calc(var(--x) * -.7), calc(var(--y) * .8)) scale(.9); }
 }
-.glass, .card, .band, .wire, .search input, .listening { background: var(--glass); border: 1px solid var(--glass-bd); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .glass, .card, .band, .wire, .search input, .listening { background: var(--panel); }
+.glass, .card, .band, .wire, .search input, .listening { background: var(--solid); border: 1px solid var(--glass-bd); color: var(--ink); }
+/* Panels stay light in dark: inside them, text tokens point at the light "sheet" set. */
+:root[data-theme="dark"] :is(.glass, .card, .band, .wire, .search input, .listening) {
+  --ink: var(--sheet-ink); --muted: var(--sheet-muted); --mag-ink: var(--sheet-mag); --acc-ink: var(--sheet-acc);
+  --gold-ink: var(--sheet-gold); --panel-kicker: var(--sheet-acc); --line: var(--sheet-line); --glass-bd: rgba(18, 36, 74, .10);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, .35);
 }
-html { scroll-padding-top: 140px; }
+html { scroll-padding-top: 180px; }
 html { background: var(--bg); }
 body { color: var(--ink); background: radial-gradient(900px 640px at 10% 6%, color-mix(in srgb, var(--mag) 14%, transparent), transparent 62%), radial-gradient(1000px 700px at 92% 14%, color-mix(in srgb, var(--acc) 18%, transparent), transparent 62%), linear-gradient(160deg, var(--bg), var(--bg2)) fixed; isolation: isolate; }
-body { margin: 0; font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+body { margin: 0; min-height: 100vh; font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 a { color: inherit; text-underline-offset: 3px; }
 a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 :focus-visible { outline: 3px solid var(--acc); outline-offset: 2px; }
@@ -54,7 +61,7 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 .skip { position: absolute; left: -999px; top: 8px; background: var(--acc); color: var(--on-acc); padding: 8px 12px; z-index: 20; }
 .skip:focus { left: 8px; }
 
-.masthead { position: sticky; top: 0; z-index: 10; background: var(--glass); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.masthead { position: sticky; top: 0; z-index: 10; padding-bottom: 40px; background: linear-gradient(180deg, var(--top) 0%, var(--top) 55%, color-mix(in srgb, var(--top) 70%, transparent) 78%, transparent 100%); }
 .masthead-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-top: 16px; }
 .brand { font-family: "DM Sans", -apple-system, "Segoe UI", sans-serif; font-weight: 300; font-size: 1.9rem; letter-spacing: -0.01em; white-space: nowrap; text-decoration: none; }
 .brand span { color: var(--mag-ink); }
@@ -82,7 +89,7 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 @keyframes wave-ripple { from { transform: scaleY(.55); } to { transform: scaleY(1.15); } }
 
 .search { margin: 20px 0 12px; }
-.search input { width: 100%; padding: 10px 14px; font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+.search input { width: 100%; padding: 10px 14px; font: inherit; color: var(--ink); background: var(--solid); border: 1px solid var(--line); border-radius: 8px; }
 .search input::placeholder { color: var(--muted); }
 .search-status { color: var(--muted); font-size: 0.85rem; min-height: 1.2em; margin: 6px 0 0; }
 .results { margin-bottom: 24px; }
@@ -163,10 +170,11 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 .notice { border-left: 4px solid var(--gold-ink); padding: 6px 12px; color: var(--muted); }
 .stamp { color: var(--muted); font-size: 0.85rem; margin-top: 12px; }
 
-.about { max-width: 70ch; }
 .connect { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; }
 .connect a { display: inline-block; border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; text-decoration: none; }
-.site-foot { color: var(--muted); font-size: 0.85rem; padding: 20px 0 40px; }
+.site-foot { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 0.85rem; padding: 20px 0 40px; }
+.site-foot p { margin: 0; flex: 1; }
+.foot-badge { border-radius: 50%; flex: none; }
 
 @media (max-width: 760px) {
   .lead-grid, .band { grid-template-columns: 1fr; }
@@ -174,7 +182,7 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; scroll-behavior: auto !important; }
-  .orb, .trace-orb, .pill .dot, .wave-base path, .wave-pulse path, .listening path { animation: none !important; }
+  .orb, .trace-orb, .pill .dot, .mast-signal .dot, .wave-base path, .wave-pulse path, .listening path { animation: none !important; }
 }
 .listening { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; color: var(--muted); font-size: 0.78rem; }
 .listening svg { width: 120px; height: 22px; flex: none; filter: var(--glow); }
@@ -182,3 +190,52 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 nav { position: relative; }
 /* Readout mono is for short labels; sentences stay in the sans. */
 .band p.meta { font-family: inherit; letter-spacing: normal; }
+
+/* Signal blend: painted field, vignette, and a wash that fades it to near-white (navy in dark) at the top. */
+.paint { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; mix-blend-mode: var(--orb-blend); filter: blur(9px) saturate(1.3); }
+.vignette { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(ellipse 80% 76% at 50% 45%, transparent 60%, color-mix(in srgb, var(--bg) 60%, transparent) 100%); }
+.top-wash { position: fixed; inset: 0 0 auto 0; height: 340px; z-index: -1; pointer-events: none; background: linear-gradient(180deg, var(--top) 0%, var(--top) 30%, color-mix(in srgb, var(--top) 55%, transparent) 62%, transparent 100%); }
+
+/* Brand: logo badge, LinkedIn, Enter Signal. */
+.brand-block { display: flex; align-items: center; gap: 12px; }
+.brand-badge { width: 48px; height: 48px; border-radius: 50%; flex: none; box-shadow: 0 0 0 2px color-mix(in srgb, var(--mag) 55%, transparent), 0 0 22px color-mix(in srgb, var(--mag) 35%, transparent); }
+.mast-btn { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.mast-li { color: var(--ink); background: var(--glass); border: 1px solid var(--glass-bd); }
+.mast-signal { color: #fff; background: linear-gradient(100deg, #0D1F3C, #1d3a6b 55%, #8a1450); box-shadow: 0 0 24px rgba(255, 45, 120, .35); }
+.mast-signal .dot { width: 8px; height: 8px; border-radius: 50%; background: #FF2D78; box-shadow: 0 0 10px #FF2D78; animation: signal-blink 2.4s ease-in-out infinite; }
+@keyframes signal-blink { 50% { opacity: .35; } }
+.li-mark { display: inline-block; width: 18px; height: 18px; border-radius: 4px; background: #0A66C2; color: #fff; font: 700 12px/18px -apple-system, "Segoe UI", sans-serif; text-align: center; letter-spacing: 0; }
+a.cta-li { display: inline-flex; align-items: center; gap: 8px; background: #0A66C2; color: #fff; border: 0; border-radius: 999px; padding: 8px 16px; font-weight: 700; text-decoration: none; }
+a.cta-li .li-mark { background: #fff; color: #0A66C2; }
+@media (max-width: 760px) {
+  .masthead-tools { flex-direction: row; flex-wrap: wrap; justify-content: flex-end; }
+  .mast-btn { padding: 6px 10px; }
+  .mast-btn .btn-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .brand-badge { width: 36px; height: 36px; }
+}
+
+/* About card: photo, name, bio, LinkedIn first. */
+.about-card { display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center; padding: 24px; border-radius: 20px; max-width: 900px; }
+.about-photo { width: 150px; height: 150px; border-radius: 50%; box-shadow: 0 0 0 3px color-mix(in srgb, var(--mag) 60%, transparent), 0 0 40px color-mix(in srgb, var(--acc) 35%, transparent); }
+.about-name { font-family: "DM Sans", -apple-system, "Segoe UI", sans-serif; font-weight: 300; font-size: 1.7rem; margin: 0; }
+.about-role { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; margin: 4px 0 12px; }
+.about-body p { max-width: 70ch; }
+.about-card .connect { margin: 16px 0 0; }
+@media (max-width: 640px) {
+  .about-card { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .about-card .connect { justify-content: center; }
+}
+
+/* Enter Signal stage: hub fades and blurs out, Signal fades in on a navy base. */
+.signal-stage { position: fixed; inset: 0; z-index: 50; opacity: 0; background: linear-gradient(160deg, #070F1F, #0D1F3C); transition: opacity .9s ease; }
+.signal-stage.on { opacity: 1; }
+.signal-stage iframe { display: block; width: 100%; height: 100%; border: 0; }
+.stage-back { position: absolute; top: 16px; left: 16px; z-index: 1; font: inherit; font-weight: 700; color: #fff; background: rgba(13, 31, 60, .6); border: 1px solid rgba(255, 255, 255, .25); border-radius: 999px; padding: 8px 16px; cursor: pointer; }
+.masthead, main, .site-foot { transition: opacity .7s ease, filter .7s ease, transform .7s ease; }
+body.leaving :is(.masthead, main, .site-foot) { opacity: 0; filter: blur(8px); transform: scale(1.015); }
+@media (prefers-reduced-motion: reduce) {
+  body.leaving :is(.masthead, main, .site-foot) { filter: none; transform: none; }
+  .signal-stage, .masthead, main, .site-foot { transition: opacity .2s ease !important; }
+}
+/* Narrow screens: the pill shows only its state (e.g. SIGNAL LIVE) so the masthead stays short. */
+@media (max-width: 760px) { .pill-detail { display: none; } .pill { white-space: nowrap; } }

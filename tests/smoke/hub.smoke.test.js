@@ -7,7 +7,7 @@ const { chromium } = require('playwright');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const FIX = path.join(__dirname, '..', 'fixtures');
-const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
+const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.webp': 'image/webp' };
 const TABS = ['front', 'news', 'research', 'videos', 'tools', 'guides', 'about'];
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64');
 let server, browser, base;
@@ -30,6 +30,7 @@ after(async () => { await browser.close(); server.close(); });
 async function feeds(context, mode) {
   await context.unroute('https://thinkinfosec.github.io/Signal/*').catch(() => {});
   await context.route('https://thinkinfosec.github.io/Signal/*', route => {
+    if (route.request().resourceType() === 'document') return route.fulfill({ body: '<!doctype html><title>Signal</title><p>Signal stub</p>', contentType: 'text/html' });
     if (mode === 'down') return route.abort();
     if (mode === 'empty') return route.fulfill({ body: '{}', contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' } });
     const name = path.basename(new URL(route.request().url()).pathname);
@@ -230,5 +231,57 @@ test('wordmark font is loaded', async () => {
   const { page, context } = await open('#front');
   await page.evaluate(() => document.fonts.ready);
   assert.ok(await page.evaluate(() => document.fonts.check('300 16px "DM Sans"')));
+  await context.close();
+});
+test('masthead has no glass slab and the paint layer is running', async () => {
+  const { page, context, errors } = await open('#front');
+  assert.equal(await page.$eval('.masthead', el => getComputedStyle(el).backdropFilter), 'none');
+  assert.ok(await page.$eval('#paint', c => c.width > 0 && c.height > 0), 'paint canvas sized');
+  assert.equal(await page.isVisible('.top-wash'), true);
+  assert.deepEqual(errors, []);
+  await context.close();
+});
+test('masthead shows the logo, LinkedIn and Enter Signal; favicon is served', async () => {
+  const { page, context } = await open('#front');
+  await page.waitForFunction(() => { const i = document.querySelector('.brand-badge'); return i && i.complete && i.naturalWidth > 0; });
+  assert.equal(await page.locator('.masthead a[href="https://www.linkedin.com/in/amcamillo/"]').count(), 1);
+  assert.equal(await page.getAttribute('#enterSignal', 'href'), 'https://thinkinfosec.github.io/Signal/');
+  const fav = await page.request.get(new URL('assets/brand/favicon-32.png', base).href);
+  assert.equal(fav.status(), 200);
+  assert.equal(await page.getAttribute('link[rel="icon"]', 'href'), 'assets/brand/favicon-32.png');
+  await context.close();
+});
+test('About shows the photo and LinkedIn is linked from masthead, About and footer', async () => {
+  const { page, context } = await open('#about');
+  await page.waitForFunction(() => [...document.querySelectorAll('.about-photo, .foot-badge')].every(i => i.complete && i.naturalWidth > 0) && document.querySelector('.about-photo'));
+  for (const sel of ['.masthead', '#panel-about', '.site-foot']) {
+    const a = page.locator(sel + ' a[href="https://www.linkedin.com/in/amcamillo/"]');
+    assert.equal(await a.count(), 1, sel);
+    assert.equal(await a.getAttribute('target'), '_blank', sel);
+    assert.match(await a.getAttribute('rel'), /noopener/, sel);
+  }
+  await context.close();
+});
+
+test('Enter Signal crossfades to the full-screen stage and Back returns', async () => {
+  const { page, context, errors } = await open('#front');
+  assert.equal(await page.isHidden('#signalStage'), true);
+  await page.click('#enterSignal');
+  await page.waitForSelector('#signalStage.on');
+  assert.equal(await page.getAttribute('#signalStage iframe', 'src'), 'https://thinkinfosec.github.io/Signal/');
+  assert.equal(await page.evaluate(() => document.getElementById('main').inert), true);
+  await page.waitForFunction(() => document.activeElement && document.activeElement.id === 'stageBack');
+  await page.click('#stageBack');
+  await page.waitForFunction(() => document.getElementById('signalStage').hidden && document.activeElement.id === 'enterSignal');
+  assert.equal(await page.evaluate(() => document.body.classList.contains('leaving')), false);
+  assert.deepEqual(errors, [], 'no CSP or script errors');
+  await context.close();
+});
+test('signal pill keeps its detail on desktop and shows one line on mobile', async () => {
+  const { page, context } = await open('#front');
+  assert.match(await page.textContent('#pillText'), /SIGNAL LIVE · \d+ STOR/);
+  await page.setViewportSize({ width: 390, height: 844 });
+  assert.equal(await page.isVisible('#pillText .pill-detail'), false);
+  assert.ok(await page.$eval('#signalPill', p => p.getBoundingClientRect().height < 32), 'pill is one line');
   await context.close();
 });

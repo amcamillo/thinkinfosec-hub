@@ -99,7 +99,14 @@
 
   function pill(node, p) {
     node.dataset.state = p.state;
-    node.querySelector('#pillText').textContent = p.detail ? p.label + ' · ' + p.detail : p.label;
+    const text = node.querySelector('#pillText');
+    text.textContent = p.label;
+    if (p.detail) { // detail is hidden on narrow screens so the pill stays on one line
+      const d = document.createElement('span');
+      d.className = 'pill-detail';
+      d.textContent = ' · ' + p.detail;
+      text.appendChild(d);
+    }
   }
 
   function headlineRow(item, index, now, opts) {
