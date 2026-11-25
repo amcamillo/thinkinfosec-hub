@@ -621,8 +621,8 @@
       "published": "2026-10-03",
       "updated": "2026-10-03",
       "author": "Andre Camillo",
-      "cover": null,
-      "reading_minutes": 19,
+      "cover": "https://amcamillo.github.io/thinkinfosec-hub/Research/always-on-agents/cover.webp",
+      "reading_minutes": 20,
       "pillar": "process",
       "people": [
         "thought-leadership"
