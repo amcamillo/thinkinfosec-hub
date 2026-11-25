@@ -25,6 +25,7 @@
   --orb-blend: multiply; --orb-opacity: .7; --glow: none;
   color-scheme: light;
 }
+:root { --mono: "Space Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
 * { box-sizing: border-box; }
 .orbs { position: fixed; inset: -12%; z-index: -1; pointer-events: none; filter: blur(70px); mix-blend-mode: var(--orb-blend); opacity: var(--orb-opacity); }
 .orb { position: absolute; width: var(--s); height: var(--s); left: var(--l); top: var(--t); border-radius: 50%; background: radial-gradient(circle, var(--c) 0%, transparent 68%); animation: orb-float var(--d) ease-in-out var(--delay, 0s) infinite alternate; will-change: transform; }
@@ -55,9 +56,9 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 
 .masthead { position: sticky; top: 0; z-index: 10; background: var(--glass); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
 .masthead-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-top: 16px; }
-.brand { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.01em; text-decoration: none; }
-.brand span { color: var(--acc-ink); }
-.brand small { font-size: 0.8rem; font-weight: 500; color: var(--muted); }
+.brand { font-family: "DM Sans", -apple-system, "Segoe UI", sans-serif; font-weight: 300; font-size: 1.9rem; letter-spacing: -0.01em; text-decoration: none; }
+.brand span { color: var(--mag-ink); }
+.brand small { font-size: 0.6em; letter-spacing: 0.04em; color: var(--muted); }
 .dateline { color: var(--muted); font-size: 0.85rem; margin-top: 2px; margin-bottom: 8px; }
 .theme-toggle { display: flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
 .theme-toggle button { background: none; border: 0; color: var(--muted); font: inherit; font-size: 0.85rem; padding: 4px 12px; cursor: pointer; }
@@ -78,7 +79,15 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 .kicker-mag, .lane-ai { color: var(--mag-ink); }
 .lane-cyber { color: var(--acc-ink); }
 .lane-geo { color: var(--gold-ink); }
-.card .kicker, .band .kicker { color: var(--panel-kicker); }
+.card .kicker:not([class*="lane-"]), .band .kicker { color: var(--panel-kicker); }
+.mono, .kicker, .meta, .dateline, .num, .pill { font-family: var(--mono); letter-spacing: 0.06em; }
+.kicker { font-weight: 700; }
+.kicker[class*="lane-"]::before { content: "● "; }
+.lane-cyber::before { color: var(--acc); }
+.lane-ai::before { color: var(--mag); }
+.lane-geo::before { color: var(--gold-ink); }
+/* No cyan on blue: in dark, Cyber labels on panels are white and only the dot is teal. */
+:root[data-theme="dark"] :is(.wire, .card, .glass, .news-list) .lane-cyber { color: var(--panel-kicker); }
 .meta { color: var(--muted); font-size: 0.85rem; }
 .section-title { font-size: 1.4rem; margin: 8px 0 12px; }
 

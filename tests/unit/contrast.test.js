@@ -42,3 +42,11 @@ test('light accent text also clears 4.5:1 on the tint (light allows teal on pane
   const t = tokens('light');
   assert.ok(ratio(t['acc-ink'], t.tint) >= 4.5);
 });
+
+test('css keeps dark cyber labels on panels white', () => {
+  assert.match(css, /:root\[data-theme="dark"\][^{]*\.lane-cyber\s*\{\s*color:\s*var\(--panel-kicker\)/);
+});
+test('wordmark uses DM Sans 300 with magenta InfoSec', () => {
+  assert.match(css, /\.brand\s*\{[^}]*"DM Sans"[^}]*font-weight:\s*300/);
+  assert.match(css, /\.brand span\s*\{\s*color:\s*var\(--mag-ink\)/);
+});
