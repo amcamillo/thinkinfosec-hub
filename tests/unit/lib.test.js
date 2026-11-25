@@ -164,3 +164,13 @@ test('signalStatus', () => {
   assert.equal(L.signalStatus({ data: { generated: '2026-11-25T11:56:00Z' }, cached: false }, NOW), 'Signal updated 4m ago');
   assert.match(L.signalStatus({ data: { generated: '2026-11-25T11:00:00Z' }, cached: true }, NOW, 'UTC'), /^Signal snapshot from 25 Nov, 11:00$/);
 });
+
+test('newsItems keeps https images and drops everything else', () => {
+  const base = { cat: 'ai', title: 'T', ts: 1 };
+  const img = image => L.newsItems({ items: [Object.assign({}, base, image === undefined ? {} : { image })] })[0].image;
+  assert.equal(img('https://cdn.example.com/a.png'), 'https://cdn.example.com/a.png');
+  assert.equal(img('http://cdn.example.com/a.png'), null);
+  assert.equal(img('javascript:alert(1)'), null);
+  assert.equal(img('assets/local.png'), null);
+  assert.equal(img(undefined), null);
+});

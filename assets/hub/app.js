@@ -30,7 +30,7 @@
     R.list($('videoGrid'), videos, v => R.card(v, 'YouTube'), 'Videos appear here when the feed is reachable.');
   }
   function renderNews(lane) {
-    R.list($('newsList'), L.filterBy(news, 'cat', lane), (n, i) => R.headlineRow(n, i, now), 'No headlines right now.');
+    R.list($('newsList'), L.filterBy(news, 'cat', lane), (n, i) => R.headlineRow(n, i, now, { thumb: true }), 'No headlines right now.');
   }
   function renderFront() {
     const front = L.frontPage(news, 4);

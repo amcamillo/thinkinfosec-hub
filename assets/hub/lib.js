@@ -78,7 +78,8 @@
       .filter(i => i && typeof i.title === 'string' && i.title && LANES[i.cat] && Number.isFinite(i.ts))
       .map(i => ({
         key: 'news:' + i.ts + ':' + i.title, title: i.title, cat: i.cat, ts: i.ts,
-        summary: typeof i.summary === 'string' ? i.summary : '', source: String(i.source || ''), url: isExternal(safeUrl(i.link)) ? safeUrl(i.link) : null
+        summary: typeof i.summary === 'string' ? i.summary : '', source: String(i.source || ''), url: isExternal(safeUrl(i.link)) ? safeUrl(i.link) : null,
+        image: isExternal(safeUrl(i.image)) ? safeUrl(i.image) : null
       }))
       .filter(isRelevant)
       .sort(byTs);

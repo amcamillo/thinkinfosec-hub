@@ -9,6 +9,7 @@ const ROOT = path.resolve(__dirname, '..', '..');
 const FIX = path.join(__dirname, '..', 'fixtures');
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml' };
 const TABS = ['front', 'news', 'research', 'videos', 'tools', 'guides', 'about'];
+const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64');
 let server, browser, base;
 
 before(async () => {
@@ -38,6 +39,9 @@ async function feeds(context, mode) {
 async function open(hash, opts = {}) {
   const context = await browser.newContext({ colorScheme: opts.scheme || 'dark' });
   await context.route(/i\.ytimg\.com|medium\.com/, r => r.abort());
+  await context.route('https://img.example/*', r => r.request().url().endsWith('missing.png')
+    ? r.fulfill({ status: 404, body: '' })
+    : r.fulfill({ body: PNG, contentType: 'image/png' }));
   await feeds(context, opts.feeds || 'up');
   const page = await context.newPage();
   const errors = [];
@@ -62,7 +66,7 @@ test('every tab renders from a direct link with no errors', async () => {
 
 test('panels show feed and corpus content', async () => {
   const { context, page } = await open('#news');
-  assert.equal(await page.locator('#newsList li').count(), 3);
+  assert.equal(await page.locator('#newsList li').count(), 4);
   await page.click('#newsChips [data-value="ai"]');
   assert.equal(await page.locator('#newsList li').count(), 1);
   await page.click('#tab-research');
@@ -74,7 +78,7 @@ test('panels show feed and corpus content', async () => {
   assert.equal(await page.locator('#toolsOutcomes .band').count(), 1);
   await page.click('#tab-front');
   assert.match(await page.textContent('#leadStory'), /Fixture cyber headline/);
-  assert.equal(await page.locator('#liveWire li').count(), 2);
+  assert.equal(await page.locator('#liveWire li').count(), 3);
   await context.close();
 });
 
@@ -145,6 +149,35 @@ test('feeds down with a cache: snapshot label', async () => {
   await page.reload();
   await page.waitForFunction(() => /Signal (updated|snapshot|unavailable)/.test(document.getElementById('dateline').textContent));
   assert.match(await page.textContent('#dateline'), /Signal snapshot from/);
-  assert.equal(await page.locator('#newsList li').count(), 3);
+  assert.equal(await page.locator('#newsList li').count(), 4);
+  await context.close();
+});
+
+test('lead story shows the publisher image, wire stays text-only', async () => {
+  const { context, page, errors } = await open('#front', { scheme: 'light' });
+  const src = await page.getAttribute('#leadStory .lead-art img', 'src');
+  assert.equal(src, 'https://img.example/lead.png');
+  await page.waitForFunction(() => { const i = document.querySelector('#leadStory .lead-art img'); return i && i.complete && i.naturalWidth > 0; });
+  assert.equal(await page.locator('#liveWire img').count(), 0);
+  assert.deepEqual(errors, []);
+  await context.close();
+});
+
+test('news rows show thumbs, drop insecure images, remove broken ones', async () => {
+  const { context, page, errors } = await open('#news');
+  assert.equal(await page.locator('#newsList li').count(), 4);
+  await page.waitForFunction(() => document.querySelectorAll('#newsList li')[2].querySelectorAll('img').length === 0);
+  assert.deepEqual(await page.$$eval('#newsList img', is => is.map(i => i.getAttribute('src'))), ['https://img.example/lead.png', 'https://img.example/ai.png']);
+  assert.equal(await page.locator('#newsList li', { hasText: 'insecure image' }).locator('img').count(), 0);
+  assert.equal(await page.locator('#newsList li', { hasText: 'chip export' }).locator('img').count(), 0);
+  assert.deepEqual(errors, []);
+  await context.close();
+});
+
+test('a lead image that fails to load is removed and the gradient remains', async () => {
+  const { context, page } = await open('#front');
+  await page.evaluate(() => document.querySelector('#leadStory .lead-art img').dispatchEvent(new Event('error')));
+  assert.equal(await page.locator('#leadStory .lead-art img').count(), 0);
+  assert.equal(await page.locator('#leadStory .lead-art').count(), 1);
   await context.close();
 });

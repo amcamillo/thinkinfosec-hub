@@ -42,13 +42,26 @@
     return on ? on.dataset.value : 'all';
   }
 
-  function headlineRow(item, index, now) {
+  function pic(src, cls, lazy) {
+    const img = el('img', cls);
+    img.alt = ''; img.decoding = 'async'; img.referrerPolicy = 'no-referrer';
+    if (lazy) img.loading = 'lazy';
+    img.addEventListener('error', () => img.remove());
+    img.src = src;
+    return img;
+  }
+
+  function headlineRow(item, index, now, opts) {
     const li = el('li');
     const body = el('div');
     const h = el('h4', 'headline');
     h.append(titleNode(item));
     body.append(el('span', 'kicker lane-' + item.cat, L.LANES[item.cat]), h, el('span', 'meta', item.source + ' · ' + L.timeAgo(item.ts, now)));
     li.append(el('span', 'num', String(index + 1).padStart(2, '0')), body);
+    if (opts && opts.thumb && item.image) {
+      li.classList.add('has-thumb');
+      li.append(pic(item.image, 'row-thumb', true));
+    }
     return li;
   }
 
@@ -75,6 +88,7 @@
     if (!item) return setEmpty(node, 'Headlines appear here when Signal is reachable.');
     const art = el('div', 'lead-art');
     art.setAttribute('aria-hidden', 'true');
+    if (item.image) art.append(pic(item.image, 'lead-img', false));
     const h = el('h3');
     h.append(titleNode(item));
     node.replaceChildren(art, el('span', 'kicker lane-' + item.cat, L.LANES[item.cat] + ' · lead story'), h,
