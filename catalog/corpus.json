@@ -736,7 +736,8 @@
       ],
       "link": "Research/always-on-agents/",
       "description": "A security reading of OpenAI dots, Meta Muse and xAI Grok Bot: published controls, and what an ANZ team should do this sprint.",
-      "date": "2026-10-03"
+      "date": "2026-10-03",
+      "thumb": "Research/always-on-agents/cover.webp"
     },
     {
       "id": "research-kernel-access-redesigned",
