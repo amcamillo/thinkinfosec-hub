@@ -159,10 +159,16 @@ test('filterBy and search', () => {
   assert.equal(L.search(entries, '   ').length, 0);
 });
 
-test('signalStatus', () => {
-  assert.equal(L.signalStatus({ data: null }, NOW), 'Signal unavailable');
-  assert.equal(L.signalStatus({ data: { generated: '2026-11-25T11:56:00Z' }, cached: false }, NOW), 'Signal updated 4m ago');
-  assert.match(L.signalStatus({ data: { generated: '2026-11-25T11:00:00Z' }, cached: true }, NOW, 'UTC'), /^Signal snapshot from 25 Nov, 11:00$/);
+test('signalPill', () => {
+  assert.deepEqual(L.signalPill({ data: null }, NOW, 0), { state: 'none', label: 'NO SIGNAL', detail: '' });
+  assert.deepEqual(L.signalPill({ data: { generated: '2026-11-25T11:56:00Z' }, cached: false }, NOW, 93),
+    { state: 'live', label: 'SIGNAL LIVE', detail: '93 STORIES · 4M AGO' });
+  assert.deepEqual(L.signalPill({ data: { generated: '2026-11-25T11:59:50Z' }, cached: false }, NOW, 1),
+    { state: 'live', label: 'SIGNAL LIVE', detail: '1 STORY · JUST NOW' });
+  assert.deepEqual(L.signalPill({ data: { generated: '2026-11-25T11:00:00Z' }, cached: true }, NOW, 5, 'UTC'),
+    { state: 'snapshot', label: 'SIGNAL SNAPSHOT', detail: '25 NOV, 11:00' });
+  assert.deepEqual(L.signalPill({ data: { generated: 'bad' }, cached: false }, NOW, 2),
+    { state: 'live', label: 'SIGNAL LIVE', detail: '2 STORIES' });
 });
 
 test('newsItems keeps https images and drops everything else', () => {

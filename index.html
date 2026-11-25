@@ -15,13 +15,18 @@
   <a class="skip" href="#main">Skip to content</a>
   <header class="masthead">
     <div class="wrap masthead-row">
-      <a class="brand" href="#front">Think<span>InfoSec</span> <small>Hub</small></a>
-      <div class="theme-toggle" role="group" aria-label="Colour theme">
-        <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
-        <button type="button" data-theme-set="light" aria-pressed="true">Light</button>
+      <div>
+        <a class="brand" href="#front">Think<span>InfoSec</span> <small>Hub</small></a>
+        <p class="dateline" id="dateline"></p>
+      </div>
+      <div class="masthead-tools">
+        <p class="pill" id="signalPill" data-state="none"><span class="dot" aria-hidden="true"></span><span id="pillText" aria-live="polite">LISTENING FOR SIGNAL</span></p>
+        <div class="theme-toggle" role="group" aria-label="Colour theme">
+          <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
+          <button type="button" data-theme-set="light" aria-pressed="true">Light</button>
+        </div>
       </div>
     </div>
-    <p class="wrap dateline" id="dateline" aria-live="polite"></p>
     <nav class="wrap" aria-label="Sections">
       <div class="tabs" role="tablist" aria-label="Hub sections">
         <button type="button" role="tab" id="tab-front" aria-controls="panel-front" data-tab="front">Front page</button>

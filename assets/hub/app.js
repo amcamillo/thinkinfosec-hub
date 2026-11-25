@@ -53,7 +53,7 @@
   R.chips($('researchChips'), all([{ value: 'hub', label: 'Hub' }, { value: 'medium', label: 'Medium' }]), renderResearch);
   R.chips($('newsChips'), all(pairs(L.LANES)), renderNews);
   renderTools('all'); renderGuides('all'); renderResearch('all'); renderVideos(); renderNews('all'); renderFront();
-  $('dateline').textContent = L.formatDay(now) + ' · Loading Signal…';
+  $('dateline').textContent = L.formatDay(now).toUpperCase();
 
   const search = window.HubSearch.init({
     form: $('searchForm'), input: $('q'), status: $('searchStatus'), results: $('searchResults'),
@@ -71,7 +71,7 @@
     renderVideos();
     renderFront();
 
-    $('dateline').textContent = L.formatDay(now) + ' · ' + L.signalStatus(newsRes, now);
+    R.pill($('signalPill'), L.signalPill(newsRes, now, news.length));
     const stamp = $('newsStamp');
     if (newsRes.data && L.isStale(newsRes.data.generated, now, 6)) {
       stamp.className = 'notice';
@@ -82,6 +82,6 @@
     }
     if ($('q').value.trim()) search.run();
   } catch (err) {
-    $('dateline').textContent = L.formatDay(now) + ' · Signal unavailable';
+    R.pill($('signalPill'), L.signalPill(null, now, 0));
   }
 })();

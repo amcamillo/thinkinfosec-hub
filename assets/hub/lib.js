@@ -164,18 +164,19 @@
     });
   }
 
-  function signalStatus(res, now, tz) {
-    if (!res || !res.data) return 'Signal unavailable';
+  function signalPill(res, now, count, tz) {
+    if (!res || !res.data) return { state: 'none', label: 'NO SIGNAL', detail: '' };
     const gen = Date.parse(res.data.generated);
-    if (!Number.isFinite(gen)) return res.cached ? 'Signal snapshot' : 'Signal updated';
-    if (res.cached) return 'Signal snapshot from ' + formatTime(gen, tz);
+    if (res.cached) return { state: 'snapshot', label: 'SIGNAL SNAPSHOT', detail: Number.isFinite(gen) ? formatTime(gen, tz).toUpperCase() : '' };
+    const stories = count + (count === 1 ? ' STORY' : ' STORIES');
+    if (!Number.isFinite(gen)) return { state: 'live', label: 'SIGNAL LIVE', detail: stories };
     const ago = timeAgo(gen, now);
-    return ago === 'just now' ? 'Signal updated just now' : 'Signal updated ' + ago + ' ago';
+    return { state: 'live', label: 'SIGNAL LIVE', detail: stories + ' · ' + (ago === 'just now' ? 'JUST NOW' : ago.toUpperCase() + ' AGO') };
   }
 
   return {
     LANES, ORIGINS, GUIDE_GROUPS, safeUrl, isExternal, clip, timeAgo, formatDay, formatDate, formatTime, isStale,
     mediumKey, youtubeId, newsItems, mediaItems, researchItems, videoItems, toolItems, guideItems,
-    isRelevant, frontPage, filterBy, searchEntries, search, signalStatus
+    isRelevant, frontPage, filterBy, searchEntries, search, signalPill
   };
 });

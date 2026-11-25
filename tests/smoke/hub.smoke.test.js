@@ -48,7 +48,7 @@ async function open(hash, opts = {}) {
   page.on('pageerror', e => errors.push(e.message));
   page.on('console', m => { if (m.type() === 'error' && !/Failed to load resource|ERR_FAILED/.test(m.text())) errors.push(m.text()); });
   await page.goto(base + (hash || ''));
-  await page.waitForFunction(() => /Signal (updated|snapshot|unavailable)/.test(document.getElementById('dateline').textContent));
+  await page.waitForFunction(() => document.getElementById('signalPill').dataset.state !== 'none' || /NO SIGNAL/.test(document.getElementById('pillText').textContent));
   return { context, page, errors };
 }
 
@@ -66,6 +66,7 @@ test('every tab renders from a direct link with no errors', async () => {
 
 test('panels show feed and corpus content', async () => {
   const { context, page } = await open('#news');
+  assert.equal(await page.getAttribute('#signalPill', 'data-state'), 'live');
   assert.equal(await page.locator('#newsList li').count(), 4);
   await page.click('#newsChips [data-value="ai"]');
   assert.equal(await page.locator('#newsList li').count(), 1);
@@ -127,7 +128,7 @@ test('search finds every kind of item', async () => {
 
 test('feeds down with no cache: empty states, rest of hub works', async () => {
   const { context, page } = await open('#news', { feeds: 'down' });
-  assert.match(await page.textContent('#dateline'), /Signal unavailable/);
+  assert.match(await page.textContent('#pillText'), /NO SIGNAL/);
   assert.match(await page.textContent('#newsList'), /No headlines right now/);
   await page.click('#tab-tools');
   assert.ok(await page.locator('#toolGrid .card').count() > 5);
@@ -138,8 +139,8 @@ test('feed returning {} after a good load falls back to the cached snapshot', as
   const { context, page } = await open('#news');
   await feeds(context, 'empty');
   await page.reload();
-  await page.waitForFunction(() => /Signal (updated|snapshot|unavailable)/.test(document.getElementById('dateline').textContent));
-  assert.match(await page.textContent('#dateline'), /Signal snapshot from/);
+  await page.waitForFunction(() => document.getElementById('signalPill').dataset.state !== 'none' || /NO SIGNAL/.test(document.getElementById('pillText').textContent));
+  assert.match(await page.textContent('#pillText'), /SIGNAL SNAPSHOT/);
   await context.close();
 });
 
@@ -147,8 +148,8 @@ test('feeds down with a cache: snapshot label', async () => {
   const { context, page } = await open('#news');
   await feeds(context, 'down');
   await page.reload();
-  await page.waitForFunction(() => /Signal (updated|snapshot|unavailable)/.test(document.getElementById('dateline').textContent));
-  assert.match(await page.textContent('#dateline'), /Signal snapshot from/);
+  await page.waitForFunction(() => document.getElementById('signalPill').dataset.state !== 'none' || /NO SIGNAL/.test(document.getElementById('pillText').textContent));
+  assert.match(await page.textContent('#pillText'), /SIGNAL SNAPSHOT/);
   assert.equal(await page.locator('#newsList li').count(), 4);
   await context.close();
 });

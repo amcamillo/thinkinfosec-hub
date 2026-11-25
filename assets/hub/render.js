@@ -51,6 +51,11 @@
     return img;
   }
 
+  function pill(node, p) {
+    node.dataset.state = p.state;
+    node.querySelector('#pillText').textContent = p.detail ? p.label + ' · ' + p.detail : p.label;
+  }
+
   function headlineRow(item, index, now, opts) {
     const li = el('li');
     const body = el('div');
@@ -111,5 +116,5 @@
     }));
   }
 
-  root.HubRender = { el, link, titleNode, setEmpty, list, chips, activeChip, headlineRow, card, lead, outcomes };
+  root.HubRender = { el, link, titleNode, setEmpty, list, chips, activeChip, headlineRow, pill, card, lead, outcomes };
 })(window);
