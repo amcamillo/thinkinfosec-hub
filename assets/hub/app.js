@@ -27,15 +27,15 @@
       r => R.card(r, r.source === 'medium' ? 'Medium' : 'Hub research', r.source === 'medium' ? 'mag' : null, { trace: true }), 'No research yet.');
   }
   function renderVideos() {
-    R.list($('videoGrid'), videos, v => R.card(v, 'YouTube'), 'Videos appear here when the feed is reachable.');
+    R.list($('videoGrid'), videos, v => R.card(v, 'YouTube'), n => R.listening(n, 'videos appear when the feed is reachable'));
   }
   function renderNews(lane) {
-    R.list($('newsList'), L.filterBy(news, 'cat', lane), (n, i) => R.headlineRow(n, i, now, { thumb: true }), 'No headlines right now.');
+    R.list($('newsList'), L.filterBy(news, 'cat', lane), (n, i) => R.headlineRow(n, i, now, { thumb: true }), n => R.listening(n, 'no headlines in this lane yet'));
   }
   function renderFront() {
     const front = L.frontPage(news, 4);
     R.lead($('leadStory'), front.lead, now);
-    R.list($('liveWire'), front.wire, (n, i) => R.headlineRow(n, i + 1, now), 'Waiting for Signal.');
+    R.list($('liveWire'), front.wire, (n, i) => R.headlineRow(n, i + 1, now), n => R.listening(n, 'waiting for the wire'));
     const latest = [
       ['Research', research.find(r => r.source === 'hub'), null],
       ['Medium', research.find(r => r.source === 'medium'), 'mag'],

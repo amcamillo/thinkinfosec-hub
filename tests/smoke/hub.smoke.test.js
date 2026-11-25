@@ -129,7 +129,7 @@ test('search finds every kind of item', async () => {
 test('feeds down with no cache: empty states, rest of hub works', async () => {
   const { context, page } = await open('#news', { feeds: 'down' });
   assert.match(await page.textContent('#pillText'), /NO SIGNAL/);
-  assert.match(await page.textContent('#newsList'), /No headlines right now/);
+  assert.match(await page.textContent('#newsList'), /LISTENING FOR SIGNAL/);
   await page.click('#tab-tools');
   assert.ok(await page.locator('#toolGrid .card').count() > 5);
   await context.close();
@@ -198,5 +198,12 @@ test('cards without images get a mini trace', async () => {
 test('News rows without an image get a mini trace thumb', async () => {
   const { page, context } = await open('#news');
   await page.waitForSelector('#newsList li.has-thumb .trace-thumb');
+  await context.close();
+});
+
+test('feed-dependent empty states say Listening for signal', async () => {
+  const { page, context } = await open('#front', { feeds: 'down' });
+  await page.waitForFunction(() => /LISTENING FOR SIGNAL/.test(document.getElementById('liveWire').textContent));
+  assert.match(await page.textContent('#leadStory'), /LISTENING FOR SIGNAL/);
   await context.close();
 });

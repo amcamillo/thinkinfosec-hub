@@ -168,3 +168,6 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
   * { transition: none !important; scroll-behavior: auto !important; }
   .orb, .trace-orb, .pill .dot, .wave-base path, .wave-pulse path, .listening path { animation: none !important; }
 }
+.listening { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; color: var(--muted); font-size: 0.78rem; }
+.listening svg { width: 120px; height: 22px; flex: none; filter: var(--glow); }
+.listening path { transform-origin: 50% 50%; animation: wave-ripple 1.8s ease-in-out infinite alternate; }

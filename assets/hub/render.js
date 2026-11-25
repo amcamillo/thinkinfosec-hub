@@ -18,8 +18,8 @@
   }
   function titleNode(item) { return L.safeUrl(item.url) ? link(item.url, item.title) : el('span', null, item.title); }
   function setEmpty(node, message) { node.replaceChildren(el('p', 'empty', message)); }
-  function list(node, items, make, emptyMessage) {
-    if (!items.length) return setEmpty(node, emptyMessage);
+  function list(node, items, make, empty) {
+    if (!items.length) return typeof empty === 'function' ? empty(node) : setEmpty(node, empty);
     node.replaceChildren(...items.map(make));
   }
 
@@ -82,6 +82,13 @@
     if (item.source) box.append(el('span', 'trace-src', item.source));
     return box;
   }
+  function listening(node, message) {
+    const box = el('div', 'listening');
+    const svg = svgEl('svg', { viewBox: '0 0 120 22', 'aria-hidden': 'true', focusable: 'false' });
+    svg.append(svgEl('path', { d: 'M0 11 C20 11 30 11 46 11 C52 11 54 6 60 6 C66 6 68 16 74 16 C80 16 84 11 92 11 C104 11 112 11 120 11', fill: 'none', stroke: '#00BFCF', 'stroke-width': '2', 'stroke-linecap': 'round' }));
+    box.append(svg, el('span', 'mono', 'LISTENING FOR SIGNAL… ' + message));
+    node.replaceChildren(box);
+  }
   function traceThumb(item, cls) {
     const spec = L.traceSpec(item, 200, 60);
     const box = el('div', 'trace-thumb ' + (cls || ''));
@@ -126,7 +133,7 @@
   }
 
   function lead(node, item, now) {
-    if (!item) return setEmpty(node, 'Headlines appear here when Signal is reachable.');
+    if (!item) return listening(node, 'headlines appear here when Signal is reachable');
     const art = el('div', 'lead-art');
     art.setAttribute('aria-hidden', 'true');
     art.append(traceBanner(item));
@@ -153,5 +160,5 @@
     }));
   }
 
-  root.HubRender = { el, link, titleNode, setEmpty, list, chips, activeChip, headlineRow, pill, card, lead, outcomes, traceBanner, traceThumb };
+  root.HubRender = { el, link, titleNode, setEmpty, list, chips, activeChip, headlineRow, pill, card, lead, outcomes, traceBanner, traceThumb, listening };
 })(window);
