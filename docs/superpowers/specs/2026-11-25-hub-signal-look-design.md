@@ -1,6 +1,6 @@
 # Hub: news images and the Signal look
 
-Date: 2026-11-25. Status: approved in browser mockups, awaiting spec review.
+Date: 2026-11-25. Status: implemented on branch news-images.
 Builds on `2026-11-25-hub-front-page-redesign-design.md` (shipped in PR #15).
 
 ## Goal
