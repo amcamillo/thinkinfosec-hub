@@ -1,0 +1,7 @@
+{
+  "generated": "2026-11-25T08:00:00Z",
+  "items": [
+    { "id": "medium:abc123def456", "kind": "article", "title": "Fixture Medium article on agent identity", "url": "https://andrecamillo.medium.com/fixture-article-abc123def456", "ts": 1795500000000, "summary": "Medium summary text.", "minutes": 6 },
+    { "id": "youtube:AAAAAAAAAAA", "kind": "video", "title": "Fixture video on kernel access", "url": "https://www.youtube.com/watch?v=AAAAAAAAAAA", "ts": 1795400000000, "summary": "Video summary text.", "thumb": "https://i.ytimg.com/vi/AAAAAAAAAAA/hqdefault.jpg" }
+  ]
+}
