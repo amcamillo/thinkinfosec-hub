@@ -189,6 +189,8 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 .fig { margin: 22px 0 26px; min-width: 0; max-width: 100%; }
 .fig iframe, .fig img { display: block; width: 100%; max-width: 100%; border: 0; border-radius: 12px; background: #f6f8fc; }
 .fig img { height: auto; }
+.fig video { display: block; width: 100%; height: auto; border-radius: 12px; background: #12244A; }
+.article > section > .cap { max-width: var(--read); margin: 0 auto 8px; font-size: .85rem; color: var(--muted); }
 .fig .still { display: none; }
 .fig figcaption { max-width: var(--read); margin: 10px auto 0; font: 400 .76rem/1.55 var(--mono); letter-spacing: .02em; color: var(--muted); }
 @media (prefers-reduced-motion: reduce) { .fig .motion { display: none; } .fig .still { display: block; } }
