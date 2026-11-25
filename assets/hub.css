@@ -237,3 +237,5 @@ body.leaving :is(.masthead, main, .site-foot) { opacity: 0; filter: blur(8px); t
   body.leaving :is(.masthead, main, .site-foot) { filter: none; transform: none; }
   .signal-stage, .masthead, main, .site-foot { transition: opacity .2s ease !important; }
 }
+/* Narrow screens: the pill shows only its state (e.g. SIGNAL LIVE) so the masthead stays short. */
+@media (max-width: 760px) { .pill-detail { display: none; } .pill { white-space: nowrap; } }

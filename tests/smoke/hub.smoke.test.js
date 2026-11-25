@@ -277,3 +277,11 @@ test('Enter Signal crossfades to the full-screen stage and Back returns', async 
   assert.deepEqual(errors, [], 'no CSP or script errors');
   await context.close();
 });
+test('signal pill keeps its detail on desktop and shows one line on mobile', async () => {
+  const { page, context } = await open('#front');
+  assert.match(await page.textContent('#pillText'), /SIGNAL LIVE · \d+ STOR/);
+  await page.setViewportSize({ width: 390, height: 844 });
+  assert.equal(await page.isVisible('#pillText .pill-detail'), false);
+  assert.ok(await page.$eval('#signalPill', p => p.getBoundingClientRect().height < 32), 'pill is one line');
+  await context.close();
+});
