@@ -757,7 +757,8 @@
       ],
       "link": "Research/kernel-access-redesigned/",
       "description": "How Linux, macOS and Windows each got security tools out of Ring 0, and how finished each journey is.",
-      "date": "2026-10-21"
+      "date": "2026-10-21",
+      "thumb": "Research/kernel-access-redesigned/cover.webp"
     },
     {
       "id": "research-php2shell",

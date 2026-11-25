@@ -2,6 +2,7 @@
   "$schema": "../../catalog/research.schema.json",
   "id": "research-kernel-access-redesigned",
   "slug": "kernel-access-redesigned",
+  "cover": "cover.webp",
   "title": "Kernel-Access Redesigned",
   "summary": "How Linux, macOS and Windows each got security tools out of Ring 0, and how finished each journey is.",
   "published": "2026-10-15",
