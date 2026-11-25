@@ -7,7 +7,7 @@ const { chromium } = require('playwright');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const FIX = path.join(__dirname, '..', 'fixtures');
-const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
+const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.webp': 'image/webp' };
 const TABS = ['front', 'news', 'research', 'videos', 'tools', 'guides', 'about'];
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64');
 let server, browser, base;
@@ -238,5 +238,15 @@ test('masthead has no glass slab and the paint layer is running', async () => {
   assert.ok(await page.$eval('#paint', c => c.width > 0 && c.height > 0), 'paint canvas sized');
   assert.equal(await page.isVisible('.top-wash'), true);
   assert.deepEqual(errors, []);
+  await context.close();
+});
+test('masthead shows the logo, LinkedIn and Enter Signal; favicon is served', async () => {
+  const { page, context } = await open('#front');
+  await page.waitForFunction(() => { const i = document.querySelector('.brand-badge'); return i && i.complete && i.naturalWidth > 0; });
+  assert.equal(await page.locator('.masthead a[href="https://www.linkedin.com/in/amcamillo/"]').count(), 1);
+  assert.equal(await page.getAttribute('#enterSignal', 'href'), 'https://thinkinfosec.github.io/Signal/');
+  const fav = await page.request.get(new URL('assets/brand/favicon-32.png', base).href);
+  assert.equal(fav.status(), 200);
+  assert.equal(await page.getAttribute('link[rel="icon"]', 'href'), 'assets/brand/favicon-32.png');
   await context.close();
 });

@@ -9,6 +9,8 @@
   <meta name="description" content="Research, tools, guides and the day's cyber, world and AI headlines from ThinkInfoSec.">
   <script src="assets/hub/theme-init.js"></script>
   <link rel="stylesheet" href="assets/hub.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/brand/favicon-180.png">
 </head>
 <body>
   <div class="orbs" aria-hidden="true"><i class="orb orb-1"></i><i class="orb orb-2"></i><i class="orb orb-3"></i><i class="orb orb-4"></i><i class="orb orb-5"></i></div>
@@ -18,12 +20,17 @@
   <a class="skip" href="#main">Skip to content</a>
   <header class="masthead">
     <div class="wrap masthead-row">
-      <div>
-        <a class="brand" href="#front">Think<span>InfoSec</span> <small>Hub</small></a>
-        <p class="dateline" id="dateline"></p>
+      <div class="brand-block">
+        <img class="brand-badge" src="assets/brand/logo-96.webp" width="48" height="48" alt="ThinkInfoSec logo">
+        <div>
+          <a class="brand" href="#front">Think<span>InfoSec</span> <small>Hub</small></a>
+          <p class="dateline" id="dateline"></p>
+        </div>
       </div>
       <div class="masthead-tools">
         <p class="pill" id="signalPill" data-state="none"><span class="dot" aria-hidden="true"></span><span id="pillText" aria-live="polite">LISTENING FOR SIGNAL</span></p>
+        <a class="mast-btn mast-li" href="https://www.linkedin.com/in/amcamillo/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><span class="li-mark" aria-hidden="true">in</span><span class="btn-label">LinkedIn</span></a>
+        <a class="mast-btn mast-signal" id="enterSignal" href="https://thinkinfosec.github.io/Signal/" aria-label="Enter Signal full screen"><span class="dot" aria-hidden="true"></span><span class="btn-label">Enter Signal</span><span aria-hidden="true">⤢</span></a>
         <div class="theme-toggle" role="group" aria-label="Colour theme">
           <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
           <button type="button" data-theme-set="light" aria-pressed="true">Light</button>
