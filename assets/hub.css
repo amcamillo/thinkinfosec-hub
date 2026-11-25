@@ -239,3 +239,14 @@ body.leaving :is(.masthead, main, .site-foot) { opacity: 0; filter: blur(8px); t
 }
 /* Narrow screens: the pill shows only its state (e.g. SIGNAL LIVE) so the masthead stays short. */
 @media (max-width: 760px) { .pill-detail { display: none; } .pill { white-space: nowrap; } }
+
+/* Content veil: frosts the painted background behind the content column so text separates from it.
+   Feathered on every side with a mask so there is no hard edge. */
+main.wrap { position: relative; }
+main.wrap::before { content: ""; position: absolute; inset: -28px -56px; z-index: -1; pointer-events: none;
+  background: color-mix(in srgb, var(--bg) 42%, transparent);
+  -webkit-backdrop-filter: blur(26px) saturate(1.15); backdrop-filter: blur(26px) saturate(1.15);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 56px, #000 calc(100% - 56px), transparent), linear-gradient(180deg, transparent, #000 28px, #000 calc(100% - 28px), transparent);
+  -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent, #000 56px, #000 calc(100% - 56px), transparent), linear-gradient(180deg, transparent, #000 28px, #000 calc(100% - 28px), transparent);
+  mask-composite: intersect; }
+@media (max-width: 760px) { main.wrap::before { inset: -20px -16px; -webkit-mask-image: linear-gradient(180deg, transparent, #000 20px, #000 calc(100% - 20px), transparent); mask-image: linear-gradient(180deg, transparent, #000 20px, #000 calc(100% - 20px), transparent); } }
