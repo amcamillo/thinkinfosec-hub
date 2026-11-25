@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research — Thinkinfosec Hub</title>
+<meta name="description" content="Independent ThinkInfoSec research briefings on agentic threats, securing AI, regulation and control frameworks. Search and filter by theme, technology, framework and region.">
+<meta name="author" content="Andre Camillo">
+<link rel="canonical" href="https://amcamillo.github.io/thinkinfosec-hub/Research/">
+<link rel="icon" href="../assets/brand/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/brand/favicon-180.png">
+<link rel="alternate" type="application/json" href="index.json" title="ThinkInfoSec research feed">
+<link rel="stylesheet" href="../assets/research.css">
+<script src="../assets/hub/theme-init.js"></script>
+</head>
+<body class="library">
+<a class="skip" href="#results">Skip to results</a>
+<div class="orbs" aria-hidden="true"><span class="orb orb-1"></span><span class="orb orb-2"></span><span class="orb orb-3"></span></div>
+<header class="col r-top">
+  <a class="brand-block" href="../index.html">
+    <img class="brand-badge" src="../assets/brand/logo-96.webp" width="40" height="40" alt="ThinkInfoSec logo">
+    <span class="brand">Think<span>InfoSec</span> <small>Hub</small></span>
+  </a>
+  <div class="r-tools">
+    <a class="r-back" href="../index.html">&larr; Hub</a>
+    <div class="theme-toggle" role="group" aria-label="Colour theme">
+      <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
+      <button type="button" data-theme-set="light" aria-pressed="true">Light</button>
+    </div>
+  </div>
+</header>
+
+<div class="col cover lib-cover">
+  <nav class="crumb" aria-label="Breadcrumb"><a href="../index.html">Hub</a><span class="sep">/</span>Research</nav>
+  <p class="kicker">Independent research briefings</p>
+  <h1>The <em>research</em> library</h1>
+  <p class="lede">Agentic threats, securing AI, regulation and control frameworks, read through a defender's lens. Search, or narrow by theme, technology, framework and region.</p>
+  <div class="rail" id="libStats" aria-live="polite">
+    <span><b id="statCount">—</b> BRIEFINGS</span>
+    <span><b id="statThemes">—</b> THEMES</span>
+    <span>LATEST <b id="statLatest">—</b></span>
+  </div>
+</div>
+
+<main class="col lib" id="main">
+  <form class="lib-search frost" role="search" id="libForm">
+    <label class="visually-hidden" for="q">Search research</label>
+    <span class="lib-search-icon" aria-hidden="true">&#9906;</span>
+    <input id="q" name="q" type="search" placeholder="Search titles, summaries, tags and vendors" autocomplete="off">
+    <button type="button" class="lib-clear" id="libClear" hidden>Clear all</button>
+  </form>
+
+  <div class="lib-facets" id="facets" aria-label="Filters"></div>
+
+  <div class="lib-bar">
+    <p class="lib-count" id="libCount" aria-live="polite" role="status"></p>
+    <label class="lib-sort">Sort
+      <select id="sort">
+        <option value="newest">Newest</option>
+        <option value="oldest">Oldest</option>
+        <option value="short">Shortest read</option>
+      </select>
+    </label>
+  </div>
+
+  <section class="lib-grid" id="results" aria-label="Research briefings"></section>
+  <p class="lib-empty" id="libEmpty" hidden>No briefings match those filters. <button type="button" id="libReset">Clear filters</button></p>
+  <noscript><p class="lib-empty">The library needs JavaScript to filter. The full list is in <a href="index.json">index.json</a> and on the <a href="../index.html#research">hub front page</a>.</p></noscript>
+</main>
+
+<footer class="col r-foot">
+  <img src="../assets/brand/logo-96.webp" width="28" height="28" alt="">
+  <div>
+    <p class="ft-main">ThinkInfoSec 2026 &middot; Andre Camillo &middot; <a href="index.json">Research feed (JSON)</a></p>
+    <p class="ft-sub">Independent briefings, not official publications of the organisations named. Briefings marked AI-assisted are AI-assisted research; none of this is legal advice.</p>
+  </div>
+  <a class="cta-li" href="https://www.linkedin.com/in/amcamillo/" target="_blank" rel="noopener noreferrer"><span class="li-mark" aria-hidden="true">in</span>LinkedIn</a>
+</footer>
+<script src="../assets/research.js"></script>
+<script src="../assets/research-index.js"></script>
+</body>
+</html>

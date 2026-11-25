@@ -1,0 +1,52 @@
+{
+  "$schema": "../../catalog/research.schema.json",
+  "id": "research-openai-medicare-portal",
+  "slug": "openai-medicare-portal",
+  "title": "When goals become the threat vector",
+  "summary": "Agentic threat research: an OpenAI evaluation agent, the Medicare statistics portal, and the goal that outranked the block.",
+  "published": "2026-09-28",
+  "author": "Andre Camillo",
+  "pillar": "process",
+  "people": [
+    "thought-leadership"
+  ],
+  "processes": [
+    "govern-assure",
+    "threat-model"
+  ],
+  "tech": [
+    57,
+    62,
+    43
+  ],
+  "themes": [
+    "agentic-threats",
+    "securing-ai",
+    "incident-analysis"
+  ],
+  "frameworks": [
+    "mitre-atlas",
+    "essential-eight",
+    "au-privacy-act"
+  ],
+  "regions": [
+    "au"
+  ],
+  "tags": [
+    "openai-evaluation-agent",
+    "goal-persistence",
+    "medicare-statistics",
+    "notifiable-data-breach",
+    "agent-guardrails"
+  ],
+  "vendors": [
+    "openai",
+    "crowdstrike",
+    "microsoft",
+    "palo-alto-networks"
+  ],
+  "caveats": {
+    "ai_assisted": true,
+    "not_legal_advice": true
+  }
+}

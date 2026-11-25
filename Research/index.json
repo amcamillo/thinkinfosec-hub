@@ -1,0 +1,1468 @@
+{
+  "version": 1,
+  "generated_from": "Research/*/meta.json",
+  "items": [
+    {
+      "id": "research-double-agents",
+      "slug": "double-agents",
+      "url": "https://amcamillo.github.io/thinkinfosec-hub/Research/double-agents/",
+      "title": "Double agents",
+      "headline": "Double Agents: ARTEX and the Day the Pen-Test Tool Switched Sides",
+      "summary": "ARTEX, the pen-test harness in the November 2026 FBI FLASH, and the agents already on the estate.",
+      "published": "2026-11-25",
+      "updated": "2026-11-25",
+      "author": "Andre Camillo",
+      "cover": "https://amcamillo.github.io/thinkinfosec-hub/Research/double-agents/cover.webp",
+      "reading_minutes": 17,
+      "pillar": "process",
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "threat-model",
+        "detect-hunt"
+      ],
+      "tech": [
+        43,
+        62
+      ],
+      "themes": [
+        "agentic-threats",
+        "detection-response",
+        "securing-ai"
+      ],
+      "frameworks": [
+        "mitre-attack"
+      ],
+      "regions": [
+        "global",
+        "us"
+      ],
+      "tags": [
+        "artex",
+        "fbi-flash",
+        "cyberstrikeai",
+        "vapor-panda",
+        "storm-0940",
+        "breakout-time",
+        "agentic-intrusion",
+        "red-team-tools"
+      ],
+      "vendors": [
+        "crowdstrike",
+        "microsoft",
+        "palo-alto-networks",
+        "nextron-systems",
+        "ahnlab",
+        "anthropic",
+        "openai",
+        "deepseek"
+      ],
+      "caveats": {
+        "ai_assisted": true,
+        "not_legal_advice": true
+      },
+      "sources": [
+        {
+          "url": "https://www.ic3.gov/csa/2026/261113.pdf",
+          "host": "ic3.gov",
+          "text": "FLASH-20261113-001"
+        },
+        {
+          "url": "https://www.crowdstrike.com/en-us/blog/unknown-threat-actor-uses-artex-to-target-south-korean-finance/",
+          "host": "crowdstrike.com",
+          "text": "CrowdStrike's own write-up of a South Korean campaign"
+        },
+        {
+          "url": "https://www.nextron-systems.com/2026/10/29/beyond-framework-signatures-understanding-ai-driven-intrusions/",
+          "host": "nextron-systems.com",
+          "text": "\"Beyond Framework Signatures: Understanding AI-Driven Intrusions\""
+        },
+        {
+          "url": "https://asec.ahnlab.com/en/95845/",
+          "host": "asec.ahnlab.com",
+          "text": "AhnLab ASEC"
+        },
+        {
+          "url": "https://github.com/oritera/Cairn",
+          "host": "github.com",
+          "text": "its README"
+        },
+        {
+          "url": "https://thehackernews.com/2025/09/ai-powered-villager-pen-testing-tool.html",
+          "host": "thehackernews.com",
+          "text": "10,030 downloads in about two months"
+        },
+        {
+          "url": "https://blog.checkpoint.com/executive-insights/hexstrike-ai-when-llms-meet-zero-day-exploitation/",
+          "host": "blog.checkpoint.com",
+          "text": "Underground forums discussed using it against NetScaler within hours of release"
+        },
+        {
+          "url": "https://gambit.security/blog-posts/autonomous-ai-agents-online-retailers-25-a-company",
+          "host": "gambit.security",
+          "text": "Gambit Security's interim report"
+        },
+        {
+          "url": "https://github.com/jiwoochris/artex-global/blob/main/docs/defense-en.md",
+          "host": "github.com",
+          "text": "defence guide"
+        },
+        {
+          "url": "https://www.crowdstrike.com/en-us/blog/crowdstrike-2026-global-threat-report-findings",
+          "host": "crowdstrike.com",
+          "text": "CrowdStrike's 2026 Global Threat Report"
+        },
+        {
+          "url": "https://www.microsoft.com/en-us/security/blog/2026/10/21/storm-0940-uses-artex-agentic-ai-connectwise-supply-chain-compromise/",
+          "host": "microsoft.com",
+          "text": "Microsoft's 21 October 2026 write-up"
+        },
+        {
+          "url": "https://unit42.paloaltonetworks.com/artex-and-ai-powered-red-teaming-tools/",
+          "host": "unit42.paloaltonetworks.com",
+          "text": "Unit 42's 11 November 2026 report"
+        },
+        {
+          "url": "https://crowdstrike.com/en-us/blog/crowdstrike-2026-threat-hunting-report",
+          "host": "crowdstrike.com",
+          "text": "CrowdStrike's 2026 Threat Hunting Report"
+        }
+      ]
+    },
+    {
+      "id": "research-where-agents-run",
+      "slug": "where-agents-run",
+      "url": "https://amcamillo.github.io/thinkinfosec-hub/Research/where-agents-run/",
+      "title": "Your agent is not the model",
+      "headline": "Your agent is not the model: where it runs, and what can stop it",
+      "summary": "Harnesses, runtimes, and the controls that can actually stop them.",
+      "published": "2026-11-13",
+      "updated": "2026-11-13",
+      "author": "Andre Camillo",
+      "cover": null,
+      "reading_minutes": 31,
+      "pillar": "process",
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "govern-assure",
+        "threat-model",
+        "detect-hunt"
+      ],
+      "tech": [
+        2,
+        62
+      ],
+      "themes": [
+        "securing-ai",
+        "detection-response",
+        "identity-access"
+      ],
+      "frameworks": [
+        "owasp-agentic",
+        "owasp-llm-top-10",
+        "mitre-atlas"
+      ],
+      "regions": [
+        "global"
+      ],
+      "tags": [
+        "agent-harness",
+        "agent-runtime",
+        "mcp",
+        "lethal-trifecta",
+        "ollama",
+        "coding-agents",
+        "non-human-identity",
+        "aidr"
+      ],
+      "vendors": [
+        "crowdstrike",
+        "microsoft",
+        "palo-alto-networks",
+        "google",
+        "anthropic",
+        "openai"
+      ],
+      "caveats": {
+        "ai_assisted": true,
+        "not_legal_advice": true
+      },
+      "sources": [
+        {
+          "url": "https://www.anthropic.com/engineering/building-effective-agents",
+          "host": "anthropic.com",
+          "text": "Building effective agents"
+        },
+        {
+          "url": "https://docs.ollama.com/capabilities/tool-calling",
+          "host": "docs.ollama.com",
+          "text": "tool calling documentation"
+        },
+        {
+          "url": "https://docs.ollama.com/integrations/claude-code",
+          "host": "docs.ollama.com",
+          "text": "Ollama's Claude Code integration page"
+        },
+        {
+          "url": "https://code.claude.com/docs/en/sandboxing",
+          "host": "code.claude.com",
+          "text": "sandboxing docs"
+        },
+        {
+          "url": "https://github.com/anthropic-experimental/sandbox-runtime",
+          "host": "github.com",
+          "text": "sandbox-runtime"
+        },
+        {
+          "url": "https://support.claude.com/en/articles/14479288-claude-cowork-desktop-architecture-overview",
+          "host": "support.claude.com",
+          "text": "desktop architecture overview"
+        },
+        {
+          "url": "https://cursor.com/blog/agent-sandboxing",
+          "host": "cursor.com",
+          "text": "Agent sandboxing"
+        },
+        {
+          "url": "https://learn.chatgpt.com/docs/sandboxing",
+          "host": "learn.chatgpt.com",
+          "text": "sandboxing docs"
+        },
+        {
+          "url": "https://learn.chatgpt.com/docs/agent-approvals-security",
+          "host": "learn.chatgpt.com",
+          "text": "approvals and security docs"
+        },
+        {
+          "url": "https://learn.chatgpt.com/docs/windows/windows-sandbox",
+          "host": "learn.chatgpt.com",
+          "text": "Windows sandbox docs"
+        },
+        {
+          "url": "https://codex.danielvaughan.com/2026/05/14/codex-cli-windows-sandbox-engineering-restricted-tokens-acls-elevated-architecture/",
+          "host": "codex.danielvaughan.com",
+          "text": "Daniel Vaughan's write-up of it"
+        },
+        {
+          "url": "https://antigravity.google/docs/sandbox/",
+          "host": "antigravity.google",
+          "text": "terminal sandbox"
+        },
+        {
+          "url": "https://antigravity.google/docs/agent-settings.md",
+          "host": "antigravity.google",
+          "text": "settings docs"
+        },
+        {
+          "url": "https://labs.cloudsecurityalliance.org/research/csa-research-note-agentic-ide-prompt-injection-sandbox-escap/",
+          "host": "labs.cloudsecurityalliance.org",
+          "text": "a research note"
+        },
+        {
+          "url": "https://www.elastic.co/security-labs/ai-coding-agent-audit-cursor-hooks",
+          "host": "elastic.co",
+          "text": "a piece on auditing Cursor with hooks"
+        },
+        {
+          "url": "https://www.sophos.com/blog/2607_agents_vs_telemetry",
+          "host": "sophos.com",
+          "text": "When AI agents look like attackers"
+        },
+        {
+          "url": "https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/",
+          "host": "simonwillison.net",
+          "text": "lethal trifecta"
+        },
+        {
+          "url": "https://arxiv.org/abs/2503.18813",
+          "host": "arxiv.org",
+          "text": "Defeating Prompt Injections by Design"
+        },
+        {
+          "url": "https://learn.microsoft.com/azure/foundry/guardrails/guardrails-overview",
+          "host": "learn.microsoft.com",
+          "text": "Azure AI Foundry guardrails"
+        },
+        {
+          "url": "https://learn.microsoft.com/entra/agent-id/identity-professional/security-for-ai",
+          "host": "learn.microsoft.com",
+          "text": "Entra security-for-AI docs"
+        },
+        {
+          "url": "https://www.tenable.com/cve/CVE-2025-54135",
+          "host": "tenable.com",
+          "text": "CVE-2025-54135"
+        },
+        {
+          "url": "https://sc1.checkpoint.com/documents/Workforce_AI_Security/Workforce_AI_Security_Admin_Guide.pdf",
+          "host": "sc1.checkpoint.com",
+          "text": "Workforce AI Security admin guide"
+        },
+        {
+          "url": "https://aidr-docs.crowdstrike.com/docs/aidr/collectors/agentic",
+          "host": "aidr-docs.crowdstrike.com",
+          "text": "collector docs"
+        },
+        {
+          "url": "https://aidr-docs.crowdstrike.com/docs/aidr/collectors/agentic/claude-code",
+          "host": "aidr-docs.crowdstrike.com",
+          "text": "Claude Code collector"
+        },
+        {
+          "url": "https://aidr-docs.crowdstrike.com/docs/aidr/collectors/gateway/portkey",
+          "host": "aidr-docs.crowdstrike.com",
+          "text": "Portkey plugin"
+        },
+        {
+          "url": "https://aidr-docs.crowdstrike.com/docs/aidr/collectors/gateway/truefoundry",
+          "host": "aidr-docs.crowdstrike.com",
+          "text": "TrueFoundry guardrail"
+        },
+        {
+          "url": "https://aidr-docs.crowdstrike.com/docs/aidr/collectors/gateway/kong",
+          "host": "aidr-docs.crowdstrike.com",
+          "text": "Kong response plugin"
+        },
+        {
+          "url": "https://aidr-docs.crowdstrike.com/docs/aidr/collectors/gateway/jetstream",
+          "host": "aidr-docs.crowdstrike.com",
+          "text": "JetStream guardrail"
+        },
+        {
+          "url": "https://learn.microsoft.com/entra/agent-id/what-are-agent-identities",
+          "host": "learn.microsoft.com",
+          "text": "Entra Agent ID agent identities and blueprints"
+        },
+        {
+          "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
+          "host": "genai.owasp.org",
+          "text": "Top 10 for Agentic Applications"
+        },
+        {
+          "url": "https://www.checkpoint.com/press-releases/check-point-acquires-lakera-to-deliver-end-to-end-ai-security-for-enterprises/",
+          "host": "checkpoint.com",
+          "text": "announced in September 2025"
+        }
+      ]
+    },
+    {
+      "id": "research-php2shell",
+      "slug": "php2shell",
+      "url": "https://amcamillo.github.io/thinkinfosec-hub/Research/php2shell/",
+      "title": "PHP2Shell and the runtime",
+      "headline": "PHP2Shell and the runtime",
+      "summary": "The 21 October 2026 PHP engine advisories: what the patch closes, and what a WAF does not prove.",
+      "published": "2026-10-26",
+      "updated": "2026-10-26",
+      "author": "Andre Camillo",
+      "cover": null,
+      "reading_minutes": 16,
+      "pillar": "process",
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "threat-model",
+        "detect-hunt",
+        "respond-recover"
+      ],
+      "tech": [
+        47,
+        53
+      ],
+      "themes": [
+        "vulnerabilities-exploitation",
+        "detection-response"
+      ],
+      "frameworks": [],
+      "regions": [
+        "global"
+      ],
+      "tags": [
+        "php",
+        "php2shell",
+        "waf",
+        "patch-management",
+        "runtime-inventory",
+        "cve"
+      ],
+      "vendors": [
+        "cloudflare",
+        "akamai",
+        "imperva"
+      ],
+      "caveats": {
+        "ai_assisted": true,
+        "not_legal_advice": true
+      },
+      "sources": [
+        {
+          "url": "https://www.php.net/archive/2026.php#2026-10-21-5",
+          "host": "php.net",
+          "text": "php.net/archive/2026.php"
+        },
+        {
+          "url": "https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w",
+          "host": "github.com",
+          "text": "github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w"
+        },
+        {
+          "url": "https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp",
+          "host": "github.com",
+          "text": "github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp"
+        },
+        {
+          "url": "https://thephp.foundation/blog/2026/10/21/todays-php-security-release-and-how-were-strengthening-php-security/",
+          "host": "thephp.foundation",
+          "text": "thephp.foundation/blog/2026/10/21/…"
+        },
+        {
+          "url": "https://www.cisa.gov/news-events/alerts/2026/10/21/critical-vulnerabilities-php-require-immediate-patching",
+          "host": "cisa.gov",
+          "text": "cisa.gov/…/critical-vulnerabilities-php-require-immediate-patching"
+        },
+        {
+          "url": "https://www.cyber.gc.ca/en/alerts-advisories/al26-026-critical-vulnerabilities-impacting-php-cve-2026-109618-cve-2026-109619",
+          "host": "cyber.gc.ca",
+          "text": "cyber.gc.ca/…/al26-026-…"
+        },
+        {
+          "url": "https://www.kb.cert.org/vuls/id/763488",
+          "host": "kb.cert.org",
+          "text": "kb.cert.org/vuls/id/763488"
+        },
+        {
+          "url": "https://www.wiz.io/blog/php2shell-php-rce",
+          "host": "wiz.io",
+          "text": "wiz.io/blog/php2shell-php-rce"
+        },
+        {
+          "url": "https://blog.cloudflare.com/php-vulnerabilities-waf-protection/",
+          "host": "blog.cloudflare.com",
+          "text": "blog.cloudflare.com/php-vulnerabilities-waf-protection"
+        },
+        {
+          "url": "https://vercel.com/kb/bulletin/php2shell-security-bulletin",
+          "host": "vercel.com",
+          "text": "vercel.com/kb/bulletin/php2shell-security-bulletin"
+        }
+      ]
+    },
+    {
+      "id": "research-kernel-access-redesigned",
+      "slug": "kernel-access-redesigned",
+      "url": "https://amcamillo.github.io/thinkinfosec-hub/Research/kernel-access-redesigned/",
+      "title": "Kernel-Access Redesigned",
+      "headline": "Kernel-Access Redesigned",
+      "summary": "How Linux, macOS and Windows each got security tools out of Ring 0, and how finished each journey is.",
+      "published": "2026-10-15",
+      "updated": "2026-10-21",
+      "author": "Andre Camillo",
+      "cover": null,
+      "reading_minutes": 9,
+      "pillar": "process",
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "threat-model",
+        "respond-recover"
+      ],
+      "tech": [
+        1,
+        2
+      ],
+      "themes": [
+        "kernel-endpoint",
+        "strategy-outlook"
+      ],
+      "frameworks": [],
+      "regions": [
+        "global",
+        "eu"
+      ],
+      "tags": [
+        "ring-0",
+        "ebpf",
+        "endpoint-security-framework",
+        "patchguard",
+        "windows-resiliency-initiative",
+        "wesp",
+        "hvci",
+        "lsm"
+      ],
+      "vendors": [
+        "microsoft",
+        "apple",
+        "crowdstrike"
+      ],
+      "caveats": {
+        "ai_assisted": true,
+        "not_legal_advice": true
+      },
+      "sources": [
+        {
+          "url": "https://www.crowdstrike.com/en-us/events/fal-con/las-vegas/keynotes/",
+          "host": "crowdstrike.com",
+          "text": "CrowdStrike's own keynote page"
+        },
+        {
+          "url": "https://www.crowdstrike.com/en-us/press-releases/crowdstrike-appoints-alex-ionescu-chief-technology-innovation-officer/",
+          "host": "crowdstrike.com",
+          "text": "rejoined CrowdStrike in April 2025"
+        },
+        {
+          "url": "https://cisa.gov/news-events/alerts/2024/07/19/widespread-it-outage-due-crowdstrike-update",
+          "host": "cisa.gov",
+          "text": "CISA's alert"
+        },
+        {
+          "url": "https://www.intelligentcio.com/apac/?p=37560",
+          "host": "intelligentcio.com",
+          "text": "CrowdStrike's own technical update"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/EBPF",
+          "host": "en.wikipedia.org",
+          "text": "eBPF entry on Wikipedia"
+        },
+        {
+          "url": "https://issa.mydigitalpublication.com/articles/mitigating-attacks-on-a-supercomputer-with-krsi",
+          "host": "issa.mydigitalpublication.com",
+          "text": "ISSA Journal's write-up"
+        },
+        {
+          "url": "https://developer.apple.com/support/kernel-extensions",
+          "host": "developer.apple.com",
+          "text": "Apple's own developer page"
+        },
+        {
+          "url": "https://eclecticlight.co/2024/09/09/mastering-secure-boot-on-apple-silicon/",
+          "host": "eclecticlight.co",
+          "text": "Eclectic Light's walkthrough"
+        },
+        {
+          "url": "https://eclecticlight.co/2024/07/24/how-macos-is-moving-away-from-kernel-extensions/",
+          "host": "eclecticlight.co",
+          "text": "Eclectic Light notes"
+        },
+        {
+          "url": "https://news.microsoft.com/?p=48181",
+          "host": "news.microsoft.com",
+          "text": "Brad Smith's announcement"
+        },
+        {
+          "url": "https://www.theregister.com/2024/07/22/windows_crowdstrike_kernel_eu/",
+          "host": "theregister.com",
+          "text": "The Register's reading"
+        },
+        {
+          "url": "https://blogs.windows.com/windowsexperience/2024/11/19/windows-security-and-resiliency-protecting-your-business/",
+          "host": "blogs.windows.com",
+          "text": "Microsoft's Windows blog"
+        },
+        {
+          "url": "https://blogs.windows.com/windowsexperience/2025/11/18/preparing-for-whats-next-windows-security-and-resiliency-innovations-help-organizations-mitigate-risks-recover-faster-and-prepare-for-the-era-of-ai/",
+          "host": "blogs.windows.com",
+          "text": "Microsoft's November 2025 update"
+        },
+        {
+          "url": "https://www.investing.com/news/transcripts/crowdstrike-at-falcon-pushes-deeper-into-aidriven-security-93CH-4888375",
+          "host": "investing.com",
+          "text": "the keynote coverage on Investing.com"
+        },
+        {
+          "url": "https://bleepingcomputer.com/news/microsoft/microsoft-rolls-out-native-windows-11-sysmon-security-monitoring",
+          "host": "bleepingcomputer.com",
+          "text": "BleepingComputer"
+        },
+        {
+          "url": "https://www.helpnetsecurity.com/2026/09/03/windows-memory-integrity-update/",
+          "host": "helpnetsecurity.com",
+          "text": "Help Net Security"
+        },
+        {
+          "url": "https://support.microsoft.com/windows/quick-machine-recovery-in-windows-aa2852f4-e04e-4af4-9508-0addda165304",
+          "host": "support.microsoft.com",
+          "text": "Microsoft Support"
+        },
+        {
+          "url": "https://github.com/microsoft/ebpf-for-windows",
+          "host": "github.com",
+          "text": "project's README"
+        },
+        {
+          "url": "https://amcamillo.github.io/thinkinfosec-hub",
+          "host": "amcamillo.github.io",
+          "text": "ThinkInfoSec Hub"
+        },
+        {
+          "url": "https://www.youtube.com/channel/UCK5IydDSpf-Yz7qCmVjDN5Q",
+          "host": "youtube.com",
+          "text": "YouTube"
+        },
+        {
+          "url": "https://open.spotify.com/show/2e32C7SFXNUqfRR3YemmtI",
+          "host": "open.spotify.com",
+          "text": "Podcast"
+        }
+      ]
+    },
+    {
+      "id": "research-always-on-agents",
+      "slug": "always-on-agents",
+      "url": "https://amcamillo.github.io/thinkinfosec-hub/Research/always-on-agents/",
+      "title": "Always-on agents",
+      "headline": "Always-on agents: dots, Muse and Grok Bot through a security lens",
+      "summary": "A security reading of OpenAI dots, Meta Muse and xAI Grok Bot: published controls, and what an ANZ team should do this sprint.",
+      "published": "2026-10-03",
+      "updated": "2026-10-03",
+      "author": "Andre Camillo",
+      "cover": null,
+      "reading_minutes": 19,
+      "pillar": "process",
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "govern-assure",
+        "threat-model"
+      ],
+      "tech": [
+        57,
+        62
+      ],
+      "themes": [
+        "securing-ai",
+        "identity-access",
+        "strategy-outlook"
+      ],
+      "frameworks": [
+        "owasp-llm-top-10"
+      ],
+      "regions": [
+        "au",
+        "nz"
+      ],
+      "tags": [
+        "openai-dots",
+        "meta-muse",
+        "grok-bot",
+        "always-on-agents",
+        "oauth",
+        "excessive-agency",
+        "prompt-injection"
+      ],
+      "vendors": [
+        "openai",
+        "meta",
+        "xai",
+        "microsoft"
+      ],
+      "caveats": {
+        "ai_assisted": true,
+        "not_legal_advice": true
+      },
+      "sources": []
+    },
+    {
+      "id": "research-ai-harness-engineering",
+      "slug": "ai-harness-engineering",
+      "url": "https://amcamillo.github.io/thinkinfosec-hub/Research/ai-harness-engineering/",
+      "title": "The harness is the control plane",
+      "headline": "The harness is the control plane",
+      "summary": "A controls reading of Zhong and Zhu’s harness ladder, and the trust boundaries the preprint leaves open.",
+      "published": "2026-10-02",
+      "updated": "2026-10-02",
+      "author": "Andre Camillo",
+      "cover": null,
+      "reading_minutes": 15,
+      "pillar": "process",
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "govern-assure",
+        "threat-model"
+      ],
+      "tech": [
+        57,
+        62
+      ],
+      "themes": [
+        "securing-ai",
+        "strategy-outlook"
+      ],
+      "frameworks": [
+        "owasp-llm-top-10",
+        "nist-ai-rmf",
+        "eu-ai-act"
+      ],
+      "regions": [
+        "global"
+      ],
+      "tags": [
+        "harness-engineering",
+        "agent-harness",
+        "h0-h3-ladder",
+        "preprint-review",
+        "trust-boundaries",
+        "control-plane"
+      ],
+      "vendors": [
+        "openai",
+        "anthropic"
+      ],
+      "caveats": {
+        "ai_assisted": true,
+        "not_legal_advice": true
+      },
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2605.13357v1",
+          "host": "arxiv.org",
+          "text": "AI Harness Engineering: A Runtime Substrate for Foundation-Model Software Agents"
+        },
+        {
+          "url": "https://arxiv.org/abs/2605.13357",
+          "host": "arxiv.org",
+          "text": "arxiv.org/abs/2605.13357"
+        },
+        {
+          "url": "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final",
+          "host": "csrc.nist.gov",
+          "text": "csrc.nist.gov/pubs/sp/800/53/r5/upd1/final"
+        },
+        {
+          "url": "https://genai.owasp.org/llm-top-10/",
+          "host": "genai.owasp.org",
+          "text": "genai.owasp.org/llm-top-10"
+        },
+        {
+          "url": "https://csrc.nist.gov/pubs/sp/800/218/final",
+          "host": "csrc.nist.gov",
+          "text": "csrc.nist.gov/pubs/sp/800/218/final"
+        },
+        {
+          "url": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-ai-rmf-10",
+          "host": "nist.gov",
+          "text": "nist.gov/publications/…/ai-rmf-10"
+        }
+      ]
+    },
+    {
+      "id": "research-openai-medicare-portal",
+      "slug": "openai-medicare-portal",
+      "url": "https://amcamillo.github.io/thinkinfosec-hub/Research/openai-medicare-portal/",
+      "title": "When goals become the threat vector",
+      "headline": "When goals become the threat vector",
+      "summary": "Agentic threat research: an OpenAI evaluation agent, the Medicare statistics portal, and the goal that outranked the block.",
+      "published": "2026-09-28",
+      "updated": "2026-09-28",
+      "author": "Andre Camillo",
+      "cover": null,
+      "reading_minutes": 22,
+      "pillar": "process",
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "govern-assure",
+        "threat-model"
+      ],
+      "tech": [
+        57,
+        62,
+        43
+      ],
+      "themes": [
+        "agentic-threats",
+        "securing-ai",
+        "incident-analysis"
+      ],
+      "frameworks": [
+        "mitre-atlas",
+        "essential-eight",
+        "au-privacy-act"
+      ],
+      "regions": [
+        "au"
+      ],
+      "tags": [
+        "openai-evaluation-agent",
+        "goal-persistence",
+        "medicare-statistics",
+        "notifiable-data-breach",
+        "agent-guardrails"
+      ],
+      "vendors": [
+        "openai",
+        "crowdstrike",
+        "microsoft",
+        "palo-alto-networks"
+      ],
+      "caveats": {
+        "ai_assisted": true,
+        "not_legal_advice": true
+      },
+      "sources": [
+        {
+          "url": "https://anthonyalbanese.com.au/media-centre/press-conference-new-york-2026-09-24-1790258427946",
+          "host": "anthonyalbanese.com.au",
+          "text": "anthonyalbanese.com.au/…/press-conference-new-york-2026-09-24"
+        },
+        {
+          "url": "https://www.abc.net.au/news/2026-09-24/what-we-know-about-the-openai-medicare-hack/107189452",
+          "host": "abc.net.au",
+          "text": "abc.net.au/news/2026-09-24/…/107189452"
+        },
+        {
+          "url": "https://www.canberratimes.com.au/story/9356739/services-australia-openai-breach-probed-after-email-delay/",
+          "host": "canberratimes.com.au",
+          "text": "canberratimes.com.au/story/9356739/…"
+        },
+        {
+          "url": "https://www.abc.net.au/news/2026-09-26/openai-review-rogue-agents-australia-medicare-hack/107199074",
+          "host": "abc.net.au",
+          "text": "abc.net.au/news/2026-09-26/…/107199074"
+        },
+        {
+          "url": "https://openai.com/hugging-face-incident-and-misalignment/",
+          "host": "openai.com",
+          "text": "openai.com/hugging-face-incident-and-misalignment"
+        },
+        {
+          "url": "https://cdn.openai.com/pdf/67869394-cb91-4c12-888c-5cbd85c7814c/OpenAI-Hugging-Face%20Incident-Technical-Report.pdf",
+          "host": "cdn.openai.com",
+          "text": "cdn.openai.com/…/OpenAI-Hugging-Face Incident-Technical-Report.pdf"
+        },
+        {
+          "url": "https://www.oaic.gov.au/privacy/notifiable-data-breaches/about-the-notifiable-data-breaches-scheme",
+          "host": "oaic.gov.au",
+          "text": "oaic.gov.au/…/about-the-notifiable-data-breaches-scheme"
+        },
+        {
+          "url": "https://www.oaic.gov.au/privacy/notifiable-data-breaches/preventing-preparing-for-and-responding-to-data-breaches/data-breach-preparation-and-response/part-4-notifiable-data-breach-ndb-scheme",
+          "host": "oaic.gov.au",
+          "text": "oaic.gov.au/…/part-4-notifiable-data-breach-ndb-scheme"
+        },
+        {
+          "url": "https://www.anthropic.com/threat-intelligence-report-september-2026",
+          "host": "anthropic.com",
+          "text": "anthropic.com/threat-intelligence-report-september-2026"
+        },
+        {
+          "url": "https://www.crowdstrike.com/en-us/blog/crowdstrike-2025-threat-hunting-report-ai-weapon-target/",
+          "host": "crowdstrike.com",
+          "text": "crowdstrike.com/…/crowdstrike-2025-threat-hunting-report-ai-weapon-target"
+        },
+        {
+          "url": "https://cloud.google.com/security/resources/m-trends-executive-edition",
+          "host": "cloud.google.com",
+          "text": "cloud.google.com/security/resources/m-trends-executive-edition"
+        },
+        {
+          "url": "https://www.cyberproof.com/cyber-threat-intelligence/cyberproof-2025-mid-year-cyber-threat-landscape-report/",
+          "host": "cyberproof.com",
+          "text": "cyberproof.com/…/cyberproof-2025-mid-year-cyber-threat-landscape-report"
+        },
+        {
+          "url": "https://www.cisc.gov.au/legislation-regulation-and-compliance/soci-act-2018",
+          "host": "cisc.gov.au",
+          "text": "cisc.gov.au/…/soci-act-2018"
+        },
+        {
+          "url": "https://www.cisc.gov.au/resources-subsite/Documents/guidance-for-the-critical-infrastructure-risk-management-program.pdf",
+          "host": "cisc.gov.au",
+          "text": "cisc.gov.au/…/guidance-for-the-critical-infrastructure-risk-management-program.pdf"
+        },
+        {
+          "url": "https://www.protectivesecurity.gov.au/pspf-annual-release",
+          "host": "protectivesecurity.gov.au",
+          "text": "protectivesecurity.gov.au/pspf-annual-release"
+        },
+        {
+          "url": "https://www.protectivesecurity.gov.au/news/policy-amendment-information-security",
+          "host": "protectivesecurity.gov.au",
+          "text": "protectivesecurity.gov.au/…/policy-amendment-information-security"
+        },
+        {
+          "url": "https://www.cyber.gov.au/about-us/view-all-content/alerts-and-advisories/risks-of-ai-misalignment-to-australian-organisations",
+          "host": "cyber.gov.au",
+          "text": "cyber.gov.au/…/risks-of-ai-misalignment-to-australian-organisations"
+        },
+        {
+          "url": "https://www.cyber.gov.au/business-government/asds-cyber-security-frameworks/essential-eight",
+          "host": "cyber.gov.au",
+          "text": "cyber.gov.au/…/essential-eight"
+        },
+        {
+          "url": "https://www.cyber.gov.au/business-government/asds-cyber-security-frameworks/ism",
+          "host": "cyber.gov.au",
+          "text": "cyber.gov.au/…/ism"
+        },
+        {
+          "url": "https://learn.microsoft.com/entra/agent-id/what-are-agent-identities",
+          "host": "learn.microsoft.com",
+          "text": "learn.microsoft.com/entra/agent-id/what-are-agent-identities"
+        },
+        {
+          "url": "https://learn.microsoft.com/entra/agent-id/what-is-agent-id-platform",
+          "host": "learn.microsoft.com",
+          "text": "learn.microsoft.com/entra/agent-id/what-is-agent-id-platform"
+        },
+        {
+          "url": "https://cortex-docs.paloaltonetworks.com/cortex-agentix/learn-about-cortex-agentix/agentic-ai-in-cortex-agentix",
+          "host": "cortex-docs.paloaltonetworks.com",
+          "text": "cortex-docs.paloaltonetworks.com/…/agentic-ai-in-cortex-agentix"
+        },
+        {
+          "url": "https://www.crowdstrike.com/platform/charlotte-ai/",
+          "host": "crowdstrike.com",
+          "text": "crowdstrike.com/platform/charlotte-ai"
+        },
+        {
+          "url": "https://learn.microsoft.com/entra/agent-id/identity-professional/security-for-ai",
+          "host": "learn.microsoft.com",
+          "text": "learn.microsoft.com/entra/agent-id/…/security-for-ai"
+        },
+        {
+          "url": "https://learn.microsoft.com/azure/defender-for-cloud/ai-threat-protection",
+          "host": "learn.microsoft.com",
+          "text": "learn.microsoft.com/…/ai-threat-protection"
+        },
+        {
+          "url": "https://docs.paloaltonetworks.com/ai-runtime-security",
+          "host": "docs.paloaltonetworks.com",
+          "text": "docs.paloaltonetworks.com/ai-runtime-security"
+        }
+      ]
+    },
+    {
+      "id": "research-essential-eight-crowdstrike",
+      "slug": "essential-eight-crowdstrike",
+      "url": "https://amcamillo.github.io/thinkinfosec-hub/Research/essential-eight-crowdstrike/",
+      "title": "Essential 8 and CrowdStrike Falcon Ecosystem",
+      "headline": "Essential 8 and CrowdStrike Falcon Ecosystem",
+      "summary": "CrowdStrike capability against the Essential Eight: native scope, dependencies, and residual gaps.",
+      "published": "2026-09-22",
+      "updated": "2026-09-22",
+      "author": "Andre Camillo",
+      "cover": null,
+      "reading_minutes": 1,
+      "pillar": "process",
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "govern-assure",
+        "threat-model",
+        "respond-recover"
+      ],
+      "tech": [
+        57,
+        1,
+        8,
+        12,
+        47,
+        67
+      ],
+      "themes": [
+        "control-frameworks",
+        "regulation-compliance"
+      ],
+      "frameworks": [
+        "essential-eight"
+      ],
+      "regions": [
+        "au"
+      ],
+      "tags": [
+        "crosswalk",
+        "maturity-model",
+        "residual-obligations",
+        "falcon-platform"
+      ],
+      "vendors": [
+        "crowdstrike"
+      ],
+      "caveats": {
+        "ai_assisted": true,
+        "not_legal_advice": true
+      },
+      "sources": []
+    },
+    {
+      "id": "research-ncsc-top-10-crowdstrike",
+      "slug": "ncsc-top-10-crowdstrike",
+      "url": "https://amcamillo.github.io/thinkinfosec-hub/Research/ncsc-top-10-crowdstrike/",
+      "title": "NCSC Top 10 and the Falcon boundary",
+      "headline": "NCSC Top 10 and the Falcon boundary",
+      "summary": "CrowdStrike capability against New Zealand’s NCSC Critical Controls: native scope, dependencies, and residual obligations.",
+      "published": "2026-09-22",
+      "updated": "2026-09-22",
+      "author": "Andre Camillo",
+      "cover": null,
+      "reading_minutes": 1,
+      "pillar": "process",
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "govern-assure",
+        "threat-model",
+        "respond-recover"
+      ],
+      "tech": [
+        57,
+        1,
+        12,
+        37,
+        47,
+        67
+      ],
+      "themes": [
+        "control-frameworks",
+        "regulation-compliance"
+      ],
+      "frameworks": [
+        "nz-ncsc-critical-controls"
+      ],
+      "regions": [
+        "nz"
+      ],
+      "tags": [
+        "crosswalk",
+        "critical-controls",
+        "residual-obligations",
+        "falcon-platform"
+      ],
+      "vendors": [
+        "crowdstrike"
+      ],
+      "caveats": {
+        "ai_assisted": true,
+        "not_legal_advice": true
+      },
+      "sources": []
+    },
+    {
+      "id": "research-preparing-2027",
+      "slug": "preparing-for-2027",
+      "url": "https://amcamillo.github.io/thinkinfosec-hub/Research/preparing-for-2027/",
+      "title": "Preparing for 2027",
+      "headline": "Preparing for 2027: Cybersecurity and Compliance Briefing",
+      "summary": "Twelve 2025/26 benchmark reports against Australia’s 2026–27 regulatory spine.",
+      "published": "2026-09-18",
+      "updated": "2026-09-18",
+      "author": "Andre Camillo",
+      "cover": null,
+      "reading_minutes": 21,
+      "pillar": "process",
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "govern-assure",
+        "threat-model",
+        "channel-mssp"
+      ],
+      "tech": [
+        57,
+        62,
+        43
+      ],
+      "themes": [
+        "regulation-compliance",
+        "strategy-outlook",
+        "securing-ai"
+      ],
+      "frameworks": [
+        "au-cyber-security-act",
+        "soci-act",
+        "au-privacy-act",
+        "essential-eight",
+        "owasp-llm-top-10",
+        "mitre-atlas"
+      ],
+      "regions": [
+        "au"
+      ],
+      "tags": [
+        "benchmark-reports",
+        "ransomware-reporting",
+        "regulatory-spine",
+        "mid-market",
+        "threat-velocity"
+      ],
+      "vendors": [
+        "crowdstrike",
+        "microsoft",
+        "ibm",
+        "gartner"
+      ],
+      "caveats": {
+        "ai_assisted": true,
+        "not_legal_advice": true
+      },
+      "sources": [
+        {
+          "url": "https://www.crowdstrike.com/en-us/global-threat-report/",
+          "host": "crowdstrike.com",
+          "text": "crowdstrike.com/en-us/global-threat-report"
+        },
+        {
+          "url": "https://www.crowdstrike.com/en-us/press-releases/2026-crowdstrike-global-threat-report/",
+          "host": "crowdstrike.com",
+          "text": "crowdstrike.com/…/2026-crowdstrike-global-threat-report"
+        },
+        {
+          "url": "https://ir.crowdstrike.com/node/15996/pdf",
+          "host": "ir.crowdstrike.com",
+          "text": "ir.crowdstrike.com/node/15996/pdf"
+        },
+        {
+          "url": "https://www.verizon.com/business/resources/reports/dbir/",
+          "host": "verizon.com",
+          "text": "verizon.com/business/resources/reports/dbir"
+        },
+        {
+          "url": "https://cloud.google.com/blog/topics/threat-intelligence/m-trends-2026",
+          "host": "cloud.google.com",
+          "text": "cloud.google.com/blog/…/m-trends-2026"
+        },
+        {
+          "url": "https://www.enisa.europa.eu/publications/enisa-threat-landscape-2025",
+          "host": "enisa.europa.eu",
+          "text": "enisa.europa.eu/publications/enisa-threat-landscape-2025"
+        },
+        {
+          "url": "https://www.enisa.europa.eu/sites/default/files/2026-01/ENISA%20Threat%20Landscape%202025_v1.2.pdf",
+          "host": "enisa.europa.eu",
+          "text": "enisa.europa.eu/…/ENISA Threat Landscape 2025_v1.2.pdf"
+        },
+        {
+          "url": "https://www.microsoft.com/mddr",
+          "host": "microsoft.com",
+          "text": "microsoft.com/mddr"
+        },
+        {
+          "url": "https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/bade/documents/products-and-services/en-us/security/Microsoft-Digital-Defense-Report-2025.pdf",
+          "host": "cdn-dynmedia-1.microsoft.com",
+          "text": "cdn-dynmedia-1.microsoft.com/…/Microsoft-Digital-Defense-Report-2025.pdf"
+        },
+        {
+          "url": "https://www.crowdstrike.com/en-us/press-releases/crowdstrike-2026-threat-hunting-report/",
+          "host": "crowdstrike.com",
+          "text": "crowdstrike.com/…/crowdstrike-2026-threat-hunting-report"
+        },
+        {
+          "url": "https://www.ibm.com/reports/data-breach",
+          "host": "ibm.com",
+          "text": "ibm.com/reports/data-breach"
+        },
+        {
+          "url": "https://www-api.ibm.com/adobe/assets/urn:aaid:aem:21111142-1251-4369-86fb-57b82f5bb108/original/as/Cost-of-a-Data-Breach-Report-2026.pdf",
+          "host": "www-api.ibm.com",
+          "text": "ibm.com … Cost-of-a-Data-Breach-Report-2026.pdf"
+        },
+        {
+          "url": "https://securitybrief.com.au/story/australia-breach-costs-hit-aud-4-22-million-ibm-says",
+          "host": "securitybrief.com.au",
+          "text": "securitybrief.com.au/…/australia-breach-costs-hit-aud-4-22-million-ibm-says"
+        },
+        {
+          "url": "https://www.wavestone.com/en/insight/cyber-benchmark-2026-progress-slows-as-complexity-rises-1/",
+          "host": "wavestone.com",
+          "text": "wavestone.com/en/insight/cyber-benchmark-2026-…"
+        },
+        {
+          "url": "https://www.wavestone.com/wp-content/uploads/2026/06/2026-cyber-benchmark.pdf",
+          "host": "wavestone.com",
+          "text": "wavestone.com/wp-content/uploads/2026/06/2026-cyber-benchmark.pdf"
+        },
+        {
+          "url": "https://www.weforum.org/publications/global-cybersecurity-outlook-2026/digest/",
+          "host": "weforum.org",
+          "text": "weforum.org/publications/global-cybersecurity-outlook-2026"
+        },
+        {
+          "url": "https://www.pwc.com/us/en/services/consulting/cybersecurity-data-tech-risk/library/global-digital-trust-insights.html",
+          "host": "pwc.com",
+          "text": "pwc.com/…/global-digital-trust-insights"
+        },
+        {
+          "url": "https://www.isc2.org/Insights/2025/12/2025-ISC2-Cybersecurity-Workforce-Study",
+          "host": "isc2.org",
+          "text": "isc2.org/Insights/2025/12/2025-ISC2-Cybersecurity-Workforce-Study"
+        },
+        {
+          "url": "https://www.gartner.com/en/newsroom/press-releases/2025-07-29-gartner-forecasts-worldwide-end-user-spending-on-information-security-to-total-213-billion-us-dollars-in-2025",
+          "host": "gartner.com",
+          "text": "gartner.com/en/newsroom/press-releases/2025-07-29-…"
+        },
+        {
+          "url": "https://www.gartner.com/en/documents/6998666",
+          "host": "gartner.com",
+          "text": "gartner.com/en/documents/6998666"
+        },
+        {
+          "url": "https://www.oaic.gov.au/news/media-centre/data-breach-notifications-increase-to-all-time-high-in-2025,-new-ndb-stats-show",
+          "host": "oaic.gov.au",
+          "text": "oaic.gov.au/news/media-centre/…new-ndb-stats-show"
+        },
+        {
+          "url": "https://www.oaic.gov.au/privacy/notifiable-data-breaches/notifiable-data-breaches-publications",
+          "host": "oaic.gov.au",
+          "text": "oaic.gov.au/privacy/notifiable-data-breaches/…"
+        },
+        {
+          "url": "https://www.homeaffairs.gov.au/cyber-security-subsite/Pages/cyber-security-act.aspx",
+          "host": "homeaffairs.gov.au",
+          "text": "homeaffairs.gov.au/…/cyber-security-act.aspx"
+        },
+        {
+          "url": "https://www.legislation.gov.au/C2024A00108/latest/text",
+          "host": "legislation.gov.au",
+          "text": "legislation.gov.au/C2024A00108"
+        },
+        {
+          "url": "https://www.cyber.gov.au/about-us/view-all-content/reports-and-statistics/annual-cyber-threat-report-2024-2025",
+          "host": "cyber.gov.au",
+          "text": "cyber.gov.au/…/annual-cyber-threat-report-2024-2025"
+        },
+        {
+          "url": "https://www.cyber.gov.au/sites/default/files/2025-10/Annual%20Cyber%20Threat%20Report%202024-25.pdf",
+          "host": "cyber.gov.au",
+          "text": "cyber.gov.au/…/Annual Cyber Threat Report 2024-25.pdf"
+        },
+        {
+          "url": "https://www.cyber.gov.au/business-government/secure-design/quantum/planning-for-post-quantum-cryptography",
+          "host": "cyber.gov.au",
+          "text": "cyber.gov.au/…/planning-for-post-quantum-cryptography"
+        },
+        {
+          "url": "https://www.cyber.gov.au/sites/default/files/2025-09/Planning%20for%20post-quantum%20cryptography%20%28September%202025%29.pdf",
+          "host": "cyber.gov.au",
+          "text": "cyber.gov.au/…/Planning for post-quantum cryptography (September 2025).pdf"
+        },
+        {
+          "url": "https://www.legislation.gov.au/C2024A00124/latest/text",
+          "host": "legislation.gov.au",
+          "text": "legislation.gov.au/C2024A00124"
+        },
+        {
+          "url": "https://www.oaic.gov.au/privacy/notifiable-data-breaches/about-the-notifiable-data-breaches-scheme",
+          "host": "oaic.gov.au",
+          "text": "oaic.gov.au/privacy/notifiable-data-breaches/about-the-notifiable-data-breaches-scheme"
+        },
+        {
+          "url": "https://www.oaic.gov.au/privacy/australian-privacy-principles/australian-privacy-principles-guidelines/chapter-1-app-1-open-and-transparent-management-of-personal-information",
+          "host": "oaic.gov.au",
+          "text": "oaic.gov.au/…/chapter-1-app-1-…"
+        },
+        {
+          "url": "https://www.oaic.gov.au/privacy/privacy-registers/privacy-codes/childrens-online-privacy-code",
+          "host": "oaic.gov.au",
+          "text": "oaic.gov.au/…/childrens-online-privacy-code"
+        },
+        {
+          "url": "https://www.homeaffairs.gov.au/about-us/our-portfolios/national-security/security-of-critical-infrastructure-act-2018",
+          "host": "homeaffairs.gov.au",
+          "text": "homeaffairs.gov.au/…/security-of-critical-infrastructure-act-2018"
+        },
+        {
+          "url": "https://www.austrac.gov.au/news-and-media/article/newly-regulated-businesses-get-ready-reforms",
+          "host": "austrac.gov.au",
+          "text": "austrac.gov.au/…/newly-regulated-businesses-get-ready-reforms"
+        },
+        {
+          "url": "https://www.abc.net.au/news/2026-07-15/labor-to-set-standards-for-ai-data-centres-and-copyright/106918380",
+          "host": "abc.net.au",
+          "text": "abc.net.au/news/2026-07-15/labor-to-set-standards-for-ai-…"
+        },
+        {
+          "url": "https://www.abc.net.au/news/2026-07-14/albanese-maps-out-ai-future-introducing-national-framework/106915094",
+          "host": "abc.net.au",
+          "text": "abc.net.au/news/2026-07-14/albanese-maps-out-ai-future-…"
+        },
+        {
+          "url": "https://download.asic.gov.au/media/xhrf1w0e/26-092mr-open-letter-to-afs-licensees-and-market-participants.pdf",
+          "host": "download.asic.gov.au",
+          "text": "download.asic.gov.au/…/26-092mr-open-letter-….pdf"
+        },
+        {
+          "url": "https://www.asic.gov.au/about-asic/news-centre/find-a-media-release/2026-releases/26-021mr-asic-action-sees-fiig-securities-ordered-to-pay-25-million-over-cyber-security-failures",
+          "host": "asic.gov.au",
+          "text": "asic.gov.au/…/26-021mr-…"
+        },
+        {
+          "url": "https://download.asic.gov.au/media/o02h30dd/26-021mr-asic-v-fiig-securities-limited-judgment-13-feb-2026.pdf",
+          "host": "download.asic.gov.au",
+          "text": "download.asic.gov.au/…/26-021mr-asic-v-fiig-…-13-feb-2026.pdf"
+        },
+        {
+          "url": "https://www.apra.gov.au/system/files/2026-05/Prudential%20Standard%20-%20CPS%20230%20Operational%20Risk%20Management%20-%20clean.pdf",
+          "host": "apra.gov.au",
+          "text": "apra.gov.au/…/CPS 230 Operational Risk Management"
+        },
+        {
+          "url": "https://www.apra.gov.au/news-and-publications/apra-letter-industry-artificial-intelligence-ai",
+          "host": "apra.gov.au",
+          "text": "apra.gov.au/…/apra-letter-industry-artificial-intelligence-ai"
+        },
+        {
+          "url": "https://www.apra.gov.au/practice-guides/cpg-230",
+          "host": "apra.gov.au",
+          "text": "apra.gov.au/practice-guides/cpg-230"
+        },
+        {
+          "url": "https://www.guidepointsecurity.com/wp-content/uploads/2026/01/GRIT-2026-Ransomware-and-Cyber-Threat-Report.pdf",
+          "host": "guidepointsecurity.com",
+          "text": "guidepointsecurity.com/…/GRIT-2026-Ransomware-and-Cyber-Threat-Report.pdf"
+        },
+        {
+          "url": "https://www.recordedfuture.com/research/state-of-security",
+          "host": "recordedfuture.com",
+          "text": "recordedfuture.com/research/state-of-security"
+        },
+        {
+          "url": "https://assets.recordedfuture.com/insikt-report-pdfs/2026/cta-2026-0212.pdf",
+          "host": "assets.recordedfuture.com",
+          "text": "cta-2026-0212.pdf"
+        },
+        {
+          "url": "https://blog.cloudflare.com/2026-threat-report/",
+          "host": "blog.cloudflare.com",
+          "text": "blog.cloudflare.com/2026-threat-report"
+        },
+        {
+          "url": "https://www.trustkibu.com/news/quarterly-threat-report-q1-2026",
+          "host": "trustkibu.com",
+          "text": "trustkibu.com/news/quarterly-threat-report-q1-2026"
+        },
+        {
+          "url": "https://assets.ctfassets.net/b06irrs6qcvj/2czCcFzcaFCL7pNE8sne3z/4477287f83fbf339232b6893484466a1/Arctic_Wolf_Threat_Report_2026.pdf",
+          "host": "assets.ctfassets.net",
+          "text": "Arctic_Wolf_Threat_Report_2026.pdf"
+        },
+        {
+          "url": "https://genai.owasp.org/llm-top-10/",
+          "host": "genai.owasp.org",
+          "text": "genai.owasp.org/llm-top-10"
+        },
+        {
+          "url": "https://atlas.mitre.org/",
+          "host": "atlas.mitre.org",
+          "text": "atlas.mitre.org"
+        },
+        {
+          "url": "https://www.barracuda.com/company/news/2026/barracuda-cybercert-compliance-certification-australian-businesses",
+          "host": "barracuda.com",
+          "text": "barracuda.com/…/barracuda-cybercert-compliance-certification-australian-businesses"
+        }
+      ]
+    },
+    {
+      "id": "research-anz-mssp",
+      "slug": "anz-mssp",
+      "url": "https://amcamillo.github.io/thinkinfosec-hub/Research/anz-mssp/",
+      "title": "ANZ MSSP Landscape",
+      "headline": "2025: The State of MSSP across Australia and New Zealand",
+      "summary": "Managed security market across Australia and New Zealand.",
+      "published": "2026-08-24",
+      "updated": "2026-08-24",
+      "author": "Andre Camillo",
+      "cover": null,
+      "reading_minutes": 6,
+      "pillar": "process",
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "channel-mssp"
+      ],
+      "tech": [
+        64
+      ],
+      "themes": [
+        "channel-mssp",
+        "market-landscape"
+      ],
+      "frameworks": [
+        "essential-eight",
+        "soci-act",
+        "au-privacy-act"
+      ],
+      "regions": [
+        "au",
+        "nz"
+      ],
+      "tags": [
+        "mssp",
+        "managed-security",
+        "market-landscape",
+        "sovereign-capability"
+      ],
+      "vendors": [
+        "cybercx"
+      ],
+      "caveats": {
+        "ai_assisted": true,
+        "not_legal_advice": true
+      },
+      "sources": []
+    },
+    {
+      "id": "research-alliance-map",
+      "slug": "infosec-solutions-map",
+      "url": "https://amcamillo.github.io/thinkinfosec-hub/Research/infosec-solutions-map/",
+      "title": "CrowdStrike Alliance Landscape",
+      "headline": "Infosec Solution Landscape",
+      "summary": "70 technology domains across the Falcon ecosystem.",
+      "published": "2026-08-24",
+      "updated": "2026-08-24",
+      "author": "Andre Camillo",
+      "cover": null,
+      "reading_minutes": 1,
+      "pillar": "process",
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "architect-zt",
+        "channel-mssp"
+      ],
+      "tech": [
+        64
+      ],
+      "themes": [
+        "market-landscape",
+        "channel-mssp"
+      ],
+      "frameworks": [],
+      "regions": [
+        "global"
+      ],
+      "tags": [
+        "solution-map",
+        "technology-domains",
+        "alliance-partners",
+        "vendor-ecosystems"
+      ],
+      "vendors": [
+        "crowdstrike",
+        "microsoft",
+        "palo-alto-networks"
+      ],
+      "caveats": {
+        "ai_assisted": true,
+        "not_legal_advice": true
+      },
+      "sources": []
+    }
+  ]
+}

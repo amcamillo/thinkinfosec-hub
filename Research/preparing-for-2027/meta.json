@@ -1,0 +1,57 @@
+{
+  "$schema": "../../catalog/research.schema.json",
+  "id": "research-preparing-2027",
+  "slug": "preparing-for-2027",
+  "title": "Preparing for 2027",
+  "headline": "Preparing for 2027: Cybersecurity and Compliance Briefing",
+  "summary": "Twelve 2025/26 benchmark reports against Australia’s 2026–27 regulatory spine.",
+  "published": "2026-09-18",
+  "author": "Andre Camillo",
+  "pillar": "process",
+  "people": [
+    "thought-leadership"
+  ],
+  "processes": [
+    "govern-assure",
+    "threat-model",
+    "channel-mssp"
+  ],
+  "tech": [
+    57,
+    62,
+    43
+  ],
+  "themes": [
+    "regulation-compliance",
+    "strategy-outlook",
+    "securing-ai"
+  ],
+  "frameworks": [
+    "au-cyber-security-act",
+    "soci-act",
+    "au-privacy-act",
+    "essential-eight",
+    "owasp-llm-top-10",
+    "mitre-atlas"
+  ],
+  "regions": [
+    "au"
+  ],
+  "tags": [
+    "benchmark-reports",
+    "ransomware-reporting",
+    "regulatory-spine",
+    "mid-market",
+    "threat-velocity"
+  ],
+  "vendors": [
+    "crowdstrike",
+    "microsoft",
+    "ibm",
+    "gartner"
+  ],
+  "caveats": {
+    "ai_assisted": true,
+    "not_legal_advice": true
+  }
+}
