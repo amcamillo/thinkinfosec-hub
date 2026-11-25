@@ -81,7 +81,7 @@ There is no pale blue or cyan text on any blue background. Every text and backgr
 - If a fetch fails, the hub shows the cached copy labelled "Signal snapshot from <time>". If there is no cache, the panel shows an empty state and the other tabs keep working.
 - News older than 6 hours shows a stale notice.
 - All feed text is plain text set with `textContent`. Only `https:` links are accepted. External links use `rel="noopener noreferrer"`.
-- The CSP allows `default-src 'self'`. `connect-src` allows `'self'` and `https://thinkinfosec.github.io`. `img-src` allows `'self'`, `https://i.ytimg.com` and `https://miro.medium.com`.
+- The CSP allows `default-src 'self'`. `connect-src` allows `'self'` and `https://thinkinfosec.github.io`. `img-src` allows `'self'`, `https://i.ytimg.com`, `https://cdn-images-1.medium.com` and `https://miro.medium.com`.
 
 ## Testing
 

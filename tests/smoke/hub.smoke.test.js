@@ -30,6 +30,7 @@ async function feeds(context, mode) {
   await context.unroute('https://thinkinfosec.github.io/Signal/*').catch(() => {});
   await context.route('https://thinkinfosec.github.io/Signal/*', route => {
     if (mode === 'down') return route.abort();
+    if (mode === 'empty') return route.fulfill({ body: '{}', contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' } });
     const name = path.basename(new URL(route.request().url()).pathname);
     return route.fulfill({ path: path.join(FIX, name), contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' } });
   });
@@ -126,6 +127,15 @@ test('feeds down with no cache: empty states, rest of hub works', async () => {
   assert.match(await page.textContent('#newsList'), /No headlines right now/);
   await page.click('#tab-tools');
   assert.ok(await page.locator('#toolGrid .card').count() > 5);
+  await context.close();
+});
+
+test('feed returning {} after a good load falls back to the cached snapshot', async () => {
+  const { context, page } = await open('#news');
+  await feeds(context, 'empty');
+  await page.reload();
+  await page.waitForFunction(() => /Signal (updated|snapshot|unavailable)/.test(document.getElementById('dateline').textContent));
+  assert.match(await page.textContent('#dateline'), /Signal snapshot from/);
   await context.close();
 });
 

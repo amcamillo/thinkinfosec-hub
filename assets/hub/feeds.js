@@ -6,6 +6,7 @@
       const res = await fetch(BASE + name, { cache: 'no-cache' });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
+      if (!data || !Array.isArray(data.items)) throw new Error('bad feed shape');
       try { localStorage.setItem(key, JSON.stringify({ savedAt: Date.now(), data })); } catch (e) {}
       return { data, cached: false };
     } catch (err) {

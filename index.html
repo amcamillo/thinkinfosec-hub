@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://i.ytimg.com https://cdn-images-1.medium.com https://miro.medium.com; connect-src 'self' https://thinkinfosec.github.io; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https://i.ytimg.com https://cdn-images-1.medium.com https://miro.medium.com; connect-src 'self' https://thinkinfosec.github.io; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>ThinkInfoSec Hub</title>
   <meta name="description" content="Research, tools, guides and the day's cyber, world and AI headlines from ThinkInfoSec.">
@@ -34,7 +34,7 @@
     </nav>
   </header>
 
-  <main id="main" class="wrap">
+  <main id="main" class="wrap" tabindex="-1">
     <form class="search" role="search" id="searchForm">
       <label class="visually-hidden" for="q">Search the hub</label>
       <input id="q" type="search" placeholder="Search research, articles, videos, tools, guides…" autocomplete="off">
@@ -42,7 +42,7 @@
     </form>
     <section id="searchResults" class="results" aria-label="Search results" hidden></section>
 
-    <section role="tabpanel" id="panel-front" aria-labelledby="tab-front" hidden>
+    <section role="tabpanel" tabindex="0" id="panel-front" aria-labelledby="tab-front" hidden>
       <div id="outcomesBand"></div>
       <div class="lead-grid">
         <article id="leadStory" class="lead"></article>
@@ -56,39 +56,39 @@
       <div id="latestRail" class="rail"></div>
     </section>
 
-    <section role="tabpanel" id="panel-news" aria-labelledby="tab-news" hidden>
+    <section role="tabpanel" tabindex="0" id="panel-news" aria-labelledby="tab-news" hidden>
       <h2 class="section-title">News from Signal</h2>
       <div id="newsChips" class="chips" role="group" aria-label="Filter news by lane"></div>
       <ol id="newsList" class="news-list"></ol>
       <p id="newsStamp" class="stamp"></p>
     </section>
 
-    <section role="tabpanel" id="panel-research" aria-labelledby="tab-research" hidden>
+    <section role="tabpanel" tabindex="0" id="panel-research" aria-labelledby="tab-research" hidden>
       <h2 class="section-title">Research and articles</h2>
       <div id="researchChips" class="chips" role="group" aria-label="Filter research by source"></div>
       <div id="researchList" class="grid"></div>
     </section>
 
-    <section role="tabpanel" id="panel-videos" aria-labelledby="tab-videos" hidden>
+    <section role="tabpanel" tabindex="0" id="panel-videos" aria-labelledby="tab-videos" hidden>
       <h2 class="section-title">Videos</h2>
       <div id="videoGrid" class="grid"></div>
       <p class="stamp"><a href="https://www.youtube.com/@thinkinfosecorg" class="ext" target="_blank" rel="noopener noreferrer">All videos on YouTube</a></p>
     </section>
 
-    <section role="tabpanel" id="panel-tools" aria-labelledby="tab-tools" hidden>
+    <section role="tabpanel" tabindex="0" id="panel-tools" aria-labelledby="tab-tools" hidden>
       <h2 class="section-title">Tools</h2>
       <div id="toolsOutcomes"></div>
       <div id="toolChips" class="chips" role="group" aria-label="Filter tools by where they are hosted"></div>
       <div id="toolGrid" class="grid"></div>
     </section>
 
-    <section role="tabpanel" id="panel-guides" aria-labelledby="tab-guides" hidden>
+    <section role="tabpanel" tabindex="0" id="panel-guides" aria-labelledby="tab-guides" hidden>
       <h2 class="section-title">Guides &amp; Assets</h2>
       <div id="guideChips" class="chips" role="group" aria-label="Filter guides and assets by type"></div>
       <div id="guideGrid" class="grid"></div>
     </section>
 
-    <section role="tabpanel" id="panel-about" aria-labelledby="tab-about" hidden>
+    <section role="tabpanel" tabindex="0" id="panel-about" aria-labelledby="tab-about" hidden>
       <h2 class="section-title">About</h2>
       <div class="about">
         <p>Welcome to my learning hub! I specialize in AI, InfoSec, and Cloud technologies, with a passion for sharing knowledge and building practical solutions.</p>

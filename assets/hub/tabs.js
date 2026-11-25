@@ -18,8 +18,8 @@
     });
     document.title = (id === 'front' ? '' : tabs[ids.indexOf(id)].textContent + ' · ') + 'ThinkInfoSec Hub';
   }
-  function go(id, focus) {
-    if (location.hash !== '#' + id) history.pushState(null, '', '#' + id);
+  function go(id, focus, replace) {
+    if (location.hash !== '#' + id) history[replace ? 'replaceState' : 'pushState'](null, '', '#' + id);
     select(id, focus);
   }
   tabs.forEach((t, i) => {
@@ -30,7 +30,7 @@
       else if (e.key === 'ArrowLeft') j = (i - 1 + tabs.length) % tabs.length;
       else if (e.key === 'Home') j = 0;
       else if (e.key === 'End') j = tabs.length - 1;
-      if (j !== null) { e.preventDefault(); go(ids[j], true); }
+      if (j !== null) { e.preventDefault(); go(ids[j], true, true); }
     });
   });
   function known(hash) {
@@ -38,7 +38,12 @@
     return ids.includes(ALIASES[id] || id);
   }
   // Non-tab hashes (e.g. #main from the skip link) must not switch tabs.
-  function onNav() { if (!location.hash || known(location.hash)) select(resolve(location.hash), false); }
+  function onNav() { if (!location.hash || known(location.hash)) {
+      const id = resolve(location.hash);
+      if (location.hash && location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+      select(id, false);
+    }
+  }
   window.addEventListener('popstate', onNav);
   window.addEventListener('hashchange', onNav);
 

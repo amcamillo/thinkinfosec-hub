@@ -52,6 +52,11 @@ test('youtubeId', () => {
   assert.equal(L.youtubeId('https://example.com'), null);
 });
 
+test('newsItems rejects non-https feed links', () => {
+  const items = L.newsItems({ items: [{ cat: 'ai', title: 'Rel', ts: 1, link: 'Research/x/' }] });
+  assert.equal(items[0].url, null);
+});
+
 test('newsItems validates and sorts', () => {
   const items = L.newsItems({ items: [
     { cat: 'ai', title: 'B', ts: 1, source: 'S' },

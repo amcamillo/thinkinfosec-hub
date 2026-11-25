@@ -55,28 +55,33 @@
   renderTools('all'); renderGuides('all'); renderResearch('all'); renderVideos(); renderNews('all'); renderFront();
   $('dateline').textContent = L.formatDay(now) + ' · Loading Signal…';
 
-  window.HubSearch.init({
+  const search = window.HubSearch.init({
     form: $('searchForm'), input: $('q'), status: $('searchStatus'), results: $('searchResults'),
     entries: () => L.searchEntries({ news, research, videos, tools, guides })
   });
 
   const [newsRes, mediaRes] = await Promise.all([window.HubFeeds.load('news.json'), window.HubFeeds.load('media.json')]);
-  news = L.newsItems(newsRes.data);
-  const media = L.mediaItems(mediaRes.data);
-  research = L.researchItems(corpus, media);
-  videos = L.videoItems(corpus, media);
-  renderNews(R.activeChip($('newsChips')));
-  renderResearch(R.activeChip($('researchChips')));
-  renderVideos();
-  renderFront();
+  try {
+    news = L.newsItems(newsRes.data);
+    const media = L.mediaItems(mediaRes.data);
+    research = L.researchItems(corpus, media);
+    videos = L.videoItems(corpus, media);
+    renderNews(R.activeChip($('newsChips')));
+    renderResearch(R.activeChip($('researchChips')));
+    renderVideos();
+    renderFront();
 
-  $('dateline').textContent = L.formatDay(now) + ' · ' + L.signalStatus(newsRes, now);
-  const stamp = $('newsStamp');
-  if (newsRes.data && L.isStale(newsRes.data.generated, now, 6)) {
-    stamp.className = 'notice';
-    stamp.textContent = 'These headlines are more than 6 hours old. Signal may be paused.';
-  } else if (newsRes.data) {
-    stamp.className = 'stamp';
-    stamp.textContent = 'Snapshot built ' + L.formatTime(Date.parse(newsRes.data.generated));
+    $('dateline').textContent = L.formatDay(now) + ' · ' + L.signalStatus(newsRes, now);
+    const stamp = $('newsStamp');
+    if (newsRes.data && L.isStale(newsRes.data.generated, now, 6)) {
+      stamp.className = 'notice';
+      stamp.textContent = 'These headlines are more than 6 hours old. Signal may be paused.';
+    } else if (newsRes.data) {
+      stamp.className = 'stamp';
+      stamp.textContent = 'Snapshot built ' + L.formatTime(Date.parse(newsRes.data.generated));
+    }
+    if ($('q').value.trim()) search.run();
+  } catch (err) {
+    $('dateline').textContent = L.formatDay(now) + ' · Signal unavailable';
   }
 })();

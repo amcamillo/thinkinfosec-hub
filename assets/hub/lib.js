@@ -66,7 +66,7 @@
       .filter(i => i && typeof i.title === 'string' && i.title && LANES[i.cat] && Number.isFinite(i.ts))
       .map(i => ({
         key: 'news:' + i.ts + ':' + i.title, title: i.title, cat: i.cat, ts: i.ts,
-        summary: typeof i.summary === 'string' ? i.summary : '', source: String(i.source || ''), url: safeUrl(i.link)
+        summary: typeof i.summary === 'string' ? i.summary : '', source: String(i.source || ''), url: isExternal(safeUrl(i.link)) ? safeUrl(i.link) : null
       }))
       .sort(byTs);
   }
@@ -91,7 +91,7 @@
     media.filter(m => m.kind === 'article').forEach(m => {
       const k = mediumKey(m.url);
       const prev = map.get(k) || {};
-      map.set(k, { key: k, source: 'medium', title: m.title, url: m.url, summary: prev.summary || clip(m.summary, 180), ts: m.ts, thumb: m.thumb, minutes: m.minutes });
+      map.set(k, { key: k, source: 'medium', title: m.title, url: m.url, summary: prev.summary || clip(m.summary, 180), ts: m.ts, thumb: isExternal(safeUrl(m.thumb)) ? safeUrl(m.thumb) : undefined, minutes: m.minutes });
     });
     return Array.from(map.values()).sort(byTs);
   }
