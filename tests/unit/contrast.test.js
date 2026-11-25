@@ -20,7 +20,9 @@ function ratio(a, b) { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); re
 
 const PAIRS = [
   ['ink', 'bg'], ['muted', 'bg'], ['ink', 'panel'], ['muted', 'panel'], ['acc-ink', 'bg'],
-  ['mag-ink', 'bg'], ['mag-ink', 'panel'], ['gold-ink', 'bg'], ['panel-kicker', 'panel'], ['on-acc', 'acc']
+  ['mag-ink', 'bg'], ['mag-ink', 'panel'], ['gold-ink', 'bg'], ['panel-kicker', 'panel'], ['on-acc', 'acc'],
+  // --tint is the worst case: a glow bubble showing through a frosted panel.
+  ['ink', 'tint'], ['muted', 'tint'], ['mag-ink', 'tint'], ['gold-ink', 'tint'], ['panel-kicker', 'tint']
 ];
 for (const theme of ['dark', 'light']) {
   test(theme + ' theme text pairs reach 4.5:1', () => {
@@ -34,4 +36,9 @@ for (const theme of ['dark', 'light']) {
 }
 test('dark panel labels are not cyan on blue', () => {
   assert.equal(tokens('dark')['panel-kicker'].toLowerCase(), '#ffffff');
+});
+
+test('light accent text also clears 4.5:1 on the tint (light allows teal on panels)', () => {
+  const t = tokens('light');
+  assert.ok(ratio(t['acc-ink'], t.tint) >= 4.5);
 });

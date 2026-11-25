@@ -2,24 +2,27 @@
 @font-face { font-family: "Space Mono"; font-weight: 400; font-style: normal; font-display: swap; src: url("fonts/space-mono-400.woff2") format("woff2"); }
 @font-face { font-family: "Space Mono"; font-weight: 700; font-style: normal; font-display: swap; src: url("fonts/space-mono-700.woff2") format("woff2"); }
 /* ThinkInfoSec Hub.
-   Rule: in dark, accent text (--acc-ink) sits only on --bg, never on --panel (no cyan on blue).
-   Labels on panels use --panel-kicker. */
+   Rule: in dark, accent text (--acc-ink) sits only on --bg, never on a panel (no cyan on blue). Labels on panels use --panel-kicker. --tint is the worst-case panel colour with a bubble showing through. */
 :root[data-theme="dark"] {
-  --bg: #02050b; --panel: #0f2547; --line: #2f4f86;
-  --ink: #ffffff; --muted: #d3dcea;
+  --bg: #070F1F; --bg2: #0D1F3C; --panel: #0d1f3c; --tint: #1c3a5a; --line: #2f4f86;
+  --glass: rgba(13, 31, 60, .62); --glass-bd: rgba(255, 255, 255, .12);
+  --ink: #EAF2FA; --muted: #C9D6E6;
   --acc: #00BFCF; --acc-ink: #5fe9f5; --on-acc: #02050b;
-  --mag: #FF3D9A; --mag-ink: #ff7ab8;
+  --mag: #FF2D78; --mag-ink: #ff8cc0;
   --gold-ink: #f5c542;
   --panel-kicker: #ffffff;
+  --orb-blend: screen; --orb-opacity: .8; --glow: drop-shadow(0 0 6px #00BFCF);
   color-scheme: dark;
 }
 :root[data-theme="light"] {
-  --bg: #f6f8fb; --panel: #ffffff; --line: #d9e1ec;
-  --ink: #0D1F3C; --muted: #4a5a72;
-  --acc: #00BFCF; --acc-ink: #007C87; --on-acc: #0D1F3C;
-  --mag: #FF3D9A; --mag-ink: #B0125B;
-  --gold-ink: #8a5a00;
-  --panel-kicker: #007C87;
+  --bg: #F8F4FB; --bg2: #E3F1F8; --panel: #ffffff; --tint: #efe2ee; --line: #d9d3e3;
+  --glass: rgba(255, 255, 255, .86); --glass-bd: rgba(18, 36, 74, .10);
+  --ink: #12244A; --muted: #3A4D72;
+  --acc: #00BFCF; --acc-ink: #036A7C; --on-acc: #12244A;
+  --mag: #FF2D78; --mag-ink: #B0125B;
+  --gold-ink: #7a4f00;
+  --panel-kicker: #036A7C;
+  --orb-blend: multiply; --orb-opacity: .7; --glow: none;
   color-scheme: light;
 }
 * { box-sizing: border-box; }
