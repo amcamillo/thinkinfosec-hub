@@ -50,3 +50,18 @@ test('wordmark uses DM Sans 300 with magenta InfoSec', () => {
   assert.match(css, /\.brand\s*\{[^}]*"DM Sans"[^}]*font-weight:\s*300/);
   assert.match(css, /\.brand span\s*\{\s*color:\s*var\(--mag-ink\)/);
 });
+test('dark theme light panels: sheet text reaches 4.5:1 on the sheet and its worst case', () => {
+  const t = tokens('dark');
+  for (const fg of ['sheet-ink', 'sheet-muted', 'sheet-mag', 'sheet-acc', 'sheet-gold']) {
+    for (const bg of ['sheet', 'sheet-tint']) {
+      assert.ok(t[fg] && t[bg], 'dark missing --' + fg + ' or --' + bg);
+      const r = ratio(t[fg], t[bg]);
+      assert.ok(r >= 4.5, `dark: --${fg} on --${bg} is ${r.toFixed(2)}:1`);
+    }
+  }
+});
+test('panels are solid, and in dark re-point text tokens to the sheet set', () => {
+  assert.match(css, /\.glass, \.card, \.band, \.wire, \.search input, \.listening \{[^}]*background: var\(--solid\)/);
+  assert.doesNotMatch(css, /\.glass, \.card[^{]*\{[^}]*backdrop-filter/);
+  assert.match(css, /:root\[data-theme="dark"\] :is\(\.glass, \.card[^)]*\) \{[^}]*--ink: var\(--sheet-ink\)/);
+});

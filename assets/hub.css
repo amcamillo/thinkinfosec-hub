@@ -11,6 +11,9 @@
   --mag: #FF2D78; --mag-ink: #ff8cc0;
   --gold-ink: #f5c542;
   --panel-kicker: #ffffff;
+  --solid: rgba(236, 242, 250, .94); --top: #070F1F;
+  --sheet: #ECF2FA; --sheet-tint: #DCE3EC; --sheet-ink: #0D1F3C; --sheet-muted: #3D4B66;
+  --sheet-mag: #B0125B; --sheet-acc: #036A7C; --sheet-gold: #7a4f00; --sheet-line: #C5D0DE;
   --orb-blend: screen; --orb-opacity: .8; --glow: drop-shadow(0 0 6px #00BFCF);
   color-scheme: dark;
 }
@@ -22,6 +25,7 @@
   --mag: #FF2D78; --mag-ink: #B0125B;
   --gold-ink: #7a4f00;
   --panel-kicker: #036A7C;
+  --solid: rgba(255, 255, 255, .92); --top: #FFFDFE;
   --orb-blend: multiply; --orb-opacity: .7; --glow: none;
   color-scheme: light;
 }
@@ -38,9 +42,12 @@
   50%  { transform: translate(var(--x), var(--y)) scale(1.25); }
   100% { transform: translate(calc(var(--x) * -.7), calc(var(--y) * .8)) scale(.9); }
 }
-.glass, .card, .band, .wire, .search input, .listening { background: var(--glass); border: 1px solid var(--glass-bd); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .glass, .card, .band, .wire, .search input, .listening { background: var(--panel); }
+.glass, .card, .band, .wire, .search input, .listening { background: var(--solid); border: 1px solid var(--glass-bd); color: var(--ink); }
+/* Panels stay light in dark: inside them, text tokens point at the light "sheet" set. */
+:root[data-theme="dark"] :is(.glass, .card, .band, .wire, .search input, .listening) {
+  --ink: var(--sheet-ink); --muted: var(--sheet-muted); --mag-ink: var(--sheet-mag); --acc-ink: var(--sheet-acc);
+  --gold-ink: var(--sheet-gold); --panel-kicker: var(--sheet-acc); --line: var(--sheet-line); --glass-bd: rgba(18, 36, 74, .10);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, .35);
 }
 html { scroll-padding-top: 140px; }
 html { background: var(--bg); }
@@ -82,7 +89,7 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 @keyframes wave-ripple { from { transform: scaleY(.55); } to { transform: scaleY(1.15); } }
 
 .search { margin: 20px 0 12px; }
-.search input { width: 100%; padding: 10px 14px; font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+.search input { width: 100%; padding: 10px 14px; font: inherit; color: var(--ink); background: var(--solid); border: 1px solid var(--line); border-radius: 8px; }
 .search input::placeholder { color: var(--muted); }
 .search-status { color: var(--muted); font-size: 0.85rem; min-height: 1.2em; margin: 6px 0 0; }
 .results { margin-bottom: 24px; }
