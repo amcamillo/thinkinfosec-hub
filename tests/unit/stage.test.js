@@ -84,3 +84,13 @@ test('exits fullscreen on hide when the stage is fullscreen', () => {
   s.hide(); flush();
   assert.equal(exited, true);
 });
+
+test('init leaves the plain link alone where ancestorOrigins is missing (Signal would refuse the frame)', () => {
+  const { init } = require('../../assets/hub/stage.js');
+  let wired = false;
+  const node = { addEventListener() { wired = true; }, querySelector: () => ({}), href: 'https://thinkinfosec.github.io/Signal/' };
+  const doc = { getElementById: () => node, querySelector: () => null, addEventListener() { wired = true; } };
+  const win = { location: {}, matchMedia: () => ({ matches: false }) };
+  assert.equal(init(doc, win), null);
+  assert.equal(wired, false);
+});

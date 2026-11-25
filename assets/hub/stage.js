@@ -43,6 +43,9 @@
     const link = doc.getElementById('enterSignal');
     const stage = doc.getElementById('signalStage');
     if (!link || !stage) return null;
+    // Signal only accepts being framed where location.ancestorOrigins proves the hub is its parent.
+    // Without it (Firefox) the frame would be blank, so leave the button as a plain link to Signal.
+    if (!win.location || !win.location.ancestorOrigins) return null;
     const s = create({
       doc, stage, link,
       frame: stage.querySelector('iframe'),
