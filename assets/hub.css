@@ -52,7 +52,7 @@
 html { scroll-padding-top: 180px; }
 html { background: var(--bg); }
 body { color: var(--ink); background: radial-gradient(900px 640px at 10% 6%, color-mix(in srgb, var(--mag) 14%, transparent), transparent 62%), radial-gradient(1000px 700px at 92% 14%, color-mix(in srgb, var(--acc) 18%, transparent), transparent 62%), linear-gradient(160deg, var(--bg), var(--bg2)) fixed; isolation: isolate; }
-body { margin: 0; font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+body { margin: 0; min-height: 100vh; font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 a { color: inherit; text-underline-offset: 3px; }
 a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 :focus-visible { outline: 3px solid var(--acc); outline-offset: 2px; }
