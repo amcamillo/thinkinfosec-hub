@@ -159,8 +159,70 @@ test('filterBy and search', () => {
   assert.equal(L.search(entries, '   ').length, 0);
 });
 
-test('signalStatus', () => {
-  assert.equal(L.signalStatus({ data: null }, NOW), 'Signal unavailable');
-  assert.equal(L.signalStatus({ data: { generated: '2026-11-25T11:56:00Z' }, cached: false }, NOW), 'Signal updated 4m ago');
-  assert.match(L.signalStatus({ data: { generated: '2026-11-25T11:00:00Z' }, cached: true }, NOW, 'UTC'), /^Signal snapshot from 25 Nov, 11:00$/);
+test('signalPill', () => {
+  assert.deepEqual(L.signalPill({ data: null }, NOW, 0), { state: 'none', label: 'NO SIGNAL', detail: '' });
+  assert.deepEqual(L.signalPill({ data: { generated: '2026-11-25T11:56:00Z' }, cached: false }, NOW, 93),
+    { state: 'live', label: 'SIGNAL LIVE', detail: '93 STORIES · 4M AGO' });
+  assert.deepEqual(L.signalPill({ data: { generated: '2026-11-25T11:59:50Z' }, cached: false }, NOW, 1),
+    { state: 'live', label: 'SIGNAL LIVE', detail: '1 STORY · JUST NOW' });
+  assert.deepEqual(L.signalPill({ data: { generated: '2026-11-25T11:00:00Z' }, cached: true }, NOW, 5, 'UTC'),
+    { state: 'snapshot', label: 'SIGNAL SNAPSHOT', detail: '25 NOV, 11:00' });
+  assert.deepEqual(L.signalPill({ data: { generated: 'bad' }, cached: false }, NOW, 2),
+    { state: 'live', label: 'SIGNAL LIVE', detail: '2 STORIES' });
+});
+
+test('newsItems keeps https images and drops everything else', () => {
+  const base = { cat: 'ai', title: 'T', ts: 1 };
+  const img = image => L.newsItems({ items: [Object.assign({}, base, image === undefined ? {} : { image })] })[0].image;
+  assert.equal(img('https://cdn.example.com/a.png'), 'https://cdn.example.com/a.png');
+  assert.equal(img('http://cdn.example.com/a.png'), null);
+  assert.equal(img('javascript:alert(1)'), null);
+  assert.equal(img('assets/local.png'), null);
+  assert.equal(img(undefined), null);
+});
+
+test('channel', () => {
+  assert.equal(L.channel(1), 'CH-01');
+  assert.equal(L.channel(12), 'CH-12');
+});
+test('utcTime', () => {
+  assert.equal(L.utcTime(Date.parse('2026-11-25T14:32:09Z')), '14:32 UTC');
+  assert.equal(L.utcTime(Date.parse('2026-11-25T03:05:00Z')), '03:05 UTC');
+});
+
+test('traceSpec is deterministic per title and differs between titles', () => {
+  const a = L.traceSpec({ title: 'Ransomware hits hospitals', cat: 'cyber' });
+  assert.deepEqual(L.traceSpec({ title: 'Ransomware hits hospitals', cat: 'cyber' }), a);
+  assert.notEqual(L.traceSpec({ title: 'Different story', cat: 'cyber' }).d, a.d);
+});
+test('traceSpec shapes follow the lane', () => {
+  const cyber = L.traceSpec({ title: 't', cat: 'cyber' });
+  const ai = L.traceSpec({ title: 't', cat: 'ai' });
+  const geo = L.traceSpec({ title: 't', cat: 'geo' });
+  assert.match(cyber.d, /^M[\d. ]+C/);
+  assert.match(ai.d, /^M[\d. ]+C/);
+  assert.match(geo.d, /^M[\d. ]+(L[\d. ]+)+$/);
+  assert.notEqual(cyber.d, ai.d);
+  assert.equal(cyber.color, '#5fe9f5'); assert.equal(ai.color, '#ff8cc0'); assert.equal(geo.color, '#f5c542');
+});
+test('traceSpec stays inside the plate and marks the highest peak', () => {
+  for (const cat of ['cyber', 'ai', 'geo', 'unknown']) {
+    const s = L.traceSpec({ title: 'Bounds check ' + cat, cat }, 640, 240);
+    const nums = s.d.match(/-?[\d.]+/g).map(Number);
+    for (let i = 0; i < nums.length; i += 2) {
+      assert.ok(nums[i] >= 0 && nums[i] <= 640, cat + ' x out of bounds: ' + nums[i]);
+      assert.ok(nums[i + 1] >= 8 && nums[i + 1] <= 232, cat + ' y out of bounds: ' + nums[i + 1]);
+    }
+    assert.equal(s.peak.y, Math.min(...s.points.map(p => p.y)));
+    assert.equal(s.orbs.length, 3);
+  }
+});
+test('traceSpec scales amplitude to the plate so thumbnails are not clipped flat', () => {
+  for (const cat of ['cyber', 'ai', 'geo']) {
+    for (const title of ['Fixture Medium article on agent identity', 'CrowdStrike Public Resource Library', 'Double agents']) {
+      const s = L.traceSpec({ title, cat }, 200, 60);
+      const clipped = s.points.filter(p => p.y <= 8 || p.y >= 52).length;
+      assert.equal(clipped, 0, `${cat} "${title}" has ${clipped} points pinned to the edge`);
+    }
+  }
 });

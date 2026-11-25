@@ -20,29 +20,29 @@
   }
   function renderGuides(group) {
     R.list($('guideGrid'), L.filterBy(guides, 'group', group),
-      g => R.card(g, L.GUIDE_GROUPS[g.group]), 'Nothing in this group yet. New items land here as they are published.');
+      g => R.card(g, L.GUIDE_GROUPS[g.group], null, { trace: true }), 'Nothing in this group yet. New items land here as they are published.');
   }
   function renderResearch(source) {
     R.list($('researchList'), L.filterBy(research, 'source', source),
-      r => R.card(r, r.source === 'medium' ? 'Medium' : 'Hub research', r.source === 'medium' ? 'mag' : null), 'No research yet.');
+      r => R.card(r, r.source === 'medium' ? 'Medium' : 'Hub research', r.source === 'medium' ? 'mag' : null, { trace: true }), 'No research yet.');
   }
   function renderVideos() {
-    R.list($('videoGrid'), videos, v => R.card(v, 'YouTube'), 'Videos appear here when the feed is reachable.');
+    R.list($('videoGrid'), videos, v => R.card(v, 'YouTube'), n => R.listening(n, 'videos appear when the feed is reachable'));
   }
   function renderNews(lane) {
-    R.list($('newsList'), L.filterBy(news, 'cat', lane), (n, i) => R.headlineRow(n, i, now), 'No headlines right now.');
+    R.list($('newsList'), L.filterBy(news, 'cat', lane), (n, i) => R.headlineRow(n, i, now, { thumb: true }), n => R.listening(n, 'no headlines in this lane yet'));
   }
   function renderFront() {
     const front = L.frontPage(news, 4);
     R.lead($('leadStory'), front.lead, now);
-    R.list($('liveWire'), front.wire, (n, i) => R.headlineRow(n, i + 1, now), 'Waiting for Signal.');
+    R.list($('liveWire'), front.wire, (n, i) => R.headlineRow(n, i + 1, now), n => R.listening(n, 'waiting for the wire'));
     const latest = [
       ['Research', research.find(r => r.source === 'hub'), null],
       ['Medium', research.find(r => r.source === 'medium'), 'mag'],
       ['YouTube', videos[0], null],
       ['Guide', guides[0], 'mag']
     ].filter(x => x[1]);
-    R.list($('latestRail'), latest, x => R.card(Object.assign({}, x[1], { summary: '', thumb: null }), x[0], x[2]), 'Nothing new yet.');
+    R.list($('latestRail'), latest, x => R.card(Object.assign({}, x[1], { summary: '' }), x[0], x[2], { trace: true }), 'Nothing new yet.');
   }
 
   R.outcomes($('outcomesBand'), tools);
@@ -53,7 +53,7 @@
   R.chips($('researchChips'), all([{ value: 'hub', label: 'Hub' }, { value: 'medium', label: 'Medium' }]), renderResearch);
   R.chips($('newsChips'), all(pairs(L.LANES)), renderNews);
   renderTools('all'); renderGuides('all'); renderResearch('all'); renderVideos(); renderNews('all'); renderFront();
-  $('dateline').textContent = L.formatDay(now) + ' · Loading Signal…';
+  $('dateline').textContent = L.formatDay(now).toUpperCase();
 
   const search = window.HubSearch.init({
     form: $('searchForm'), input: $('q'), status: $('searchStatus'), results: $('searchResults'),
@@ -71,7 +71,7 @@
     renderVideos();
     renderFront();
 
-    $('dateline').textContent = L.formatDay(now) + ' · ' + L.signalStatus(newsRes, now);
+    R.pill($('signalPill'), L.signalPill(newsRes, now, news.length));
     const stamp = $('newsStamp');
     if (newsRes.data && L.isStale(newsRes.data.generated, now, 6)) {
       stamp.className = 'notice';
@@ -82,6 +82,6 @@
     }
     if ($('q').value.trim()) search.run();
   } catch (err) {
-    $('dateline').textContent = L.formatDay(now) + ' · Signal unavailable';
+    R.pill($('signalPill'), L.signalPill(null, now, 0));
   }
 })();

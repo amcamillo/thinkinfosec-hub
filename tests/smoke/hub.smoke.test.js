@@ -7,8 +7,9 @@ const { chromium } = require('playwright');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const FIX = path.join(__dirname, '..', 'fixtures');
-const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml' };
+const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
 const TABS = ['front', 'news', 'research', 'videos', 'tools', 'guides', 'about'];
+const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64');
 let server, browser, base;
 
 before(async () => {
@@ -38,13 +39,16 @@ async function feeds(context, mode) {
 async function open(hash, opts = {}) {
   const context = await browser.newContext({ colorScheme: opts.scheme || 'dark' });
   await context.route(/i\.ytimg\.com|medium\.com/, r => r.abort());
+  await context.route('https://img.example/*', r => r.request().url().endsWith('missing.png')
+    ? r.fulfill({ status: 404, body: '' })
+    : r.fulfill({ body: PNG, contentType: 'image/png' }));
   await feeds(context, opts.feeds || 'up');
   const page = await context.newPage();
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
   page.on('console', m => { if (m.type() === 'error' && !/Failed to load resource|ERR_FAILED/.test(m.text())) errors.push(m.text()); });
   await page.goto(base + (hash || ''));
-  await page.waitForFunction(() => /Signal (updated|snapshot|unavailable)/.test(document.getElementById('dateline').textContent));
+  await page.waitForFunction(() => document.getElementById('signalPill').dataset.state !== 'none' || /NO SIGNAL/.test(document.getElementById('pillText').textContent));
   return { context, page, errors };
 }
 
@@ -62,7 +66,8 @@ test('every tab renders from a direct link with no errors', async () => {
 
 test('panels show feed and corpus content', async () => {
   const { context, page } = await open('#news');
-  assert.equal(await page.locator('#newsList li').count(), 3);
+  assert.equal(await page.getAttribute('#signalPill', 'data-state'), 'live');
+  assert.equal(await page.locator('#newsList li').count(), 4);
   await page.click('#newsChips [data-value="ai"]');
   assert.equal(await page.locator('#newsList li').count(), 1);
   await page.click('#tab-research');
@@ -74,7 +79,7 @@ test('panels show feed and corpus content', async () => {
   assert.equal(await page.locator('#toolsOutcomes .band').count(), 1);
   await page.click('#tab-front');
   assert.match(await page.textContent('#leadStory'), /Fixture cyber headline/);
-  assert.equal(await page.locator('#liveWire li').count(), 2);
+  assert.equal(await page.locator('#liveWire li').count(), 3);
   await context.close();
 });
 
@@ -123,8 +128,8 @@ test('search finds every kind of item', async () => {
 
 test('feeds down with no cache: empty states, rest of hub works', async () => {
   const { context, page } = await open('#news', { feeds: 'down' });
-  assert.match(await page.textContent('#dateline'), /Signal unavailable/);
-  assert.match(await page.textContent('#newsList'), /No headlines right now/);
+  assert.match(await page.textContent('#pillText'), /NO SIGNAL/);
+  assert.match(await page.textContent('#newsList'), /LISTENING FOR SIGNAL/);
   await page.click('#tab-tools');
   assert.ok(await page.locator('#toolGrid .card').count() > 5);
   await context.close();
@@ -134,8 +139,8 @@ test('feed returning {} after a good load falls back to the cached snapshot', as
   const { context, page } = await open('#news');
   await feeds(context, 'empty');
   await page.reload();
-  await page.waitForFunction(() => /Signal (updated|snapshot|unavailable)/.test(document.getElementById('dateline').textContent));
-  assert.match(await page.textContent('#dateline'), /Signal snapshot from/);
+  await page.waitForFunction(() => document.getElementById('signalPill').dataset.state !== 'none' || /NO SIGNAL/.test(document.getElementById('pillText').textContent));
+  assert.match(await page.textContent('#pillText'), /SIGNAL SNAPSHOT/);
   await context.close();
 });
 
@@ -143,8 +148,87 @@ test('feeds down with a cache: snapshot label', async () => {
   const { context, page } = await open('#news');
   await feeds(context, 'down');
   await page.reload();
-  await page.waitForFunction(() => /Signal (updated|snapshot|unavailable)/.test(document.getElementById('dateline').textContent));
-  assert.match(await page.textContent('#dateline'), /Signal snapshot from/);
-  assert.equal(await page.locator('#newsList li').count(), 3);
+  await page.waitForFunction(() => document.getElementById('signalPill').dataset.state !== 'none' || /NO SIGNAL/.test(document.getElementById('pillText').textContent));
+  assert.match(await page.textContent('#pillText'), /SIGNAL SNAPSHOT/);
+  assert.equal(await page.locator('#newsList li').count(), 4);
+  await context.close();
+});
+
+test('lead story shows the publisher image, wire stays text-only', async () => {
+  const { context, page, errors } = await open('#front', { scheme: 'light' });
+  const src = await page.getAttribute('#leadStory .lead-art img', 'src');
+  assert.equal(src, 'https://img.example/lead.png');
+  await page.waitForFunction(() => { const i = document.querySelector('#leadStory .lead-art img'); return i && i.complete && i.naturalWidth > 0; });
+  assert.equal(await page.locator('#liveWire img').count(), 0);
+  assert.deepEqual(errors, []);
+  await context.close();
+});
+
+test('news rows show thumbs, drop insecure images, remove broken ones', async () => {
+  const { context, page, errors } = await open('#news');
+  assert.equal(await page.locator('#newsList li').count(), 4);
+  await page.waitForFunction(() => document.querySelectorAll('#newsList li')[2].querySelectorAll('img').length === 0);
+  assert.deepEqual(await page.$$eval('#newsList img', is => is.map(i => i.getAttribute('src'))), ['https://img.example/lead.png', 'https://img.example/ai.png']);
+  assert.equal(await page.locator('#newsList li', { hasText: 'insecure image' }).locator('img').count(), 0);
+  assert.equal(await page.locator('#newsList li', { hasText: 'chip export' }).locator('img').count(), 0);
+  assert.deepEqual(errors, []);
+  await context.close();
+});
+
+test('a lead image that fails to load is removed and the gradient remains', async () => {
+  const { context, page } = await open('#front');
+  await page.evaluate(() => document.querySelector('#leadStory .lead-art img').dispatchEvent(new Event('error')));
+  assert.equal(await page.locator('#leadStory .lead-art img').count(), 0);
+  assert.equal(await page.locator('#leadStory .lead-art').count(), 1);
+  await context.close();
+});
+
+test('lead shows the Signal trace behind the image, and keeps it when the image 404s', async () => {
+  const { page, context } = await open('#front');
+  await page.waitForSelector('#leadStory .trace-banner svg path');
+  assert.ok(await page.$('#leadStory .trace-banner .trace-readout'));
+  assert.match(await page.textContent('#leadStory .trace-readout'), /CYBER · CH-01 · \d\d:\d\d UTC/);
+  await context.close();
+});
+test('cards without images get a mini trace', async () => {
+  const { page, context } = await open('#front');
+  await page.waitForSelector('#latestRail .card .trace-thumb svg');
+  await context.close();
+});
+test('News rows without an image get a mini trace thumb', async () => {
+  const { page, context } = await open('#news');
+  await page.waitForSelector('#newsList li.has-thumb .trace-thumb');
+  await context.close();
+});
+
+test('feed-dependent empty states say Listening for signal', async () => {
+  const { page, context } = await open('#front', { feeds: 'down' });
+  await page.waitForFunction(() => /LISTENING FOR SIGNAL/.test(document.getElementById('liveWire').textContent));
+  assert.match(await page.textContent('#leadStory'), /LISTENING FOR SIGNAL/);
+  await context.close();
+});
+
+test('wave pulse moves under the selected tab', async () => {
+  const { page, context } = await open('#front');
+  await page.waitForSelector('.wave-pulse');
+  const before = await page.$eval('.wave-pulse', n => n.style.transform);
+  await page.click('#tab-tools');
+  await page.waitForFunction(b => document.querySelector('.wave-pulse').style.transform !== b, before);
+  const box = await page.$eval('#tab-tools', t => { const r = t.getBoundingClientRect(); return r.left + r.width / 2; });
+  const pulse = await page.$eval('.wave-pulse', n => { const m = /translateX\(([-\d.]+)px\)/.exec(n.style.transform); return Number(m[1]) + 120 + n.parentElement.getBoundingClientRect().left; });
+  assert.ok(Math.abs(pulse - box) < 2, `pulse centre ${pulse} vs tab centre ${box}`);
+  await context.close();
+});
+test('reduced motion stops the bubbles and waves', async () => {
+  const { page, context } = await open('#front');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  const running = await page.evaluate(() => document.getAnimations().filter(a => a.playState === 'running').map(a => a.effect.target.className.baseVal ?? a.effect.target.className));
+  assert.deepEqual(running, []);
+  await context.close();
+});
+test('wordmark font is loaded', async () => {
+  const { page, context } = await open('#front');
+  await page.evaluate(() => document.fonts.ready);
+  assert.ok(await page.evaluate(() => document.fonts.check('300 16px "DM Sans"')));
   await context.close();
 });

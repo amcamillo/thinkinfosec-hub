@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https://i.ytimg.com https://cdn-images-1.medium.com https://miro.medium.com; connect-src 'self' https://thinkinfosec.github.io; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https:; connect-src 'self' https://thinkinfosec.github.io; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>ThinkInfoSec Hub</title>
   <meta name="description" content="Research, tools, guides and the day's cyber, world and AI headlines from ThinkInfoSec.">
@@ -11,16 +11,22 @@
   <link rel="stylesheet" href="assets/hub.css">
 </head>
 <body>
+  <div class="orbs" aria-hidden="true"><i class="orb orb-1"></i><i class="orb orb-2"></i><i class="orb orb-3"></i><i class="orb orb-4"></i><i class="orb orb-5"></i></div>
   <a class="skip" href="#main">Skip to content</a>
   <header class="masthead">
     <div class="wrap masthead-row">
-      <a class="brand" href="#front">Think<span>InfoSec</span> <small>Hub</small></a>
-      <div class="theme-toggle" role="group" aria-label="Colour theme">
-        <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
-        <button type="button" data-theme-set="light" aria-pressed="true">Light</button>
+      <div>
+        <a class="brand" href="#front">Think<span>InfoSec</span> <small>Hub</small></a>
+        <p class="dateline" id="dateline"></p>
+      </div>
+      <div class="masthead-tools">
+        <p class="pill" id="signalPill" data-state="none"><span class="dot" aria-hidden="true"></span><span id="pillText" aria-live="polite">LISTENING FOR SIGNAL</span></p>
+        <div class="theme-toggle" role="group" aria-label="Colour theme">
+          <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
+          <button type="button" data-theme-set="light" aria-pressed="true">Light</button>
+        </div>
       </div>
     </div>
-    <p class="wrap dateline" id="dateline" aria-live="polite"></p>
     <nav class="wrap" aria-label="Sections">
       <div class="tabs" role="tablist" aria-label="Hub sections">
         <button type="button" role="tab" id="tab-front" aria-controls="panel-front" data-tab="front">Front page</button>
@@ -30,6 +36,10 @@
         <button type="button" role="tab" id="tab-tools" aria-controls="panel-tools" data-tab="tools">Tools</button>
         <button type="button" role="tab" id="tab-guides" aria-controls="panel-guides" data-tab="guides">Guides &amp; Assets</button>
         <button type="button" role="tab" id="tab-about" aria-controls="panel-about" data-tab="about">About</button>
+      </div>
+      <div class="tab-wave" aria-hidden="true">
+        <svg class="wave-base" viewBox="0 0 840 22" preserveAspectRatio="none" focusable="false"><path d="M0 12 C40 10 80 14 120 12 S200 10 240 12 S320 14 360 12 S440 10 480 12 S560 14 600 12 S680 10 720 12 S800 14 840 12 S920 10 960 12"/></svg>
+        <svg class="wave-pulse" viewBox="0 0 240 22" focusable="false"><defs><linearGradient id="wavePulseGrad" x1="0" x2="1"><stop offset="0" stop-color="#00BFCF" stop-opacity="0"/><stop offset=".5" stop-color="#00BFCF"/><stop offset="1" stop-color="#FF2D78" stop-opacity="0"/></linearGradient></defs><path d="M0 12 C30 12 60 12 80 12 C92 12 96 4 108 4 C120 4 120 20 132 20 C144 20 148 8 160 12 C180 12 210 12 240 12"/></svg>
       </div>
     </nav>
   </header>

@@ -1,8 +1,40 @@
 {
   "generated": "2026-11-25T09:00:00Z",
   "items": [
-    { "source": "Fixture Wire", "cat": "cyber", "title": "Fixture cyber headline on ransomware crews", "summary": "Cyber summary text.", "ts": 1795597200000, "link": "https://example.com/cyber" },
-    { "source": "Fixture Lab", "cat": "ai", "title": "Fixture AI headline on model releases", "summary": "AI summary text.", "ts": 1795593600000, "link": "https://example.com/ai" },
-    { "source": "Fixture World", "cat": "geo", "title": "Fixture geopolitics headline on chip export controls", "summary": "Geopolitics summary text.", "ts": 1795590000000 }
+    {
+      "source": "Fixture Wire",
+      "cat": "cyber",
+      "title": "Fixture cyber headline on ransomware crews",
+      "summary": "Cyber summary text.",
+      "ts": 1795597200000,
+      "link": "https://example.com/cyber",
+      "image": "https://img.example/lead.png"
+    },
+    {
+      "source": "Fixture Lab",
+      "cat": "ai",
+      "title": "Fixture AI headline on model releases",
+      "summary": "AI summary text.",
+      "ts": 1795593600000,
+      "link": "https://example.com/ai",
+      "image": "https://img.example/ai.png"
+    },
+    {
+      "source": "Fixture World",
+      "cat": "geo",
+      "title": "Fixture geopolitics headline on chip export controls",
+      "summary": "Geopolitics summary text.",
+      "ts": 1795590000000,
+      "image": "https://img.example/missing.png"
+    },
+    {
+      "source": "Fixture Wire",
+      "cat": "cyber",
+      "title": "Fixture cyber headline with insecure image",
+      "summary": "Insecure image summary.",
+      "ts": 1795586400000,
+      "link": "https://example.com/insecure",
+      "image": "http://insecure.example/x.png"
+    }
   ]
 }
