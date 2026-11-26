@@ -952,7 +952,7 @@
       "updated": "2026-09-22",
       "author": "Andre Camillo",
       "cover": null,
-      "reading_minutes": 1,
+      "reading_minutes": 20,
       "pillar": "process",
       "people": [
         "thought-leadership"
@@ -993,7 +993,33 @@
         "ai_assisted": true,
         "not_legal_advice": true
       },
-      "sources": []
+      "sources": [
+        {
+          "url": "https://www.cyber.gov.au/business-government/asds-cyber-security-frameworks/essential-eight/essential-eight-maturity-model",
+          "host": "cyber.gov.au",
+          "text": "cyber.gov.au/business-government/asds-cyber-security-frameworks/essen…"
+        },
+        {
+          "url": "https://www.cyber.gov.au/business-government/asds-cyber-security-frameworks/essential-eight/essential-eight-maturity-model-faq",
+          "host": "cyber.gov.au",
+          "text": "cyber.gov.au/business-government/asds-cyber-security-frameworks/essen…"
+        },
+        {
+          "url": "https://www.cyber.gov.au/business-government/asds-cyber-security-frameworks/essential-eight/essential-eight-assessment-process-guide",
+          "host": "cyber.gov.au",
+          "text": "cyber.gov.au/business-government/asds-cyber-security-frameworks/essen…"
+        },
+        {
+          "url": "https://marketplace.crowdstrike.com/listings/airlock-digital-precision-application-control/",
+          "host": "marketplace.crowdstrike.com",
+          "text": "marketplace.crowdstrike.com/listings/airlock-digital-precision-applic…"
+        },
+        {
+          "url": "https://developer.crowdstrike.com/cac/terraform/provider/prevention-policy/resources/prevention-policy-windows/",
+          "host": "developer.crowdstrike.com",
+          "text": "developer.crowdstrike.com/cac/terraform/provider/prevention-policy/re…"
+        }
+      ]
     },
     {
       "id": "research-ncsc-top-10-crowdstrike",
