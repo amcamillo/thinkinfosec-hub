@@ -1513,8 +1513,8 @@
       "published": "2026-08-24",
       "updated": "2026-08-24",
       "author": "Andre Camillo",
-      "cover": null,
-      "reading_minutes": 1,
+      "cover": "https://amcamillo.github.io/thinkinfosec-hub/Research/infosec-solutions-map/cover.webp",
+      "reading_minutes": 19,
       "pillar": "process",
       "people": [
         "thought-leadership"
