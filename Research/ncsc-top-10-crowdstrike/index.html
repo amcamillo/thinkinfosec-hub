@@ -3,361 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NCSC Top 10 and the Falcon boundary | Thinkinfosec Hub</title>
+<title>NCSC Top 10 and the Falcon boundary — Thinkinfosec Hub</title>
 <meta name="description" content="An independent ThinkInfoSec crosswalk of CrowdStrike capability against New Zealand’s NCSC Critical Controls: native scope, dependencies, and residual obligations.">
 <meta name="author" content="Andre Camillo">
 <link rel="canonical" href="https://amcamillo.github.io/thinkinfosec-hub/Research/ncsc-top-10-crowdstrike/">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
-<style>
-:root {
-  --navy: #0D1F3C;
-  --teal: #00BFCF;
-  --teal-dark: #008A96;
-  --pink: #FF2D78;
-  --green: #00875A;
-  --bg: #f4f7f6;
-  --card: #ffffff;
-  --ink: #333333;
-  --mute: #555555;
-  --faint: #777777;
-  --line: #dddddd;
-  --radius: 8px;
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
-  --focus: 2px solid var(--teal);
-  --col: 1040px;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 16px;
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-}
-a { color: var(--teal-dark); }
-a:hover { text-decoration: underline; }
-a:focus-visible, button:focus-visible, summary:focus-visible {
-  outline: var(--focus); outline-offset: 3px;
-}
-.skip {
-  position: absolute; left: 0.75rem; top: -3rem;
-  background: var(--navy); color: #fff; padding: 0.5rem 0.85rem;
-  border-radius: var(--radius); z-index: 400; text-decoration: none;
-}
-.skip:focus { top: 0.75rem; }
-.topbar { background: var(--navy); color: #fff; }
-.topbar-inner {
-  max-width: var(--col); margin: 0 auto;
-  min-height: 52px; padding: 8px 24px;
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
-}
-.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
-.brand img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
-.brand-name { font-size: 15px; font-weight: 700; display: block; line-height: 1.15; }
-.brand-sub { font-size: 12px; color: var(--teal); font-weight: 500; }
-.topbar-side { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; text-align: right; }
-.topbar-meta { font-size: 13px; color: rgba(255,255,255,0.62); margin: 0; }
-.advice-stamp {
-  margin: 0; padding: 3px 8px;
-  border: 1.5px solid #FF8B00; border-radius: 4px;
-  background: #fff8f0; color: #9a4d00;
-  font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
-  text-transform: uppercase; line-height: 1.2;
-}
-.mast { background: var(--card); border-bottom: 1px solid var(--line); }
-.mast-inner { max-width: var(--col); margin: 0 auto; padding: 28px 24px 22px; }
-.crumb { font-size: 13px; color: var(--faint); margin-bottom: 18px; }
-.crumb a { color: var(--teal-dark); text-decoration: none; font-weight: 500; }
-.crumb a:hover { text-decoration: underline; }
-.sep { margin: 0 8px; color: var(--line); }
-.dateline { font-size: 13px; color: var(--teal-dark); font-weight: 600; margin-bottom: 8px; }
-.mast h1 {
-  font-size: clamp(28px, 3.6vw, 38px);
-  font-weight: 700; color: var(--navy);
-  letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 12px;
-}
-.mast h1 em { font-style: normal; color: var(--teal-dark); }
-.lede { max-width: 42rem; color: var(--mute); margin-bottom: 10px; }
-.meta-line { font-size: 14px; color: var(--faint); margin-bottom: 18px; }
-.facts {
-  display: flex; flex-wrap: wrap; gap: 10px 32px;
-  padding-top: 16px; border-top: 1px solid var(--line);
-  font-size: 14px; color: var(--mute);
-}
-.facts b { color: var(--navy); font-weight: 700; margin-right: 5px; }
-.facts a { text-decoration: none; font-size: 13px; }
-.facts a:hover { text-decoration: underline; }
-.toc {
-  position: sticky; top: 0; z-index: 200;
-  background: var(--card); border-bottom: 1px solid var(--line); padding: 8px 0;
-}
-.toc-inner {
-  max-width: var(--col); margin: 0 auto; padding: 0 24px;
-  display: flex; gap: 4px; overflow-x: auto; width: 100%;
-}
-.toc a {
-  flex-shrink: 0; color: var(--faint); text-decoration: none;
-  font-size: 13px; font-weight: 500; min-height: 40px; padding: 0 12px;
-  display: inline-flex; align-items: center; border-radius: 6px;
-}
-.toc a:hover { color: var(--navy); background: var(--bg); }
-.toc a.on { color: var(--navy); background: var(--bg); font-weight: 600; }
-.wrap { max-width: var(--col); margin: 0 auto; padding: 20px 24px 64px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
-.wrap > section { min-width: 0; }
-section {
-  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
-  box-shadow: var(--shadow); padding: 28px 28px 24px; scroll-margin-top: 64px;
-}
-.kicker {
-  font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--teal-dark); margin-bottom: 6px;
-}
-h2 {
-  font-size: 1.45rem; font-weight: 700; color: var(--navy);
-  margin: 0 0 10px; letter-spacing: -0.02em; line-height: 1.25;
-}
-h3 { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
-.blurb { color: var(--mute); margin-bottom: 18px; max-width: 44rem; }
-.prose { font-size: 14.5px; color: var(--mute); margin-top: 8px; }
-.note { font-size: 14px; color: var(--mute); margin-top: 12px; }
-.thesis {
-  background: var(--bg); border-radius: var(--radius); padding: 16px 18px; margin: 0 0 20px;
-}
-.thesis p { font-size: 1.05rem; font-weight: 600; color: var(--navy); line-height: 1.5; max-width: 46rem; }
-.thesis span { color: var(--teal-dark); }
-.moves { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
-.move .n { font-size: 12px; font-weight: 700; color: var(--teal-dark); display: block; margin-bottom: 6px; }
-.move:nth-child(2) .n { color: var(--navy); }
-.move:nth-child(3) .n { color: var(--pink); }
-.move p { font-size: 14.5px; color: var(--mute); }
-.callout {
-  margin-top: 16px; padding: 14px 16px; background: var(--navy); color: #fff;
-  border-radius: var(--radius); font-size: 14.5px;
-}
-.callout strong { color: var(--teal); }
-.callout .cite { color: var(--teal); }
-.warn {
-  margin-top: 14px; padding: 12px 14px; background: #fff8f0;
-  border-left: 3px solid #FF8B00; border-radius: 0 var(--radius) var(--radius) 0;
-  font-size: 14.5px; color: var(--mute);
-}
-.warn strong { color: var(--navy); }
-.grid-2 { display: grid; gap: 16px; }
-@media (min-width: 800px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
-.mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; }
-sup.cite, .cite {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 10px; font-weight: 500; line-height: 0; vertical-align: super;
-}
-.cite { color: var(--teal-dark); text-decoration: none; margin-left: 1px; }
-.cite:hover { text-decoration: underline; }
-.sourcelist { list-style: none; display: grid; gap: 12px; }
-.sourcelist li {
-  font-size: 14px; color: var(--mute); padding-left: 2.6rem; position: relative;
-  line-height: 1.55; scroll-margin-top: 72px;
-}
-.sourcelist li > .n {
-  position: absolute; left: 0; top: 0;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 12px; font-weight: 600; color: var(--navy);
-}
-.sourcelist a { word-break: break-word; }
-.sourcelist .meta {
-  display: block; margin-top: 2px;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 11px; color: var(--faint);
-}
-.group-lbl {
-  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
-  text-transform: uppercase; color: var(--teal-dark); margin: 22px 0 10px;
-}
-.group-lbl:first-child { margin-top: 0; }
-.sourcelist li:target { background: #eef8f9; border-radius: 6px; }
-.badge {
-  display: inline; font-size: 12px; font-weight: 600; font-style: italic;
-  border: 0; background: none; color: var(--faint); padding: 0; text-transform: none;
-}
-.finds { display: grid; gap: 0; }
-.find {
-  display: grid; grid-template-columns: 2.2rem 1fr; gap: 8px;
-  padding: 16px 0; border-top: 1px solid var(--line);
-}
-.find .n { font-size: 14px; font-weight: 700; color: var(--teal-dark); padding-top: 2px; }
-.find.proof .n { color: var(--pink); }
-.find p { font-size: 15px; color: var(--ink); margin: 6px 0 0; }
-.find h3 { margin: 0; }
-details.caveat { border-top: 1px solid var(--line); }
-details.caveat summary {
-  cursor: pointer; list-style: none; padding: 12px 0;
-  font-weight: 600; font-size: 15px; color: var(--navy);
-  display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px;
-}
-details.caveat summary::-webkit-details-marker { display: none; }
-details.caveat summary::after { content: "+"; color: var(--teal-dark); font-weight: 500; }
-details.caveat[open] summary::after { content: "–"; }
-details.caveat p { padding: 0 0 14px; font-size: 14.5px; color: var(--mute); }
-.chiprow { font-size: 14px; color: var(--faint); margin-bottom: 8px; }
-.threat { padding: 14px 0; border-top: 1px solid var(--line); font-size: 15px; color: var(--ink); }
-.limits { margin: 14px 0 0 1.1rem; display: grid; gap: 8px; }
-.limits li { font-size: 14.5px; color: var(--mute); }
-.mx {
-  display: grid;
-  grid-template-columns: 2.4rem minmax(0, 1.05fr) minmax(0, 1.35fr);
-  gap: 4px 16px; align-items: baseline;
-  padding: 14px 8px; margin: 0 -8px;
-  border-top: 1px solid var(--line);
-  text-decoration: none; color: inherit; border-radius: 6px; min-height: 44px;
-}
-.mx:hover { background: var(--bg); }
-.mx .n { font-size: 13px; font-weight: 700; color: var(--teal-dark); }
-.mx .name { display: block; font-weight: 700; color: var(--navy); }
-.mx .pos { display: block; font-size: 13px; color: var(--faint); font-weight: 600; margin-top: 2px; }
-.mx .sub { font-size: 14px; color: var(--mute); }
-.lanes { display: grid; gap: 18px; margin-top: 18px; }
-@media (min-width: 800px) { .lanes { grid-template-columns: 1fr 1fr 1fr; } }
-.lane .role {
-  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
-  text-transform: uppercase; color: var(--teal-dark); margin-bottom: 4px;
-}
-.lane.residual .role { color: var(--pink); }
-.lane h3 { font-size: 1.02rem; }
-.lane ul { margin: 8px 0 0 1.05rem; display: grid; gap: 6px; }
-.lane li { font-size: 14px; color: var(--mute); }
-.rec-label {
-  font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
-  text-transform: uppercase; color: var(--faint); margin-top: 12px;
-}
-.pager { display: flex; justify-content: space-between; gap: 12px; }
-.pager a {
-  display: inline-flex; align-items: center; min-height: 44px;
-  font-size: 14px; font-weight: 600; text-decoration: none; max-width: 48%;
-}
-.pager a.next { margin-left: auto; text-align: right; }
-.toc a { transition: background-color 160ms ease, color 160ms ease; }
-.band-navy { border-top: 4px solid var(--navy); }
-.band-teal { border-top: 4px solid var(--teal); }
-.band-amber { border-top: 4px solid #FF8B00; }
-.band-pink { border-top: 4px solid var(--pink); }
-.panel {
-  border: 1px solid var(--line); border-radius: var(--radius);
-  padding: 14px 16px 12px; margin-top: 14px;
-}
-.panel.teal { background: #f3fbfc; border-top: 3px solid var(--teal); }
-.panel.navy { background: #f4f7fb; border-top: 3px solid var(--navy); }
-.panel.amber { background: #fff8f0; border-top: 3px solid #FF8B00; }
-.panel.pink { background: #fff5f8; border-top: 3px solid var(--pink); }
-.panel h3 { margin-bottom: 8px; }
-.profile { display: grid; gap: 8px; }
-.profile-head, .profile-row {
-  display: grid;
-  grid-template-columns: minmax(150px, 1.35fr) repeat(4, minmax(108px, 1fr));
-  gap: 8px; align-items: center;
-}
-.profile-head {
-  background: var(--navy); color: #fff; border-radius: 8px;
-  padding: 10px 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.01em;
-}
-.profile-row {
-  text-decoration: none; color: inherit; background: #f6f8fb;
-  border-radius: 8px; padding: 10px 12px; min-height: 48px;
-  transition: background-color 160ms ease, transform 160ms ease;
-}
-.profile-row:hover { background: #e7eef6; }
-.profile-row .who { font-weight: 700; color: var(--navy); }
-.profile-row .who small {
-  display: block; font-weight: 600; color: var(--teal-dark);
-  font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px;
-}
-.plab { display: none; }
-.chipstrip {
-  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px; margin: 12px 0 4px;
-}
-.chipstrip .plab { display: block; }
-.pill {
-  display: inline-flex; align-items: center; justify-content: center;
-  min-height: 28px; padding: 2px 10px; border-radius: 999px;
-  font-size: 12px; font-weight: 700; line-height: 1.2; color: var(--navy);
-  white-space: nowrap;
-}
-.pill.none { background: #e8edf4; }
-.pill.yes { background: #c9f0dc; }
-.pill.strong { background: #cfe5ff; }
-.pill.support { background: #dcecff; }
-.pill.req { background: #ffe1b8; }
-.pill.owner { background: #ffd49a; }
-.pill.material { background: #ffd1d1; }
-.pill.watch { background: #ffe8b8; }
-.scroll { overflow-x: auto; margin-top: 8px; max-width: 100%; }
-.cmp { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-.cmp th {
-  text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
-  text-transform: uppercase; color: var(--faint);
-  padding: 0 10px 8px 0; border-bottom: 2px solid var(--navy); white-space: nowrap;
-}
-.cmp td {
-  padding: 9px 10px 9px 0; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--mute);
-}
-.cmp .mod { font-weight: 700; color: var(--navy); }
-.xwalk { min-width: 720px; }
-.xwalk th, .xwalk td { text-align: center; }
-.xwalk th:first-child, .xwalk td:first-child { text-align: left; }
-.xwalk th a { color: #fff; text-decoration: none; }
-.xwalk thead th { background: var(--navy); color: #fff; padding: 8px; border-bottom: 0; }
-.xwalk thead th:first-child { border-radius: 8px 0 0 0; }
-.xwalk thead th:last-child { border-radius: 0 8px 0 0; }
-.mark {
-  display: inline-flex; min-width: 2.4rem; justify-content: center;
-  border-radius: 999px; padding: 2px 6px; font-size: 12px; font-weight: 700; color: var(--navy);
-}
-.mark.s { background: #dcecff; }
-.mark.d { background: #c9f0dc; }
-.mark.ds { background: #b7e4c7; }
-.mark.none { background: transparent; color: var(--faint); font-weight: 500; }
-#main > section.view-in { animation: rise 260ms ease both; }
-#main > section.view-in:nth-child(2) { animation-delay: 50ms; }
-#main > section.view-in:nth-child(3) { animation-delay: 100ms; }
-.view-in .panel { animation: rise 280ms ease both; }
-.view-in .panel:nth-of-type(2) { animation-delay: 40ms; }
-.view-in .panel:nth-of-type(3) { animation-delay: 80ms; }
-@keyframes rise {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: none; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .toc a, .profile-row { transition: none; }
-  #main > section.view-in, .view-in .panel { animation: none; }
-}
-footer {
-  background: var(--navy); color: rgba(255,255,255,0.65);
-  padding: 24px; text-align: center;
-}
-footer .ft-main { font-size: 14px; max-width: var(--col); margin: 0 auto; }
-footer .ft-main a { color: var(--teal); text-decoration: none; }
-footer .ft-main a:hover { text-decoration: underline; }
-footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.4); max-width: 40rem; }
-@media (max-width: 800px) {
-  .moves { grid-template-columns: 1fr; }
-  .find { grid-template-columns: 1fr; }
-  .mx { grid-template-columns: 2.4rem minmax(0, 1fr); }
-  .mx .sub { grid-column: 2; }
-  section { padding: 20px 18px 18px; }
-  .pager { flex-direction: column; }
-  .pager a, .pager a.next { max-width: none; text-align: left; margin-left: 0; }
-  .profile-head { display: none; }
-  .profile-row, .chipstrip { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
-  .profile-row .who { grid-column: 1 / -1; }
-  .pcell { min-width: 0; }
-  .pill { white-space: normal; text-align: center; }
-  .plab {
-    display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
-    text-transform: uppercase; color: var(--faint); margin-bottom: 4px;
-  }
-}
-</style>
+<meta property="og:image" content="https://amcamillo.github.io/thinkinfosec-hub/assets/brand/logo-192.webp">
+<link rel="icon" href="../../assets/brand/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/brand/favicon-180.png">
+<link rel="stylesheet" href="../../assets/research.css">
+<script src="../../assets/hub/theme-init.js"></script>
 <!-- research-meta:start (generated by scripts/research.cjs) -->
 <script type="application/ld+json">
 {
@@ -415,7 +69,20 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
       "name": "New Zealand"
     }
   ],
-  "citation": [],
+  "citation": [
+    "https://www.ncsc.govt.nz/protect-your-organisation/summary/",
+    "https://www.ncsc.govt.nz/protect-your-organisation/patching/",
+    "https://www.ncsc.govt.nz/protect-your-organisation/multi-factor-authentication-and-verification/",
+    "https://www.ncsc.govt.nz/protect-your-organisation/password-managers/",
+    "https://www.ncsc.govt.nz/protect-your-organisation/centralised-logging/",
+    "https://www.ncsc.govt.nz/protect-your-organisation/build-security-awareness-in-your-organisation/",
+    "https://www.ncsc.govt.nz/protect-your-organisation/asset-lifecycle-management/",
+    "https://www.ncsc.govt.nz/protect-your-organisation/implement-and-test-backups/",
+    "https://www.ncsc.govt.nz/protect-your-organisation/application-control/",
+    "https://www.ncsc.govt.nz/protect-your-organisation/principle-of-least-privilege/",
+    "https://www.ncsc.govt.nz/protect-your-organisation/network-separation-and-segmentation/",
+    "https://marketplace.crowdstrike.com/listings/airlock-digital-precision-application-control/"
+  ],
   "creativeWorkStatus": "Published",
   "disclaimer": "AI-assisted research. This is not legal advice."
 }
@@ -424,638 +91,73 @@ footer .ft-sub { margin: 8px auto 0; font-size: 12px; color: rgba(255,255,255,0.
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-
-<header class="topbar">
-  <div class="topbar-inner">
-    <a class="brand" href="../../index.html">
-      <img src="../../assets/learning-hub-logo.png" alt="Thinkinfosec Hub logo" width="32" height="32" onerror="this.style.display='none'">
-      <span>
-        <span class="brand-name">Thinkinfosec</span>
-        <span class="brand-sub">Research briefing</span>
-      </span>
-    </a>
-    <div class="topbar-side">
-      <p class="topbar-meta">September 2026</p>
-      <p class="advice-stamp">Not legal advice</p>
+<div class="orbs" aria-hidden="true"><span class="orb orb-1"></span><span class="orb orb-2"></span><span class="orb orb-3"></span></div>
+<header class="col r-top">
+  <a class="brand-block" href="../../index.html">
+    <img class="brand-badge" src="../../assets/brand/logo-96.webp" width="40" height="40" alt="ThinkInfoSec logo">
+    <span class="brand">Think<span>InfoSec</span> <small>Hub</small></span>
+  </a>
+  <div class="r-tools">
+    <a class="r-back" href="../">&larr; Research</a>
+    <div class="theme-toggle" role="group" aria-label="Colour theme">
+      <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
+      <button type="button" data-theme-set="light" aria-pressed="true">Light</button>
     </div>
   </div>
 </header>
-
-<div class="mast">
-  <div class="mast-inner">
-    <nav class="crumb" aria-label="Breadcrumb">
-      <a href="../../index.html">Hub</a><span class="sep">/</span>
-      <a href="../../index.html#research">Research</a><span class="sep">/</span>
-      NCSC Top 10 and the Falcon boundary
-    </nav>
-    <p class="dateline">Independent research briefing · September 2026</p>
-    <h1>NCSC Top 10 and the Falcon <em>boundary</em></h1>
-    <p class="lede">CrowdStrike can carry material parts of several New Zealand NCSC Critical Controls. A licence or a detection does not prove a control is in place. Each control is walked as native capability, dependency and residual obligation.</p>
-    <p class="meta-line">Analyst assessment · as at 22 September 2026 · NCSC Critical Controls, 21 September 2026 snapshot · New Zealand · AI-assisted research</p>
-    <p class="facts" id="facts">
-      <span><b>10</b> controls, reviewed annually · <a href="#fn1">NCSC Critical Controls</a></span>
-      <span><b>0</b> control mappings · <a href="#fn2">capability mapping</a></span>
-      <span><b>Windows</b> patch scope evidenced · <a href="#fn3">Falcon for IT</a></span>
-      <span><b>Pending</b> threat context · <a href="#fn4">ThinkThreats slice</a></span>
-    </p>
+<div class="col cover">
+  <nav class="crumb" aria-label="Breadcrumb">
+    <a href="../../index.html">Hub</a><span class="sep">/</span><a href="../">Research</a><span class="sep">/</span>NCSC Top 10 and the Falcon boundary
+  </nav>
+  <p class="kicker">Control frameworks &middot; Independent research briefing</p>
+  <h1>NCSC Top 10 and the Falcon <em>boundary</em></h1>
+  <p class="lede">CrowdStrike can carry material parts of several New Zealand NCSC Critical Controls. A licence or a detection does not prove a control is in place. Each control is walked as native capability, dependency and residual obligation.</p>
+  <div class="rail">
+    <span>BY <b>ANDRE CAMILLO</b></span>
+    <span><b>SEP 2026</b> &middot; 26 MIN READ</span>
+    <span class="ai" role="note"><b>&#9670; AI-ASSISTED RESEARCH</b></span>
+    <span class="law" role="note"><b>&#9888; THIS IS NOT LEGAL ADVICE</b></span>
   </div>
+  <p class="disclose">AI-assisted research: minor inconsistencies can occur. Every claim remains grounded in the ThinkInfoSec ontology and the sources disclosed on this page.</p>
+  <ul class="facts" aria-label="Key figures">
+    <li><a href="#fn1"><b>10</b><span>controls, reviewed annually</span><small>NCSC Critical Controls</small></a></li>
+    <li><a href="#fn2"><b>0</b><span>control mappings</span><small>capability mapping</small></a></li>
+    <li><a href="#fn3"><b>Windows</b><span>patch scope evidenced</span><small>Falcon for IT</small></a></li>
+    <li><a href="#fn4"><b>Pending</b><span>threat context</span><small>ThinkThreats slice</small></a></li>
+  </ul>
+  <p class="asof">Analyst assessment &middot; as at 22 September 2026 &middot; NCSC Critical Controls, 21 September 2026 snapshot &middot; New Zealand.</p>
 </div>
-
-<nav class="toc" aria-label="On this page"><div class="toc-inner" id="toc"></div></nav>
-
-<main id="main" class="wrap">
-  <section>
-    <p class="kicker">The argument</p>
-    <h2>A licence does not establish NCSC conformance</h2>
-    <div class="thesis">
-      <p>CrowdStrike provides control capability and evidence. <span>The organisation remains responsible for control design, scope, operation, exceptions and effectiveness.</span></p>
-    </div>
-    <p class="blurb">Open this briefing over a local web server to load the control navigator. The ten controls, the control architecture, the method and the sources are separate views.</p>
-  </section>
+<div class="r-body">
+<nav class="toc" aria-label="On this page"><p class="toc-label">On this page</p><div class="toc-inner">
+  <a href="#overview">Thesis</a>
+  <a href="#profile">Profile</a>
+  <a href="#path">Attack path</a>
+  <a href="#patch-software-and-systems">01 Patch</a>
+  <a href="#mfa-and-verification">02 MFA</a>
+  <a href="#password-manager">03 Passwords</a>
+  <a href="#centralised-logging">04 Logging</a>
+  <a href="#security-awareness">05 Awareness</a>
+  <a href="#asset-lifecycle-management">06 Assets</a>
+  <a href="#backups-and-restoration-testing">07 Backups</a>
+  <a href="#application-control">08 Apps</a>
+  <a href="#least-privilege">09 Privilege</a>
+  <a href="#network-segmentation-and-separation">10 Network</a>
+  <a href="#architecture">Architecture</a>
+  <a href="#method">Method</a>
+  <a href="#sources">Sources</a>
+</div></nav>
+<main id="main" class="col article">
+<section id="overview"><p class="kicker">The argument</p><h2 tabindex="-1">A licence does not establish NCSC conformance</h2><div class="thesis"><p>CrowdStrike provides control capability and evidence. <span>The organisation remains responsible for control design, scope, operation, exceptions and effectiveness.</span></p></div><p class="prose">CrowdStrike provides strong but bounded support for patching, MFA, centralised logging, asset discovery, application control, least privilege and host-firewall enforcement. Password-manager provision, awareness training, backup and recovery, full asset lifecycle, business-process verification and enterprise network segmentation remain ecosystem or organisational responsibilities.<a class="cite" href="#fn1">1</a></p><p class="prose">This is a product-capability crosswalk. It does not infer NCSC conformance from product licensing, deployment, configuration or detections.</p></section><section id="profile"><p class="kicker">Comparison</p><h2>CrowdStrike contribution profile across the NCSC Critical Controls</h2><p class="blurb">Qualitative control architecture. Select a row to open that control. These labels are not an NCSC conformance score.<a class="cite" href="#fn1">1</a></p><div class="profile"><div class="profile-head"><span>NCSC Critical Control</span><span>Native control</span><span>Native support</span><span>Ecosystem control</span><span>Principal residual obligation</span></div><a class="profile-row" href="#patch-software-and-systems"><span class="who"><small>N1</small>Patch software and systems</span><span class="pcell"><span class="plab">Native control</span><span class="pill yes">Windows bounded</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill strong">Strong</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill req">Required</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill watch">Complete scope</span></span></a><a class="profile-row" href="#mfa-and-verification"><span class="who"><small>N2</small>Implement multi-factor authentication and verification</span><span class="pcell"><span class="plab">Native control</span><span class="pill yes">Supported flows</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill strong">Strong</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill owner">Verification owner</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill watch">Process coverage</span></span></a><a class="profile-row" href="#password-manager"><span class="who"><small>N3</small>Provide and use a password manager</span><span class="pcell"><span class="plab">Native control</span><span class="pill none">None</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill support">Identity support</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill owner">Control owner</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill material">Provide / adopt</span></span></a><a class="profile-row" href="#centralised-logging"><span class="who"><small>N4</small>Centralised logging</span><span class="pcell"><span class="plab">Native control</span><span class="pill yes">Strong / bounded</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill strong">Strong</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill req">Sources / SOC</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill watch">Source coverage</span></span></a><a class="profile-row" href="#security-awareness"><span class="who"><small>N5</small>Build security awareness in your organisation</span><span class="pcell"><span class="plab">Native control</span><span class="pill none">None</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill support">Scenario input</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill owner">Control owner</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill material">Behaviour change</span></span></a><a class="profile-row" href="#asset-lifecycle-management"><span class="who"><small>N6</small>Asset lifecycle management</span><span class="pcell"><span class="plab">Native control</span><span class="pill yes">Inventory bounded</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill strong">Strong</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill owner">Lifecycle owner</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill watch">End-to-end lifecycle</span></span></a><a class="profile-row" href="#backups-and-restoration-testing"><span class="who"><small>N7</small>Implement and test backups</span><span class="pcell"><span class="plab">Native control</span><span class="pill none">None</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill support">Detection</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill owner">Control owner</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill material">Recoverability</span></span></a><a class="profile-row" href="#application-control"><span class="who"><small>N8</small>Implement application control</span><span class="pcell"><span class="plab">Native control</span><span class="pill yes">Behaviour bounded</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill strong">Strong</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill req">Allowlisting</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill watch">Approval / scope</span></span></a><a class="profile-row" href="#least-privilege"><span class="who"><small>N9</small>Enforce the principle of least privilege</span><span class="pcell"><span class="plab">Native control</span><span class="pill yes">Identity bounded</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill strong">Strong</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill req">IGA / PAM</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill watch">Universal coverage</span></span></a><a class="profile-row" href="#network-segmentation-and-separation"><span class="who"><small>N10</small>Implement network segmentation and separation</span><span class="pcell"><span class="plab">Native control</span><span class="pill yes">Host firewall</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill support">Visibility</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill owner">Network owner</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill material">Zone architecture</span></span></a></div><p class="note">“Bounded” means direct capability only within a documented platform, source, workload or authentication scope. Residual labels identify the main obligation left with the organisation. They are not risk, maturity or compliance ratings.</p><div class="panel teal"><h3>Where each Falcon module shows up</h3><p class="prose"><span class="mark d">D*</span> direct, bounded to documented scope. <span class="mark s">S</span> supporting prevention, visibility, response or evidence. <span class="mark ds">D*/S</span> both. <span class="mark none">—</span> no material contribution evidenced. Capability classes, not maturity ratings.</p><div class="scroll"><table class="cmp xwalk"><thead><tr><th>CrowdStrike module</th><th><a href="#patch-software-and-systems">N1</a></th><th><a href="#mfa-and-verification">N2</a></th><th><a href="#password-manager">N3</a></th><th><a href="#centralised-logging">N4</a></th><th><a href="#security-awareness">N5</a></th><th><a href="#asset-lifecycle-management">N6</a></th><th><a href="#backups-and-restoration-testing">N7</a></th><th><a href="#application-control">N8</a></th><th><a href="#least-privilege">N9</a></th><th><a href="#network-segmentation-and-separation">N10</a></th></tr></thead><tbody><tr><td class="mod">Falcon Exposure Management / Spotlight</td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td></tr><tr><td class="mod">Falcon for IT</td><td><span class="mark d" title="Direct, bounded to documented scope">D*</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td></tr><tr><td class="mod">Falcon Discover</td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark d" title="Direct, bounded to documented scope">D*</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td></tr><tr><td class="mod">FalconID</td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark d" title="Direct, bounded to documented scope">D*</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td></tr><tr><td class="mod">Falcon Identity Protection</td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark ds" title="Direct bounded and supporting">D*/S</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark ds" title="Direct bounded and supporting">D*/S</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td></tr><tr><td class="mod">Falcon Next-Gen SIEM</td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark d" title="Direct, bounded to documented scope">D*</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td></tr><tr><td class="mod">Falcon Onum</td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td></tr><tr><td class="mod">Falcon Prevent</td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark d" title="Direct, bounded to documented scope">D*</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td></tr><tr><td class="mod">Falcon Insight XDR</td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td></tr><tr><td class="mod">Falcon Surface / Falcon for XIoT</td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark s" title="Supporting prevention, visibility, response or evidence">S</span></td></tr><tr><td class="mod">Falcon Privileged Access / CIEM / Shield</td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark ds" title="Direct bounded and supporting">D*/S</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td></tr><tr><td class="mod">Falcon Firewall Management</td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark none" title="No material contribution evidenced">—</span></td><td><span class="mark d" title="Direct, bounded to documented scope">D*</span></td></tr></tbody></table></div></div></section><section id="path"><p class="kicker">Directional only</p><h2>Why these controls sit on the same path</h2><p class="blurb">ThinkThreats claims selected for this assessment were all pending on 22 September 2026. They explain why an organisation might prioritise a control. They do not change the capability finding. <span class="badge one">Single-source · pending</span><a class="cite" href="#fn4">4</a></p><details class="caveat"><summary>Pending threat drivers</summary><div><p class="threat">A pending M-Trends 2026 extraction records exploits as the leading initial-access vector, and as 32 percent of investigations where a vector was identified. That is the practical case for measurable patch coverage. <span class="badge one">Single-source · pending</span><a class="cite" href="#fn5">5</a><a class="cite" href="#fn6">6</a></p><p class="threat">The same pending extraction records stolen credentials in 9 percent of investigations, vishing as the second-most common vector, and help-desk targeting for password resets and MFA changes. <span class="badge one">Single-source · pending</span><a class="cite" href="#fn7">7</a><a class="cite" href="#fn8">8</a><a class="cite" href="#fn9">9</a></p><p class="threat">It also describes vishing used to steal credentials and to obtain rogue SaaS authorisation. People and business processes are part of the initial-access path. <span class="badge one">Single-source · pending</span><a class="cite" href="#fn10">10</a></p><p class="threat">Pending guidance is to close telemetry gaps, keep infrastructure documentation current, and harden edge and core devices. Unknown assets and missing logs obstruct both prevention and response. <span class="badge one">Single-source · pending</span><a class="cite" href="#fn11">11</a><a class="cite" href="#fn12">12</a></p><p class="threat">The same pending extraction recommends prioritising backup, identity and virtualisation security, with decoupled identity, immutable storage and offsite or air-gapped copies. <span class="badge one">Single-source · pending</span><a class="cite" href="#fn13">13</a><a class="cite" href="#fn14">14</a></p><p class="threat">It recommends pre-approved, centrally stored tools, and phishing-resistant MFA with monitored break-glass access for Tier-0 systems, alongside a rapid hand-off from initial access to follow-on operators. <span class="badge one">Single-source · pending</span><a class="cite" href="#fn15">15</a><a class="cite" href="#fn16">16</a><a class="cite" href="#fn17">17</a></p><p class="threat">A pending CrowdStrike threat-hunting extraction describes malware used to support lateral movement. That is directional context for segmentation. It is not an approved finding. <span class="badge one">Single-source · pending</span><a class="cite" href="#fn18">18</a></p></div></details><div class="callout"><strong>Dated list.</strong> NCSC reviews these ten controls annually and may change them. This briefing applies only to the 21 September 2026 snapshot.<a class="cite" href="#fn1">1</a></div></section><section id="patch-software-and-systems"><p class="kicker">NCSC-01 · Control 01</p><h2 tabindex="-1">Windows patching does not cover the NCSC estate</h2><div class="callout"><strong>Assessment.</strong> Direct but bounded Windows capability. Complete coverage still needs other mechanisms.</div><div class="chipstrip"><span class="pcell"><span class="plab">Native control</span><span class="pill yes">Windows bounded</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill strong">Strong</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill req">Required</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill watch">Complete scope</span></span></div><p class="prose">A pending extraction records exploitation as the leading initial-access vector, and as 32 percent of investigations where a vector was identified. Delayed patching leaves that path open. An incomplete inventory makes the exposure hard to measure. <span class="badge one">Single-source · pending</span><a class="cite" href="#fn5">5</a><a class="cite" href="#fn6">6</a></p><div class="panel teal"><h3>CrowdStrike modules</h3><div class="scroll"><table class="cmp"><thead><tr><th>Module</th><th>Role</th><th>How it supports</th><th>Boundary</th></tr></thead><tbody><tr><td class="mod">Falcon Exposure Management / Spotlight</td><td><span class="pill support">Supporting</span></td><td>Discovers vulnerabilities, unsupported software and exploit context.</td><td>Does not deploy every patch.</td></tr><tr><td class="mod">Falcon Discover</td><td><span class="pill support">Supporting</span></td><td>Identifies managed, unmanaged and unsupported assets and software.</td><td>Does not establish complete enterprise inventory.</td></tr><tr><td class="mod">Falcon for IT Patch Management</td><td><span class="pill yes">Direct · bounded</span></td><td>Deploys supported Windows patches and reports host status.</td><td>Windows- and catalogue-scoped in the cited evidence.</td></tr><tr><td class="mod">Falcon NG-SIEM</td><td><span class="pill strong">Evidence</span></td><td>Correlates asset, exposure, deployment and change records.</td><td>Requires source integrations and an organisation-defined process.</td></tr></tbody></table></div><p class="note">Sources recorded against this control.<a class="cite" href="#fn19">19</a><a class="cite" href="#fn5">5</a><a class="cite" href="#fn6">6</a><a class="cite" href="#fn3">3</a><a class="cite" href="#fn20">20</a><a class="cite" href="#fn21">21</a></p></div><div class="panel amber"><h3>What else has to enforce it</h3><div class="scroll"><table class="cmp"><thead><tr><th>Ecosystem control</th><th>How it completes the requirement</th></tr></thead><tbody><tr><td class="mod">UEM/RMM and vendor update services</td><td>Patch non-Windows and out-of-catalogue software.</td></tr><tr><td class="mod">Network, appliance and firmware management</td><td>Patches routers, firewalls, IoT, drivers and firmware.</td></tr><tr><td class="mod">ITSM/change management</td><td>Governs standard/emergency changes and exceptions.</td></tr></tbody></table></div><p class="note">An April 2026 alliance map named ServiceNow as an example of the change record. Virtual patching and application-composition scanning appeared beside it. They do not replace a patch mechanism for each asset class.<a class="cite" href="#fn46">46</a></p></div><div class="panel pink"><h3>Residual obligation</h3><div class="scroll"><table class="cmp"><thead><tr><th>Gap</th><th>Left with the organisation</th></tr></thead><tbody><tr><td>Native deployment does not cover the complete NCSC scope.</td><td>Assign a patch mechanism and owner to every asset class.</td></tr><tr><td>Discovery and status do not prove risk acceptance.</td><td>Record and re-evaluate delayed or cancelled patches.</td></tr><tr><td>Delivery does not prove effective installation.</td><td>Independently verify versions or remediated exposure.</td></tr></tbody></table></div></div><div class="panel navy"><h3>NCSC requirement, in short</h3><ul class="limits"><li>Inventory software, firmware, devices and dependencies.</li><li>Operate a repeatable notification, prioritisation, testing, deployment, rollback and verification process.</li><li>Keep systems current and make delay or cancellation an explicit risk decision.</li><li>Cover endpoints, servers, network devices, IoT, applications and legacy components.</li></ul><p class="note"><a class="cite" href="#fn19">19</a></p></div></section><section id="mfa-and-verification"><p class="kicker">NCSC-02 · Control 02</p><h2 tabindex="-1">Phishing-resistant MFA does not verify the business process</h2><div class="callout"><strong>Assessment.</strong> Strong bounded native MFA. Verification and universal coverage remain process and architecture responsibilities.</div><div class="chipstrip"><span class="pcell"><span class="plab">Native control</span><span class="pill yes">Supported flows</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill strong">Strong</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill owner">Verification owner</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill watch">Process coverage</span></span></div><p class="prose">The same pending extraction records stolen credentials in 9 percent of investigated incidents, vishing as the second-most common initial-access vector, and help-desk targeting for password resets and MFA changes. Authentication technology and process verification have to be designed together. <span class="badge one">Single-source · pending</span><a class="cite" href="#fn7">7</a><a class="cite" href="#fn8">8</a><a class="cite" href="#fn9">9</a></p><div class="panel teal"><h3>CrowdStrike modules</h3><div class="scroll"><table class="cmp"><thead><tr><th>Module</th><th>Role</th><th>How it supports</th><th>Boundary</th></tr></thead><tbody><tr><td class="mod">FalconID</td><td><span class="pill yes">Direct · bounded</span></td><td>Provides phishing-resistant FIDO2 authentication for supported flows.</td><td>Platform prerequisites and connectors prevent universal coverage.</td></tr><tr><td class="mod">Falcon Identity Protection</td><td><span class="pill yes">Direct / supporting</span></td><td>Applies identity-risk and conditional-access policy to supported paths.</td><td>Overlays rather than replaces the authoritative IdP.</td></tr><tr><td class="mod">Falcon NG-SIEM</td><td><span class="pill strong">Evidence</span></td><td>Centralises authentication and policy events.</td><td>Completeness depends on source onboarding and identity correlation.</td></tr></tbody></table></div><p class="note">Sources recorded against this control.<a class="cite" href="#fn22">22</a><a class="cite" href="#fn7">7</a><a class="cite" href="#fn8">8</a><a class="cite" href="#fn9">9</a><a class="cite" href="#fn23">23</a><a class="cite" href="#fn24">24</a><a class="cite" href="#fn25">25</a></p></div><div class="panel amber"><h3>What else has to enforce it</h3><div class="scroll"><table class="cmp"><thead><tr><th>Ecosystem control</th><th>How it completes the requirement</th></tr></thead><tbody><tr><td class="mod">Enterprise IdP/SSO and connectors</td><td>Extends MFA across required services.</td></tr><tr><td class="mod">CIAM/application-native MFA</td><td>Covers customer and non-federated flows.</td></tr><tr><td class="mod">Independent process verification</td><td>Verifies sensitive requests through a trusted second channel.</td></tr></tbody></table></div><p class="note">That map named Okta, Microsoft Entra ID and Duo as examples of the identity provider that has to enforce MFA. FalconID and Identity Protection do not replace that provider.<a class="cite" href="#fn46">46</a></p></div><div class="panel pink"><h3>Residual obligation</h3><div class="scroll"><table class="cmp"><thead><tr><th>Gap</th><th>Left with the organisation</th></tr></thead><tbody><tr><td>Universal authentication coverage is architecture-dependent.</td><td>Maintain a service-to-authentication register and close bypasses.</td></tr><tr><td>MFA does not satisfy business-process verification.</td><td>Operate independent verification resistant to account compromise.</td></tr><tr><td>Recovery, break-glass and non-human identities remain external.</td><td>Design, test, monitor and review those paths.</td></tr></tbody></table></div></div><div class="panel navy"><h3>NCSC requirement, in short</h3><ul class="limits"><li>Identify critical, sensitive, administrative and internet-accessible systems and users.</li><li>Require appropriately strong multiple factors.</li><li>Independently verify sensitive payment, reset and data-change requests.</li><li>Govern enrolment, recovery, exceptions and authentication evidence.</li></ul><p class="note"><a class="cite" href="#fn22">22</a></p></div></section><section id="password-manager"><p class="kicker">NCSC-03 · Control 03</p><h2 tabindex="-1">No native password manager was evidenced</h2><div class="callout"><strong>Assessment.</strong> The password manager sits outside Falcon. CrowdStrike contributes identity-risk reduction and telemetry only.</div><div class="chipstrip"><span class="pcell"><span class="plab">Native control</span><span class="pill none">None</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill support">Identity support</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill owner">Control owner</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill material">Provide / adopt</span></span></div><p class="prose">Pending evidence records stolen credentials as a continuing initial-access vector, and help-desk targeting for password resets. A password manager reduces reuse and weak storage. Controlled recovery addresses a path attackers already use. <span class="badge one">Single-source · pending</span><a class="cite" href="#fn7">7</a><a class="cite" href="#fn9">9</a></p><div class="panel teal"><h3>CrowdStrike modules</h3><div class="scroll"><table class="cmp"><thead><tr><th>Module</th><th>Role</th><th>How it supports</th><th>Boundary</th></tr></thead><tbody><tr><td class="mod">FalconID</td><td><span class="pill support">Supporting</span></td><td>Reduces password exposure for supported passwordless flows.</td><td>Is not an enterprise password vault.</td></tr><tr><td class="mod">Falcon Identity Protection</td><td><span class="pill support">Supporting</span></td><td>Detects credential misuse and suspicious identity activity.</td><td>Does not generate, store, share or rotate user passwords.</td></tr><tr><td class="mod">Falcon NG-SIEM</td><td><span class="pill strong">Evidence</span></td><td>Can centralise password-manager, IdP and help-desk events.</td><td>Requires a password-manager platform and connectors.</td></tr></tbody></table></div><p class="note">Sources recorded against this control.<a class="cite" href="#fn26">26</a><a class="cite" href="#fn7">7</a><a class="cite" href="#fn9">9</a><a class="cite" href="#fn23">23</a><a class="cite" href="#fn24">24</a></p></div><div class="panel amber"><h3>What else has to enforce it</h3><div class="scroll"><table class="cmp"><thead><tr><th>Ecosystem control</th><th>How it completes the requirement</th></tr></thead><tbody><tr><td class="mod">Enterprise password manager</td><td>Generates, encrypts, stores, shares and administers credentials.</td></tr><tr><td class="mod">Identity lifecycle and recovery</td><td>Controls onboarding, offboarding and emergency recovery.</td></tr><tr><td class="mod">Adoption programme</td><td>Migrates unsafe storage and measures use.</td></tr></tbody></table></div><p class="note">That map named 1Password and Bitwarden as examples of the password manager the organisation still has to provide.<a class="cite" href="#fn46">46</a></p></div><div class="panel pink"><h3>Residual obligation</h3><div class="scroll"><table class="cmp"><thead><tr><th>Gap</th><th>Left with the organisation</th></tr></thead><tbody><tr><td>No native password-manager capability was evidenced.</td><td>Provide and govern a dedicated enterprise password manager.</td></tr><tr><td>Passwordless coverage does not remove all secrets.</td><td>Inventory and vault residual credentials.</td></tr><tr><td>Identity detections do not prove adoption.</td><td>Measure usage and remove unmanaged storage.</td></tr></tbody></table></div></div><div class="panel navy"><h3>NCSC requirement, in short</h3><ul class="limits"><li>Provide an approved password manager to all staff with organisational access.</li><li>Drive broad adoption of long, strong and unique passwords.</li><li>Store credentials and recovery material only in approved secure ways.</li><li>Govern hosting model, MFA, recovery and adoption.</li></ul><p class="note"><a class="cite" href="#fn26">26</a></p></div></section><section id="centralised-logging"><p class="kicker">NCSC-04 · Control 04</p><h2 tabindex="-1">A SIEM does not prove the log estate is complete</h2><div class="callout"><strong>Assessment.</strong> Strong native platform capability. Effectiveness remains source-, retention- and operations-dependent.</div><div class="chipstrip"><span class="pcell"><span class="plab">Native control</span><span class="pill yes">Strong / bounded</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill strong">Strong</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill req">Sources / SOC</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill watch">Source coverage</span></span></div><p class="prose">A pending recommendation is to close telemetry and endpoint-detection gaps, and to keep infrastructure documentation current, so response is not blocked by missing diagrams or logs. Without that evidence, an organisation cannot confidently scope an incident or show that the exploited gap has been closed. <span class="badge one">Single-source · pending</span><a class="cite" href="#fn11">11</a></p><div class="panel teal"><h3>CrowdStrike modules</h3><div class="scroll"><table class="cmp"><thead><tr><th>Module</th><th>Role</th><th>How it supports</th><th>Boundary</th></tr></thead><tbody><tr><td class="mod">Falcon Next-Gen SIEM</td><td><span class="pill yes">Direct · bounded</span></td><td>Ingests, normalises, searches, correlates and alerts on native and third-party telemetry.</td><td>Only covers correctly onboarded and retained sources within entitlement.</td></tr><tr><td class="mod">Falcon Onum</td><td><span class="pill support">Supporting</span></td><td>Collects, filters, transforms and routes telemetry.</td><td>Is a pipeline, not a SIEM.</td></tr><tr><td class="mod">Falcon Insight XDR</td><td><span class="pill support">Supporting</span></td><td>Provides continuous endpoint and cross-domain telemetry.</td><td>Does not represent the complete log estate.</td></tr><tr><td class="mod">Falcon Cloud Security CDR</td><td><span class="pill support">Supporting</span></td><td>Ingests supported cloud audit logs and detects cloud control-plane activity.</td><td>Requires provider logging, enablement and a separate SKU.</td></tr></tbody></table></div><p class="note">Sources recorded against this control.<a class="cite" href="#fn27">27</a><a class="cite" href="#fn11">11</a><a class="cite" href="#fn25">25</a><a class="cite" href="#fn28">28</a><a class="cite" href="#fn29">29</a><a class="cite" href="#fn30">30</a></p></div><div class="panel amber"><h3>What else has to enforce it</h3><div class="scroll"><table class="cmp"><thead><tr><th>Ecosystem control</th><th>How it completes the requirement</th></tr></thead><tbody><tr><td class="mod">Source-system logging and connectors</td><td>Produces and transports all required event classes.</td></tr><tr><td class="mod">Time, retention and access controls</td><td>Makes records reliable, durable and protected.</td></tr><tr><td class="mod">SOC use cases and process</td><td>Turns events into detection, triage and response.</td></tr></tbody></table></div><p class="note">That map named Vectra, Corelight, Darktrace and ExtraHop as examples of network telemetry that still has to be onboarded. A SIEM licence does not make those sources complete.<a class="cite" href="#fn46">46</a></p></div><div class="panel pink"><h3>Residual obligation</h3><div class="scroll"><table class="cmp"><thead><tr><th>Gap</th><th>Left with the organisation</th></tr></thead><tbody><tr><td>SIEM ownership does not prove source completeness.</td><td>Maintain a required-event/source coverage matrix.</td></tr><tr><td>Native telemetry excludes many business and infrastructure systems.</td><td>Onboard and validate external sources.</td></tr><tr><td>Storage and detection do not guarantee action.</td><td>Staff, test and measure monitoring and response.</td></tr></tbody></table></div></div><div class="panel navy"><h3>NCSC requirement, in short</h3><ul class="limits"><li>Identify critical events and systems that must be logged.</li><li>Collect logs centrally and protect them from unauthorised change.</li><li>Correlate events and create actionable alerts.</li><li>Manage source coverage, time, retention, access and incident use.</li></ul><p class="note"><a class="cite" href="#fn27">27</a></p></div></section><section id="security-awareness"><p class="kicker">NCSC-05 · Control 05</p><h2 tabindex="-1">Telemetry is not an awareness programme</h2><div class="callout"><strong>Assessment.</strong> The awareness programme sits outside Falcon. CrowdStrike provides scenario and measurement inputs only.</div><div class="chipstrip"><span class="pcell"><span class="plab">Native control</span><span class="pill none">None</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill support">Scenario input</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill owner">Control owner</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill material">Behaviour change</span></span></div><p class="prose">Pending findings record vishing as the second-most common initial-access vector, and campaigns that manipulated users and help desks to obtain credentials, approve rogue SaaS access, reset passwords or change MFA. Technical controls do not remove those human and process paths. <span class="badge one">Single-source · pending</span><a class="cite" href="#fn8">8</a><a class="cite" href="#fn10">10</a><a class="cite" href="#fn9">9</a></p><div class="panel teal"><h3>CrowdStrike modules</h3><div class="scroll"><table class="cmp"><thead><tr><th>Module</th><th>Role</th><th>How it supports</th><th>Boundary</th></tr></thead><tbody><tr><td class="mod">Falcon NG-SIEM</td><td><span class="pill support">Supporting</span></td><td>Aggregates identity, phishing, endpoint and incident data for behavioural themes.</td><td>Does not deliver training or simulations.</td></tr><tr><td class="mod">Falcon Insight XDR</td><td><span class="pill support">Supporting</span></td><td>Provides incident patterns for exercises and targeted communication.</td><td>Detection data is only an input.</td></tr><tr><td class="mod">CrowdStrike threat intelligence</td><td><span class="pill support">Supporting</span></td><td>Supplies current adversary context for scenarios.</td><td>Does not establish staff knowledge or behaviour.</td></tr></tbody></table></div><p class="note">Sources recorded against this control.<a class="cite" href="#fn31">31</a><a class="cite" href="#fn8">8</a><a class="cite" href="#fn10">10</a><a class="cite" href="#fn9">9</a><a class="cite" href="#fn25">25</a><a class="cite" href="#fn29">29</a></p></div><div class="panel amber"><h3>What else has to enforce it</h3><div class="scroll"><table class="cmp"><thead><tr><th>Ecosystem control</th><th>How it completes the requirement</th></tr></thead><tbody><tr><td class="mod">Awareness and phishing-simulation platform</td><td>Delivers training, simulations and tracking.</td></tr><tr><td class="mod">HR, leadership and communications</td><td>Embeds expectations and role-specific content.</td></tr><tr><td class="mod">Human-risk process</td><td>Converts incidents and exercises into interventions.</td></tr></tbody></table></div><p class="note">That map named KnowBe4, Proofpoint, Mimecast, Abnormal and Cofense as examples of the awareness and email platforms that deliver the programme.<a class="cite" href="#fn46">46</a></p></div><div class="panel pink"><h3>Residual obligation</h3><div class="scroll"><table class="cmp"><thead><tr><th>Gap</th><th>Left with the organisation</th></tr></thead><tbody><tr><td>No native awareness-training capability was evidenced.</td><td>Operate a dedicated training and simulation capability.</td></tr><tr><td>Telemetry does not prove behaviour change.</td><td>Measure reporting, repeat failure and process performance.</td></tr><tr><td>Generic annual training is not an ongoing programme.</td><td>Deliver continuous, role-relevant interventions.</td></tr></tbody></table></div></div><div class="panel navy"><h3>NCSC requirement, in short</h3><ul class="limits"><li>Establish leadership support and a positive reporting culture.</li><li>Deliver ongoing and role-relevant education.</li><li>Address phishing, downloads, credential requests and sensitive processes.</li><li>Measure behaviour and improve the programme from incidents and exercises.</li></ul><p class="note"><a class="cite" href="#fn31">31</a></p></div></section><section id="asset-lifecycle-management"><p class="kicker">NCSC-06 · Control 06</p><h2 tabindex="-1">Discovery is not lifecycle governance</h2><div class="callout"><strong>Assessment.</strong> Strong security discovery and inventory. Lifecycle governance remains with the organisation.</div><div class="chipstrip"><span class="pcell"><span class="plab">Native control</span><span class="pill yes">Inventory bounded</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill strong">Strong</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill owner">Lifecycle owner</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill watch">End-to-end lifecycle</span></span></div><p class="prose">Pending guidance calls for current infrastructure documentation and for closing telemetry gaps, and separately for hardening edge and core devices because exploitation remains a common entry path. Unknown or unsupported assets obstruct both prevention and response. <span class="badge one">Single-source · pending</span><a class="cite" href="#fn11">11</a><a class="cite" href="#fn12">12</a></p><div class="panel teal"><h3>CrowdStrike modules</h3><div class="scroll"><table class="cmp"><thead><tr><th>Module</th><th>Role</th><th>How it supports</th><th>Boundary</th></tr></thead><tbody><tr><td class="mod">Falcon Discover</td><td><span class="pill yes">Direct · bounded</span></td><td>Discovers managed, unmanaged and unsupported assets.</td><td>Does not govern procurement, ownership or disposal.</td></tr><tr><td class="mod">Falcon Exposure Management</td><td><span class="pill support">Supporting</span></td><td>Adds exposure, configuration and attack-path context.</td><td>Security exposure is one lifecycle dimension.</td></tr><tr><td class="mod">Falcon for IT</td><td><span class="pill support">Supporting</span></td><td>Queries state and inventories software on covered hosts.</td><td>Covered endpoints are not the full estate.</td></tr><tr><td class="mod">Falcon Surface / Falcon for XIoT</td><td><span class="pill support">Supporting</span></td><td>Adds external, shadow and OT/IoT discovery.</td><td>Coverage remains product- and collection-dependent.</td></tr></tbody></table></div><p class="note">Sources recorded against this control.<a class="cite" href="#fn32">32</a><a class="cite" href="#fn11">11</a><a class="cite" href="#fn12">12</a><a class="cite" href="#fn21">21</a><a class="cite" href="#fn20">20</a><a class="cite" href="#fn3">3</a><a class="cite" href="#fn33">33</a><a class="cite" href="#fn34">34</a></p></div><div class="panel amber"><h3>What else has to enforce it</h3><div class="scroll"><table class="cmp"><thead><tr><th>Ecosystem control</th><th>How it completes the requirement</th></tr></thead><tbody><tr><td class="mod">CMDB/ITAM/SAM</td><td>Maintains authoritative identity, ownership, dependencies and lifecycle.</td></tr><tr><td class="mod">Procurement/development workflow</td><td>Registers and hardens new assets before use.</td></tr><tr><td class="mod">Decommissioning and disposal</td><td>Removes access and data and securely disposes of assets.</td></tr></tbody></table></div><p class="note">That map named ServiceNow as a CMDB example, and Claroty and Armis for OT and IoT visibility. Discovery still has to be reconciled into an owned lifecycle record.<a class="cite" href="#fn46">46</a></p></div><div class="panel pink"><h3>Residual obligation</h3><div class="scroll"><table class="cmp"><thead><tr><th>Gap</th><th>Left with the organisation</th></tr></thead><tbody><tr><td>Falcon is not the authoritative lifecycle system.</td><td>Reconcile discovery into CMDB/ITAM.</td></tr><tr><td>Procurement, development and supplier lifecycle are outside scope.</td><td>Embed registration and security gates in those processes.</td></tr><tr><td>Unsupported-asset detection does not retire assets.</td><td>Fund and track remediation or risk treatment.</td></tr></tbody></table></div></div><div class="panel navy"><h3>NCSC requirement, in short</h3><ul class="limits"><li>Record software, hardware, cloud and supply-chain assets with owners.</li><li>Record and harden assets before use.</li><li>Link assets to patching, vulnerability, configuration and support status.</li><li>Plan end of support and securely decommission and dispose of assets.</li></ul><p class="note"><a class="cite" href="#fn32">32</a></p></div></section><section id="backups-and-restoration-testing"><p class="kicker">NCSC-07 · Control 07</p><h2 tabindex="-1">Detection around backups is not a backup</h2><div class="callout"><strong>Assessment.</strong> Backup and restoration sit outside Falcon. CrowdStrike is a supporting detection and investigation layer.</div><div class="chipstrip"><span class="pcell"><span class="plab">Native control</span><span class="pill none">None</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill support">Detection</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill owner">Control owner</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill material">Recoverability</span></span></div><p class="prose">Pending recommendations are to prioritise backup, identity and virtualisation security, because attackers target them to deny recovery, and to keep decoupled identity, immutable storage and offsite or air-gapped copies. Recovery is a resilience control. <span class="badge one">Single-source · pending</span><a class="cite" href="#fn13">13</a><a class="cite" href="#fn14">14</a></p><div class="panel teal"><h3>CrowdStrike modules</h3><div class="scroll"><table class="cmp"><thead><tr><th>Module</th><th>Role</th><th>How it supports</th><th>Boundary</th></tr></thead><tbody><tr><td class="mod">Falcon Prevent</td><td><span class="pill support">Supporting</span></td><td>Detects or prevents ransomware and destructive behaviour.</td><td>Does not create or restore backups.</td></tr><tr><td class="mod">Falcon Insight XDR</td><td><span class="pill support">Supporting</span></td><td>Investigates and contains activity affecting backup infrastructure.</td><td>Containment is not recoverability.</td></tr><tr><td class="mod">Falcon Identity Protection</td><td><span class="pill support">Supporting</span></td><td>Detects risky access involving backup administration.</td><td>Does not segregate recovery identity or storage.</td></tr><tr><td class="mod">Falcon NG-SIEM</td><td><span class="pill strong">Evidence</span></td><td>Correlates backup, identity and endpoint alerts.</td><td>Backup assurance depends on source-platform evidence.</td></tr></tbody></table></div><p class="note">Sources recorded against this control.<a class="cite" href="#fn35">35</a><a class="cite" href="#fn14">14</a><a class="cite" href="#fn13">13</a><a class="cite" href="#fn36">36</a><a class="cite" href="#fn29">29</a><a class="cite" href="#fn24">24</a><a class="cite" href="#fn37">37</a></p></div><div class="panel amber"><h3>What else has to enforce it</h3><div class="scroll"><table class="cmp"><thead><tr><th>Ecosystem control</th><th>How it completes the requirement</th></tr></thead><tbody><tr><td class="mod">Dedicated backup/cyber-recovery platform</td><td>Creates, retains, isolates and restores backups.</td></tr><tr><td class="mod">Isolated recovery environment</td><td>Separates recovery identity and clean restoration.</td></tr><tr><td class="mod">Business/service owners</td><td>Define RPO/RTO and accept restored services.</td></tr></tbody></table></div><p class="note">That map named Rubrik as the primary recovery partner, with Cohesity and Veeam as alternatives. The same three are already recorded as alliance technologies for this role.<a class="cite" href="#fn46">46</a><a class="cite" href="#fn37">37</a></p></div><div class="panel pink"><h3>Residual obligation</h3><div class="scroll"><table class="cmp"><thead><tr><th>Gap</th><th>Left with the organisation</th></tr></thead><tbody><tr><td>No native backup creation or restoration capability is evidenced.</td><td>Deploy and govern dedicated recovery technology.</td></tr><tr><td>Detection cannot prove recoverability.</td><td>Test end-to-end restoration and dependencies.</td></tr><tr><td>Production compromise can reach backup administration.</td><td>Segregate recovery identity and retain immutable or offline copies.</td></tr></tbody></table></div></div><div class="panel navy"><h3>NCSC requirement, in short</h3><ul class="limits"><li>Identify systems, data, configurations and owners requiring protection.</li><li>Define RPO and RTO from business requirements.</li><li>Protect and retain separated backups securely.</li><li>Verify jobs and test complete restoration with dependencies.</li></ul><p class="note"><a class="cite" href="#fn35">35</a></p></div></section><section id="application-control"><p class="kicker">NCSC-08 · Control 08</p><h2 tabindex="-1">Behaviour blocking is not an approved execution set</h2><div class="callout"><strong>Assessment.</strong> Bounded native prevention. Authoritative allowlisting stays outside Falcon where the design requires deny-by-default.</div><div class="chipstrip"><span class="pcell"><span class="plab">Native control</span><span class="pill yes">Behaviour bounded</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill strong">Strong</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill req">Allowlisting</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill watch">Approval / scope</span></span></div><p class="prose">A pending recommendation is to use pre-approved, centrally stored tools. Fewer out-of-baseline installs also means fewer opportunistic infections from self-installed software. <span class="badge one">Single-source · pending</span><a class="cite" href="#fn15">15</a></p><div class="panel teal"><h3>CrowdStrike modules</h3><div class="scroll"><table class="cmp"><thead><tr><th>Module</th><th>Role</th><th>How it supports</th><th>Boundary</th></tr></thead><tbody><tr><td class="mod">Falcon Prevent</td><td><span class="pill yes">Direct · bounded</span></td><td>Blocks malicious and prohibited behaviour with ML, IOAs, exploit mitigation, script controls and custom IOAs.</td><td>Does not create a complete business-approved allowlist.</td></tr><tr><td class="mod">Falcon Insight XDR</td><td><span class="pill support">Supporting</span></td><td>Records execution and supports investigation and containment.</td><td>Does not define approved software.</td></tr><tr><td class="mod">Falcon NG-SIEM</td><td><span class="pill strong">Evidence</span></td><td>Centralises execution and allow/block events.</td><td>Requires complete authoritative policy sources.</td></tr></tbody></table></div><p class="note">Sources recorded against this control.<a class="cite" href="#fn38">38</a><a class="cite" href="#fn15">15</a><a class="cite" href="#fn36">36</a><a class="cite" href="#fn29">29</a><a class="cite" href="#fn39">39</a></p></div><div class="panel amber"><h3>What else has to enforce it</h3><div class="scroll"><table class="cmp"><thead><tr><th>Ecosystem control</th><th>How it completes the requirement</th></tr></thead><tbody><tr><td class="mod">Airlock Digital</td><td>Provides integrated deny-by-default allowlisting.</td></tr><tr><td class="mod">WDAC/AppLocker or equivalent</td><td>Provides approved-execution policy.</td></tr><tr><td class="mod">Software approval/change process</td><td>Defines approved software and exceptions.</td></tr></tbody></table></div><p class="note">That map treated endpoint prevention as the control and did not name an allowlisting engine. Where the design requires deny-by-default, an allowlisting product such as Airlock Digital still sits outside Falcon.<a class="cite" href="#fn46">46</a><a class="cite" href="#fn39">39</a></p></div><div class="panel pink"><h3>Residual obligation</h3><div class="scroll"><table class="cmp"><thead><tr><th>Gap</th><th>Left with the organisation</th></tr></thead><tbody><tr><td>Native deny-by-default allowlisting was not evidenced.</td><td>Add an allowlisting engine where required by control design.</td></tr><tr><td>Behaviour blocking is not business approval.</td><td>Maintain an approved-software model.</td></tr><tr><td>Complete special-workload coverage is not proven.</td><td>Define and test scope and exceptions.</td></tr></tbody></table></div></div><div class="panel navy"><h3>NCSC requirement, in short</h3><ul class="limits"><li>Decide what applications and file types are permitted or restricted.</li><li>Block malicious, unwanted or unapproved execution.</li><li>Where allowlisting is used, progress from audit to enforce mode.</li><li>Maintain group/device policies, detection updates and monitoring.</li></ul><p class="note"><a class="cite" href="#fn38">38</a></p></div></section><section id="least-privilege"><p class="kicker">NCSC-09 · Control 09</p><h2 tabindex="-1">Privilege tools do not prove least privilege everywhere</h2><div class="callout"><strong>Assessment.</strong> Meaningful bounded native capability. Complete least privilege remains an identity-governance architecture.</div><div class="chipstrip"><span class="pcell"><span class="plab">Native control</span><span class="pill yes">Identity bounded</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill strong">Strong</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill req">IGA / PAM</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill watch">Universal coverage</span></span></div><p class="prose">A pending extraction records rapid hand-off from initial-access operators, and recommends phishing-resistant MFA with monitored break-glass procedures for Tier-0 access. Excess privilege turns one compromised account into broad system and recovery impact. <span class="badge one">Single-source · pending</span><a class="cite" href="#fn16">16</a><a class="cite" href="#fn17">17</a></p><div class="panel teal"><h3>CrowdStrike modules</h3><div class="scroll"><table class="cmp"><thead><tr><th>Module</th><th>Role</th><th>How it supports</th><th>Boundary</th></tr></thead><tbody><tr><td class="mod">Falcon Privileged Access</td><td><span class="pill yes">Direct · bounded</span></td><td>Records just-in-time, just-enough privilege and privileged-session control.</td><td>Dedicated corroborating product notes are absent; scope and evidence exports require validation.</td></tr><tr><td class="mod">Falcon Identity Protection</td><td><span class="pill yes">Direct / supporting</span></td><td>Detects identity threats and conditionally enforces supported paths.</td><td>Does not own every role or lifecycle process.</td></tr><tr><td class="mod">Falcon Cloud Security CIEM</td><td><span class="pill yes">Direct / supporting</span></td><td>Finds excessive/dormant cloud permissions and supports bounded remediation.</td><td>Capabilities differ by cloud provider.</td></tr><tr><td class="mod">Falcon Shield</td><td><span class="pill yes">Direct · bounded</span></td><td>Applies privilege governance in supported SaaS integrations.</td><td>Does not cover the whole estate.</td></tr></tbody></table></div><p class="note">Sources recorded against this control.<a class="cite" href="#fn40">40</a><a class="cite" href="#fn16">16</a><a class="cite" href="#fn17">17</a><a class="cite" href="#fn41">41</a><a class="cite" href="#fn24">24</a><a class="cite" href="#fn42">42</a><a class="cite" href="#fn43">43</a></p></div><div class="panel amber"><h3>What else has to enforce it</h3><div class="scroll"><table class="cmp"><thead><tr><th>Ecosystem control</th><th>How it completes the requirement</th></tr></thead><tbody><tr><td class="mod">IdP, directory and IGA</td><td>Owns roles, lifecycle, approval and certification.</td></tr><tr><td class="mod">PAM and vaulting</td><td>Controls credentials and sessions outside native scope.</td></tr><tr><td class="mod">Secure administrative paths</td><td>Separates and hardens privileged access.</td></tr></tbody></table></div><p class="note">That map named CyberArk and BeyondTrust for vaulting and session control, and SailPoint for access reviews. Those names illustrate the identity-governance role. They were not re-verified for this briefing.<a class="cite" href="#fn46">46</a></p></div><div class="panel pink"><h3>Residual obligation</h3><div class="scroll"><table class="cmp"><thead><tr><th>Gap</th><th>Left with the organisation</th></tr></thead><tbody><tr><td>Universal privilege coverage is not proven.</td><td>Map every privileged path to an enforcement owner.</td></tr><tr><td>Role design and approval are external governance.</td><td>Establish roles, separated accounts and justified workflows.</td></tr><tr><td>Risk findings do not prove revocation.</td><td>Certify access and remove dormant/excess privilege.</td></tr></tbody></table></div></div><div class="panel navy"><h3>NCSC requirement, in short</h3><ul class="limits"><li>Identify and justify minimum permissions for every account type.</li><li>Use roles and separate administrative from everyday accounts.</li><li>Limit privilege by task and time, including just-in-time access.</li><li>Review entitlements and monitor privileged activity.</li></ul><p class="note"><a class="cite" href="#fn40">40</a></p></div></section><section id="network-segmentation-and-separation"><p class="kicker">NCSC-10 · Control 10</p><h2 tabindex="-1">A host firewall is not a zone architecture</h2><div class="callout"><strong>Assessment.</strong> Bounded host enforcement and visibility. Network controls own the control objective.</div><div class="chipstrip"><span class="pcell"><span class="plab">Native control</span><span class="pill yes">Host firewall</span></span><span class="pcell"><span class="plab">Native support</span><span class="pill support">Visibility</span></span><span class="pcell"><span class="plab">Ecosystem control</span><span class="pill owner">Network owner</span></span><span class="pcell"><span class="plab">Residual obligation</span><span class="pill material">Zone architecture</span></span></div><p class="prose">A pending claim describes malware used to support lateral movement. Other pending recommendations emphasise hardened edge and core devices, and recovery environments decoupled from production identity. Segmentation limits blast radius after initial access. <span class="badge one">Pending · two reports</span><a class="cite" href="#fn18">18</a><a class="cite" href="#fn12">12</a><a class="cite" href="#fn14">14</a></p><div class="panel teal"><h3>CrowdStrike modules</h3><div class="scroll"><table class="cmp"><thead><tr><th>Module</th><th>Role</th><th>How it supports</th><th>Boundary</th></tr></thead><tbody><tr><td class="mod">Falcon Firewall Management</td><td><span class="pill yes">Direct · bounded</span></td><td>Centrally manages host-firewall rules on supported Windows, macOS and Linux hosts.</td><td>Does not create enterprise zones or control every network path.</td></tr><tr><td class="mod">Falcon Insight XDR</td><td><span class="pill support">Supporting</span></td><td>Adds network-related telemetry, detection and endpoint containment.</td><td>Detection and containment are not segmentation architecture.</td></tr><tr><td class="mod">Falcon NG-SIEM</td><td><span class="pill strong">Evidence</span></td><td>Correlates endpoint, firewall, network and cloud events.</td><td>Depends on complete integrations.</td></tr><tr><td class="mod">Falcon for XIoT</td><td><span class="pill support">Supporting</span></td><td>Discovers supported OT/IoT assets and ingests partner visibility.</td><td>Discovery does not enforce segmentation.</td></tr></tbody></table></div><p class="note">Sources recorded against this control.<a class="cite" href="#fn44">44</a><a class="cite" href="#fn18">18</a><a class="cite" href="#fn12">12</a><a class="cite" href="#fn14">14</a><a class="cite" href="#fn45">45</a><a class="cite" href="#fn29">29</a><a class="cite" href="#fn25">25</a><a class="cite" href="#fn34">34</a></p></div><div class="panel amber"><h3>What else has to enforce it</h3><div class="scroll"><table class="cmp"><thead><tr><th>Ecosystem control</th><th>How it completes the requirement</th></tr></thead><tbody><tr><td class="mod">NGFW/FWaaS and cloud network controls</td><td>Enforces zone boundaries and permitted flows.</td></tr><tr><td class="mod">NAC/ZTNA/SDN</td><td>Controls device/user admission and dynamic access.</td></tr><tr><td class="mod">Network architecture/configuration management</td><td>Maintains zones, flows, ownership and exceptions.</td></tr></tbody></table></div><p class="note">That map named Illumio and Akamai Guardicore for workload isolation, Fortinet and Palo Alto for inter-segment firewalls, and Zscaler and Netskope for identity-aware access. Host firewall management does not replace that zone architecture.<a class="cite" href="#fn46">46</a></p></div><div class="panel pink"><h3>Residual obligation</h3><div class="scroll"><table class="cmp"><thead><tr><th>Gap</th><th>Left with the organisation</th></tr></thead><tbody><tr><td>Native enforcement is mainly managed-host firewall policy.</td><td>Use network and cloud platforms for authoritative segmentation.</td></tr><tr><td>Telemetry does not prove prohibited paths are blocked.</td><td>Test allowed and denied flows from each zone.</td></tr><tr><td>Unmanaged, appliance, wireless, remote and OT paths can bypass endpoint controls.</td><td>Include every path in design, monitoring and exception review.</td></tr></tbody></table></div></div><div class="panel navy"><h3>NCSC requirement, in short</h3><ul class="limits"><li>Identify devices, users, data, dependencies, ports and protocols.</li><li>Divide networks into zones based on function, sensitivity and trust.</li><li>Control and minimise connections between zones.</li><li>Harden devices and monitor remote, wireless, physical and cross-zone access.</li></ul><p class="note"><a class="cite" href="#fn44">44</a></p></div></section><section id="architecture"><p class="kicker">Control architecture</p><h2 tabindex="-1">Pair the native layer with the control that actually enforces the requirement</h2><p class="blurb">Nine pairings from the assessment. They are an architecture, not a conformance score and not a 90-day plan.</p><div class="finds"><div class="find"><span class="n">01</span><div><h3>Reconcile discovery into the lifecycle record</h3><p>Use Falcon Discover and Exposure Management as security discovery sources, reconciled into an authoritative asset lifecycle process.</p></div></div><div class="find"><span class="n">02</span><div><h3>Bound the patch tools</h3><p>Use Falcon for IT only inside the evidenced Windows catalogue. Keep platform and vendor mechanisms for the rest of the estate.</p></div></div><div class="find"><span class="n">03</span><div><h3>Keep authentication authoritative</h3><p>Use FalconID and Identity Protection for supported phishing-resistant and risk-based flows. The enterprise identity provider and the business process own complete MFA and verification.</p></div></div><div class="find"><span class="n">04</span><div><h3>Define the log estate first</h3><p>Use Falcon Next-Gen SIEM as the central analysis platform only after required events, source coverage, time, retention and operating accountabilities are defined.</p></div></div><div class="find"><span class="n">05</span><div><h3>Add an allowlist where the design needs one</h3><p>Pair Falcon Prevent with an authoritative allowlisting engine where application control requires deny-by-default execution.</p></div></div><div class="find"><span class="n">06</span><div><h3>Validate privilege scope before relying on it</h3><p>Combine Falcon identity capability with identity governance, privileged-access management and secure administrative paths. Validate Falcon Privileged Access before treating it as deployed.</p></div></div><div class="find"><span class="n">07</span><div><h3>Keep zones outside the host firewall</h3><p>Use Falcon Firewall Management as one enforcement layer inside a broader network, cloud and access-control architecture.</p></div></div><div class="find"><span class="n">08</span><div><h3>Keep recovery independent</h3><p>Keep backup and recovery on an isolated platform and identity plane. Integrate its telemetry into Falcon without making Falcon the recovery authority.</p></div></div><div class="find proof"><span class="n">09</span><div><h3>Provide the human controls elsewhere</h3><p>Provide a dedicated password manager and awareness programme. Use CrowdStrike telemetry to focus adoption and training.</p></div></div></div><div class="warn"><strong>What would change this advice.</strong> A later NCSC list needs a new edition of this crosswalk. Product notes that evidence a native password manager, an awareness curriculum, backup creation and restoration, deny-by-default allowlisting, or enterprise zone enforcement would change those findings. A proven patch scope beyond Windows would widen the patching finding. If the pending claims are withdrawn or materially revised, rewrite the threat paragraphs. If a reviewed control mapping for this edition becomes available, redo the crosswalk against it. Confirm entitlements in the tenant before treating any capability as deployed.</div></section><section id="method"><p class="kicker">Method</p><h2 tabindex="-1">An analyst crosswalk, not a generated coverage claim</h2><div class="panel navy"><h3>Evidence classes in the file</h3><ul class="limits"><li><strong>native direct.</strong> CrowdStrike authoritatively performs a material part of the requirement.</li><li><strong>native direct bounded.</strong> CrowdStrike directly performs part of the requirement only for documented platforms, workloads, sources or authentication flows.</li><li><strong>native supporting.</strong> CrowdStrike supplies prevention, discovery, prioritisation, detection, response or evidence but does not own the required control.</li><li><strong>ecosystem.</strong> Another technology, platform control or organisational process is required.</li><li><strong>gap.</strong> No sufficient native capability was evidenced or the requirement remains organisational.</li></ul></div><p class="prose">The structured lists on each control are rendered from <a href="assessment.json">assessment.json</a>, report <span class="mono">ncsc-top-10-crowdstrike-2026-09-22</span>, status analyst-draft, as at 2026-09-22. The prose around those lists is the analyst commentary for that assessment. This page is ThinkInfoSec synthesis for boards and operators. It is not an NCSC or CrowdStrike publication, and it is not an assessment of any organisation.</p><p class="prose">NCSC describes the ten controls as a current priority list for deciding where to spend time and money. No conformance or maturity level is derived from product presence, licensing or configuration. The file records the result as not assessable from product presence.<a class="cite" href="#fn1">1</a></p><p class="prose">Product statements were taken from working product notes. Those notes are not treated as independently verified product assurance. Service relationships were taken from a capability mapping used for this assessment. They are not compliance evidence. That mapping’s record for these controls has no detailed controls and no control mappings.<a class="cite" href="#fn2">2</a></p><p class="prose">ThinkThreats material is used only to explain why a control might be prioritised. Every cited claim was pending on 22 September 2026.<a class="cite" href="#fn4">4</a></p><p class="prose">Named parties under each control come from an earlier ThinkInfoSec alliance map. They show who might hold the ecosystem role. They were not re-verified for this publication, and they do not change the capability finding.<a class="cite" href="#fn46">46</a></p><ul class="limits"><li>This is a product-capability crosswalk, not an assessment of an organisation.</li><li>NCSC reviews the Top 10 annually. This briefing applies only to the 21 September 2026 snapshot, reverified on 22 September 2026.</li><li>The capability mapping used for this framework records metadata only: no detailed controls and no control mappings. The crosswalk is analyst-authored.</li><li>Product notes used here are working material rather than finished product assurance.</li><li>All selected ThinkThreats claims were pending review on 22 September 2026.</li><li>No customer deployment, configuration, exception or operating-effectiveness evidence was supplied.</li><li>Product availability, licensing, platform support and names can change and must be validated before implementation.</li></ul><p class="note">Public URLs in the source list are those recorded in the assessment. This briefing did not re-fetch them, and it did not re-query the product notes, the capability mapping, or ThinkThreats.</p></section><section id="sources"><p class="kicker">Bibliography</p><h2 tabindex="-1">Sources as recorded on 22 September 2026</h2><p class="blurb">Numbers follow first use in the briefing. Product notes and capability mappings have no public URL in the assessment, so none is invented here. Pending ThinkThreats claims are labelled as pending.</p><p class="group-lbl">Official framework</p><ol class="sourcelist"><li id="fn1"><span class="n">[1]</span> New Zealand National Cyber Security Centre, <em>Critical Controls: Summary</em>. Current Top 10, retrieved 21 September 2026 and reverified 22 September 2026. NCSC reviews the list annually and may change controls. This briefing is tied to that snapshot.<span class="meta"><a href="https://www.ncsc.govt.nz/protect-your-organisation/summary/" target="_blank" rel="noopener">ncsc.govt.nz/protect-your-organisation/summary/</a></span></li><li id="fn19"><span class="n">[19]</span> New Zealand National Cyber Security Centre, <em>Patching</em>.<span class="meta"><a href="https://www.ncsc.govt.nz/protect-your-organisation/patching/" target="_blank" rel="noopener">ncsc.govt.nz/protect-your-organisation/patching/</a></span></li><li id="fn22"><span class="n">[22]</span> New Zealand National Cyber Security Centre, <em>Multi-factor authentication and verification</em>.<span class="meta"><a href="https://www.ncsc.govt.nz/protect-your-organisation/multi-factor-authentication-and-verification/" target="_blank" rel="noopener">ncsc.govt.nz/protect-your-organisation/multi-factor-authentication-an…</a></span></li><li id="fn26"><span class="n">[26]</span> New Zealand National Cyber Security Centre, <em>Password managers</em>.<span class="meta"><a href="https://www.ncsc.govt.nz/protect-your-organisation/password-managers/" target="_blank" rel="noopener">ncsc.govt.nz/protect-your-organisation/password-managers/</a></span></li><li id="fn27"><span class="n">[27]</span> New Zealand National Cyber Security Centre, <em>Centralised logging</em>.<span class="meta"><a href="https://www.ncsc.govt.nz/protect-your-organisation/centralised-logging/" target="_blank" rel="noopener">ncsc.govt.nz/protect-your-organisation/centralised-logging/</a></span></li><li id="fn31"><span class="n">[31]</span> New Zealand National Cyber Security Centre, <em>Build security awareness in your organisation</em>.<span class="meta"><a href="https://www.ncsc.govt.nz/protect-your-organisation/build-security-awareness-in-your-organisation/" target="_blank" rel="noopener">ncsc.govt.nz/protect-your-organisation/build-security-awareness-in-yo…</a></span></li><li id="fn32"><span class="n">[32]</span> New Zealand National Cyber Security Centre, <em>Asset lifecycle management</em>.<span class="meta"><a href="https://www.ncsc.govt.nz/protect-your-organisation/asset-lifecycle-management/" target="_blank" rel="noopener">ncsc.govt.nz/protect-your-organisation/asset-lifecycle-management/</a></span></li><li id="fn35"><span class="n">[35]</span> New Zealand National Cyber Security Centre, <em>Implement and test backups</em>.<span class="meta"><a href="https://www.ncsc.govt.nz/protect-your-organisation/implement-and-test-backups/" target="_blank" rel="noopener">ncsc.govt.nz/protect-your-organisation/implement-and-test-backups/</a></span></li><li id="fn38"><span class="n">[38]</span> New Zealand National Cyber Security Centre, <em>Application control</em>.<span class="meta"><a href="https://www.ncsc.govt.nz/protect-your-organisation/application-control/" target="_blank" rel="noopener">ncsc.govt.nz/protect-your-organisation/application-control/</a></span></li><li id="fn40"><span class="n">[40]</span> New Zealand National Cyber Security Centre, <em>Principle of least privilege</em>.<span class="meta"><a href="https://www.ncsc.govt.nz/protect-your-organisation/principle-of-least-privilege/" target="_blank" rel="noopener">ncsc.govt.nz/protect-your-organisation/principle-of-least-privilege/</a></span></li><li id="fn44"><span class="n">[44]</span> New Zealand National Cyber Security Centre, <em>Network separation and segmentation</em>.<span class="meta"><a href="https://www.ncsc.govt.nz/protect-your-organisation/network-separation-and-segmentation/" target="_blank" rel="noopener">ncsc.govt.nz/protect-your-organisation/network-separation-and-segment…</a></span></li></ol><p class="group-lbl">CrowdStrike product evidence</p><ol class="sourcelist"><li id="fn3"><span class="n">[3]</span> Product notes consulted for this assessment, <em>Falcon for IT Patch Management</em>. Working material used for the crosswalk, not an independently verified product assurance. The assessment treats Windows patch deployment as the evidenced scope, and as catalogue-dependent.</li><li id="fn20"><span class="n">[20]</span> Product notes consulted for this assessment, <em>Falcon Exposure Management and Spotlight</em>. Working material used for the crosswalk, not an independently verified product assurance.</li><li id="fn21"><span class="n">[21]</span> Product notes consulted for this assessment, <em>Falcon Discover</em>. Working material used for the crosswalk, not an independently verified product assurance.</li><li id="fn23"><span class="n">[23]</span> Product notes consulted for this assessment, <em>FalconID</em>. Working material used for the crosswalk, not an independently verified product assurance.</li><li id="fn24"><span class="n">[24]</span> Product notes consulted for this assessment, <em>Falcon Identity Protection</em>. Working material used for the crosswalk, not an independently verified product assurance.</li><li id="fn25"><span class="n">[25]</span> Product notes consulted for this assessment, <em>Falcon Next-Gen SIEM</em>. Working material used for the crosswalk, not an independently verified product assurance.</li><li id="fn28"><span class="n">[28]</span> Product notes consulted for this assessment, <em>Falcon Onum</em>. Working material used for the crosswalk, not an independently verified product assurance.</li><li id="fn29"><span class="n">[29]</span> Product notes consulted for this assessment, <em>Falcon Insight XDR</em>. Working material used for the crosswalk, not an independently verified product assurance.</li><li id="fn30"><span class="n">[30]</span> Product notes consulted for this assessment, <em>Falcon Cloud Security CDR</em>. Working material used for the crosswalk, not an independently verified product assurance.</li><li id="fn33"><span class="n">[33]</span> Product notes consulted for this assessment, <em>Falcon Surface</em>. Working material used for the crosswalk, not an independently verified product assurance.</li><li id="fn34"><span class="n">[34]</span> Product notes consulted for this assessment, <em>Falcon for XIoT</em>. Working material used for the crosswalk, not an independently verified product assurance.</li><li id="fn36"><span class="n">[36]</span> Product notes consulted for this assessment, <em>Falcon Prevent</em>. Working material used for the crosswalk, not an independently verified product assurance.</li><li id="fn39"><span class="n">[39]</span> CrowdStrike Marketplace, <em>Airlock Digital precision application control</em>. Consulted as an integrated allowlisting option, not as native Falcon capability.<span class="meta"><a href="https://marketplace.crowdstrike.com/listings/airlock-digital-precision-application-control/" target="_blank" rel="noopener">marketplace.crowdstrike.com/listings/airlock-digital-precision-applic…</a></span></li><li id="fn42"><span class="n">[42]</span> Product notes consulted for this assessment, <em>Falcon Cloud Security CIEM</em>. Working material used for the crosswalk, not an independently verified product assurance.</li><li id="fn43"><span class="n">[43]</span> Product notes consulted for this assessment, <em>Falcon Shield</em>. Working material used for the crosswalk, not an independently verified product assurance.</li><li id="fn45"><span class="n">[45]</span> Product notes consulted for this assessment, <em>Falcon Firewall Management</em>. Working material used for the crosswalk, not an independently verified product assurance.</li></ol><p class="group-lbl">Capability and alliance mappings</p><ol class="sourcelist"><li id="fn2"><span class="n">[2]</span> Capability mapping consulted for this assessment on 22 September 2026. The NCSC Critical Controls record is metadata only: zero detailed controls and zero control mappings. This crosswalk is analyst-authored. It is not a generated control mapping. This page did not re-query the mapping.</li><li id="fn37"><span class="n">[37]</span> Capability relationship consulted for this assessment, <em>Managed backup and cyber recovery</em>. Alliance technologies recorded for that relationship include Rubrik, Cohesity and Veeam. No native CrowdStrike backup module is recorded. A capability relationship, not a control-compliance assertion.</li><li id="fn41"><span class="n">[41]</span> Capability relationship consulted for this assessment, <em>Falcon Privileged Access</em>. The relationship records just-in-time and just-enough privilege, and privileged-session control. Dedicated corroborating product notes remain absent. A capability relationship, not a control-compliance assertion.</li></ol><p class="group-lbl">Earlier ThinkInfoSec map</p><ol class="sourcelist"><li id="fn46"><span class="n">[46]</span> ThinkInfoSec alliance map, April 2026. An earlier synthesis that named alliance parties against these ten controls and tallied technology domains as native, hybrid or partner-led. This briefing keeps those party names as examples of the ecosystem role. It does not reuse that map’s coverage counts, maturity language or compliance framing. A named party is not evidence the control is in place, and the list is not complete.</li></ol><p class="group-lbl">ThinkThreats context — pending</p><ol class="sourcelist"><li id="fn4"><span class="n">[4]</span> ThinkThreats corpus, as cited by this assessment on 22 September 2026. Every selected claim was pending review. Pending claims are directional scene-setting, not approved intelligence findings. Absence of a claim is not treated as absence of threat. This page did not re-query the corpus.</li><li id="fn5"><span class="n">[5]</span> ThinkThreats pending claim <span class="mono">mandiant-m-trends-2026:c03</span>. Exploits remained the leading initial-access vector. Review status PENDING on 22 September 2026. Not an approved intelligence finding.</li><li id="fn6"><span class="n">[6]</span> ThinkThreats pending claim <span class="mono">mandiant-m-trends-2026:c09</span>. Exploits recorded in 32 percent of investigations with an identified vector. Review status PENDING on 22 September 2026. Not an approved intelligence finding.</li><li id="fn7"><span class="n">[7]</span> ThinkThreats pending claim <span class="mono">mandiant-m-trends-2026:c14</span>. Stolen credentials recorded in 9 percent of investigations. Review status PENDING on 22 September 2026. Not an approved intelligence finding.</li><li id="fn8"><span class="n">[8]</span> ThinkThreats pending claim <span class="mono">mandiant-m-trends-2026:c10</span>. Email phishing and vishing initial-access trend. Review status PENDING on 22 September 2026. Not an approved intelligence finding.</li><li id="fn9"><span class="n">[9]</span> ThinkThreats pending claim <span class="mono">mandiant-m-trends-2026:c12</span>. Help-desk targeting for password resets and MFA changes. Review status PENDING on 22 September 2026. Not an approved intelligence finding.</li><li id="fn10"><span class="n">[10]</span> ThinkThreats pending claim <span class="mono">mandiant-m-trends-2026:c11</span>. Vishing used for credential theft and rogue SaaS authorisation. Review status PENDING on 22 September 2026. Not an approved intelligence finding.</li><li id="fn11"><span class="n">[11]</span> ThinkThreats pending claim <span class="mono">mandiant-m-trends-2026:c25</span>. Close telemetry gaps and keep infrastructure documentation current. Review status PENDING on 22 September 2026. Not an approved intelligence finding.</li><li id="fn12"><span class="n">[12]</span> ThinkThreats pending claim <span class="mono">mandiant-m-trends-2026:c06</span>. Harden edge and core devices because exploitation remains a common entry path. Review status PENDING on 22 September 2026. Not an approved intelligence finding.</li><li id="fn13"><span class="n">[13]</span> ThinkThreats pending claim <span class="mono">mandiant-m-trends-2026:c05</span>. Prioritise backup, identity and virtualisation security. Review status PENDING on 22 September 2026. Not an approved intelligence finding.</li><li id="fn14"><span class="n">[14]</span> ThinkThreats pending claim <span class="mono">mandiant-m-trends-2026:c27</span>. Decoupled identity, immutable storage and offsite or air-gapped copies. Review status PENDING on 22 September 2026. Not an approved intelligence finding.</li><li id="fn15"><span class="n">[15]</span> ThinkThreats pending claim <span class="mono">mandiant-m-trends-2026:c24</span>. Use pre-approved, centrally stored tools. Review status PENDING on 22 September 2026. Not an approved intelligence finding.</li><li id="fn16"><span class="n">[16]</span> ThinkThreats pending claim <span class="mono">mandiant-m-trends-2026:c04</span>. Rapid hand-off from initial-access to follow-on operators. Review status PENDING on 22 September 2026. Not an approved intelligence finding.</li><li id="fn17"><span class="n">[17]</span> ThinkThreats pending claim <span class="mono">mandiant-m-trends-2026:c26</span>. Phishing-resistant MFA and monitored break-glass access for Tier-0 systems. Review status PENDING on 22 September 2026. Not an approved intelligence finding.</li><li id="fn18"><span class="n">[18]</span> ThinkThreats pending claim <span class="mono">crowdstrike-threat-hunting-report-2025:reviewed-trial:cs-128</span>. Malware used to support lateral movement. Review status PENDING on 22 September 2026. Not an approved intelligence finding.</li></ol><p class="note">Accessed through the 22 September 2026 analyst assessment. Linked pages were not re-read for this publication.</p></section>
 </main>
-
-<noscript>
-  <div class="wrap">
-    <section>
-      <p class="kicker">How to read this</p>
-      <h2>JavaScript is required for the control navigator</h2>
-      <p class="prose">The argument above still stands. CrowdStrike is not treated here as an NCSC compliance product. Conformance is an organisational assessment against the control, not a reading of a licence.</p>
-    </section>
+</div>
+<footer class="col r-foot">
+  <img src="../../assets/brand/logo-96.webp" width="28" height="28" alt="">
+  <div>
+    <p class="ft-main">ThinkInfoSec 2026 &middot; Andre Camillo &middot; <a href="../">Back to Research</a></p>
+    <p class="ft-sub">Independent briefing. Educational use. Not an NCSC or CrowdStrike publication. Numbered citations map to the source list. The thesis is ThinkInfoSec synthesis of the 22 September 2026 assessment. AI-assisted research: minor inconsistencies can occur. Every claim remains grounded in the ThinkInfoSec ontology and the sources disclosed on this page.</p>
   </div>
-</noscript>
-
-<footer>
-  <p class="ft-main">ThinkInfoSec 2026 — <a href="https://www.linkedin.com/in/amcamillo/" target="_blank" rel="noopener">Andre Camillo</a> · <a href="../../index.html#research">Back to Research</a></p>
-  <p class="ft-sub">Independent briefing. Educational use. Not an NCSC or CrowdStrike publication. Numbered citations map to the source list. The thesis is ThinkInfoSec synthesis of the 22 September 2026 assessment. AI-assisted research: minor inconsistencies can occur. Every claim remains grounded in the ThinkInfoSec ontology and the sources disclosed on this page.</p>
+  <a class="cta-li" href="https://www.linkedin.com/in/amcamillo/" target="_blank" rel="noopener noreferrer"><span class="li-mark" aria-hidden="true">in</span>LinkedIn</a>
 </footer>
-
-<script>
-(function () {
-  /* Mast links assume these four ids are numbered 1–4. Do not reorder them. */
-  var ORDER = [
-    "NCSC-SUMMARY", "OUT-NCSC-REG", "CD-PATCH", "TT-CORPUS",
-    "TT-PATCH-01", "TT-PATCH-02", "TT-CRED-01", "TT-AWARE-01", "TT-PASSWORD-01",
-    "TT-AWARE-02", "TT-LOG-01", "TT-ASSET-01", "TT-BACKUP-02", "TT-BACKUP-01",
-    "TT-APP-01", "TT-HANDOFF-01", "TT-PRIV-01", "TT-NET-01",
-    "NCSC-PATCH", "CD-EXPOSURE", "CD-DISCOVER",
-    "NCSC-MFA", "CD-FALCONID", "CD-IDENTITY", "CD-NGSIEM",
-    "NCSC-PASSWORD",
-    "NCSC-LOG", "CD-ONUM", "CD-INSIGHT", "CD-CDR",
-    "NCSC-AWARE",
-    "NCSC-ASSET", "CD-SURFACE", "CD-XIOT",
-    "NCSC-BACKUP", "CD-PREVENT", "OUT-BDR",
-    "NCSC-APP", "ECO-AIRLOCK",
-    "NCSC-PRIV", "OUT-CS-FPA", "CD-CIEM", "CD-SHIELD",
-    "NCSC-NET", "CD-FIREWALL",
-    "APRIL-MAP"
-  ];
-  var SHORT = {
-    "NCSC-01": "Patch",
-    "NCSC-02": "MFA",
-    "NCSC-03": "Passwords",
-    "NCSC-04": "Logging",
-    "NCSC-05": "Awareness",
-    "NCSC-06": "Assets",
-    "NCSC-07": "Backups",
-    "NCSC-08": "Apps",
-    "NCSC-09": "Privilege",
-    "NCSC-10": "Network"
-  };
-  var OFFICIAL = {
-    "NCSC-01": "NCSC-PATCH",
-    "NCSC-02": "NCSC-MFA",
-    "NCSC-03": "NCSC-PASSWORD",
-    "NCSC-04": "NCSC-LOG",
-    "NCSC-05": "NCSC-AWARE",
-    "NCSC-06": "NCSC-ASSET",
-    "NCSC-07": "NCSC-BACKUP",
-    "NCSC-08": "NCSC-APP",
-    "NCSC-09": "NCSC-PRIV",
-    "NCSC-10": "NCSC-NET"
-  };
-  var COMMENTARY = {
-    controls: {
-      "NCSC-01": {
-        headline: "Windows patching does not cover the NCSC estate",
-        why: "A pending extraction records exploitation as the leading initial-access vector, and as 32 percent of investigations where a vector was identified. Delayed patching leaves that path open. An incomplete inventory makes the exposure hard to measure.",
-        whyRefs: ["TT-PATCH-01", "TT-PATCH-02"],
-        whyBadge: "Single-source · pending",
-        assessment: "Direct but bounded Windows capability. Complete coverage still needs other mechanisms."
-      },
-      "NCSC-02": {
-        headline: "Phishing-resistant MFA does not verify the business process",
-        why: "The same pending extraction records stolen credentials in 9 percent of investigated incidents, vishing as the second-most common initial-access vector, and help-desk targeting for password resets and MFA changes. Authentication technology and process verification have to be designed together.",
-        whyRefs: ["TT-CRED-01", "TT-AWARE-01", "TT-PASSWORD-01"],
-        whyBadge: "Single-source · pending",
-        assessment: "Strong bounded native MFA. Verification and universal coverage remain process and architecture responsibilities."
-      },
-      "NCSC-03": {
-        headline: "No native password manager was evidenced",
-        why: "Pending evidence records stolen credentials as a continuing initial-access vector, and help-desk targeting for password resets. A password manager reduces reuse and weak storage. Controlled recovery addresses a path attackers already use.",
-        whyRefs: ["TT-CRED-01", "TT-PASSWORD-01"],
-        whyBadge: "Single-source · pending",
-        assessment: "The password manager sits outside Falcon. CrowdStrike contributes identity-risk reduction and telemetry only."
-      },
-      "NCSC-04": {
-        headline: "A SIEM does not prove the log estate is complete",
-        why: "A pending recommendation is to close telemetry and endpoint-detection gaps, and to keep infrastructure documentation current, so response is not blocked by missing diagrams or logs. Without that evidence, an organisation cannot confidently scope an incident or show that the exploited gap has been closed.",
-        whyRefs: ["TT-LOG-01"],
-        whyBadge: "Single-source · pending",
-        assessment: "Strong native platform capability. Effectiveness remains source-, retention- and operations-dependent."
-      },
-      "NCSC-05": {
-        headline: "Telemetry is not an awareness programme",
-        why: "Pending findings record vishing as the second-most common initial-access vector, and campaigns that manipulated users and help desks to obtain credentials, approve rogue SaaS access, reset passwords or change MFA. Technical controls do not remove those human and process paths.",
-        whyRefs: ["TT-AWARE-01", "TT-AWARE-02", "TT-PASSWORD-01"],
-        whyBadge: "Single-source · pending",
-        assessment: "The awareness programme sits outside Falcon. CrowdStrike provides scenario and measurement inputs only."
-      },
-      "NCSC-06": {
-        headline: "Discovery is not lifecycle governance",
-        why: "Pending guidance calls for current infrastructure documentation and for closing telemetry gaps, and separately for hardening edge and core devices because exploitation remains a common entry path. Unknown or unsupported assets obstruct both prevention and response.",
-        whyRefs: ["TT-LOG-01", "TT-ASSET-01"],
-        whyBadge: "Single-source · pending",
-        assessment: "Strong security discovery and inventory. Lifecycle governance remains with the organisation."
-      },
-      "NCSC-07": {
-        headline: "Detection around backups is not a backup",
-        why: "Pending recommendations are to prioritise backup, identity and virtualisation security, because attackers target them to deny recovery, and to keep decoupled identity, immutable storage and offsite or air-gapped copies. Recovery is a resilience control.",
-        whyRefs: ["TT-BACKUP-02", "TT-BACKUP-01"],
-        whyBadge: "Single-source · pending",
-        assessment: "Backup and restoration sit outside Falcon. CrowdStrike is a supporting detection and investigation layer."
-      },
-      "NCSC-08": {
-        headline: "Behaviour blocking is not an approved execution set",
-        why: "A pending recommendation is to use pre-approved, centrally stored tools. Fewer out-of-baseline installs also means fewer opportunistic infections from self-installed software.",
-        whyRefs: ["TT-APP-01"],
-        whyBadge: "Single-source · pending",
-        assessment: "Bounded native prevention. Authoritative allowlisting stays outside Falcon where the design requires deny-by-default."
-      },
-      "NCSC-09": {
-        headline: "Privilege tools do not prove least privilege everywhere",
-        why: "A pending extraction records rapid hand-off from initial-access operators, and recommends phishing-resistant MFA with monitored break-glass procedures for Tier-0 access. Excess privilege turns one compromised account into broad system and recovery impact.",
-        whyRefs: ["TT-HANDOFF-01", "TT-PRIV-01"],
-        whyBadge: "Single-source · pending",
-        assessment: "Meaningful bounded native capability. Complete least privilege remains an identity-governance architecture."
-      },
-      "NCSC-10": {
-        headline: "A host firewall is not a zone architecture",
-        why: "A pending claim describes malware used to support lateral movement. Other pending recommendations emphasise hardened edge and core devices, and recovery environments decoupled from production identity. Segmentation limits blast radius after initial access.",
-        whyRefs: ["TT-NET-01", "TT-ASSET-01", "TT-BACKUP-01"],
-        whyBadge: "Pending · two reports",
-        assessment: "Bounded host enforcement and visibility. Network controls own the control objective."
-      }
-    },
-    threats: [
-      {
-        text: "A pending M-Trends 2026 extraction records exploits as the leading initial-access vector, and as 32 percent of investigations where a vector was identified. That is the practical case for measurable patch coverage.",
-        refs: ["TT-PATCH-01", "TT-PATCH-02"],
-        badge: "Single-source · pending"
-      },
-      {
-        text: "The same pending extraction records stolen credentials in 9 percent of investigations, vishing as the second-most common vector, and help-desk targeting for password resets and MFA changes.",
-        refs: ["TT-CRED-01", "TT-AWARE-01", "TT-PASSWORD-01"],
-        badge: "Single-source · pending"
-      },
-      {
-        text: "It also describes vishing used to steal credentials and to obtain rogue SaaS authorisation. People and business processes are part of the initial-access path.",
-        refs: ["TT-AWARE-02"],
-        badge: "Single-source · pending"
-      },
-      {
-        text: "Pending guidance is to close telemetry gaps, keep infrastructure documentation current, and harden edge and core devices. Unknown assets and missing logs obstruct both prevention and response.",
-        refs: ["TT-LOG-01", "TT-ASSET-01"],
-        badge: "Single-source · pending"
-      },
-      {
-        text: "The same pending extraction recommends prioritising backup, identity and virtualisation security, with decoupled identity, immutable storage and offsite or air-gapped copies.",
-        refs: ["TT-BACKUP-02", "TT-BACKUP-01"],
-        badge: "Single-source · pending"
-      },
-      {
-        text: "It recommends pre-approved, centrally stored tools, and phishing-resistant MFA with monitored break-glass access for Tier-0 systems, alongside a rapid hand-off from initial access to follow-on operators.",
-        refs: ["TT-APP-01", "TT-HANDOFF-01", "TT-PRIV-01"],
-        badge: "Single-source · pending"
-      },
-      {
-        text: "A pending CrowdStrike threat-hunting extraction describes malware used to support lateral movement. That is directional context for segmentation. It is not an approved finding.",
-        refs: ["TT-NET-01"],
-        badge: "Single-source · pending"
-      }
-    ],
-    architecture: [
-      { title: "Reconcile discovery into the lifecycle record", body: "Use Falcon Discover and Exposure Management as security discovery sources, reconciled into an authoritative asset lifecycle process." },
-      { title: "Bound the patch tools", body: "Use Falcon for IT only inside the evidenced Windows catalogue. Keep platform and vendor mechanisms for the rest of the estate." },
-      { title: "Keep authentication authoritative", body: "Use FalconID and Identity Protection for supported phishing-resistant and risk-based flows. The enterprise identity provider and the business process own complete MFA and verification." },
-      { title: "Define the log estate first", body: "Use Falcon Next-Gen SIEM as the central analysis platform only after required events, source coverage, time, retention and operating accountabilities are defined." },
-      { title: "Add an allowlist where the design needs one", body: "Pair Falcon Prevent with an authoritative allowlisting engine where application control requires deny-by-default execution." },
-      { title: "Validate privilege scope before relying on it", body: "Combine Falcon identity capability with identity governance, privileged-access management and secure administrative paths. Validate Falcon Privileged Access before treating it as deployed." },
-      { title: "Keep zones outside the host firewall", body: "Use Falcon Firewall Management as one enforcement layer inside a broader network, cloud and access-control architecture." },
-      { title: "Keep recovery independent", body: "Keep backup and recovery on an isolated platform and identity plane. Integrate its telemetry into Falcon without making Falcon the recovery authority." },
-      { title: "Provide the human controls elsewhere", body: "Provide a dedicated password manager and awareness programme. Use CrowdStrike telemetry to focus adoption and training.", proof: true }
-    ]
-  };
-  var EXAMPLES = {
-    "NCSC-01": { text: "An April 2026 alliance map named ServiceNow as an example of the change record. Virtual patching and application-composition scanning appeared beside it. They do not replace a patch mechanism for each asset class.", refs: ["APRIL-MAP"] },
-    "NCSC-02": { text: "That map named Okta, Microsoft Entra ID and Duo as examples of the identity provider that has to enforce MFA. FalconID and Identity Protection do not replace that provider.", refs: ["APRIL-MAP"] },
-    "NCSC-03": { text: "That map named 1Password and Bitwarden as examples of the password manager the organisation still has to provide.", refs: ["APRIL-MAP"] },
-    "NCSC-04": { text: "That map named Vectra, Corelight, Darktrace and ExtraHop as examples of network telemetry that still has to be onboarded. A SIEM licence does not make those sources complete.", refs: ["APRIL-MAP"] },
-    "NCSC-05": { text: "That map named KnowBe4, Proofpoint, Mimecast, Abnormal and Cofense as examples of the awareness and email platforms that deliver the programme.", refs: ["APRIL-MAP"] },
-    "NCSC-06": { text: "That map named ServiceNow as a CMDB example, and Claroty and Armis for OT and IoT visibility. Discovery still has to be reconciled into an owned lifecycle record.", refs: ["APRIL-MAP"] },
-    "NCSC-07": { text: "That map named Rubrik as the primary recovery partner, with Cohesity and Veeam as alternatives. The same three are already recorded as alliance technologies for this role.", refs: ["APRIL-MAP", "OUT-BDR"] },
-    "NCSC-08": { text: "That map treated endpoint prevention as the control and did not name an allowlisting engine. Where the design requires deny-by-default, an allowlisting product such as Airlock Digital still sits outside Falcon.", refs: ["APRIL-MAP", "ECO-AIRLOCK"] },
-    "NCSC-09": { text: "That map named CyberArk and BeyondTrust for vaulting and session control, and SailPoint for access reviews. Those names illustrate the identity-governance role. They were not re-verified for this briefing.", refs: ["APRIL-MAP"] },
-    "NCSC-10": { text: "That map named Illumio and Akamai Guardicore for workload isolation, Fortinet and Palo Alto for inter-segment firewalls, and Zscaler and Netskope for identity-aware access. Host firewall management does not replace that zone architecture.", refs: ["APRIL-MAP"] }
-  };
-
-  var DATA = null;
-  var NUM = {};
-  var main = document.getElementById("main");
-  var toc = document.getElementById("toc");
-
-  function esc(s) {
-    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[c];
-    });
-  }
-  function pad(n) { return (n < 10 ? "0" : "") + n; }
-  function motion() {
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
-  }
-  function cites(refs) {
-    if (!refs || !refs.length) return "";
-    return refs.map(function (id) {
-      var n = NUM[id];
-      return n ? "<a class=\"cite\" href=\"#fn" + n + "\">" + n + "</a>" : "";
-    }).join("");
-  }
-  function badge(label) {
-    return label ? " <span class=\"badge one\">" + esc(label) + "</span>" : "";
-  }
-  function shortUrl(url) {
-    var clean = String(url).replace(/^https?:\/\/(www\.)?/, "");
-    return clean.length > 72 ? clean.slice(0, 69) + "…" : clean;
-  }
-  function indexSources(data) {
-    var byId = {};
-    ["official", "cyberdoc", "capability", "thinkthreats", "supplemental"].forEach(function (key) {
-      (data.sources[key] || []).forEach(function (src) {
-        src._group = key;
-        byId[src.id] = src;
-      });
-    });
-    byId["OUT-NCSC-REG"] = { id: "OUT-NCSC-REG", _group: "capability", synthetic: "register" };
-    byId["TT-CORPUS"] = { id: "TT-CORPUS", _group: "thinkthreats", synthetic: "corpus" };
-    byId["APRIL-MAP"] = { id: "APRIL-MAP", _group: "prior", synthetic: "prior" };
-    ORDER.forEach(function (id) {
-      if (!byId[id]) throw new Error("Missing source " + id);
-    });
-    var ordered = ORDER.map(function (id) { return byId[id]; });
-    Object.keys(byId).forEach(function (id) {
-      if (ORDER.indexOf(id) === -1) ordered.push(byId[id]);
-    });
-    ordered.forEach(function (src, i) {
-      src._n = i + 1;
-      NUM[src.id] = src._n;
-    });
-    return ordered;
-  }
-  function sourceBody(s) {
-    if (s.synthetic === "register") {
-      return "Capability mapping consulted for this assessment on 22 September 2026. The NCSC Critical Controls record is metadata only: zero detailed controls and zero control mappings. This crosswalk is analyst-authored. It is not a generated control mapping. This page did not re-query the mapping.";
-    }
-    if (s.synthetic === "corpus") {
-      return "ThinkThreats corpus, as cited by this assessment on 22 September 2026. Every selected claim was pending review. Pending claims are directional scene-setting, not approved intelligence findings. Absence of a claim is not treated as absence of threat. This page did not re-query the corpus.";
-    }
-    if (s.synthetic === "prior") {
-      return "ThinkInfoSec alliance map, April 2026. An earlier synthesis that named alliance parties against these ten controls and tallied technology domains as native, hybrid or partner-led. This briefing keeps those party names as examples of the ecosystem role. It does not reuse that map’s coverage counts, maturity language or compliance framing. A named party is not evidence the control is in place, and the list is not complete.";
-    }
-    if (s._group === "official") {
-      var extra = s.id === "NCSC-SUMMARY"
-        ? " Current Top 10, retrieved 21 September 2026 and reverified 22 September 2026. NCSC reviews the list annually and may change controls. This briefing is tied to that snapshot."
-        : "";
-      return "New Zealand National Cyber Security Centre, <em>" + esc(s.title) + "</em>." + extra;
-    }
-    if (s._group === "cyberdoc") {
-      var note = "";
-      if (s.id === "CD-PATCH") {
-        note = " The assessment treats Windows patch deployment as the evidenced scope, and as catalogue-dependent.";
-      }
-      return "Product notes consulted for this assessment, <em>" + esc(s.title) + "</em>. Working material used for the crosswalk, not an independently verified product assurance." + note;
-    }
-    if (s.id === "ECO-AIRLOCK") {
-      return "CrowdStrike Marketplace, <em>" + esc(s.title) + "</em>. Consulted as an integrated allowlisting option, not as native Falcon capability.";
-    }
-    if (s._group === "capability") {
-      var rel = "Capability relationship consulted for this assessment, <em>" + esc(s.title) + "</em>. ";
-      if (s.id === "OUT-BDR") {
-        rel += "Alliance technologies recorded for that relationship include Rubrik, Cohesity and Veeam. No native CrowdStrike backup module is recorded. ";
-      }
-      if (s.id === "OUT-CS-FPA") {
-        rel += "The relationship records just-in-time and just-enough privilege, and privileged-session control. Dedicated corroborating product notes remain absent. ";
-      }
-      return rel + "A capability relationship, not a control-compliance assertion.";
-    }
-    return "ThinkThreats pending claim <span class=\"mono\">" + esc(s.claim_id) + "</span>. " + esc(s.title) + ". Review status " + esc(s.review_status) + " on 22 September 2026. Not an approved intelligence finding.";
-  }
-  function sourceItem(s) {
-    var meta = s.url ? "<span class=\"meta\"><a href=\"" + esc(s.url) + "\" target=\"_blank\" rel=\"noopener\">" + esc(shortUrl(s.url)) + "</a></span>" : "";
-    return "<li id=\"fn" + s._n + "\"><span class=\"n\">[" + s._n + "]</span> " + sourceBody(s) + meta + "</li>";
-  }
-  function parseRoute() {
-    var hash = "";
-    try { hash = decodeURIComponent(location.hash.replace(/^#/, "")); } catch (e) { hash = ""; }
-    if (!hash || hash === "overview") return { id: "overview" };
-    if (hash === "architecture" || hash === "method" || hash === "sources") return { id: hash };
-    if (/^fn\d+$/.test(hash)) return { id: "sources", focusId: hash };
-    var control = DATA.controls.find(function (c) { return c.slug === hash; });
-    if (control) return { id: "control", control: control };
-    return { id: "overview" };
-  }
-  function paintToc(route) {
-    var items = [{ href: "#overview", id: "overview", label: "Overview" }];
-    DATA.controls.forEach(function (c) {
-      items.push({ href: "#" + c.slug, id: c.slug, label: pad(c.order) + " " + SHORT[c.id] });
-    });
-    items.push({ href: "#architecture", id: "architecture", label: "Architecture" });
-    items.push({ href: "#method", id: "method", label: "Method" });
-    items.push({ href: "#sources", id: "sources", label: "Sources" });
-    var current = route.id === "control" ? route.control.slug : route.id;
-    toc.innerHTML = items.map(function (item) {
-      var on = item.id === current;
-      return "<a href=\"" + item.href + "\"" + (on ? " class=\"on\" aria-current=\"location\"" : "") + ">" + esc(item.label) + "</a>";
-    }).join("");
-    var active = toc.querySelector("a.on");
-    if (active) active.scrollIntoView({ inline: "nearest", block: "nearest" });
-  }
-  function paintFacts() {
-    document.getElementById("facts").innerHTML =
-      "<span><b>10</b> controls, reviewed annually · <a href=\"#fn" + NUM["NCSC-SUMMARY"] + "\">NCSC Critical Controls</a></span>" +
-      "<span><b>0</b> control mappings · <a href=\"#fn" + NUM["OUT-NCSC-REG"] + "\">capability mapping</a></span>" +
-      "<span><b>Windows</b> patch scope evidenced · <a href=\"#fn" + NUM["CD-PATCH"] + "\">Falcon for IT</a></span>" +
-      "<span><b>Pending</b> threat context · <a href=\"#fn" + NUM["TT-CORPUS"] + "\">ThinkThreats slice</a></span>";
-  }
-  var PROFILE = {
-    "NCSC-01": { control: "Windows bounded", controlKind: "yes", support: "Strong", supportKind: "strong", eco: "Required", ecoKind: "req", residual: "Complete scope", residualKind: "watch" },
-    "NCSC-02": { control: "Supported flows", controlKind: "yes", support: "Strong", supportKind: "strong", eco: "Verification owner", ecoKind: "owner", residual: "Process coverage", residualKind: "watch" },
-    "NCSC-03": { control: "None", controlKind: "none", support: "Identity support", supportKind: "support", eco: "Control owner", ecoKind: "owner", residual: "Provide / adopt", residualKind: "material" },
-    "NCSC-04": { control: "Strong / bounded", controlKind: "yes", support: "Strong", supportKind: "strong", eco: "Sources / SOC", ecoKind: "req", residual: "Source coverage", residualKind: "watch" },
-    "NCSC-05": { control: "None", controlKind: "none", support: "Scenario input", supportKind: "support", eco: "Control owner", ecoKind: "owner", residual: "Behaviour change", residualKind: "material" },
-    "NCSC-06": { control: "Inventory bounded", controlKind: "yes", support: "Strong", supportKind: "strong", eco: "Lifecycle owner", ecoKind: "owner", residual: "End-to-end lifecycle", residualKind: "watch" },
-    "NCSC-07": { control: "None", controlKind: "none", support: "Detection", supportKind: "support", eco: "Control owner", ecoKind: "owner", residual: "Recoverability", residualKind: "material" },
-    "NCSC-08": { control: "Behaviour bounded", controlKind: "yes", support: "Strong", supportKind: "strong", eco: "Allowlisting", ecoKind: "req", residual: "Approval / scope", residualKind: "watch" },
-    "NCSC-09": { control: "Identity bounded", controlKind: "yes", support: "Strong", supportKind: "strong", eco: "IGA / PAM", ecoKind: "req", residual: "Universal coverage", residualKind: "watch" },
-    "NCSC-10": { control: "Host firewall", controlKind: "yes", support: "Visibility", supportKind: "support", eco: "Network owner", ecoKind: "owner", residual: "Zone architecture", residualKind: "material" }
-  };
-  var MODULES = [
-    ["Falcon Exposure Management / Spotlight", ["S", "—", "—", "—", "—", "S", "—", "—", "—", "—"]],
-    ["Falcon for IT", ["D*", "—", "—", "—", "—", "S", "—", "—", "—", "—"]],
-    ["Falcon Discover", ["S", "—", "—", "—", "—", "D*", "—", "—", "—", "—"]],
-    ["FalconID", ["—", "D*", "S", "—", "—", "—", "—", "—", "—", "—"]],
-    ["Falcon Identity Protection", ["—", "D*/S", "S", "S", "—", "—", "S", "—", "D*/S", "—"]],
-    ["Falcon Next-Gen SIEM", ["S", "S", "S", "D*", "S", "S", "S", "S", "S", "S"]],
-    ["Falcon Onum", ["—", "—", "—", "S", "—", "—", "—", "—", "—", "—"]],
-    ["Falcon Prevent", ["—", "—", "—", "S", "—", "—", "S", "D*", "—", "—"]],
-    ["Falcon Insight XDR", ["—", "—", "—", "S", "S", "—", "S", "S", "S", "—"]],
-    ["Falcon Surface / Falcon for XIoT", ["S", "—", "—", "—", "—", "S", "—", "—", "—", "S"]],
-    ["Falcon Privileged Access / CIEM / Shield", ["—", "—", "—", "—", "—", "—", "—", "—", "D*/S", "—"]],
-    ["Falcon Firewall Management", ["—", "—", "—", "—", "—", "—", "—", "—", "—", "D*"]]
-  ];
-  var ROLE = {
-    supporting: ["Supporting", "support"],
-    evidence: ["Evidence", "strong"],
-    direct_bounded: ["Direct · bounded", "yes"],
-    direct_supporting: ["Direct / supporting", "yes"]
-  };
-  function pill(label, kind, lab) {
-    return "<span class=\"pcell\"><span class=\"plab\">" + esc(lab) + "</span><span class=\"pill " + kind + "\">" + esc(label) + "</span></span>";
-  }
-  function markCell(mark) {
-    var kind = mark === "S" ? "s" : mark === "D*" ? "d" : mark === "D*/S" ? "ds" : "none";
-    var title = mark === "D*" ? "Direct, bounded to documented scope" : mark === "S" ? "Supporting prevention, visibility, response or evidence" : mark === "D*/S" ? "Direct bounded and supporting" : "No material contribution evidenced";
-    return "<span class=\"mark " + kind + "\" title=\"" + esc(title) + "\">" + esc(mark) + "</span>";
-  }
-  function profileHtml() {
-    var head = "<div class=\"profile-head\"><span>NCSC Critical Control</span><span>Native control</span><span>Native support</span><span>Ecosystem control</span><span>Principal residual obligation</span></div>";
-    var rows = DATA.controls.map(function (c) {
-      var p = PROFILE[c.id];
-      if (!p) return "";
-      return "<a class=\"profile-row\" href=\"#" + esc(c.slug) + "\">" +
-        "<span class=\"who\"><small>N" + c.order + "</small>" + esc(c.title) + "</span>" +
-        pill(p.control, p.controlKind, "Native control") +
-        pill(p.support, p.supportKind, "Native support") +
-        pill(p.eco, p.ecoKind, "Ecosystem control") +
-        pill(p.residual, p.residualKind, "Residual obligation") +
-        "</a>";
-    }).join("");
-    return "<div class=\"profile\">" + head + rows + "</div>";
-  }
-  function moduleCrosswalk() {
-    var head = "<tr><th>CrowdStrike module</th>" + DATA.controls.map(function (c) {
-      return "<th><a href=\"#" + esc(c.slug) + "\">N" + c.order + "</a></th>";
-    }).join("") + "</tr>";
-    var body = MODULES.map(function (row) {
-      return "<tr><td class=\"mod\">" + esc(row[0]) + "</td>" + row[1].map(markCell).map(function (cell) {
-        return "<td>" + cell + "</td>";
-      }).join("") + "</tr>";
-    }).join("");
-    return "<div class=\"scroll\"><table class=\"cmp xwalk\"><thead>" + head + "</thead><tbody>" + body + "</tbody></table></div>";
-  }
-  function overviewHtml() {
-    var threats = COMMENTARY.threats.map(function (item) {
-      return "<p class=\"threat\">" + esc(item.text) + badge(item.badge) + cites(item.refs) + "</p>";
-    }).join("");
-    return "" +
-      "<section id=\"overview\" class=\"view-in band-navy\">" +
-        "<p class=\"kicker\">The argument</p>" +
-        "<h2>A licence does not establish NCSC conformance</h2>" +
-        "<div class=\"thesis\"><p>CrowdStrike provides control capability and evidence. <span>The organisation remains responsible for control design, scope, operation, exceptions and effectiveness.</span></p></div>" +
-        "<p class=\"prose\">" + esc(DATA.overall_conclusion) + cites(["NCSC-SUMMARY"]) + "</p>" +
-        "<p class=\"prose\">" + esc(DATA.interpretation_rule) + "</p>" +
-      "</section>" +
-      "<section class=\"view-in band-teal\">" +
-        "<p class=\"kicker\">Comparison</p>" +
-        "<h2>CrowdStrike contribution profile across the NCSC Critical Controls</h2>" +
-        "<p class=\"blurb\">Qualitative control architecture. Select a row to open that control. These labels are not an NCSC conformance score." + cites(["NCSC-SUMMARY"]) + "</p>" +
-        profileHtml() +
-        "<p class=\"note\">“Bounded” means direct capability only within a documented platform, source, workload or authentication scope. Residual labels identify the main obligation left with the organisation. They are not risk, maturity or compliance ratings.</p>" +
-        "<div class=\"panel teal\">" +
-          "<h3>Where each Falcon module shows up</h3>" +
-          "<p class=\"prose\"><span class=\"mark d\">D*</span> direct, bounded to documented scope. <span class=\"mark s\">S</span> supporting prevention, visibility, response or evidence. <span class=\"mark ds\">D*/S</span> both. <span class=\"mark none\">—</span> no material contribution evidenced. Capability classes, not maturity ratings.</p>" +
-          moduleCrosswalk() +
-        "</div>" +
-      "</section>" +
-      "<section class=\"view-in band-amber\">" +
-        "<p class=\"kicker\">Directional only</p>" +
-        "<h2>Why these controls sit on the same path</h2>" +
-        "<p class=\"blurb\">ThinkThreats claims selected for this assessment were all pending on 22 September 2026. They explain why an organisation might prioritise a control. They do not change the capability finding." + badge("Single-source · pending") + cites(["TT-CORPUS"]) + "</p>" +
-        "<details class=\"caveat\"><summary>Pending threat drivers</summary><div>" + threats + "</div></details>" +
-        "<div class=\"callout\"><strong>Dated list.</strong> NCSC reviews these ten controls annually and may change them. This briefing applies only to the 21 September 2026 snapshot." + cites(["NCSC-SUMMARY"]) + "</div>" +
-      "</section>";
-  }
-  function controlHtml(c) {
-    var note = COMMENTARY.controls[c.id] || {};
-    var map = c.structured_mapping || {};
-    var prof = PROFILE[c.id];
-    var i = DATA.controls.findIndex(function (item) { return item.id === c.id; });
-    var prev = DATA.controls[i - 1];
-    var next = DATA.controls[i + 1];
-    var official = OFFICIAL[c.id];
-    var chips = prof
-      ? "<div class=\"chipstrip\">" +
-          pill(prof.control, prof.controlKind, "Native control") +
-          pill(prof.support, prof.supportKind, "Native support") +
-          pill(prof.eco, prof.ecoKind, "Ecosystem control") +
-          pill(prof.residual, prof.residualKind, "Residual obligation") +
-        "</div>"
-      : "";
-    var modules = (map.native_modules || []).map(function (m) {
-      var role = ROLE[m.role] || [m.role, "none"];
-      return "<tr><td class=\"mod\">" + esc(m.module) + "</td><td><span class=\"pill " + role[1] + "\">" + esc(role[0]) + "</span></td><td>" + esc(m.how) + "</td><td>" + esc(m.boundary) + "</td></tr>";
-    }).join("");
-    var eco = (map.ecosystem_controls || []).map(function (row) {
-      return "<tr><td class=\"mod\">" + esc(row.component) + "</td><td>" + esc(row.how) + "</td></tr>";
-    }).join("");
-    var gaps = (map.gaps_and_residual || []).map(function (row) {
-      return "<tr><td>" + esc(row.gap) + "</td><td>" + esc(row.residual) + "</td></tr>";
-    }).join("");
-    var asks = (map.official_requirements || []).map(function (row) {
-      return "<li>" + esc(row) + "</li>";
-    }).join("");
-    var pager = "<nav class=\"pager\" aria-label=\"Adjacent controls\">" +
-      (prev ? "<a class=\"prev\" href=\"#" + prev.slug + "\">Previous: " + esc(prev.title) + "</a>" : "<span></span>") +
-      (next ? "<a class=\"next\" href=\"#" + next.slug + "\">Next: " + esc(next.title) + "</a>" : "<span></span>") +
-      "</nav>";
-    return "<section id=\"" + esc(c.slug) + "\" class=\"view-in band-teal\">" +
-      "<p class=\"kicker\">" + esc(c.id) + " · Control " + pad(c.order) + "</p>" +
-      "<h2>" + esc(note.headline || c.title) + "</h2>" +
-      "<div class=\"callout\"><strong>Assessment.</strong> " + esc(note.assessment || c.position) + "</div>" +
-      chips +
-      (note.why ? "<p class=\"prose\">" + esc(note.why) + badge(note.whyBadge) + cites(note.whyRefs) + "</p>" : "") +
-      "<div class=\"panel teal\">" +
-        "<h3>CrowdStrike modules</h3>" +
-        "<div class=\"scroll\"><table class=\"cmp\"><thead><tr><th>Module</th><th>Role</th><th>How it supports</th><th>Boundary</th></tr></thead><tbody>" + modules + "</tbody></table></div>" +
-        "<p class=\"note\">Sources recorded against this control." + cites(c.source_refs) + "</p>" +
-      "</div>" +
-      "<div class=\"panel amber\"><h3>What else has to enforce it</h3><div class=\"scroll\"><table class=\"cmp\"><thead><tr><th>Ecosystem control</th><th>How it completes the requirement</th></tr></thead><tbody>" + eco + "</tbody></table></div>" +
-        (EXAMPLES[c.id] ? "<p class=\"note\">" + esc(EXAMPLES[c.id].text) + cites(EXAMPLES[c.id].refs) + "</p>" : "") +
-      "</div>" +
-      "<div class=\"panel pink\"><h3>Residual obligation</h3><div class=\"scroll\"><table class=\"cmp\"><thead><tr><th>Gap</th><th>Left with the organisation</th></tr></thead><tbody>" + gaps + "</tbody></table></div></div>" +
-      "<div class=\"panel navy\"><h3>NCSC requirement, in short</h3><ul class=\"limits\">" + asks + "</ul><p class=\"note\">" + cites(official ? [official] : []) + "</p></div>" +
-      pager +
-    "</section>";
-  }
-  function architectureHtml() {
-    var items = COMMENTARY.architecture.map(function (item, idx) {
-      return "<div class=\"find" + (item.proof ? " proof" : "") + "\"><span class=\"n\">" + pad(idx + 1) + "</span><div><h3>" + esc(item.title) + "</h3><p>" + esc(item.body) + "</p></div></div>";
-    }).join("");
-    return "<section id=\"architecture\" class=\"view-in band-navy\">" +
-      "<p class=\"kicker\">Control architecture</p>" +
-      "<h2>Pair the native layer with the control that actually enforces the requirement</h2>" +
-      "<p class=\"blurb\">Nine pairings from the assessment. They are an architecture, not a conformance score and not a 90-day plan.</p>" +
-      "<div class=\"finds\">" + items + "</div>" +
-      "<div class=\"warn\"><strong>What would change this advice.</strong> A later NCSC list needs a new edition of this crosswalk. Product notes that evidence a native password manager, an awareness curriculum, backup creation and restoration, deny-by-default allowlisting, or enterprise zone enforcement would change those findings. A proven patch scope beyond Windows would widen the patching finding. If the pending claims are withdrawn or materially revised, rewrite the threat paragraphs. If a reviewed control mapping for this edition becomes available, redo the crosswalk against it. Confirm entitlements in the tenant before treating any capability as deployed.</div>" +
-    "</section>";
-  }
-  function methodHtml() {
-    var limits = "<ul class=\"limits\">" + (DATA.limitations || []).map(function (item) {
-      return "<li>" + esc(item) + "</li>";
-    }).join("") + "</ul>";
-    var scale = Object.keys(DATA.assessment_scale || {}).map(function (key) {
-      return "<li><strong>" + esc(key.replace(/_/g, " ")) + ".</strong> " + esc(DATA.assessment_scale[key]) + "</li>";
-    }).join("");
-    return "<section id=\"method\" class=\"view-in band-navy\">" +
-      "<p class=\"kicker\">Method</p>" +
-      "<h2>An analyst crosswalk, not a generated coverage claim</h2>" +
-      "<div class=\"panel navy\"><h3>Evidence classes in the file</h3><ul class=\"limits\">" + scale + "</ul></div>" +
-      "<p class=\"prose\">The structured lists on each control are rendered from <a href=\"assessment.json\">assessment.json</a>, report <span class=\"mono\">" + esc(DATA.report_id) + "</span>, status " + esc(DATA.status) + ", as at " + esc(DATA.as_at) + ". The prose around those lists is the analyst commentary for that assessment. This page is ThinkInfoSec synthesis for boards and operators. It is not an NCSC or CrowdStrike publication, and it is not an assessment of any organisation.</p>" +
-      "<p class=\"prose\">NCSC describes the ten controls as a current priority list for deciding where to spend time and money. No conformance or maturity level is derived from product presence, licensing or configuration. The file records the result as " + esc(String(DATA.maturity_determination).replace(/_/g, " ")) + "." + cites(["NCSC-SUMMARY"]) + "</p>" +
-      "<p class=\"prose\">Product statements were taken from working product notes. Those notes are not treated as independently verified product assurance. Service relationships were taken from a capability mapping used for this assessment. They are not compliance evidence. That mapping’s record for these controls has no detailed controls and no control mappings." + cites(["OUT-NCSC-REG"]) + "</p>" +
-      "<p class=\"prose\">ThinkThreats material is used only to explain why a control might be prioritised. Every cited claim was pending on 22 September 2026." + cites(["TT-CORPUS"]) + "</p>" +
-      "<p class=\"prose\">Named parties under each control come from an earlier ThinkInfoSec alliance map. They show who might hold the ecosystem role. They were not re-verified for this publication, and they do not change the capability finding." + cites(["APRIL-MAP"]) + "</p>" +
-      limits +
-      "<p class=\"note\">Public URLs in the source list are those recorded in the assessment. This briefing did not re-fetch them, and it did not re-query the product notes, the capability mapping, or ThinkThreats.</p>" +
-    "</section>";
-  }
-  function sourcesHtml() {
-    var groups = [
-      ["official", "Official framework"],
-      ["product", "CrowdStrike product evidence"],
-      ["capability", "Capability and alliance mappings"],
-      ["prior", "Earlier ThinkInfoSec map"],
-      ["thinkthreats", "ThinkThreats context — pending"]
-    ];
-    function bucket(s) {
-      if (s._group === "supplemental" || s._group === "cyberdoc") return "product";
-      return s._group;
-    }
-    var html = groups.map(function (pair) {
-      var items = DATA._sources.filter(function (s) { return bucket(s) === pair[0]; })
-        .sort(function (a, b) { return a._n - b._n; });
-      if (!items.length) return "";
-      return "<p class=\"group-lbl\">" + pair[1] + "</p><ol class=\"sourcelist\">" +
-        items.map(sourceItem).join("") + "</ol>";
-    }).join("");
-    return "<section id=\"sources\">" +
-      "<p class=\"kicker\">Bibliography</p>" +
-      "<h2>Sources as recorded on 22 September 2026</h2>" +
-      "<p class=\"blurb\">Numbers follow first use in the briefing. Product notes and capability mappings have no public URL in the assessment, so none is invented here. Pending ThinkThreats claims are labelled as pending.</p>" +
-      html +
-      "<p class=\"note\">Accessed through the 22 September 2026 analyst assessment. Linked pages were not re-read for this publication.</p>" +
-    "</section>";
-  }
-  function viewHtml(route) {
-    if (route.id === "overview") return overviewHtml();
-    if (route.id === "control") return controlHtml(route.control);
-    if (route.id === "architecture") return architectureHtml();
-    if (route.id === "method") return methodHtml();
-    return sourcesHtml();
-  }
-  function render(fromNav) {
-    var route = parseRoute();
-    paintToc(route);
-    main.innerHTML = viewHtml(route);
-    var titleBit = route.control ? route.control.title + " — " : "";
-    document.title = titleBit + "NCSC Top 10 and the Falcon boundary | Thinkinfosec Hub";
-    if (route.focusId) {
-      var el = document.getElementById(route.focusId);
-      if (el) {
-        el.tabIndex = -1;
-        el.focus({ preventScroll: true });
-        el.scrollIntoView({ block: "start", behavior: motion() });
-      }
-      return;
-    }
-    if (fromNav) {
-      var heading = main.querySelector("h2");
-      if (heading) {
-        heading.tabIndex = -1;
-        heading.focus({ preventScroll: true });
-      }
-      var section = main.querySelector("section");
-      if (section) section.scrollIntoView({ block: "start", behavior: motion() });
-    }
-  }
-  function fail(message) {
-    main.innerHTML = "<section><p class=\"kicker\">Method</p><h2>The assessment file did not load</h2><p class=\"prose\">" + esc(message) + "</p></section>";
-  }
-  fetch("assessment.json")
-    .then(function (res) {
-      if (!res.ok) throw new Error("Open this briefing over HTTP so assessment.json can load (status " + res.status + ").");
-      return res.json();
-    })
-    .then(function (data) {
-      DATA = data;
-      DATA._sources = indexSources(data);
-      paintFacts();
-      render(location.hash.length > 1);
-      window.addEventListener("hashchange", function () { render(true); });
-    })
-    .catch(function (err) {
-      fail(err && err.message ? err.message : "The assessment file could not be read.");
-    });
-})();
-
-</script>
+<script src="../../assets/research.js"></script>
 </body>
 </html>
