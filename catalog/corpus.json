@@ -281,7 +281,8 @@
       ],
       "link": "Research/infosec-solutions-map/",
       "description": "70 technology domains across the Falcon ecosystem.",
-      "date": "2026-08-24"
+      "date": "2026-08-24",
+      "thumb": "Research/infosec-solutions-map/cover.webp"
     },
     {
       "id": "learn-helpful-links",

@@ -2,6 +2,7 @@
   "$schema": "../../catalog/research.schema.json",
   "id": "research-alliance-map",
   "slug": "infosec-solutions-map",
+  "cover": "cover.webp",
   "title": "CrowdStrike Alliance Landscape",
   "headline": "Infosec Solution Landscape",
   "summary": "70 technology domains across the Falcon ecosystem.",
