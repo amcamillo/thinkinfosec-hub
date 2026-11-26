@@ -360,6 +360,26 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 .article .tier p { font-size: .85rem; color: var(--muted); margin: 0; }
 .article .tier.gold { background: rgba(0, 191, 207, .10); }
 .article .tt-map img.tt-ne-map { width: 100%; height: auto; display: block; background: #eef4f7; }
+/* Market briefing components: stat cards, threat lists, profitability drivers, dwell-time calculator (anz-mssp) */
+.article > section > :is(.dwell, .callout, .note) { max-width: var(--read); margin-inline: auto; }
+.article p.lbl { font: 400 .72rem/1.5 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 4px 0 0; }
+.article p.stat { font: 300 3rem/1.05 var(--serif-light); color: var(--acc-ink); margin: 10px 0 6px; }
+.article p.stat.stat-sm { font-size: 1.9rem; }
+.article .stat-card p { margin: 6px 0 0; }
+.article p.driver { color: var(--ink); font-size: .9rem; padding-left: 12px; border-left: 3px solid var(--acc); }
+.article .driver strong { color: var(--acc-ink); }
+.article .threat-list { margin: 8px 0 0; padding-left: 1.2rem; display: grid; gap: 12px; }
+.article .threat-list .src { display: block; margin-top: 4px; }
+.article .card p.src { font: 400 .72rem/1.5 var(--mono); margin-top: 10px; }
+.article .card .bar-row { grid-template-columns: 130px 1fr 100px; }
+.article .clock-table td.opp { color: var(--acc-ink); font-weight: 600; }
+.article .dwell { margin-top: 18px; padding: 18px 20px; border-radius: 12px; border: 1px solid rgba(18, 36, 74, .10); background: rgba(0, 191, 207, .06); display: grid; gap: 8px; }
+.article .dwell h3 { margin: 0; }
+.article .dwell label { font-size: .92rem; font-weight: 600; margin-top: 6px; }
+.article .dwell label b { color: var(--acc-ink); }
+.article .dwell input[type="range"] { width: 100%; accent-color: var(--acc-ink); }
+.article .dwell-out { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--line); font: 400 .74rem/1.5 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.article .dwell-out b { font: 300 2.2rem/1 var(--serif-light); letter-spacing: 0; text-transform: none; color: var(--mag-ink); }
 @media (max-width: 800px) {
   .article .grid-3, .article .smb-groups, .article .smb-group.teal .tiers, .article .smb-group.magenta .tiers { grid-template-columns: 1fr; }
   .article .tier { border-left: 0; border-top: 1px solid var(--line); }
