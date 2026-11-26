@@ -2,6 +2,7 @@
   "$schema": "../../catalog/research.schema.json",
   "id": "research-preparing-2027",
   "slug": "preparing-for-2027",
+  "cover": "cover.webp",
   "title": "Preparing for 2027",
   "headline": "Preparing for 2027: Cybersecurity and Compliance Briefing",
   "summary": "Twelve 2025/26 benchmark reports against Australia’s 2026–27 regulatory spine.",
