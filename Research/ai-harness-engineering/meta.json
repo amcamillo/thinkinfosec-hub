@@ -2,6 +2,7 @@
   "$schema": "../../catalog/research.schema.json",
   "id": "research-ai-harness-engineering",
   "slug": "ai-harness-engineering",
+  "cover": "cover.webp",
   "title": "The harness is the control plane",
   "summary": "A controls reading of Zhong and Zhu’s harness ladder, and the trust boundaries the preprint leaves open.",
   "published": "2026-10-02",

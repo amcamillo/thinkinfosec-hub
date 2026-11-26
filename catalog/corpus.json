@@ -715,7 +715,8 @@
       ],
       "link": "Research/ai-harness-engineering/",
       "description": "A controls reading of Zhong and Zhu’s harness ladder, and the trust boundaries the preprint leaves open.",
-      "date": "2026-10-02"
+      "date": "2026-10-02",
+      "thumb": "Research/ai-harness-engineering/cover.webp"
     },
     {
       "id": "research-always-on-agents",
