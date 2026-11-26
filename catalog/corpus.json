@@ -835,6 +835,27 @@
       "description": "ARTEX, the pen-test harness in the November 2026 FBI FLASH, and the agents already on the estate.",
       "date": "2026-11-25",
       "thumb": "Research/double-agents/cover.webp"
+    },
+    {
+      "id": "research-context-vs-mcp",
+      "title": "Stop feeding the window",
+      "kind": "research",
+      "origin": "hub",
+      "pillar": "technology",
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "govern-assure",
+        "threat-model"
+      ],
+      "tech": [
+        62
+      ],
+      "link": "Research/context-vs-mcp/",
+      "description": "Why stuffed context drives hallucination, what compaction drops, and how MCP fits RAG.",
+      "date": "2026-11-26",
+      "thumb": "Research/context-vs-mcp/cover.webp"
     }
   ]
 }

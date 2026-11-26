@@ -3,6 +3,169 @@
   "generated_from": "Research/*/meta.json",
   "items": [
     {
+      "id": "research-context-vs-mcp",
+      "slug": "context-vs-mcp",
+      "url": "https://amcamillo.github.io/thinkinfosec-hub/Research/context-vs-mcp/",
+      "title": "Stop feeding the window",
+      "headline": "Stop feeding the window: context, compaction and MCP-based fetching in agents",
+      "summary": "Why stuffed context drives hallucination, what compaction drops, and how MCP fits RAG.",
+      "published": "2026-11-26",
+      "updated": "2026-11-26",
+      "author": "Andre Camillo",
+      "cover": "https://amcamillo.github.io/thinkinfosec-hub/Research/context-vs-mcp/cover.webp",
+      "reading_minutes": 19,
+      "pillar": "technology",
+      "people": [
+        "thought-leadership"
+      ],
+      "processes": [
+        "govern-assure",
+        "threat-model"
+      ],
+      "tech": [
+        62
+      ],
+      "themes": [
+        "securing-ai",
+        "identity-access"
+      ],
+      "frameworks": [
+        "owasp-llm-top-10",
+        "owasp-agentic"
+      ],
+      "regions": [
+        "global"
+      ],
+      "tags": [
+        "mcp",
+        "rag",
+        "context-engineering",
+        "compaction",
+        "hallucination",
+        "context-rot",
+        "tool-poisoning",
+        "lethal-trifecta",
+        "isoc",
+        "charlotte-ai",
+        "agentic-soc"
+      ],
+      "vendors": [
+        "crowdstrike",
+        "gartner",
+        "anthropic",
+        "openai",
+        "chroma",
+        "invariant-labs",
+        "cyberark"
+      ],
+      "caveats": {
+        "ai_assisted": true,
+        "not_legal_advice": true
+      },
+      "sources": [
+        {
+          "url": "https://www.crowdstrike.com/en-us/platform/charlotte-ai/charlotte-ai-agentworks/",
+          "host": "crowdstrike.com",
+          "text": "Charlotte AI AgentWorks"
+        },
+        {
+          "url": "https://www.crowdstrike.com/en-us/press-releases/crowdstrike-named-a-leader-2026-gartner-magic-quadrant-isoc-siem/",
+          "host": "crowdstrike.com",
+          "text": "announcement"
+        },
+        {
+          "url": "https://support.claude.com/en/articles/11473015-retrieval-augmented-generation-rag-for-projects",
+          "host": "support.claude.com",
+          "text": "RAG for Projects article"
+        },
+        {
+          "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+          "host": "anthropic.com",
+          "text": "Effective context engineering for AI agents"
+        },
+        {
+          "url": "https://arxiv.org/abs/2307.03172",
+          "host": "arxiv.org",
+          "text": "Lost in the Middle"
+        },
+        {
+          "url": "https://www.trychroma.com/research/context-rot",
+          "host": "trychroma.com",
+          "text": "Context Rot"
+        },
+        {
+          "url": "https://arxiv.org/abs/2505.06120",
+          "host": "arxiv.org",
+          "text": "LLMs Get Lost In Multi-Turn Conversation"
+        },
+        {
+          "url": "https://openai.com/index/why-language-models-hallucinate/",
+          "host": "openai.com",
+          "text": "Why language models hallucinate"
+        },
+        {
+          "url": "https://platform.claude.com/docs/en/build-with-claude/compaction",
+          "host": "platform.claude.com",
+          "text": "API documentation"
+        },
+        {
+          "url": "https://code.claude.com/docs/en/context-window",
+          "host": "code.claude.com",
+          "text": "context-window docs"
+        },
+        {
+          "url": "https://github.com/anthropics/claude-code/issues/24460",
+          "host": "github.com",
+          "text": "user-filed GitHub issue"
+        },
+        {
+          "url": "https://modelcontextprotocol.io/specification/latest",
+          "host": "modelcontextprotocol.io",
+          "text": "latest revision on modelcontextprotocol.io"
+        },
+        {
+          "url": "https://modelcontextprotocol.io/specification/latest/basic/authorization",
+          "host": "modelcontextprotocol.io",
+          "text": "authorization section"
+        },
+        {
+          "url": "https://www.anthropic.com/engineering/code-execution-with-mcp",
+          "host": "anthropic.com",
+          "text": "Code execution with MCP"
+        },
+        {
+          "url": "https://research.aimultiple.com/code-execution-with-mcp",
+          "host": "research.aimultiple.com",
+          "text": "measured a smaller but still large reduction"
+        },
+        {
+          "url": "https://invariantlabs.ai/blog/mcp-security-notification",
+          "host": "invariantlabs.ai",
+          "text": "tool poisoning disclosure"
+        },
+        {
+          "url": "https://www.cyberark.com/resources/threat-research-blog/poison-everywhere-no-output-from-your-mcp-server-is-safe",
+          "host": "cyberark.com",
+          "text": "Poison everywhere"
+        },
+        {
+          "url": "https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/",
+          "host": "simonwillison.net",
+          "text": "lethal trifecta"
+        },
+        {
+          "url": "https://arxiv.org/abs/2005.11401",
+          "host": "arxiv.org",
+          "text": "Lewis et al. in 2020"
+        },
+        {
+          "url": "https://www.anthropic.com/engineering/contextual-retrieval",
+          "host": "anthropic.com",
+          "text": "Contextual Retrieval"
+        }
+      ]
+    },
+    {
       "id": "research-double-agents",
       "slug": "double-agents",
       "url": "https://amcamillo.github.io/thinkinfosec-hub/Research/double-agents/",

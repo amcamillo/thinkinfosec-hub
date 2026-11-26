@@ -1,0 +1,15 @@
+{
+  "type": "scale",
+  "title": "What comes back after compaction is a fraction of what went in",
+  "subtitle": "The window compacts at six figures of tokens; what gets reloaded from disk is capped in the thousands.",
+  "eyebrow": "ThinkInfoSec · Scale",
+  "caption": "Documented defaults and caps, Claude API and Claude Code docs, Nov 2026. Log scale.",
+  "axis": "log",
+  "ticks": [{ "value": 1000, "label": "1k" }, { "value": 10000, "label": "10k" }, { "value": 100000, "label": "100k" }],
+  "items": [
+    { "label": "API compaction default trigger", "value": 150000, "display": "150k tokens", "source": "Claude API compaction docs", "tone": "neutral" },
+    { "label": "Lowest allowed trigger", "value": 50000, "display": "50k tokens", "source": "Claude API compaction docs", "tone": "neutral" },
+    { "label": "All re-injected skills, combined cap", "value": 25000, "display": "25k tokens", "source": "Claude Code context-window docs", "tone": "teal" },
+    { "label": "Per re-injected skill cap", "value": 5000, "display": "5k tokens", "source": "Claude Code context-window docs", "tone": "teal" }
+  ]
+}

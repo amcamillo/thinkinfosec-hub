@@ -1,0 +1,20 @@
+{
+  "title": "Load it, or fetch it?",
+  "subtitle": "Two questions settle most cases. Small, stable and needed whole wins for context; everything else wants a fetch.",
+  "eyebrow": "ThinkInfoSec · Decision",
+  "caption": "My decision rule, built from the sources in this piece; not any vendor's guidance.",
+  "nodes": [
+    { "id": "q1", "tag": "Question", "title": "Small, stable, needed whole?", "sub": "a policy, a contract, one spec", "tone": "neutral" },
+    { "id": "ctx", "tag": "Answer", "title": "Put it in context", "sub": "inline or upload, cache it", "tone": "teal" },
+    { "id": "q3", "tag": "Question", "title": "Permissioned or live?", "sub": "ACLs, changes daily", "tone": "neutral" },
+    { "id": "mcp", "tag": "Answer", "title": "Retrieve over MCP", "sub": "filtered by access, live", "tone": "teal" },
+    { "id": "rag", "tag": "Answer", "title": "Retrieve from an index", "sub": "a few chunks, cited", "tone": "teal" }
+  ],
+  "rows": [["q1", "ctx"], ["q3", "mcp"], ["rag", "~"]],
+  "edges": [
+    { "from": "q1", "to": "ctx", "label": "yes" },
+    { "from": "q1", "to": "q3", "label": "no" },
+    { "from": "q3", "to": "mcp", "label": "yes" },
+    { "from": "q3", "to": "rag", "label": "no" }
+  ]
+}

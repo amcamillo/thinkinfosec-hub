@@ -1,0 +1,13 @@
+{
+  "type": "stats",
+  "title": "More context is not more accuracy",
+  "subtitle": "Four published findings point the same way: past a point, every extra token makes the right one harder to use.",
+  "eyebrow": "ThinkInfoSec · Stats",
+  "caption": "Figures as each study published them. Chroma sells a vector database; its replication code is public on GitHub.",
+  "cards": [
+    { "value": "18", "label": "frontier models tested as input length grew", "source": "Chroma, Context Rot, 14 Jul 2025", "tone": "magenta" },
+    { "value": "39%", "label": "average drop, multi-turn vs single-turn", "source": "Laban et al., arXiv 2505.06120", "tone": "magenta" },
+    { "value": "~1.5%", "label": "gain from 50 retrieved docs instead of 20", "source": "Liu et al., Lost in the Middle, TACL 2024", "tone": "neutral" },
+    { "value": "1", "label": "distractor is enough to cut accuracy", "source": "Chroma, Context Rot, 14 Jul 2025", "tone": "magenta" }
+  ]
+}
