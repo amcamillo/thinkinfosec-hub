@@ -694,7 +694,8 @@
       ],
       "link": "Research/openai-medicare-portal/",
       "description": "Agentic threat research: an OpenAI evaluation agent, the Medicare statistics portal, and the goal that outranked the block.",
-      "date": "2026-09-28"
+      "date": "2026-09-28",
+      "thumb": "Research/openai-medicare-portal/cover.webp"
     },
     {
       "id": "research-ai-harness-engineering",

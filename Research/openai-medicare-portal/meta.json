@@ -2,6 +2,7 @@
   "$schema": "../../catalog/research.schema.json",
   "id": "research-openai-medicare-portal",
   "slug": "openai-medicare-portal",
+  "cover": "cover.webp",
   "title": "When goals become the threat vector",
   "summary": "Agentic threat research: an OpenAI evaluation agent, the Medicare statistics portal, and the goal that outranked the block.",
   "published": "2026-09-28",
