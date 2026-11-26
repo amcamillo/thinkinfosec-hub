@@ -327,7 +327,7 @@
         });
         const o = (W.pos.out || [])[0];
         if (o) {
-          el('path', { d: `M849,472 C849,540 ${o.x},540 ${o.x},${o.y + 9}`, fill: 'none', stroke: '#12244A', 'stroke-width': 1.5, 'stroke-dasharray': '5 4', 'marker-end': `url(#xp-arr-ink-${fid})`, class: an ? 'xp-draw' : null }, og);
+          el('path', { d: `M849,472 C849,530 712,530 712,440 L712,${o.y} L${o.x + 10},${o.y}`, fill: 'none', stroke: '#12244A', 'stroke-width': 1.5, 'stroke-dasharray': '5 4', 'marker-end': `url(#xp-arr-ink-${fid})`, class: an ? 'xp-draw' : null }, og);
           txt(og, 860, 482, 'appended, then', 'xp-lbl');
           txt(og, 860, 497, 'the loop runs again', 'xp-lbl');
         }
