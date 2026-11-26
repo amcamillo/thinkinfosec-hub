@@ -2,6 +2,7 @@
   "$schema": "../../catalog/research.schema.json",
   "id": "research-anz-mssp",
   "slug": "anz-mssp",
+  "cover": "cover.webp",
   "title": "ANZ MSSP Landscape",
   "headline": "2025: The State of MSSP across Australia and New Zealand",
   "summary": "Managed security market across Australia and New Zealand.",
