@@ -2,6 +2,7 @@
   "$schema": "../../catalog/research.schema.json",
   "id": "research-ncsc-top-10-crowdstrike",
   "slug": "ncsc-top-10-crowdstrike",
+  "cover": "cover.webp",
   "title": "NCSC Top 10 and the Falcon boundary",
   "summary": "CrowdStrike capability against New Zealand’s NCSC Critical Controls: native scope, dependencies, and residual obligations.",
   "published": "2026-09-22",
