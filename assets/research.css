@@ -277,6 +277,10 @@ a:hover { text-decoration-color: var(--acc); text-decoration-thickness: 2px; }
 .article .sourcelist a { word-break: break-word; }
 .article .sourcelist .meta { display: block; margin-top: 2px; font: 400 .7rem var(--mono); color: var(--muted); }
 .article .sourcelist li:target { background: rgba(0, 191, 207, .12); border-radius: 6px; }
+.article .kicker.mag, .article .group-lbl.mag { color: var(--mag-ink); }
+.article .formula { font: .85em var(--mono); color: var(--ink); overflow-wrap: anywhere; }
+.fig > a { display: block; }
+.fig figcaption .fig-open { margin-left: .4em; }
 @media (max-width: 800px) {
   .article .moves, .article .recs, .article .grid-2, .article .find { grid-template-columns: 1fr; }
 }
