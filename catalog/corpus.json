@@ -647,7 +647,8 @@
       ],
       "link": "Research/essential-eight-crowdstrike/",
       "description": "CrowdStrike capability against the Essential Eight: native scope, dependencies, and residual gaps.",
-      "date": "2026-09-22"
+      "date": "2026-09-22",
+      "thumb": "Research/essential-eight-crowdstrike/cover.webp"
     },
     {
       "id": "research-ncsc-top-10-crowdstrike",
@@ -673,7 +674,8 @@
       ],
       "link": "Research/ncsc-top-10-crowdstrike/",
       "description": "CrowdStrike capability against New Zealand’s NCSC Critical Controls: native scope, dependencies, and residual obligations.",
-      "date": "2026-09-22"
+      "date": "2026-09-22",
+      "thumb": "Research/ncsc-top-10-crowdstrike/cover.webp"
     },
     {
       "id": "research-openai-medicare-portal",

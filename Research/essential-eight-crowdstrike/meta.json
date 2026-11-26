@@ -2,6 +2,7 @@
   "$schema": "../../catalog/research.schema.json",
   "id": "research-essential-eight-crowdstrike",
   "slug": "essential-eight-crowdstrike",
+  "cover": "cover.webp",
   "title": "Essential 8 and CrowdStrike Falcon Ecosystem",
   "summary": "CrowdStrike capability against the Essential Eight: native scope, dependencies, and residual gaps.",
   "published": "2026-09-22",

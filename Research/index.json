@@ -951,8 +951,8 @@
       "published": "2026-09-22",
       "updated": "2026-09-22",
       "author": "Andre Camillo",
-      "cover": null,
-      "reading_minutes": 1,
+      "cover": "https://amcamillo.github.io/thinkinfosec-hub/Research/essential-eight-crowdstrike/cover.webp",
+      "reading_minutes": 20,
       "pillar": "process",
       "people": [
         "thought-leadership"
@@ -993,7 +993,33 @@
         "ai_assisted": true,
         "not_legal_advice": true
       },
-      "sources": []
+      "sources": [
+        {
+          "url": "https://www.cyber.gov.au/business-government/asds-cyber-security-frameworks/essential-eight/essential-eight-maturity-model",
+          "host": "cyber.gov.au",
+          "text": "cyber.gov.au/business-government/asds-cyber-security-frameworks/essen…"
+        },
+        {
+          "url": "https://www.cyber.gov.au/business-government/asds-cyber-security-frameworks/essential-eight/essential-eight-maturity-model-faq",
+          "host": "cyber.gov.au",
+          "text": "cyber.gov.au/business-government/asds-cyber-security-frameworks/essen…"
+        },
+        {
+          "url": "https://www.cyber.gov.au/business-government/asds-cyber-security-frameworks/essential-eight/essential-eight-assessment-process-guide",
+          "host": "cyber.gov.au",
+          "text": "cyber.gov.au/business-government/asds-cyber-security-frameworks/essen…"
+        },
+        {
+          "url": "https://marketplace.crowdstrike.com/listings/airlock-digital-precision-application-control/",
+          "host": "marketplace.crowdstrike.com",
+          "text": "marketplace.crowdstrike.com/listings/airlock-digital-precision-applic…"
+        },
+        {
+          "url": "https://developer.crowdstrike.com/cac/terraform/provider/prevention-policy/resources/prevention-policy-windows/",
+          "host": "developer.crowdstrike.com",
+          "text": "developer.crowdstrike.com/cac/terraform/provider/prevention-policy/re…"
+        }
+      ]
     },
     {
       "id": "research-ncsc-top-10-crowdstrike",
@@ -1005,8 +1031,8 @@
       "published": "2026-09-22",
       "updated": "2026-09-22",
       "author": "Andre Camillo",
-      "cover": null,
-      "reading_minutes": 1,
+      "cover": "https://amcamillo.github.io/thinkinfosec-hub/Research/ncsc-top-10-crowdstrike/cover.webp",
+      "reading_minutes": 26,
       "pillar": "process",
       "people": [
         "thought-leadership"
@@ -1047,7 +1073,68 @@
         "ai_assisted": true,
         "not_legal_advice": true
       },
-      "sources": []
+      "sources": [
+        {
+          "url": "https://www.ncsc.govt.nz/protect-your-organisation/summary/",
+          "host": "ncsc.govt.nz",
+          "text": "ncsc.govt.nz/protect-your-organisation/summary/"
+        },
+        {
+          "url": "https://www.ncsc.govt.nz/protect-your-organisation/patching/",
+          "host": "ncsc.govt.nz",
+          "text": "ncsc.govt.nz/protect-your-organisation/patching/"
+        },
+        {
+          "url": "https://www.ncsc.govt.nz/protect-your-organisation/multi-factor-authentication-and-verification/",
+          "host": "ncsc.govt.nz",
+          "text": "ncsc.govt.nz/protect-your-organisation/multi-factor-authentication-an…"
+        },
+        {
+          "url": "https://www.ncsc.govt.nz/protect-your-organisation/password-managers/",
+          "host": "ncsc.govt.nz",
+          "text": "ncsc.govt.nz/protect-your-organisation/password-managers/"
+        },
+        {
+          "url": "https://www.ncsc.govt.nz/protect-your-organisation/centralised-logging/",
+          "host": "ncsc.govt.nz",
+          "text": "ncsc.govt.nz/protect-your-organisation/centralised-logging/"
+        },
+        {
+          "url": "https://www.ncsc.govt.nz/protect-your-organisation/build-security-awareness-in-your-organisation/",
+          "host": "ncsc.govt.nz",
+          "text": "ncsc.govt.nz/protect-your-organisation/build-security-awareness-in-yo…"
+        },
+        {
+          "url": "https://www.ncsc.govt.nz/protect-your-organisation/asset-lifecycle-management/",
+          "host": "ncsc.govt.nz",
+          "text": "ncsc.govt.nz/protect-your-organisation/asset-lifecycle-management/"
+        },
+        {
+          "url": "https://www.ncsc.govt.nz/protect-your-organisation/implement-and-test-backups/",
+          "host": "ncsc.govt.nz",
+          "text": "ncsc.govt.nz/protect-your-organisation/implement-and-test-backups/"
+        },
+        {
+          "url": "https://www.ncsc.govt.nz/protect-your-organisation/application-control/",
+          "host": "ncsc.govt.nz",
+          "text": "ncsc.govt.nz/protect-your-organisation/application-control/"
+        },
+        {
+          "url": "https://www.ncsc.govt.nz/protect-your-organisation/principle-of-least-privilege/",
+          "host": "ncsc.govt.nz",
+          "text": "ncsc.govt.nz/protect-your-organisation/principle-of-least-privilege/"
+        },
+        {
+          "url": "https://www.ncsc.govt.nz/protect-your-organisation/network-separation-and-segmentation/",
+          "host": "ncsc.govt.nz",
+          "text": "ncsc.govt.nz/protect-your-organisation/network-separation-and-segment…"
+        },
+        {
+          "url": "https://marketplace.crowdstrike.com/listings/airlock-digital-precision-application-control/",
+          "host": "marketplace.crowdstrike.com",
+          "text": "marketplace.crowdstrike.com/listings/airlock-digital-precision-applic…"
+        }
+      ]
     },
     {
       "id": "research-preparing-2027",
