@@ -1,0 +1,26 @@
+{
+  "type": "entity",
+  "title": "RAG over MCP: the retriever becomes a governed tool",
+  "subtitle": "The agent never holds the corpus. It asks a server that checks who is asking and returns a few chunks with their sources.",
+  "eyebrow": "ThinkInfoSec · Entity map",
+  "caption": "A reference shape, my read rather than any one vendor's design. Primitive names are from the MCP specification.",
+  "focus": "server",
+  "entities": [
+    { "id": "user", "kind": "actor", "title": "User", "sub": "asks the question" },
+    { "id": "agent", "kind": "tool", "title": "Agent harness", "sub": "MCP client, runs the loop" },
+    { "id": "model", "kind": "model", "title": "Model", "sub": "sees chunks, not the corpus" },
+    { "id": "server", "kind": "tool", "title": "Retrieval MCP server", "sub": "search tool, resources", "tone": "teal" },
+    { "id": "idp", "kind": "org", "title": "Identity provider", "sub": "who is asking", "tone": "teal" },
+    { "id": "index", "kind": "asset", "title": "Vector + keyword index", "sub": "chunks with metadata" },
+    { "id": "src", "kind": "asset", "title": "Source systems", "sub": "wiki, tickets, file shares" }
+  ],
+  "relations": [
+    { "from": "user", "to": "agent", "verb": "asks" },
+    { "from": "agent", "to": "model", "verb": "sends chunks" },
+    { "from": "agent", "to": "server", "verb": "calls search" },
+    { "from": "server", "to": "idp", "verb": "checks token", "style": "conditional" },
+    { "from": "server", "to": "index", "verb": "queries, filters by ACL" },
+    { "from": "index", "to": "src", "verb": "re-indexed from", "style": "reference" }
+  ],
+  "legend": [{ "style": "flow", "label": "request path" }, { "style": "conditional", "label": "access check" }, { "style": "reference", "label": "kept fresh" }]
+}

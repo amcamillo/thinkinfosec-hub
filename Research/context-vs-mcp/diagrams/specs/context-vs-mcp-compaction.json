@@ -1,0 +1,13 @@
+{
+  "type": "phases",
+  "title": "Compaction keeps some things and rewrites the rest",
+  "subtitle": "What the agent still knows after compaction depends on where each instruction came from, not on how important it was.",
+  "eyebrow": "ThinkInfoSec · Phases",
+  "caption": "Per Anthropic's Claude Code context-window and Claude API compaction docs, as of Nov 2026.",
+  "phases": [
+    { "tag": "01 · before", "title": "A full window", "tone": "neutral", "steps": ["System prompt, CLAUDE.md", "Files read and edited", "Tool results, web pages", "Rules added mid-session"] },
+    { "tag": "02 · summarise", "title": "The model rewrites it", "tone": "magenta", "steps": ["Older turns become a summary", "Earlier blocks are dropped", "Thinking is not carried"] },
+    { "tag": "03 · reloaded", "title": "Back from disk", "tone": "teal", "steps": ["Project-root CLAUDE.md", "Auto memory, skills (capped)", "Up to five recent files"] },
+    { "tag": "04 · summarised", "title": "Only the summary's version", "tone": "magenta", "steps": ["Nested, path-scoped rules", "Context hooks added", "Anything said in chat"] }
+  ]
+}

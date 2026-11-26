@@ -1,0 +1,21 @@
+{
+  "title": "How a full window turns into a confident wrong answer",
+  "subtitle": "No single step here is a bug. Chained together, they produce an answer that sounds grounded in your files and isn't.",
+  "eyebrow": "ThinkInfoSec · Cause and consequence",
+  "caption": "Each link is published research; chaining them into one path, and the control, is my read.",
+  "nodes": [
+    { "id": "stuff", "tag": "Cause", "title": "Everything loaded", "sub": "files, history, tool output", "tone": "neutral" },
+    { "id": "dilute", "tag": "Effect", "title": "Attention spread thin", "sub": "middle and look-alikes lose", "tone": "magenta" },
+    { "id": "miss", "tag": "Effect", "title": "Right fact not used", "sub": "distractor or stale copy wins", "tone": "magenta" },
+    { "id": "guess", "tag": "Consequence", "title": "Fluent guess", "sub": "guessing outscores abstaining", "tone": "magenta" },
+    { "id": "ctl", "tag": "Control", "title": "Fetch less, cite more", "sub": "few chunks, with sources", "tone": "teal", "alignX": ["stuff", "dilute"] }
+  ],
+  "rows": [["stuff", "dilute", "miss", "guess"], ["ctl", "~", "~", "~"]],
+  "edges": [
+    { "from": "stuff", "to": "dilute", "label": "dilutes" },
+    { "from": "dilute", "to": "miss" },
+    { "from": "miss", "to": "guess", "label": "fills gap" },
+    { "from": "ctl", "to": "stuff>dilute", "style": "conditional", "label": "breaks the chain" }
+  ],
+  "legend": [{ "style": "flow", "label": "what happens" }, { "style": "conditional", "label": "what interrupts it" }]
+}

@@ -1,0 +1,59 @@
+{
+  "$schema": "../../catalog/research.schema.json",
+  "id": "research-context-vs-mcp",
+  "slug": "context-vs-mcp",
+  "title": "Stop feeding the window",
+  "headline": "Stop feeding the window: context, compaction and MCP-based fetching in agents",
+  "summary": "Why stuffed context drives hallucination, what compaction drops, and how MCP fits RAG.",
+  "published": "2026-11-26",
+  "author": "Andre Camillo",
+  "cover": "cover.webp",
+  "pillar": "technology",
+  "people": [
+    "thought-leadership"
+  ],
+  "processes": [
+    "govern-assure",
+    "threat-model"
+  ],
+  "tech": [
+    62
+  ],
+  "themes": [
+    "securing-ai",
+    "identity-access"
+  ],
+  "frameworks": [
+    "owasp-llm-top-10",
+    "owasp-agentic"
+  ],
+  "regions": [
+    "global"
+  ],
+  "tags": [
+    "mcp",
+    "rag",
+    "context-engineering",
+    "compaction",
+    "hallucination",
+    "context-rot",
+    "tool-poisoning",
+    "lethal-trifecta",
+    "isoc",
+    "charlotte-ai",
+    "agentic-soc"
+  ],
+  "vendors": [
+    "crowdstrike",
+    "gartner",
+    "anthropic",
+    "openai",
+    "chroma",
+    "invariant-labs",
+    "cyberark"
+  ],
+  "caveats": {
+    "ai_assisted": true,
+    "not_legal_advice": true
+  }
+}
