@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One bad page, every Grok Bot</title>
+<style>
+:root { --tis-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+.tx-tag    { font: 700 9.5px var(--tis-font); letter-spacing: 1.3px; text-transform: uppercase; }
+.tx-title  { font: 700 15px var(--tis-font); letter-spacing: -.1px; }
+.tx-sub    { font: 400 11.5px var(--tis-font); }
+.tx-label  { font: 500 11px var(--tis-font); }
+.tx-glabel { font: 800 10.5px var(--tis-font); letter-spacing: 1.8px; text-transform: uppercase; }
+.tx-gnote  { font: 400 11px var(--tis-font); }
+.tx-pill   { font: 600 11px var(--tis-font); }
+.tx-gate   { font: 700 11px var(--tis-font); }
+.tx-note   { font: 500 11px var(--tis-font); font-style: italic; }
+
+:root {
+  --tis-magenta:#FF2D78; --tis-magenta-2:#D91E63; --tis-teal:#00BFCF; --tis-teal-2:#0B6459; --tis-navy:#0D1F3C;
+  --tis-ink:#FFFFFF; --tis-mute:rgba(255,255,255,.68); --tis-line:rgba(255,255,255,.16);
+  --tis-glass:rgba(6,10,18,.56); --tis-glass-2:rgba(6,10,18,.72);
+}
+* { box-sizing: border-box; }
+html, body { background: var(--tis-navy); }
+body { margin: 0; overflow-x: hidden; font-family: var(--tis-font); color: var(--tis-ink); }
+.stage { position: relative; overflow: hidden; background: var(--tis-navy); min-height: 100vh; }
+.stage .zone { position: absolute; inset: 0; }
+.stage .zone-magenta { background: linear-gradient(77deg, #FF2D78 0%, #D91E63 18%, #8C2060 38%, #4A1D52 58%, rgba(13,31,60,.35) 76%, rgba(13,31,60,0) 92%); }
+.stage .zone-teal { background: linear-gradient(57deg, rgba(13,31,60,0) 8%, rgba(13,31,60,.35) 24%, #0F3A4A 44%, #0B6459 64%, #009AAB 82%, #00BFCF 100%); }
+.stage .wash  { background: rgba(6,10,18,.14); }
+.stage .grain { background-image: radial-gradient(rgba(255,255,255,.5) .5px, transparent .5px); background-size: 4px 4px; opacity: .035; }
+.wrap { position: relative; z-index: 1; padding: 44px 16px; display: flex; justify-content: center; }
+.panel { background: var(--tis-glass-2); -webkit-backdrop-filter: blur(20px) saturate(140%); backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid var(--tis-line); border-radius: 18px; padding: 28px 30px 24px; width: 100%; }
+.eyebrow { display: flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--tis-mute); margin: 0 0 10px; }
+.eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #fff; }
+h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 900; letter-spacing: -.5px; margin: 0 0 8px; text-wrap: balance; }
+.caption { color: var(--tis-mute); font-size: .95rem; line-height: 1.6; margin: 0 0 22px; max-width: 78ch; }
+.diagram { overflow-x: auto; margin: 0 -6px; padding: 0 6px; }
+.diagram svg { display: block; width: 100%; height: auto; min-width: 760px; margin: 0 auto; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--tis-line); font-size: 12px; color: var(--tis-mute); }
+.legend span { display: inline-flex; align-items: center; gap: 9px; }
+.legend svg { flex: none; }
+/* diagram primitives */
+.n-box   { fill: rgba(8,14,26,.82); stroke: rgba(255,255,255,.15); stroke-width: 1; }
+.ghost .n-box { fill: rgba(8,14,26,.35); stroke: rgba(255,255,255,.34); stroke-dasharray: 5 4; }
+.tx-title { fill: #fff; }
+.tx-sub   { fill: rgba(255,255,255,.62); }
+.tx-gnote { fill: rgba(255,255,255,.55); }
+.tx-note  { fill: rgba(255,255,255,.6); }
+.g-box    { stroke-width: 1; }
+.port     { fill: #0b1422; stroke-width: 1.3; }
+
+.panel { max-width: 1012px; }
+.diagram svg { min-width: 760px; }
+</style><style>html.embed .eyebrow,html.embed h1,html.embed .caption{display:none}html.embed .stage{min-height:0}
+html.embed body{overflow:hidden}html.embed .wrap{width:1010px;padding:10px}html.embed .panel{padding:14px 16px 12px;max-width:none}
+html.embed .diagram{overflow:visible}html.embed .diagram svg{min-width:0}</style>
+<script>if (/[?&]embed\b/.test(location.search)) { const h = document.documentElement; h.classList.add('embed');
+  const fit = () => { h.style.zoom = innerWidth / 1010; }; addEventListener('resize', fit); fit(); }</script>
+</head>
+<body><div class="stage"><div class="zone zone-magenta"></div><div class="zone zone-teal"></div><div class="zone wash"></div><div class="zone grain"></div>
+<main class="wrap"><section class="panel">
+<p class="eyebrow">ThinkInfoSec · Blast radius</p>
+<h1>One bad page, every Grok Bot</h1>
+<p class="caption">xAI's own documentation says it plainly: "Do not use separate Bots as a security boundary." All bots on an account share one cloud computer. Bot names are illustrative.</p>
+<figure class="diagram" style="margin:0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-28 -28 950 320" width="950" style="max-width:950px" role="img" aria-label="One bad page, every Grok Bot: 4 connections between 5 steps"><defs><marker id="ah-flow" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="rgba(255,255,255,.58)"/></marker><marker id="ah-conditional" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#FF2D78"/></marker><marker id="ah-optional" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="rgba(255,255,255,.82)"/></marker><marker id="ah-reference" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#00BFCF"/></marker></defs>
+<g class="group" data-id="box"><rect class="g-box" x="235" y="0" width="658.8" height="264" rx="18" fill="rgba(255,45,120,.06)" stroke="rgba(255,45,120,.42)"/>
+<text class="tx-glabel" x="263" y="29" fill="#FF2D78">One cloud computer per account</text>
+</g>
+<path data-e="0" d="M191,83 L263,83" fill="none" stroke="rgba(255,255,255,.58)" stroke-width="1.4" marker-end="url(#ah-flow)"/>
+<path data-e="1" d="M411,83 L480.8,83" fill="none" stroke="rgba(255,255,255,.58)" stroke-width="1.4" marker-end="url(#ah-flow)"/>
+<path data-e="2" d="M673.8,83 L717.8,83" fill="none" stroke="rgba(255,255,255,.58)" stroke-width="1.4" marker-end="url(#ah-flow)"/>
+<path data-e="3" d="M577.3,116 L577.3,138 Q577.3,146 585.3,146 L783.8,146 Q791.8,146 791.8,154 L791.8,176" fill="none" stroke="rgba(255,255,255,.58)" stroke-width="1.4" marker-end="url(#ah-flow)"/>
+<circle class="port" cx="191" cy="83" r="3.4" stroke="rgba(255,255,255,.58)"/>
+<circle class="port" cx="411" cy="83" r="3.4" stroke="rgba(255,255,255,.58)"/>
+<circle class="port" cx="673.8" cy="83" r="3.4" stroke="rgba(255,255,255,.58)"/>
+<circle class="port" cx="577.3" cy="116" r="3.4" stroke="rgba(255,255,255,.58)"/>
+<g class="node" data-id="inj"><rect class="n-box" x="0" y="50" width="191" height="66" rx="10"/><circle cx="17" cy="67.5" r="3.2" fill="#FF2D78"/><text class="tx-tag" x="26" y="71" fill="#FF2D78">Attacker</text><text class="tx-title" x="14" y="91">Poisoned page or email</text><text class="tx-sub" x="14" y="106">read by one bot</text></g>
+<g class="node" data-id="b1"><rect class="n-box" x="263" y="50" width="148" height="66" rx="10"/><circle cx="280" cy="67.5" r="3.2" fill="#FF2D78"/><text class="tx-tag" x="289" y="71" fill="#FF2D78">Bot 1</text><text class="tx-title" x="277" y="91">Research bot</text><text class="tx-sub" x="277" y="106">the one that read it</text></g>
+<g class="node" data-id="shared"><rect class="n-box" x="480.8" y="50" width="193" height="66" rx="10"/><circle cx="497.8" cy="67.5" r="3.2" fill="#FF2D78"/><text class="tx-tag" x="506.8" y="71" fill="#FF2D78">Shared</text><text class="tx-title" x="494.8" y="91">Files, sessions, CLI creds</text><text class="tx-sub" x="494.8" y="106">one store for all bots</text></g>
+<g class="node" data-id="b2"><rect class="n-box" x="717.8" y="50" width="148" height="66" rx="10"/><circle cx="734.8" cy="67.5" r="3.2" fill="rgba(255,255,255,.62)"/><text class="tx-tag" x="743.8" y="71" fill="rgba(255,255,255,.62)">Bot 2</text><text class="tx-title" x="731.8" y="91">Email bot</text><text class="tx-sub" x="731.8" y="106">same box, same access</text></g>
+<g class="node" data-id="b3"><rect class="n-box" x="717.8" y="176" width="148" height="66" rx="10"/><circle cx="734.8" cy="193.5" r="3.2" fill="rgba(255,255,255,.62)"/><text class="tx-tag" x="743.8" y="197" fill="rgba(255,255,255,.62)">Bot 3</text><text class="tx-title" x="731.8" y="217">Coding bot</text><text class="tx-sub" x="731.8" y="232">same box, same access</text></g>
+<text class="tx-label" x="431" y="72.5" fill="rgba(255,255,255,.66)">writes</text></svg></figure>
+<div class="legend"><span><svg width="30" height="8" viewBox="0 0 30 8" aria-hidden="true"><line x1="1" y1="4" x2="29" y2="4" stroke="rgba(255,255,255,.58)" stroke-width="1.6"/></svg>how one compromise spreads</span></div>
+</section></main></div><script type="application/json" id="fd-data">{"cfg":{"speed":140,"dwell":500,"hold":2500,"fade":700,"gap":500,"stagger":140,"groupDelay":180,"start":null,"comet":46,"minEdge":300,"maxEdge":1800,"maxFlow":12000,"dot":"#FFFFFF","gate":"#00BFCF"},"order":["inj","b1","shared","b2","b3"],"nodes":{"inj":{"parent":null,"glow":"#FF3D85"},"b1":{"parent":"box","glow":"#FF3D85"},"shared":{"parent":"box","glow":"#FF3D85"},"b2":{"parent":"box","glow":"#E8F1FF"},"b3":{"parent":"box","glow":"#E8F1FF"}},"groups":{"box":{"parent":null,"frame":true,"glow":"#FF3D85","children":["b1","shared","b2","b3"],"lead":["b1","shared","b2"]}},"edges":[{"i":0,"from":"inj","to":"b1","join":false,"glow":"#7FF4FF","dash":null,"round":false},{"i":1,"from":"b1","to":"shared","join":false,"glow":"#7FF4FF","dash":null,"round":false},{"i":2,"from":"shared","to":"b2","join":false,"glow":"#7FF4FF","dash":null,"round":false},{"i":3,"from":"shared","to":"b3","join":false,"glow":"#7FF4FF","dash":null,"round":false}]}</script>
+<script>// flow-diagram animation runtime — inlined into <name>.animated.html by build.mjs.
+// Dots travel every edge in flow order; blocks, gates and the trail behind each dot glow as it passes.
+// Everything is a pure function of time (render(t)), so the GIF capture can seek frame by frame.
+// API: window.flowAnim = { period, end, seek(ms), play(), pause() }.
+(() => {
+  const D = JSON.parse(document.getElementById('fd-data').textContent);
+  const C = D.cfg, NS = 'http://www.w3.org/2000/svg';
+  const svg = document.querySelector('.diagram svg');
+  const mk = (tag, attrs, parent, before) => {
+    const el = document.createElementNS(NS, tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    if (parent) parent.insertBefore(el, before || null);
+    return el;
+  };
+  const vb = svg.viewBox.baseVal, area = { x: vb.x - 40, y: vb.y - 40, width: vb.width + 80, height: vb.height + 80 };
+  const defs = svg.querySelector('defs');
+  // userSpaceOnUse: a percentage filter region collapses to nothing on a perfectly horizontal path
+  const blur = (id, sd) => mk('feGaussianBlur', { stdDeviation: sd }, mk('filter', { id, filterUnits: 'userSpaceOnUse', ...area }, defs));
+  blur('fx-blur', 3.2); blur('fx-blur-lg', 7);
+
+  const firstNode = svg.querySelector('g.node');
+  const under = mk('g', { class: 'fx-under', 'pointer-events': 'none' }, svg, firstNode);   // below blocks: trails, dots, halos
+  const over = mk('g', { class: 'fx-over', 'pointer-events': 'none' }, svg);                // above blocks: rings, gate pulses
+
+  // ---------------------------------------------------------------- elements
+  const items = {};   // id -> { kind, parent, children, glow, act, arrivals, ring, halo }
+  for (const [id, n] of Object.entries(D.nodes)) items[id] = { id, kind: 'node', ...n, act: Infinity, arrivals: [] };
+  for (const [id, g] of Object.entries(D.groups)) items[id] = { id, kind: 'group', ...g, act: Infinity, arrivals: [] };
+  const fxRect = (rect, glow, isGroup) => {
+    const a = { x: rect.getAttribute('x'), y: rect.getAttribute('y'), width: rect.getAttribute('width'), height: rect.getAttribute('height'), rx: rect.getAttribute('rx'), fill: 'none' };
+    return {
+      halo: mk('rect', { ...a, stroke: glow, 'stroke-width': isGroup ? 5 : 7, filter: `url(#${isGroup ? 'fx-blur' : 'fx-blur-lg'})`, opacity: 0 }, under),
+      ring: mk('rect', { ...a, stroke: glow, 'stroke-width': isGroup ? 1.4 : 1.7, opacity: 0 }, over),
+      wash: isGroup ? null : mk('rect', { ...a, fill: glow, stroke: 'none', opacity: 0 }, over),
+    };
+  };
+  for (const it of Object.values(items)) {
+    const host = svg.querySelector(`g.${it.kind}[data-id="${CSS.escape(it.id)}"] > rect`);
+    if (host) Object.assign(it, fxRect(host, it.glow, it.kind === 'group'));
+  }
+
+  const edges = D.edges.map(e => {
+    const path = svg.querySelector(`path[data-e="${e.i}"]`), d = path.getAttribute('d'), L = path.getTotalLength();
+    const mask = mk('mask', { id: `fx-m${e.i}`, maskUnits: 'userSpaceOnUse', ...area }, defs);
+    const reveal = mk('path', { d, fill: 'none', stroke: '#fff', 'stroke-width': 16, 'stroke-dasharray': `${L + 2} ${L + 2}`, 'stroke-dashoffset': L + 2 }, mask);
+    const m = `url(#fx-m${e.i})`;
+    const halo = mk('path', { d, fill: 'none', stroke: e.glow, 'stroke-width': 6, filter: 'url(#fx-blur)', mask: m, opacity: 0 }, under);
+    const trail = mk('path', { d, fill: 'none', stroke: e.glow, 'stroke-width': 2, mask: m, opacity: 0, ...(e.dash ? { 'stroke-dasharray': e.dash } : {}), ...(e.round ? { 'stroke-linecap': 'round' } : {}) }, under);
+    const comet = mk('path', { d, fill: 'none', stroke: e.glow, 'stroke-width': 7, 'stroke-linecap': 'round', filter: 'url(#fx-blur)', opacity: 0 }, under);
+    const dotHalo = mk('circle', { r: 12, fill: e.glow, filter: 'url(#fx-blur)', opacity: 0 }, under);
+    const dot = mk('circle', { r: 4.6, fill: C.dot, opacity: 0 }, under);
+    let gate = null;
+    const gp = svg.querySelector(`polygon[data-e="${e.i}"]`);
+    if (gp) {
+      const [gx, gy] = gp.dataset.at.split(',').map(Number);
+      let best = 0, bd = Infinity;
+      for (let s = 0; s <= L; s += 1) { const p = path.getPointAtLength(s), dd = Math.hypot(p.x - gx, p.y - gy); if (dd < bd) { bd = dd; best = s; } }
+      gate = { s: best, halo: mk('circle', { cx: gx, cy: gy, r: 13, fill: C.gate, filter: 'url(#fx-blur)', opacity: 0 }, over),
+        ring: mk('polygon', { points: gp.getAttribute('points'), fill: 'none', stroke: '#fff', 'stroke-width': 1.6, opacity: 0 }, over) };
+    }
+    return { ...e, path, L, reveal, halo, trail, comet, dotHalo, dot, gate, t0: Infinity, t1: Infinity };
+  });
+
+  // ---------------------------------------------------------------- timeline (earliest arrival; edges each play once)
+  const incoming = new Set(edges.filter(e => !e.join).map(e => e.to));
+  const ancestors = id => { const a = []; for (let p = items[id].parent; p; p = items[p].parent) a.push(p); return a; };
+  // Kick-off rules. Only the primary start (animate.start, else the first source in reading order) fires at 0.
+  // Entering a container wakes the unconnected blocks in its FIRST row, left to right. Every other block
+  // nothing flows into ("loose") waits until everything before it in reading order has fired.
+  const woken = id => { const p = items[id].parent; return !!p && (items[p].lead || []).includes(id) && (incoming.has(p) || woken(p)); };
+  const seeds = D.order.filter(id => !incoming.has(id) && !woken(id));
+  const primary = new Set(C.start ? [].concat(C.start) : seeds.slice(0, 1));
+  const descNodes = id => items[id].kind === 'node' ? [id] : (items[id].children || []).flatMap(descNodes);
+  const startOf = id => {
+    if (items[id].kind === 'node') return items[id].act;
+    const ts = descNodes(id).map(n => items[n].act).filter(Number.isFinite);
+    return ts.length ? Math.max(...ts) : Infinity;
+  };
+  let changed = true;
+  const relax = (id, t) => { if (t < items[id].act - 0.5) { items[id].act = t; changed = true; } };
+  const propagate = () => { changed = true; for (let guard = 0; changed && guard < 200; guard++) {
+    changed = false;
+    for (const e of edges) {
+      const s = startOf(e.from);
+      if (!Number.isFinite(s)) continue;
+      e.t0 = s + C.dwell; e.t1 = e.t0 + Math.min(C.maxEdge, Math.max(C.minEdge, e.L / C.speed * 1000));   // speed is px per second
+      if (!e.join) relax(e.to, e.t1);
+    }
+    // entering a container wakes its unconnected first-row children, left to right
+    for (const g of Object.values(items)) if (g.kind === 'group' && Number.isFinite(g.act))
+      (g.lead || []).forEach((c, k) => { if (!incoming.has(c)) relax(c, g.act + (g.frame ? C.groupDelay : 0) + k * C.stagger); });
+  } };
+  for (const id of primary) relax(id, 0);
+  propagate();
+  for (const s of seeds) {
+    if (primary.has(s)) continue;
+    const before = D.order.slice(0, D.order.indexOf(s)).map(id => items[id].act).filter(Number.isFinite);
+    relax(s, (before.length ? Math.max(...before) : 0) + C.dwell);
+    propagate();
+  }
+  // a frame lights no later than its first block (blocks can be entered directly, or nothing enters the frame)
+  for (const g of Object.values(items)) if (g.kind === 'group') {
+    const ts = descNodes(g.id).map(n => items[n].act).filter(Number.isFinite);
+    if (ts.length) g.act = Math.min(g.act, Math.max(0, Math.min(...ts) - 120));
+  }
+  // long flows are compressed to fit maxFlow (social clips); dwell and travel scale together
+  const flowEnd = Math.max(0, ...edges.map(e => e.t1).filter(Number.isFinite), ...Object.values(items).map(i => i.act).filter(Number.isFinite));
+  if (C.maxFlow && flowEnd > C.maxFlow) {
+    const k = C.maxFlow / flowEnd;
+    for (const e of edges) { e.t0 *= k; e.t1 *= k; }
+    for (const it of Object.values(items)) it.act *= k;
+  }
+  for (const e of edges) if (!e.join && Number.isFinite(e.t1)) items[e.to].arrivals.push(e.t1);
+  for (const it of Object.values(items)) if (Number.isFinite(it.act)) it.arrivals.push(it.act);
+  const end = Math.max(0, ...edges.map(e => e.t1).filter(Number.isFinite), ...Object.values(items).map(i => i.act).filter(Number.isFinite)) + C.hold;
+  const period = end + C.fade + C.gap;
+
+  // ---------------------------------------------------------------- render(t)
+  const clamp = v => Math.max(0, Math.min(1, v));
+  const smooth = v => { v = clamp(v); return v * v * (3 - 2 * v); };
+  const flash = (arr, t, tau = 420) => arr.reduce((m, a) => t >= a ? Math.max(m, Math.exp(-(t - a) / tau)) : m, 0);
+  const ease = u => 0.65 * u + 0.35 * smooth(u);
+  const set = (el, k, v) => el.setAttribute(k, typeof v === 'number' ? +v.toFixed(3) : v);
+  function render(t) {
+    const fade = t <= end ? 1 : clamp(1 - (t - end) / C.fade);
+    for (const it of Object.values(items)) {
+      if (!it.ring) continue;
+      const lit = smooth((t - it.act) / 260), fl = flash(it.arrivals, t), k = it.kind === 'group' ? 0.6 : 1;
+      set(it.ring, 'opacity', fade * k * (0.5 * lit + 0.5 * fl));
+      set(it.halo, 'opacity', fade * k * (0.22 * lit + 0.78 * fl));
+      if (it.wash) set(it.wash, 'opacity', fade * (0.035 * lit + 0.09 * fl));
+    }
+    for (const e of edges) {
+      if (!(t >= e.t0)) { for (const el of [e.halo, e.trail, e.comet, e.dot, e.dotHalo]) set(el, 'opacity', 0); if (e.gate) { set(e.gate.halo, 'opacity', 0); set(e.gate.ring, 'opacity', 0); } continue; }
+      const u = clamp((t - e.t0) / (e.t1 - e.t0)), s = e.L * ease(u), moving = t < e.t1;
+      set(e.reveal, 'stroke-dashoffset', e.L + 2 - s);
+      const after = moving ? 0 : clamp((t - e.t1) / 700);
+      set(e.trail, 'opacity', fade * (1 - 0.5 * after));
+      set(e.halo, 'opacity', fade * (0.9 - 0.68 * after));
+      const tail = Math.min(C.comet, s);
+      set(e.comet, 'stroke-dasharray', `${tail} ${e.L + C.comet * 2}`);
+      set(e.comet, 'stroke-dashoffset', tail - s);
+      const vis = moving ? smooth(u / 0.04) * smooth((1 - u) / 0.04) : 0;
+      set(e.comet, 'opacity', fade * 0.9 * vis);
+      const p = e.path.getPointAtLength(s);
+      for (const el of [e.dot, e.dotHalo]) { set(el, 'cx', p.x); set(el, 'cy', p.y); }
+      set(e.dot, 'opacity', fade * vis); set(e.dotHalo, 'opacity', fade * 0.85 * vis);
+      if (e.gate) {
+        const tg = e.t0 + (e.t1 - e.t0) * (e.gate.s / e.L), lit = smooth((t - tg) / 200), fl = flash([tg], t, 520);
+        set(e.gate.halo, 'opacity', fade * (0.3 * lit + 0.7 * fl)); set(e.gate.ring, 'opacity', fade * (0.4 * lit + 0.6 * fl));
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------- playback
+  let raf = 0, t0 = 0, cur = 0;
+  const loop = now => { cur = (now - t0) % period; render(cur); raf = requestAnimationFrame(loop); };
+  const api = {
+    period, end, acts: () => Object.fromEntries(Object.values(items).map(i => [i.id, Math.round(i.act)])),   // for checks
+    seek(ms) { cancelAnimationFrame(raf); raf = 0; cur = ms; render(ms); },
+    play() { if (raf) return; t0 = performance.now() - cur; raf = requestAnimationFrame(loop); },
+    pause() { cancelAnimationFrame(raf); raf = 0; },
+  };
+  window.flowAnim = api;
+  render(0);
+  if (new URLSearchParams(location.search).has('capture')) return;          // GIF capture drives seek()
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { api.seek(end); return; }
+  // start when scrolled into view (embeds), restart from the top each time it re-enters
+  new IntersectionObserver(([en]) => { if (en.isIntersecting) { cur = 0; api.play(); } else api.pause(); }, { threshold: 0.25 }).observe(svg);
+  svg.addEventListener('click', () => raf ? api.pause() : api.play());
+})();
+</script>
+</body></html>

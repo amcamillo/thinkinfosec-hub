@@ -96,9 +96,9 @@ The template aims for the complete 2026 Falcon portfolio under official module n
 - **Falcon Secure Access** (secure enterprise browser, ex-Seraphic) is primary in
   Data Security with an echo in Endpoint — in-session browser protection is a data
   control that happens to run on endpoints.
-- **Falcon AIDR ships as two modules** — AIDR for Workforce (AI traffic on endpoints) and
-  AIDR for Agents (AI workloads in cloud). Both are blocks in AI Security with an echo
-  where each runs (Endpoint / Cloud & SaaS).
+- **Falcon Guardian** (formerly AIDR for Workforce) is the endpoint AI-traffic module.
+  **AIDR for Agents** remains the cloud AI-workload module. Both sit in AI Security with
+  an echo where each runs (Endpoint / Cloud & SaaS).
 - **Falcon Foundry** (low-code custom apps) sits in Security Operations.
 - **Falcon LogScale Collector** sits in the Telemetry Pipeline row next to Onum.
 - Newer modules (`seb`, `foundry`, `logcoll`) default `off` — an honest gap-assessment
