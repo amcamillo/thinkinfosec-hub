@@ -1,142 +1,55 @@
-<meta charset="utf-8">
-<title>Stop Feeding the Window</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,600&family=Space+Mono:wght@400;700&display=swap">
-<style>
-/* Layout: a sticky stained-glass stage on the left, the narration scrolls past it on the right (stacked on phones). */
-:root{
-  --bg:#070F1F; --bg2:#0D1F3C; --ink:#EAF2FA; --muted:#A9B9CF; --line:#2f4f86;
-  --acc:#00BFCF; --acc-ink:#5fe9f5; --mag:#FF2D78; --mag-ink:#ff8cc0; --gold:#f5c542;
-  --card:rgba(13,31,60,.78); --card-bd:rgba(255,255,255,.10);
-  --display:"Cormorant Garamond", "Iowan Old Style", Georgia, serif;
-  --body:"DM Sans", -apple-system, "Segoe UI", sans-serif;
-  --mono:"Space Mono", ui-monospace, Menlo, monospace;
-  color-scheme:dark;
-}
-@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]){
-  --bg:#F8F4FB; --bg2:#E3F1F8; --ink:#12244A; --muted:#3A4D72; --line:#C5D0DE;
-  --acc:#00BFCF; --acc-ink:#036A7C; --mag:#B0125B; --mag-ink:#B0125B; --gold:#7a4f00;
-  --card:rgba(255,255,255,.88); --card-bd:rgba(18,36,74,.10); color-scheme:light } }
-:root[data-theme="light"]{
-  --bg:#F8F4FB; --bg2:#E3F1F8; --ink:#12244A; --muted:#3A4D72; --line:#C5D0DE;
-  --acc:#00BFCF; --acc-ink:#036A7C; --mag:#B0125B; --mag-ink:#B0125B; --gold:#7a4f00;
-  --card:rgba(255,255,255,.88); --card-bd:rgba(18,36,74,.10); color-scheme:light }
-
-*{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--body);margin:0}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
-a{color:var(--acc-ink)}
-
-/* hub shell (starting point only) */
-.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;display:flex;align-items:center;gap:14px;
-  padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
-  background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--card-bd)}
-.brand{font:700 13px/1 var(--mono);letter-spacing:.06em}
-.brand b{color:var(--acc-ink)}
-.crumb{font:400 12px/1 var(--mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
-.toggle{font:400 12px/1 var(--mono);background:none;color:var(--ink);border:1px solid var(--card-bd);border-radius:999px;padding:7px 12px;cursor:pointer}
-.toggle:focus-visible,.chip:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
-
-/* story */
-.story{position:relative}
-.stage{position:sticky;top:0;height:100vh;height:100svh;width:100%;overflow:hidden}
-#glass{position:absolute;inset:0;width:100%;height:100%;display:block}
-.gauge{position:absolute;left:max(16px,env(safe-area-inset-left,0px));top:calc(64px + env(safe-area-inset-top,0px));
-  font:400 11px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
-  transition:opacity .4s;opacity:0;width:200px}
-.gauge.on{opacity:1}
-.gauge strong{display:block;font:700 26px/1.1 var(--mono);color:var(--ink);letter-spacing:0;font-variant-numeric:tabular-nums;text-transform:none}
-.gauge .track{height:4px;background:var(--card-bd);margin-top:8px;position:relative;border-radius:2px}
-.gauge .fill{position:absolute;inset:0 auto 0 0;background:var(--acc);border-radius:2px;width:0}
-.gauge .mark{position:absolute;right:0;top:-5px;bottom:-5px;width:2px;background:var(--mag)}
-.gauge small{display:block;margin-top:6px;text-transform:none;letter-spacing:0}
-.rail{position:absolute;right:max(12px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);display:grid;gap:7px}
-.rail i{display:block;width:6px;height:6px;border-radius:50%;background:var(--card-bd);transition:background .3s,transform .3s}
-.rail i.on{background:var(--acc);transform:scale(1.5)}
-
-.copy{position:relative;margin-top:-100vh;margin-top:-100svh;z-index:2;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.scene{padding-block:30vh 10vh}
-.beat{min-height:85vh;display:flex;align-items:center}
-.beat > div{max-width:30rem;background:var(--card);border:1px solid var(--card-bd);border-radius:6px;padding:22px 24px;backdrop-filter:blur(6px)}
-.beat p{margin:0 0 .8em}
-.beat p:last-child{margin-bottom:0}
-.kicker{font:700 11px/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--acc-ink);margin-bottom:10px}
-h2{font:600 2.3rem/1.05 var(--display);margin:0 0 12px;text-wrap:balance}
-.line{font:500 italic 1.75rem/1.2 var(--display);color:var(--ink);text-wrap:balance}
-.src{font:400 12px/1.5 var(--mono);color:var(--muted);margin-top:12px}
-.honest{font:400 12px/1.5 var(--mono);color:var(--mag-ink);margin-top:10px}
-.num{font:700 1.15em/1 var(--mono);color:var(--acc-ink);font-variant-numeric:tabular-nums}
-
-/* opening: the article as it normally looks */
-.hero{min-height:100vh;display:flex;align-items:flex-end;padding-block:0 8vh}
-.hero > div{max-width:34rem;background:var(--card);border:1px solid var(--card-bd);border-radius:6px;padding:26px}
-.hero h1{font:600 clamp(2.4rem,6vw,3.6rem)/1 var(--display);margin:4px 0 12px;text-wrap:balance}
-.hero h1 em{color:var(--acc-ink)}
-.by{font:400 12px/1.4 var(--mono);color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
-.stats div{border-top:1px solid var(--line);padding-top:8px;min-width:0}
-.stats b{display:block;font:700 1.4rem/1 var(--mono);color:var(--acc-ink)}
-.stats span{display:block;font-size:11.5px;line-height:1.35;color:var(--muted);margin-top:4px}
-
-.sort{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.sort h3{font:700 11px/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;margin:0 0 8px;color:var(--muted)}
-.chip{display:block;width:100%;text-align:left;font:400 13px/1.35 var(--body);color:var(--ink);background:none;
-  border:1px solid var(--card-bd);border-radius:4px;padding:7px 9px;margin-bottom:6px;cursor:pointer}
-.chip[data-side="fetch"]{border-color:var(--acc)}
-.chip[data-side="ctx"]{border-color:var(--gold)}
-.end h2{font-size:2.8rem}
-
-@media (min-width:900px){
-  .copy{margin-left:58%;padding-right:max(32px,env(safe-area-inset-right,0px))}
-  .stage{width:100%}
-  .hero{margin-left:-20%}
-}
-@media (max-width:899px){
-  .beat{align-items:flex-end;padding-bottom:6vh}
-  .beat > div{padding:18px}
-  h2{font-size:1.9rem}
-  .stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
-  .stats b{font-size:1.1rem}
-  .stats span{font-size:10px}
-  body{font-size:15px}
-  .hero{padding-bottom:3vh}
-  .hero > div{padding:18px}
-  .hero p{display:none}
-  .line{font-size:1.45rem}
-  .gauge{width:150px}
-  .gauge strong{font-size:20px}
-}
-</style>
-
+<!DOCTYPE html>
+<!-- Generated by thinkinfosec-visuals (rip.mjs build). Edit the rip.json spec and scenes.js, then rebuild. -->
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Stop feeding the window: the story — Thinkinfosec Hub</title>
+<meta name="description" content="A scroll-driven visual story of the context-vs-MCP briefing: why a stuffed context window drives hallucination, what compaction throws away, and why fetching just in time is the better default.">
+<meta name="author" content="Andre Camillo">
+<link rel="canonical" href="https://amcamillo.github.io/thinkinfosec-hub/Research/context-vs-mcp/story/">
+<meta property="og:title" content="Stop feeding the window: the story — Thinkinfosec Hub">
+<meta property="og:image" content="https://amcamillo.github.io/thinkinfosec-hub/Research/context-vs-mcp/cover.webp">
+<link rel="icon" href="../../../assets/brand/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../../assets/brand/favicon-180.png">
+<link rel="stylesheet" href="story.css">
+<script src="theme-boot.js"></script>
+</head>
+<body>
+<a class="skip" href="#copy">Skip to the narration</a>
 <header class="bar">
-  <span class="brand">Think<b>InfoSec</b> Hub</span>
-  <span class="crumb">/ Research / Stop feeding the window / story</span>
-  <button class="toggle" id="theme" type="button">Theme</button>
+  <a class="brand-block" href="../../../index.html">
+    <img class="brand-badge" src="../../../assets/brand/logo-96.webp" width="32" height="32" alt="ThinkInfoSec logo">
+    <span class="brand">Think<span>InfoSec</span> <small>Hub</small></span>
+  </a>
+  <nav class="crumb" aria-label="Breadcrumb"><a href="../../">Research</a> / <a href="../">Stop feeding the window</a> / the story</nav>
+  <div class="theme-toggle" role="group" aria-label="Colour theme">
+    <button type="button" data-theme-set="dark" aria-pressed="true">Dark</button>
+    <button type="button" data-theme-set="light" aria-pressed="false">Light</button>
+  </div>
 </header>
 
-<div class="story">
+<main class="story">
   <div class="stage" aria-hidden="true">
     <canvas id="glass"></canvas>
     <div class="gauge" id="gauge">
-      <span id="gLabel">In the window</span>
+      <span id="gLabel"></span>
       <strong id="gVal">0</strong>
-      <div class="track"><div class="fill" id="gFill"></div><div class="mark" title="150,000"></div></div>
-      <small id="gNote">compaction fires at 150,000</small>
+      <div class="track"><div class="fill" id="gFill"></div><div class="mark"></div></div>
+      <small id="gNote"></small>
     </div>
     <div class="rail" id="rail"></div>
   </div>
 
-  <div class="copy">
+  <div class="copy" id="copy">
 
-    <section class="scene" data-s="0" style="padding-top:0">
+    <section class="scene scene-first" data-s="0" data-draw="question" id="the-window">
       <div class="hero"><div>
-        <div class="kicker">AI · Independent research briefing</div>
+        <div class="kicker">AI &middot; Research interactive presentation</div>
         <h1>Stop feeding the <em>window</em></h1>
-        <p style="margin:0 0 12px;color:var(--muted)">Context versus MCP-based fetching in agents. Why a stuffed context window drives hallucination, what compaction quietly throws away, and why fetching just in time is usually the better default.</p>
-        <div class="by">Andre Camillo · Nov 2026 · scroll to begin</div>
+        <p class="lede">Context versus MCP-based fetching in agents. Why a stuffed context window drives hallucination, what compaction quietly throws away, and why fetching just in time is usually the better default.</p>
+        <div class="by">Andre Camillo &middot; Nov 2026 &middot; scroll to begin</div>
         <div class="stats">
           <div><b>18</b><span>frontier models tested as input grew</span></div>
           <div><b>39%</b><span>average drop, single to multi-turn</span></div>
@@ -146,80 +59,80 @@ h2{font:600 2.3rem/1.05 var(--display);margin:0 0 12px;text-wrap:balance}
       </div></div>
       <div class="beat"><div>
         <p>Look at the window for a moment. Two women, one fountain. It looks like a single picture.</p>
-        <p class="line">Every window is made of pieces.</p>
-        <p>Glass is cut, then held together by lead. The lead is what tells you where one piece ends and the next begins. Keep an eye on it.</p>
+<p class="line">Every window is made of pieces.</p>
+<p>Glass is cut, then held together by lead. The lead is what tells you where one piece ends and the next begins. Keep an eye on it.</p>
       </div></div>
     </section>
 
-    <section class="scene" data-s="1">
+    <section class="scene" data-s="1" data-draw="three-ways" id="three-ways">
       <div class="beat"><div>
         <div class="kicker">Three ways in</div>
-        <h2>Who decides what's in the window?</h2>
-        <p>On the left, everything goes in at the start, every token of it, whether the task needs it or not. That's inline context, and in the simple case it's file uploads too.</p>
-        <p>On the right, the agent starts with almost nothing except a tap. When a step needs something, it holds up the cup. That's fetching through tools, usually over MCP.</p>
+<h2>Who decides what's in the window?</h2>
+<p>On the left, everything goes in at the start, every token of it, whether the task needs it or not. That's inline context, and in the simple case it's file uploads too.</p>
+<p>On the right, the agent starts with almost nothing except a tap. When a step needs something, it holds up the cup. That's fetching through tools, usually over MCP.</p>
       </div></div>
       <div class="beat"><div>
         <p>The vendor already knows which side wins at scale. Anthropic says that when project knowledge nears the window limit, Claude <q>will automatically enable RAG mode</q>.</p>
-        <p class="line">Past a threshold, it stops pouring and starts fetching.</p>
+<p class="line">Past a threshold, it stops pouring and starts fetching.</p>
         <p class="src">Anthropic Help Centre, RAG for Projects</p>
       </div></div>
     </section>
 
-    <section class="scene" data-s="2">
+    <section class="scene" data-s="2" data-draw="rot" id="rot">
       <div class="beat"><div>
         <div class="kicker">The rot</div>
-        <h2>One of these documents is the answer.</h2>
-        <p>Put it near the start or the end of a long input and models find it. Put it in the middle and performance <q>can degrade significantly</q>.</p>
+<h2>One of these documents is the answer.</h2>
+<p>Put it near the start or the end of a long input and models find it. Put it in the middle and performance <q>can degrade significantly</q>.</p>
         <p class="src">Liu et al., Lost in the Middle, TACL 2024</p>
       </div></div>
       <div class="beat"><div>
         <p>Keep pouring. Going from 20 retrieved documents to 50 improved GPT-3.5's accuracy by about <span class="num">1.5%</span>.</p>
-        <p class="line">Two and a half times the tokens, for a rounding error.</p>
-        <p>Chroma held the task fixed across <span class="num">18</span> models and changed only the length. Every one got less reliable as the input grew.</p>
-        <p class="src">Liu et al. 2024 · Chroma, Context Rot, July 2025</p>
+<p class="line">Two and a half times the tokens, for a rounding error.</p>
+<p>Chroma held the task fixed across <span class="num">18</span> models and changed only the length. Every one got less reliable as the input grew.</p>
+        <p class="src">Liu et al. 2024 &middot; Chroma, Context Rot, July 2025</p>
         <p class="honest">The fading is illustrative, not a model run.</p>
       </div></div>
     </section>
 
-    <section class="scene" data-s="3">
+    <section class="scene" data-s="3" data-draw="guess" id="guess">
       <div class="beat"><div>
         <div class="kicker">The guess</div>
-        <h2>Guess a birthday.</h2>
-        <p>You have a <span class="num">1 in 365</span> chance of scoring. Say "I don't know" and you score zero, every time. Train against accuracy-only tests long enough and you get a model that would rather guess.</p>
+<h2>Guess a birthday.</h2>
+<p>You have a <span class="num">1 in 365</span> chance of scoring. Say "I don't know" and you score zero, every time. Train against accuracy-only tests long enough and you get a model that would rather guess.</p>
         <p class="src">OpenAI, Why language models hallucinate, Sept 2025</p>
       </div></div>
       <div class="beat"><div>
         <p>A full basin doesn't just hide the right page. It surrounds it with near-misses: last quarter's policy, a similar clause from another contract, yesterday's stale tool output.</p>
-        <p>The model reaches in and lifts the closest one. It carries your seal.</p>
-        <p class="line">It uses your words. That's why you believe it.</p>
+<p>The model reaches in and lifts the closest one. It carries your seal.</p>
+<p class="line">It uses your words. That's why you believe it.</p>
         <p class="honest">The chain from rot to confident wrong answer is my read, not either paper's claim.</p>
       </div></div>
     </section>
 
-    <section class="scene" data-s="4">
-      <div class="beat"><div>
+    <section class="scene" data-s="4" data-draw="compaction" id="compaction">
+      <div class="beat" data-to="0.74"><div>
         <div class="kicker">Compaction</div>
-        <h2>The basin reaches the rim.</h2>
-        <p>At <span class="num">150,000</span> input tokens by default, the API's server-side compaction <q>replaces the older turns of a conversation with a summary that Claude writes</q>.</p>
+<h2>The basin reaches the rim.</h2>
+<p>At <span class="num">150,000</span> input tokens by default, the API's server-side compaction <q>replaces the older turns of a conversation with a summary that Claude writes</q>.</p>
         <p class="src">Claude API docs, compaction</p>
       </div></div>
       <div class="beat"><div>
         <p>Everything in the basin becomes one small pane. Only what's carved into the stone comes back sharp: the root <code>CLAUDE.md</code> and unscoped rules, re-injected from disk; up to <span class="num">5</span> files; skills capped at <span class="num">5,000</span> tokens each and <span class="num">25,000</span> in total.</p>
-        <p>What survives depends on where an instruction came from, not on how much it mattered.</p>
+<p>What survives depends on where an instruction came from, not on how much it mattered.</p>
         <p class="src">Claude Code docs, context window</p>
       </div></div>
     </section>
 
-    <section class="scene" data-s="5">
+    <section class="scene" data-s="5" data-draw="laundering" id="laundering">
       <div class="beat"><div>
         <div class="kicker">The laundering</div>
-        <h2>One piece came from outside.</h2>
-        <p>The agent read a web page along the way. It carried an injected instruction. Right now you can still see it: it's a different colour, and the lead around it says where it came from.</p>
+<h2>One piece came from outside.</h2>
+<p>The agent read a web page along the way. It carried an injected instruction. Right now you can still see it: it's a different colour, and the lead around it says where it came from.</p>
       </div></div>
-      <div class="beat"><div>
+      <div class="beat" data-to="0.62"><div>
         <p>Compaction is a model rewriting its own memory. It melts the window down and leads it again, with no marking of which pieces came from where.</p>
-        <p class="line">The lead was the provenance.</p>
-        <p>Try to find the outside piece now.</p>
+<p class="line">The lead was the provenance.</p>
+<p>Try to find the outside piece now.</p>
       </div></div>
       <div class="beat"><div>
         <p>The mirror image: a rule you typed halfway through the session, <em>"don't touch the production config"</em>. Each compaction summarises it a little more. Nobody deletes it. It just stops being what the summariser thought mattered.</p>
@@ -227,400 +140,90 @@ h2{font:600 2.3rem/1.05 var(--display);margin:0 0 12px;text-wrap:balance}
       </div></div>
     </section>
 
-    <section class="scene" data-s="6">
+    <section class="scene" data-s="6" data-draw="why-fetch" id="why-fetch">
       <div class="beat"><div>
         <div class="kicker">Why fetch</div>
-        <h2>Turn to the cup.</h2>
-        <p>Anthropic's worked example cut one job from <span class="num">150,000</span> tokens to <span class="num">2,000</span> by keeping intermediate results outside the model. An independent test measured <span class="num">78.5%</span> fewer input tokens on its own workload.</p>
-        <p class="src">Anthropic, Code execution with MCP, Nov 2025 · AIMultiple</p>
+<h2>Turn to the cup.</h2>
+<p>Anthropic's worked example cut one job from <span class="num">150,000</span> tokens to <span class="num">2,000</span> by keeping intermediate results outside the model. An independent test measured <span class="num">78.5%</span> fewer input tokens on its own workload.</p>
+        <p class="src">Anthropic, Code execution with MCP, Nov 2025 &middot; AIMultiple</p>
       </div></div>
       <div class="beat"><div>
         <p>Efficiency is the argument you'll hear first. It isn't the strongest one. What a fetched piece keeps, and an upload loses:</p>
-        <p><b>Freshness.</b> It reads today's version. <b>Access control.</b> The ribbon: the server checks who's asking. <b>Provenance.</b> Every piece keeps its lead. <b>Audit.</b> Every pour is a log line. <b>A smaller window.</b> Fewer distractors.</p>
+<p><b>Freshness.</b> It reads today's version. <b>Access control.</b> The ribbon: the server checks who's asking. <b>Provenance.</b> Every piece keeps its lead. <b>Audit.</b> Every pour is a log line. <b>A smaller window.</b> Fewer distractors.</p>
       </div></div>
     </section>
 
-    <section class="scene" data-s="7">
-      <div class="beat"><div>
+    <section class="scene" data-s="7" data-draw="cost" id="cost">
+      <div class="beat" data-to="0.42"><div>
         <div class="kicker">The cost</div>
-        <h2>The tap can lie.</h2>
-        <p>The MCP spec says tool descriptions <q>should be considered untrusted, unless obtained from a trusted server</q>. Invariant Labs hid instructions in one and pulled SSH keys in a demo. CyberArk extended it to schemas, outputs and rug pulls.</p>
-        <p class="src">MCP spec · Invariant Labs, Apr 2025 · CyberArk, Poison everywhere</p>
+<h2>The tap can lie.</h2>
+<p>The tap comes with a label: its tool description. The model reads every word of it, including the words you never see in the UI. The MCP spec says those descriptions <q>should be considered untrusted, unless obtained from a trusted server</q>.</p>
+<p>Invariant Labs hid instructions in one and pulled SSH keys in a demo. CyberArk showed the same trick works in schemas and outputs, and that a server can change its description after you approve it.</p>
+        <p class="src">MCP spec &middot; Invariant Labs, Apr 2025 &middot; CyberArk, Poison everywhere</p>
       </div></div>
       <div class="beat"><div>
-        <p>Now add taps. Private data. Untrusted content. A way to send data out. Connect all three to one cup and it leaks. That's Simon Willison's lethal trifecta.</p>
-        <p class="line">Uploads fail silently. Fetching fails where you can see it.</p>
+        <p>Now count the taps on one cup. Private data. Untrusted content. A way to send data out. With all three connected, an injected instruction can read the first and pour it down the third. That's Simon Willison's lethal trifecta.</p>
+<p>Cut any one leg and watch the cup.</p>
+<div class="knobs" role="group" aria-label="Trifecta legs">
+<button type="button" class="knob leg" data-leg="0" aria-pressed="true">Private data</button>
+<button type="button" class="knob leg" data-leg="1" aria-pressed="true">Untrusted content</button>
+<button type="button" class="knob leg" data-leg="2" aria-pressed="true">A way out</button>
+</div>
+<p class="readout" id="legOut" aria-live="polite"></p>
+<p class="line">Uploads fail silently. Fetching fails where you can see it.</p>
       </div></div>
     </section>
 
-    <section class="scene" data-s="8">
+    <section class="scene" data-s="8" data-draw="rag" id="rag">
       <div class="beat"><div>
         <div class="kicker">RAG over MCP</div>
-        <h2>Behind the fountain.</h2>
-        <p>The harness calls the retrieval server's search tool. The server checks the caller's token, queries a hybrid index, filters by each chunk's ACLs, and returns a handful of chunks with their source attached.</p>
-        <p>Filter at the valve, before the water reaches the cup. Filtering after the model has seen it is too late.</p>
+<h2>Behind the fountain.</h2>
+<p>The harness calls the retrieval server's search tool. The server checks the caller's token, queries a hybrid index, filters by each chunk's access list, and returns a handful of chunks with their source attached.</p>
+<p>Filter at the valve, before the water reaches the cup. Filtering after the model has seen it is too late. Change who's asking:</p>
+<div class="knobs" role="group" aria-label="Who is asking">
+<button type="button" class="knob who" data-who="analyst" aria-pressed="true">SOC analyst</button>
+<button type="button" class="knob who" data-who="contractor" aria-pressed="false">Contractor</button>
+</div>
+<p class="readout" id="whoOut" aria-live="polite"></p>
+        <p class="honest">The documents and access lists are made up to show the mechanism.</p>
       </div></div>
       <div class="beat"><div>
         <p>Retrieval quality still matters. Anthropic reports contextual retrieval cut failed retrievals by <span class="num">49%</span>, and by <span class="num">67%</span> with reranking.</p>
-        <p class="line">Bad retrieval is just a smaller stuffed window.</p>
-        <p class="src">Anthropic, Contextual Retrieval, Sept 2024 (own top-20 setup)</p>
+<p class="line">Bad retrieval is just a smaller stuffed window.</p>
+        <p class="src">Anthropic, Contextual Retrieval, Sept 2024 (own top-20 setup, vendor numbers)</p>
       </div></div>
     </section>
 
-    <section class="scene" data-s="9">
+    <section class="scene" data-s="9" data-draw="when" id="when">
       <div class="beat"><div>
         <div class="kicker">When to use which</div>
-        <h2>The basin still has its place.</h2>
-        <p>Small, stable and needed whole goes in the basin. Large, changing, permissioned or spread across systems comes from the tap. Tap an item to see where it lands.</p>
-        <div class="sort">
-          <div><h3>Basin · context</h3><div id="ctx"></div></div>
-          <div><h3>Tap · fetch</h3><div id="fetch"></div></div>
-        </div>
+<h2>Where do you draw the line?</h2>
+<p>Small, stable and needed whole goes in the basin. Large, changing, permissioned or spread across systems comes from the tap. Drag the line on the glass, or use the slider, and watch what the basin has to carry.</p>
+<label class="slider">Items in the basin
+<input type="range" id="divider" min="0" max="7" step="1" value="3" aria-describedby="divOut">
+<span class="ends"><span>fetch everything</span><span>upload everything</span></span>
+</label>
+<p class="readout" id="divOut" aria-live="polite"></p>
+<ul class="warn" id="divWarn"></ul>
+        <p class="honest">Token sizes are rough, for scale. The order is my decision rule from the briefing.</p>
       </div></div>
     </section>
 
-    <section class="scene end" data-s="10" style="padding-bottom:55vh">
+    <section class="scene scene-end end" data-s="10" data-draw="hold" id="hold">
       <div class="beat"><div>
         <h2>What does your agent start with?</h2>
-        <p>Context is the right home for what the agent must always know. Fetching is the right home for what it might need to look up. Most failed designs put the second kind in the first place.</p>
-        <p><a href="https://amcamillo.github.io/thinkinfosec-hub/Research/context-vs-mcp/">Read the full briefing →</a></p>
+<p>Context is the right home for what the agent must always know. Fetching is the right home for what it might need to look up. Most failed designs put the second kind in the first place.</p>
       </div></div>
-      <div class="beat" style="min-height:70vh"><div>
+      <div class="beat beat-short"><div>
         <p>Look at the basin one more time.</p>
+        <p class="next"><a href="../">Read the full briefing &rarr;</a></p>
       </div></div>
     </section>
 
   </div>
-</div>
-
-<script>
-(() => {
-  const root = document.documentElement;
-  const KEY = 'tih-story-theme';
-  try { const t = localStorage.getItem(KEY); if (t) root.dataset.theme = t; } catch (e) {}
-  document.getElementById('theme').addEventListener('click', () => {
-    const dark = getComputedStyle(root).colorScheme.includes('dark');
-    root.dataset.theme = dark ? 'light' : 'dark';
-    try { localStorage.setItem(KEY, root.dataset.theme); } catch (e) {}
-  });
-
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const cv = document.getElementById('glass'), ctx = cv.getContext('2d');
-  const scenes = [...document.querySelectorAll('.scene')];
-  const rail = document.getElementById('rail');
-  scenes.forEach(() => rail.appendChild(document.createElement('i')));
-
-  const load = src => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = src; });
-  Promise.all([load('atlas.webp'), load('atlas-grey.webp'), load('lead.webp'), load('lead-water.webp'), fetch('panes.json').then(r => r.json())])
-    .then(([atlas, grey, lead, leadW, data]) => start(atlas, grey, lead, leadW, data));
-
-  function start(atlas, grey, lead, leadW, data) {
-    const { W, H, panes } = data, MID = 677;
-    panes.forEach(p => { p.half = p.cx < MID ? 'L' : 'R'; });
-    const basin = { x: 677, y: 560 };
-
-    // lead tinted cyan, for the "pieces" reveal
-    const leadGlow = document.createElement('canvas'); leadGlow.width = W; leadGlow.height = H;
-    const lg = leadGlow.getContext('2d'); lg.drawImage(lead, 0, 0);
-    lg.globalCompositeOperation = 'source-in'; lg.fillStyle = '#00BFCF'; lg.fillRect(0, 0, W, H);
-
-    let dpr = 1, view = { s: 1, ox: 0, oy: 0 };
-    function resize() {
-      dpr = Math.min(2, devicePixelRatio || 1);
-      const w = cv.clientWidth, h = cv.clientHeight;
-      cv.width = w * dpr; cv.height = h * dpr;
-      const wide = w >= 900;
-      const aw = wide ? w * 0.58 : w, ah = wide ? h - 80 : h * 0.56;
-      const s = Math.min(aw / W, ah / H) * 0.9;
-      view = { s, ox: (aw - W * s) / 2, oy: (wide ? 70 : 64) + (ah - H * s) / 2 };
-      need = true;
-    }
-
-    const ease = t => t < 0 ? 0 : t > 1 ? 1 : t * t * (3 - 2 * t);
-    const seg = (p, a, b) => ease((p - a) / (b - a));
-    const css = n => getComputedStyle(root).getPropertyValue(n).trim();
-
-    // a document, drawn as a stained-glass pane: parchment, lead outline, text lines
-    function doc(x, y, w, h, o) {
-      o = o || {};
-      ctx.save(); ctx.translate(x, y); ctx.rotate(o.rot || 0); ctx.globalAlpha = o.a == null ? 1 : o.a;
-      const g = o.grey || 0;
-      const base = o.tint || [239, 230, 210];
-      const mix = c => Math.round(c * (1 - g) + 150 * g);
-      ctx.fillStyle = `rgb(${mix(base[0])},${mix(base[1])},${mix(base[2])})`;
-      ctx.strokeStyle = '#0a0f1c'; ctx.lineWidth = 3;
-      ctx.beginPath(); ctx.rect(-w / 2, -h / 2, w, h); ctx.fill(); ctx.stroke();
-      ctx.lineWidth = 2; ctx.globalAlpha *= .55;
-      for (let i = 1; i <= 3; i++) { ctx.beginPath(); ctx.moveTo(-w / 2 + 8, -h / 2 + i * h / 4.2); ctx.lineTo(w / 2 - 8 - (i === 3 ? w * .3 : 0), -h / 2 + i * h / 4.2); ctx.stroke(); }
-      if (o.ring) { ctx.globalAlpha = 1; ctx.strokeStyle = o.ring; ctx.lineWidth = 4; ctx.strokeRect(-w / 2 - 6, -h / 2 - 6, w + 12, h + 12); }
-      if (o.seal) { ctx.globalAlpha = 1; ctx.fillStyle = '#FF2D78'; ctx.beginPath(); ctx.arc(w / 2 - 12, h / 2 - 12, 8, 0, 7); ctx.fill(); }
-      ctx.restore();
-    }
-    function label(t, x, y, c, align) {
-      ctx.save(); ctx.font = `700 ${Math.max(22, 13 / view.s)}px "Space Mono", monospace`;
-      ctx.textAlign = align || 'center';
-      const m = ctx.measureText(t), fs = parseFloat(ctx.font.split(' ')[1]), w = m.width + fs * .9;
-      const bx = align === 'left' ? x - fs * .45 : align === 'right' ? x - m.width - fs * .45 : x - w / 2;
-      ctx.globalAlpha *= .86; ctx.fillStyle = css('--bg'); ctx.beginPath(); ctx.roundRect(bx, y - fs * 1.05, w, fs * 1.5, fs * .3); ctx.fill();
-      ctx.globalAlpha /= .86; ctx.fillStyle = c || css('--ink'); ctx.fillText(t, x, y); ctx.restore();
-    }
-    const rnd = i => { const x = Math.sin(i * 127.1 + 3.7) * 43758.5453; return x - Math.floor(x); };
-
-    // pane state per frame
-    // o: { lead: alpha for both halves, L/R: {a, dx} per half, water: alpha of the lead around water, glow }
-    function drawLead(img, o) {
-      const L = Object.assign({ a: 1, dx: 0 }, o.L), R = Object.assign({ a: 1, dx: 0 }, o.R), base = o.lead == null ? 1 : o.lead;
-      for (const [h, x0, x1] of [[L, 0, MID], [R, MID, W]]) {
-        const a = base * h.a; if (a <= 0) continue;
-        ctx.save(); ctx.beginPath(); ctx.rect(x0 + h.dx, 0, x1 - x0, H); ctx.clip();
-        ctx.globalAlpha = a; ctx.drawImage(img, h.dx, 0); ctx.restore();
-      }
-    }
-    function drawPanes(fn, o) {
-      o = typeof o === 'number' ? { lead: o, glow: arguments[2] } : (o || {});
-      for (const p of panes) {
-        const st = fn(p); if (!st || st.a <= 0.003) continue;
-        const k = st.k == null ? 1 : st.k;
-        ctx.save();
-        ctx.translate(p.cx + (st.dx || 0), p.cy + (st.dy || 0)); ctx.scale(k, k); ctx.translate(-p.cx, -p.cy);
-        const gr = st.g || 0;
-        if (gr < 1) { ctx.globalAlpha = st.a * (1 - gr); ctx.drawImage(atlas, p.ax, p.ay, p.w, p.h, p.x, p.y, p.w, p.h); }
-        if (gr > 0) { ctx.globalAlpha = st.a * gr; ctx.drawImage(grey, p.ax, p.ay, p.w, p.h, p.x, p.y, p.w, p.h); }
-        ctx.restore();
-      }
-      drawLead(lead, o);
-      // the water belongs to the left basin, so its lead travels with the left half
-      drawLead(leadW, { lead: (o.lead == null ? 1 : o.lead) * (o.water == null ? 1 : o.water), L: o.L, R: o.L });
-      if (o.glow > 0) { ctx.globalAlpha = o.glow; ctx.drawImage(leadGlow, 0, 0); }
-      ctx.globalAlpha = 1;
-    }
-
-    const gauge = document.getElementById('gauge'), gVal = document.getElementById('gVal'),
-      gFill = document.getElementById('gFill'), gLabel = document.getElementById('gLabel'), gNote = document.getElementById('gNote');
-    function setGauge(on, v, lab, note) {
-      gauge.classList.toggle('on', on); if (!on) return;
-      gVal.textContent = typeof v === 'number' ? Math.round(v).toLocaleString('en-NZ') + (v ? '' : '') : v;
-      gFill.style.width = (typeof v === 'number' ? Math.min(100, v / 1500) : 2) + '%';
-      gLabel.textContent = lab || 'In the window'; gNote.textContent = note || 'compaction fires at 150,000';
-    }
-
-    const halfShift = (p, d) => p.half === 'L' ? -d : d;
-
-    // ---- scenes: each draws the whole frame for progress p (0..1) ----
-    const S = [
-      // 0 · the question
-      p => {
-        const e = seg(p, .55, .95);
-        drawPanes(() => ({ a: 1 - .72 * e, g: .5 * e }), 1 - .5 * e, e);
-        setGauge(false);
-      },
-      // 1 · three ways in
-      p => {
-        const e = seg(p, .05, .4), d = 70 * e;
-        drawPanes(q => ({ a: 1, dx: halfShift(q, d) }), { L: { dx: -d }, R: { dx: d } });
-        // documents pour into the left basin
-        const n = Math.floor(seg(p, .25, .95) * 14);
-        for (let i = 0; i < n; i++) {
-          const t = Math.min(1, (p * 14 - i) * .6 + .2);
-          doc(470 - d + rnd(i) * 220, 80 + t * (420 + rnd(i + 9) * 60), 70, 50, { rot: (rnd(i + 3) - .5) * .9 });
-        }
-        if (p > .45) { // the cup is lifted only when asked
-          const c = seg(p, .45, .8);
-          ctx.save(); ctx.globalAlpha = .7 * c; ctx.strokeStyle = '#5fe9f5'; ctx.lineWidth = 5;
-          ctx.beginPath(); ctx.arc(960 + d, 330, 70, 0, 7); ctx.stroke(); ctx.restore();
-          label('only when asked', 960 + d, 440, null);
-        }
-        setGauge(false);
-      },
-      // 2 · the rot
-      p => {
-        drawPanes(() => ({ a: 1 }), 1, 0);
-        const n = Math.round(6 + seg(p, .1, .95) * 44);
-        const fade = seg(p, .15, .95);
-        for (let i = 0; i < n; i++) {
-          const x = 400 + rnd(i) * 470, y = 470 + rnd(i + 50) * 360;
-          if (i === 3) continue;
-          doc(x, y, 64, 46, { rot: (rnd(i + 7) - .5) * 1.2, a: .95 });
-        }
-        // the answer sits in the middle of the pile
-        doc(640, 650, 78, 56, { ring: `rgba(255,45,120,${1 - fade * .85})`, grey: fade * .9, a: 1 - fade * .35 });
-        label('the answer', 640, 610 - 40, `rgba(255,140,192,${1 - fade * .8})`);
-        setGauge(true, 8000 + seg(p, .05, .95) * 112000);
-      },
-      // 3 · the guess
-      p => {
-        drawPanes(() => ({ a: 1, g: .25 }), 1, 0);
-        for (let i = 0; i < 40; i++) doc(400 + rnd(i) * 470, 470 + rnd(i + 50) * 360, 64, 46, { rot: (rnd(i + 7) - .5) * 1.2, a: .55, grey: .5 });
-        const near = ['Q3 policy (superseded)', 'clause, other contract', 'tool output, yesterday'];
-        const e = seg(p, .15, .6), lift = seg(p, .55, .9);
-        near.forEach((t, i) => {
-          const x = 470 + i * 160, y = 640 - e * 60 - (i === 0 ? lift * 260 : 0);
-          doc(x, y, 92, 66, { seal: true, a: i === 0 ? 1 : 1 - lift * .5 });
-          if (e > .2) label(t, x, y + 62, i === 0 ? css('--mag-ink') : css('--muted'));
-        });
-        if (lift > .5) label('lifted with confidence', 470, 640 - 60 - 260 - 52, css('--ink'));
-        setGauge(true, 120000 + p * 20000);
-      },
-      // 4 · compaction
-      p => {
-        const c = seg(p, .3, .75);
-        drawPanes(q => {
-          if (q.g === 'water' || q.g === 'scroll') return { a: 1 - .55 * c, g: c };
-          return { a: 1 };
-        }, { water: 1 - .6 * c });
-        for (let i = 0; i < 46; i++) {
-          const x = 400 + rnd(i) * 470, y = 470 + rnd(i + 50) * 360;
-          doc(x + (basin.x - x) * c, y + (basin.y - y) * c, 64 * (1 - .8 * c), 46 * (1 - .8 * c), { rot: (rnd(i + 7) - .5) * 1.2 * (1 - c), a: 1 - c });
-        }
-        if (c > .5) {
-          const a = seg(p, .6, .85);
-          doc(basin.x, basin.y, 120, 80, { tint: [120, 140, 150], a });
-          label('summary', basin.x, basin.y + 75, css('--muted'));
-        }
-        if (p > .75) {
-          const a = seg(p, .75, .95), y0 = 860, x0 = basin.x;
-          ctx.save(); ctx.globalAlpha = a;
-          label('CLAUDE.md · re-injected from disk', x0, y0, css('--gold'));
-          label('5 files · skills ≤ 25,000', x0, y0 + 46, css('--gold'));
-          ctx.restore();
-        }
-        setGauge(true, p < .3 ? 140000 + p / .3 * 10000 : (p < .7 ? 150000 : 'summary'), 'In the window', p < .3 ? 'compaction fires at 150,000' : 'compacted');
-      },
-      // 5 · the laundering
-      p => {
-        const melt = seg(p, .33, .55), bleach = seg(p, .68, .98);
-        drawPanes(q => q.g === 'ribbon' ? { a: 1, g: bleach } : { a: 1 }, 1 - .92 * melt, 0);
-        // the outside piece
-        const t = 1 - melt, out = [255 * t + 0 * melt, 160 * t + 191 * melt, 70 * t + 207 * melt];
-        const pos = [[520, 620], [610, 700], [700, 640], [560, 760], [760, 720], [650, 560]];
-        pos.forEach(([x, y], i) => doc(x, y, 70, 50, { tint: i === 2 ? out : [0, 191, 207], a: .95, rot: (rnd(i) - .5) * .5 }));
-        if (melt < .5) label('from a web page', 700, 600, css('--gold'));
-        if (melt > .9 && p < .66) label('which one?', 640, 520, css('--ink'));
-        // the rule, bleaching over three compactions
-        if (p > .62) {
-          const steps = Math.min(3, Math.floor(bleach * 3.2));
-          for (let i = 0; i < 3; i++) label(i < steps ? '● compaction ' + (i + 1) : '○', 1040, 520 + i * 36, i < steps ? css('--mag-ink') : css('--muted'), 'left');
-          label('"don’t touch prod config"', 930, 470, `rgba(255,140,192,${1 - bleach * .9})`);
-        }
-        setGauge(true, 'summary', 'In the window', 'compacted · provenance lost');
-      },
-      // 6 · why fetch
-      p => {
-        const e = seg(p, .05, .5);
-        drawPanes(q => q.half === 'L' ? { a: 1 - .85 * e, g: e } : { a: 1 }, { L: { a: 1 - .8 * e }, water: 1 - .8 * e });
-        const names = ['freshness', 'access control', 'provenance', 'audit', 'a smaller window'];
-        const k = seg(p, .5, .95) * 5;
-        names.forEach((n, i) => {
-          if (k > i) label(n, 1150, 460 + i * 50, i === 1 ? css('--mag-ink') : css('--acc-ink'), 'left');
-        });
-        setGauge(true, p < .3 ? 150000 - seg(p, 0, .3) * 148000 : 2000, 'In the cup', 'one step’s worth, then cleared');
-      },
-      // 7 · the cost
-      p => {
-        const fray = seg(p, .1, .4), legs = seg(p, .5, .8), leak = seg(p, .8, 1);
-        const jit = Math.floor(performance.now() / 120);
-        drawPanes(q => q.half === 'L' ? { a: .15, g: 1 } :
-          { a: 1, dx: q.g === 'ribbon' ? (rnd(q.id + jit) - .5) * 16 * fray : 0, dy: q.g === 'ribbon' ? (rnd(q.id * 3 + jit) - .5) * 10 * fray : 0 }, { L: { a: .2 }, water: .2 });
-        if (legs > 0) {
-          ctx.save(); ctx.globalAlpha = legs; ctx.lineWidth = 14; ctx.lineCap = 'round';
-          ctx.strokeStyle = '#f5c542'; ctx.beginPath(); ctx.moveTo(1180, -40); ctx.quadraticCurveTo(1150, 200, 1010, 300); ctx.stroke();
-          ctx.strokeStyle = '#FF2D78'; ctx.beginPath(); ctx.moveTo(990, 390); ctx.quadraticCurveTo(1150, 470, 1330, 470); ctx.stroke();
-          ctx.restore();
-          label('private data', 760, 150, css('--acc-ink'));
-          label('untrusted content', 1200, 40, css('--gold'), 'left');
-          label('a way out', 1330, 520, css('--mag-ink'), 'right');
-        }
-        if (leak > 0) {
-          const t = performance.now() / 600;
-          ctx.save(); ctx.fillStyle = '#00BFCF';
-          for (let i = 0; i < 8; i++) { const f = (t + i / 8) % 1; ctx.globalAlpha = leak * (1 - f); ctx.beginPath(); ctx.arc(1330 + f * 60, 470 + f * f * 300, 9, 0, 7); ctx.fill(); }
-          ctx.restore();
-        }
-        setGauge(false);
-      },
-      // 8 · RAG over MCP
-      p => {
-        const e = seg(p, .05, .4);
-        drawPanes(q => ({ a: 1 - .82 * e, g: e * .8 }), 1 - .7 * e, 0);
-        if (e > 0) {
-          ctx.save(); ctx.globalAlpha = e; ctx.lineWidth = 6; ctx.strokeStyle = css('--acc'); ctx.lineCap = 'round';
-          const boxes = [[160, 1020, 'SharePoint'], [440, 1020, 'Confluence'], [720, 1020, 'tickets']];
-          boxes.forEach(([x, y]) => { ctx.beginPath(); ctx.moveTo(x, y - 30); ctx.lineTo(x, 900); ctx.lineTo(560, 860); ctx.stroke(); });
-          ctx.beginPath(); ctx.moveTo(560, 860); ctx.lineTo(560, 720); ctx.lineTo(905, 560); ctx.lineTo(905, 230); ctx.stroke();
-          ctx.restore();
-          boxes.forEach(([x, y, t]) => label(t, x, y, css('--ink')));
-          label('hybrid index', 560, 900 + 4, css('--muted'));
-          ctx.save(); ctx.globalAlpha = e; ctx.fillStyle = '#FF2D78'; ctx.beginPath(); ctx.arc(905, 460, 26, 0, 7); ctx.fill(); ctx.restore();
-          label('valve: identity + ACL', 945, 470, css('--mag-ink'), 'left');
-          const c = seg(p, .45, .9);
-          for (let i = 0; i < 3; i++) if (c * 3 > i) {
-            doc(1150, 80 + i * 125, 110, 64, { tint: [210, 245, 248] });
-            label(['runbook · §4 · 12 Nov', 'policy · §2 · 3 Nov', 'ticket · #8812 · today'][i], 1150, 80 + i * 125 + 62, css('--acc-ink'));
-          }
-        }
-        setGauge(false);
-      },
-      // 9 · when to use which
-      p => {
-        const e = seg(p, .05, .4);
-        drawPanes(q => ({ a: 1, dx: halfShift(q, 50 * e) }), 1, 0);
-        sorted.forEach((it, i) => {
-          if (!it.placed) return;
-          const L = it.side === 'ctx';
-          const x = L ? 420 + (i % 3) * 90 - 50 * e : 1000 + 50 * e, y = L ? 600 + Math.floor(i / 3) * 70 : 330;
-          if (L) doc(x, y, 70, 50, { tint: [245, 197, 66] });
-        });
-        setGauge(false);
-      },
-      // 10 · return and hold
-      p => {
-        drawPanes(() => ({ a: 1 }), 1, 0);
-        if (p > .55) {
-          const t = performance.now() / 900, a = seg(p, .55, .8) * (.55 + .45 * Math.sin(t * 2));
-          ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = '#FF7A3D';
-          ctx.beginPath(); ctx.ellipse(700, 640, 22, 15, .3, 0, 7); ctx.fill();
-          ctx.globalAlpha = a * .4; ctx.beginPath(); ctx.arc(700, 640, 46, 0, 7); ctx.fill(); ctx.restore();
-        }
-        setGauge(false);
-      }
-    ];
-
-    // scene 9 interaction
-    const items = [
-      ['One policy, reviewed clause by clause', 'ctx'], ['Two contracts to compare', 'ctx'], ['System instructions', 'ctx'],
-      ['A 100-page standard', 'fetch'], ['The live ticket queue', 'fetch'], ['Permissioned SharePoint', 'fetch'], ['Yesterday’s threat intel', 'fetch']
-    ];
-    const sorted = items.map(([t, side]) => ({ t, side, placed: false }));
-    const ctxCol = document.getElementById('ctx'), fCol = document.getElementById('fetch');
-    const pool = document.createElement('div'); ctxCol.parentElement.parentElement.before(pool);
-    sorted.forEach(it => {
-      const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = it.t;
-      b.addEventListener('click', () => { it.placed = true; b.dataset.side = it.side; (it.side === 'ctx' ? ctxCol : fCol).appendChild(b); b.disabled = true; need = true; });
-      pool.appendChild(b);
-    });
-
-    // scroll → scene + progress
-    let need = true, cur = 0, prog = 0;
-    function measure() {
-      const mid = innerHeight * .5;
-      for (let i = 0; i < scenes.length; i++) {
-        const r = scenes[i].getBoundingClientRect();
-        if (r.top <= mid && r.bottom > mid) { cur = i; prog = (mid - r.top) / r.height; break; }
-        if (i === 0 && r.top > mid) { cur = 0; prog = 0; }
-      }
-      if (reduced) prog = prog < .5 ? .35 : 1;
-      [...rail.children].forEach((d, i) => d.classList.toggle('on', i === cur));
-    }
-    function frame() {
-      measure();
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, cv.width, cv.height);
-      ctx.setTransform(dpr * view.s, 0, 0, dpr * view.s, dpr * view.ox, dpr * view.oy);
-      S[cur](Math.max(0, Math.min(1, prog)));
-      requestAnimationFrame(frame);
-    }
-    addEventListener('resize', resize);
-    resize(); frame();
-  }
-})();
-</script>
+</main>
+<script src="rip-runtime.js"></script>
+<script src="scenes.js"></script>
+<script src="rip-art.js"></script>
+</body>
+</html>
