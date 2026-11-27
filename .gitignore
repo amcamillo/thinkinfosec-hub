@@ -10,3 +10,6 @@ tests/artifacts/
 # Local agent tooling and social-post exports: keep out of the public repo
 .cursor/
 Research/*/social/
+
+# Brainstorm specs and plans: local only
+docs/superpowers/
