@@ -1,0 +1,188 @@
+/* Where agents run · interactive explorer, embedded in the article.
+   Every selector is scoped under .dax and every class is prefixed d-, so research.css can't leak in
+   and nothing leaks out. Layout uses container queries on .dax, not the viewport.
+   One grid, one gap (--g): every panel edge lines up. Theme follows <html data-theme>.
+   Text colours hold 4.5:1 on their surfaces in both themes; chart fills are solid. */
+
+.dax {
+  --bg: #F3EFF8; --panel: #FFFFFF; --ink: #12244A; --muted: #3A4D72; --line: #5D6B85;
+  --mag: #B0125B; --mag-ink: #B0125B; --gold: #7A4F00; --ok: #0B7A4B; --acc: #00A3B1;
+  --sunk: #F5F6F9; --sel: #FBEAF2; --on: #E7F4EE; --tipbg: #FFFFFF;
+  --bd: rgba(18, 36, 74, .16);
+  --glow: 0 1px 0 rgba(18,36,74,.04), 0 14px 30px -22px rgba(18,36,74,.45);
+  --n-pass: #036A7C; --n-stop: #0B7A4B; --n-out: #B0125B; --n-blind: #7A4F00; --n-in: #FFFFFF; --n-blind-in: #FFFFFF;
+  --g: 10px; --pad: 14px; --cut: 10px;
+  --mono-f: var(--mono, "Space Mono", ui-monospace, Menlo, monospace);
+  --body-f: var(--serif-light, "DM Sans", -apple-system, "Segoe UI", sans-serif);
+  container: dax / inline-size;
+  position: relative;
+  margin: 24px 0 8px; padding: var(--g); background: var(--bg); color: var(--ink);
+  border-radius: 14px; font: 300 15px/1.5 var(--body-f); text-align: left;
+}
+:root[data-theme="dark"] .dax {
+  --bg: #070F1F; --panel: #0D1F3C; --ink: #F2F4F7; --muted: #C8CCD2; --line: #8A94A6;
+  --mag: #FF2D78; --mag-ink: #FF8CC0; --gold: #F5C542; --ok: #3DDC97; --acc: #00BFCF;
+  --sunk: #0A1932; --sel: #3A1430; --on: #0F3326; --tipbg: #14294A;
+  --bd: rgba(255, 255, 255, .14);
+  --glow: 0 0 0 1px rgba(255,255,255,.03), 0 18px 40px -24px rgba(0,0,0,.8);
+  --n-pass: #0E7C8C; --n-stop: #1E7F52; --n-out: #C2185B; --n-blind: #F5C542; --n-in: #FFFFFF; --n-blind-in: #0D1F3C;
+  background: radial-gradient(700px 300px at 92% 0%, rgba(255,45,120,.16), transparent 70%),
+              radial-gradient(600px 300px at 0% 60%, rgba(0,191,207,.10), transparent 70%), var(--bg);
+  box-shadow: 0 0 0 1px rgba(255,45,120,.25), 0 20px 50px -20px rgba(7,15,31,.7);
+}
+.dax *, .dax *::before, .dax *::after { box-sizing: border-box; }
+.dax :is(p, ul, ol, li, h3, fieldset, legend, blockquote) { margin: 0; padding: 0; max-width: none; border: 0; background: none; font-size: inherit; line-height: inherit; color: inherit; }
+.dax b, .dax strong { font-weight: 700; }
+.dax button { font: inherit; color: inherit; }
+.dax button:focus-visible, .dax input:focus-visible, .dax [tabindex]:focus-visible { outline: 2px solid var(--mag); outline-offset: 2px; }
+.dax label:has(input:focus-visible) { outline: 2px solid var(--mag); outline-offset: 2px; }
+
+/* ---- grid: narrow default, stacked ---- */
+.dax .d-wrap { display: grid; gap: var(--g); grid-template-columns: minmax(0, 1fr); grid-template-areas: "deck" "flow" "detail" "logs"; }
+.dax .d-deck { grid-area: deck; } .dax .d-flow { grid-area: flow; } .dax .d-detail { grid-area: detail; } .dax .d-logs { grid-area: logs; }
+
+.dax .d-panel { background: var(--panel); border: 1px solid var(--bd); padding: var(--pad); position: relative; box-shadow: var(--glow); min-width: 0;
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%); }
+.dax .d-panel::before { content: ""; position: absolute; left: 0; top: 0; width: 64px; height: 3px; background: var(--mag); }
+.dax .d-flow::before { background: var(--acc); }
+.dax .d-detail::before { background: var(--gold); }
+.dax .d-step { font: 700 11.5px/1.2 var(--mono-f); letter-spacing: .1em; text-transform: uppercase; margin: 0 0 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-height: 26px; color: var(--ink); }
+.dax .d-step > span:first-child { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 3px; border: 1px solid var(--mag); transform: skewX(-10deg); flex: none; }
+.dax .d-tag { font: 400 10px/1.2 var(--mono-f); letter-spacing: .06em; padding: 4px 6px; border: 1px dashed var(--muted); color: var(--muted); text-transform: uppercase; margin-left: auto; }
+.dax .d-hint { color: var(--muted); font-size: .8rem; margin: 8px 0 0; display: block; }
+.dax .d-why { display: block; color: var(--muted); font-size: .74rem; font-style: italic; min-height: 0; }
+
+/* deck */
+.dax .d-deck { display: grid; grid-template-columns: minmax(0, 1fr); padding: 0; }
+.dax .d-grp { padding: var(--pad); min-width: 0; display: flex; flex-direction: column; }
+.dax .d-grp + .d-grp { border-top: 1px solid var(--bd); }
+.dax .d-seg { display: grid; grid-template-columns: minmax(0, 1fr); grid-auto-rows: 1fr; gap: 5px; margin-bottom: 12px; min-width: 0; }
+.dax .d-seg:last-child { margin-bottom: 0; }
+.dax .d-seg legend { font: 400 11px/1 var(--mono-f); color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+.dax .d-seg label { position: relative; cursor: pointer; display: block; }
+.dax .d-seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.dax .d-seg label > span { display: flex; flex-direction: column; justify-content: center; gap: 1px; height: 100%; padding: 7px 10px; border: 1px solid var(--bd); background: var(--sunk); font-size: .86rem; line-height: 1.25; transition: border-color .15s, background .15s; }
+.dax .d-seg small { color: var(--muted); font-size: .72rem; }
+.dax .d-seg input:checked + span { border-color: var(--mag); background: var(--sel); box-shadow: inset 3px 0 0 var(--mag); }
+.dax .d-seg label:hover > span { border-color: var(--mag); }
+.dax .d-seg label.d-off { cursor: not-allowed; }
+.dax .d-seg label.d-off > span { border-style: dashed; color: var(--muted); }
+.dax .d-os, .dax .d-guard { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.dax .d-guard { grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 12px 0 4px; }
+.dax .d-presets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.dax .d-pbtn { font: 400 11px/1.2 var(--mono-f); padding: 8px 8px; background: var(--sunk); color: var(--ink); border: 1px solid var(--bd); cursor: pointer; border-radius: 0; text-align: center; }
+.dax .d-pbtn:hover { border-color: var(--mag); }
+.dax .d-pbtn[aria-pressed="true"] { border-color: var(--mag); background: var(--sel); box-shadow: inset 0 -3px 0 var(--mag); }
+.dax .d-controls { display: grid; grid-template-columns: minmax(0, 1fr); grid-auto-rows: 1fr; gap: 6px; }
+.dax .d-ctl { display: grid; grid-template-columns: auto minmax(0, 1fr); align-content: start; gap: 1px 7px; padding: 8px 10px; border: 1px solid var(--bd); background: var(--sunk); cursor: pointer; font-size: .86rem; line-height: 1.3; transition: border-color .15s, background .15s; }
+.dax .d-ctl input { margin: 2px 0 0; accent-color: var(--ok); grid-row: 1 / span 3; }
+.dax .d-ctl .d-cs, .dax .d-ctl .d-why { grid-column: 2; }
+.dax .d-ctl .d-cs { color: var(--muted); font-size: .73rem; font-family: var(--mono-f); }
+.dax .d-ctl.d-on { border-color: var(--ok); background: var(--on); box-shadow: inset 3px 0 0 var(--ok); }
+.dax .d-ctl.d-ctl-bad.d-on { border-color: var(--mag); background: var(--sel); box-shadow: inset 3px 0 0 var(--mag); }
+.dax .d-ctl.d-off { border-style: dashed; cursor: not-allowed; }
+.dax .d-ctl.d-off .d-cn { color: var(--muted); }
+
+/* flow */
+.dax .d-verdict { padding: 12px 14px; border-left: 4px solid var(--muted); background: var(--sunk); }
+.dax .d-verdict b { display: block; font: 700 1.05rem/1.3 var(--body-f); }
+.dax .d-verdict span { color: var(--muted); font-size: .88rem; display: block; margin-top: 4px; }
+.dax .d-verdict .d-vseen { color: var(--ink); }
+.dax .d-v-lose { border-color: var(--mag); } .dax .d-v-lose b { color: var(--mag-ink); }
+.dax .d-v-part { border-color: var(--gold); } .dax .d-v-part b { color: var(--gold); }
+.dax .d-v-win { border-color: var(--ok); } .dax .d-v-win b { color: var(--ok); }
+.dax .d-chartwrap { width: 100%; margin-top: 14px; }
+.dax .d-chart { display: block; overflow: visible; }
+.dax .d-chart text { font: 400 11px var(--mono-f); fill: var(--ink); }
+.dax .d-chart .d-in-k { font-size: 9.5px; letter-spacing: .08em; }
+.dax .d-chart .d-in-n { font-size: 11px; font-weight: 700; }
+.dax .d-nr { stroke-width: 1.5; cursor: pointer; }
+.dax .d-node[data-i] { cursor: pointer; outline: none; }
+.dax .d-node text { pointer-events: none; }
+.dax .d-s-pass .d-nr { fill: var(--n-pass); stroke: var(--n-pass); }
+.dax .d-s-stop .d-nr, .dax .d-s-win .d-nr { fill: var(--n-stop); stroke: var(--n-stop); }
+.dax .d-s-out .d-nr { fill: var(--n-out); stroke: var(--n-out); }
+.dax .d-s-blind .d-nr { fill: var(--n-blind); stroke: var(--n-blind); }
+.dax .d-s-skip .d-nr, .dax .d-s-backup .d-nr { fill: var(--panel); stroke: var(--line); stroke-dasharray: 4 3; }
+.dax .d-s-backup .d-nr { stroke: var(--ok); }
+.dax .d-chart .d-s-pass .d-in, .dax .d-chart .d-s-stop .d-in, .dax .d-chart .d-s-win .d-in, .dax .d-chart .d-s-out .d-in { fill: var(--n-in); }
+.dax .d-chart .d-s-blind .d-in { fill: var(--n-blind-in); }
+.dax .d-chart .d-s-skip .d-in { fill: var(--muted); }
+.dax .d-chart .d-s-backup .d-in { fill: var(--ok); }
+.dax .d-node.d-sel .d-nr { stroke: var(--ink); stroke-width: 3; stroke-dasharray: none; }
+.dax .d-node.d-hov .d-nr { stroke: var(--gold); stroke-width: 3; }
+.dax .d-node:focus-visible .d-nr { stroke: var(--mag); stroke-width: 3; }
+.dax .d-ln { stroke-width: 3; }
+.dax .d-ln-hot { stroke: var(--mag); }
+.dax .d-ln-cold { stroke: var(--line); stroke-dasharray: 3 4; stroke-width: 2; }
+.dax .d-chart .d-chip { font-size: 10.5px; }
+.dax .d-chart .d-c-stop, .dax .d-chart .d-c-backup { fill: var(--ok); font-weight: 700; }
+.dax .d-chart .d-c-skip { fill: var(--muted); }
+.dax .d-chart .d-c-out { fill: var(--mag-ink); font-weight: 700; }
+.dax .d-chart .d-lt { fill: var(--muted); font-size: 10px; }
+.dax .d-chart .d-lt-h { letter-spacing: .08em; }
+.dax .d-lc { stroke-width: 1.5; }
+.dax .d-lc0 { fill: var(--panel); stroke: var(--line); }
+.dax .d-lc1 { fill: var(--panel); stroke: var(--gold); }
+.dax .d-lc2, .dax .d-lch { fill: var(--gold); stroke: var(--gold); }
+.dax .d-lane { cursor: help; }
+.dax .d-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; font: 400 10.5px/1.4 var(--mono-f); color: var(--muted); margin-top: 10px; }
+.dax .d-lgsep { margin-left: 10px; }
+.dax .d-k { display: inline-block; width: 11px; height: 11px; border: 1.5px solid transparent; margin-left: 6px; }
+.dax .d-k-pass { background: var(--n-pass); } .dax .d-k-stop { background: var(--n-stop); } .dax .d-k-out { background: var(--n-out); }
+.dax .d-k-skip { border: 1.5px dashed var(--line); }
+.dax .d-k-seen { background: var(--gold); } .dax .d-k-none { border-color: var(--line); }
+.dax .d-k-part { border-color: var(--gold); background: linear-gradient(90deg, var(--gold) 50%, transparent 50%); }
+.dax .d-tip { position: absolute; z-index: 60; max-width: 280px; padding: 10px 12px; background: var(--tipbg); color: var(--ink); border: 1px solid var(--line); font-size: .82rem; line-height: 1.4; pointer-events: none; box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+.dax .d-tip[hidden] { display: none; }
+.dax .d-tip b { display: block; font: 700 .76rem var(--mono-f); color: var(--gold); margin-bottom: 4px; }
+
+/* stage detail */
+.dax .d-now { padding: 8px 10px; border-left: 3px solid var(--line); background: var(--sunk); font-size: .86rem; margin-bottom: 10px; }
+.dax .d-now-stop, .dax .d-now-backup { border-color: var(--ok); } .dax .d-now-pass { border-color: var(--mag); }
+.dax .d-what2 { font-size: .9rem; margin-bottom: 8px; }
+.dax .d-facts { padding-left: 18px; margin-bottom: 10px; font-size: .84rem; list-style: square; }
+.dax .d-facts li { margin: 3px 0; }
+.dax .d-facts li::marker { color: var(--mag-ink); }
+.dax .d-q { border-left: 3px solid var(--gold); padding: 4px 0 4px 12px; margin: 0 0 10px; font-size: .9rem; font-style: italic; }
+.dax .d-q .d-qs { font: normal 400 .72rem/1.4 var(--mono-f); color: var(--muted); margin-top: 4px; }
+.dax .d-myth { font-size: .84rem; color: var(--muted); }
+.dax .d-myth b { color: var(--ink); }
+
+/* log: the list fills the height its row gives it, so it never sets the row height */
+.dax .d-logs { display: flex; flex-direction: column; }
+.dax .d-logs .d-hint { margin: 0 0 10px; }
+.dax .d-logbox { position: relative; flex: 1 1 auto; height: 360px; }
+.dax .d-log { position: absolute; inset: 0; list-style: none; margin: 0; padding: 0; overflow: auto; font: 400 11.5px/1.45 var(--mono-f); border-top: 1px solid var(--bd); scrollbar-width: thin; }
+.dax .d-row { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 2px 8px; padding: 7px 4px; border-bottom: 1px solid var(--bd); transition: background .15s, opacity .15s; }
+.dax .d-row::marker { content: none; }
+.dax .d-lst { color: var(--muted); }
+.dax .d-who { font-weight: 700; overflow-wrap: anywhere; }
+.dax .d-what { grid-column: 2; color: var(--muted); overflow-wrap: anywhere; }
+.dax .d-what.d-f-blk { color: var(--ok); } .dax .d-what.d-f-rep { color: var(--gold); } .dax .d-what.d-f-leak { color: var(--mag-ink); }
+.dax .d-row.d-after { background: var(--sunk); }
+.dax .d-row.d-after .d-who, .dax .d-row.d-after .d-what { color: var(--muted); font-weight: 400; text-decoration: line-through; text-decoration-color: var(--line); }
+.dax .d-row.d-hl { background: var(--sel); box-shadow: inset 3px 0 0 var(--gold); }
+.dax .d-row.d-fade { opacity: .55; }
+
+/* ---- medium: the article column on desktop is ~870px ---- */
+@container dax (min-width: 420px) {
+  .dax .d-prods { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dax .d-presets { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@container dax (min-width: 640px) {
+  .dax { --g: 12px; } .dax .d-panel, .dax .d-grp { --pad: 18px; --cut: 12px; }
+  .dax .d-wrap { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "deck deck" "flow flow" "detail logs"; align-items: stretch; }
+  .dax .d-deck { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); }
+  .dax .d-deck .d-pre { grid-column: 1 / -1; grid-row: 1; }
+  .dax .d-deck .d-where { grid-column: 1; grid-row: 2; }
+  .dax .d-deck .d-route { grid-column: 2; grid-row: 2; border-top: 1px solid var(--bd); border-left: 1px solid var(--bd); }
+  .dax .d-deck .d-ctrls { grid-column: 1 / -1; grid-row: 3; }
+  .dax .d-presets { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .dax .d-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dax .d-logbox { height: auto; min-height: 300px; }
+}
+@container dax (min-width: 820px) {
+  .dax .d-controls { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) { .dax * { transition: none !important; } }
