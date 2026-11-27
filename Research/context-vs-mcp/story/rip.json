@@ -1,0 +1,221 @@
+{
+  "type": "rip",
+  "title": "Stop feeding the window: the story — Thinkinfosec Hub",
+  "description": "A scroll-driven visual story of the context-vs-MCP briefing: why a stuffed context window drives hallucination, what compaction throws away, and why fetching just in time is the better default.",
+  "author": "Andre Camillo",
+  "canonical": "https://amcamillo.github.io/thinkinfosec-hub/Research/context-vs-mcp/story/",
+  "ogImage": "https://amcamillo.github.io/thinkinfosec-hub/Research/context-vs-mcp/cover.webp",
+  "fontsPath": "../../../assets/fonts/",
+  "hub": {
+    "home": "../../../index.html",
+    "logo": "../../../assets/brand/logo-96.webp",
+    "label": "Hub",
+    "crumbs": [
+      [
+        "Research",
+        "../../"
+      ],
+      [
+        "Stop feeding the window",
+        "../"
+      ],
+      [
+        "the story",
+        null
+      ]
+    ],
+    "favicon32": "../../../assets/brand/favicon-32.png",
+    "favicon180": "../../../assets/brand/favicon-180.png"
+  },
+  "briefing": {
+    "href": "../",
+    "text": "Read the full briefing"
+  },
+  "art": {
+    "panes": "panes.json",
+    "atlas": "atlas.webp",
+    "grey": "atlas-grey.webp",
+    "lead": "lead.webp",
+    "extraLead": [
+      "lead-water.webp"
+    ],
+    "mid": 677
+  },
+  "hero": {
+    "kicker": "AI &middot; Research interactive presentation",
+    "title": "Stop feeding the <em>window</em>",
+    "lede": "Context versus MCP-based fetching in agents. Why a stuffed context window drives hallucination, what compaction quietly throws away, and why fetching just in time is usually the better default.",
+    "by": "Andre Camillo &middot; Nov 2026 &middot; scroll to begin",
+    "stats": [
+      [
+        "18",
+        "frontier models tested as input grew"
+      ],
+      [
+        "39%",
+        "average drop, single to multi-turn"
+      ],
+      [
+        "150k",
+        "tokens: default compaction trigger"
+      ],
+      [
+        "5",
+        "files re-read after compaction"
+      ]
+    ]
+  },
+  "scenes": [
+    {
+      "id": "the-window",
+      "draw": "question",
+      "beats": [
+        {
+          "html": "<p>Look at the window for a moment. Two women, one fountain. It looks like a single picture.</p>\n<p class=\"line\">Every window is made of pieces.</p>\n<p>Glass is cut, then held together by lead. The lead is what tells you where one piece ends and the next begins. Keep an eye on it.</p>"
+        }
+      ]
+    },
+    {
+      "id": "three-ways",
+      "draw": "three-ways",
+      "beats": [
+        {
+          "html": "<div class=\"kicker\">Three ways in</div>\n<h2>Who decides what's in the window?</h2>\n<p>On the left, everything goes in at the start, every token of it, whether the task needs it or not. That's inline context, and in the simple case it's file uploads too.</p>\n<p>On the right, the agent starts with almost nothing except a tap. When a step needs something, it holds up the cup. That's fetching through tools, usually over MCP.</p>"
+        },
+        {
+          "html": "<p>The vendor already knows which side wins at scale. Anthropic says that when project knowledge nears the window limit, Claude <q>will automatically enable RAG mode</q>.</p>\n<p class=\"line\">Past a threshold, it stops pouring and starts fetching.</p>",
+          "src": "Anthropic Help Centre, RAG for Projects"
+        }
+      ]
+    },
+    {
+      "id": "rot",
+      "draw": "rot",
+      "beats": [
+        {
+          "html": "<div class=\"kicker\">The rot</div>\n<h2>One of these documents is the answer.</h2>\n<p>Put it near the start or the end of a long input and models find it. Put it in the middle and performance <q>can degrade significantly</q>.</p>",
+          "src": "Liu et al., Lost in the Middle, TACL 2024"
+        },
+        {
+          "html": "<p>Keep pouring. Going from 20 retrieved documents to 50 improved GPT-3.5's accuracy by about <span class=\"num\">1.5%</span>.</p>\n<p class=\"line\">Two and a half times the tokens, for a rounding error.</p>\n<p>Chroma held the task fixed across <span class=\"num\">18</span> models and changed only the length. Every one got less reliable as the input grew.</p>",
+          "src": "Liu et al. 2024 &middot; Chroma, Context Rot, July 2025",
+          "honest": "The fading is illustrative, not a model run."
+        }
+      ]
+    },
+    {
+      "id": "guess",
+      "draw": "guess",
+      "beats": [
+        {
+          "html": "<div class=\"kicker\">The guess</div>\n<h2>Guess a birthday.</h2>\n<p>You have a <span class=\"num\">1 in 365</span> chance of scoring. Say \"I don't know\" and you score zero, every time. Train against accuracy-only tests long enough and you get a model that would rather guess.</p>",
+          "src": "OpenAI, Why language models hallucinate, Sept 2025"
+        },
+        {
+          "html": "<p>A full basin doesn't just hide the right page. It surrounds it with near-misses: last quarter's policy, a similar clause from another contract, yesterday's stale tool output.</p>\n<p>The model reaches in and lifts the closest one. It carries your seal.</p>\n<p class=\"line\">It uses your words. That's why you believe it.</p>",
+          "honest": "The chain from rot to confident wrong answer is my read, not either paper's claim."
+        }
+      ]
+    },
+    {
+      "id": "compaction",
+      "draw": "compaction",
+      "beats": [
+        {
+          "html": "<div class=\"kicker\">Compaction</div>\n<h2>The basin reaches the rim.</h2>\n<p>At <span class=\"num\">150,000</span> input tokens by default, the API's server-side compaction <q>replaces the older turns of a conversation with a summary that Claude writes</q>.</p>",
+          "src": "Claude API docs, compaction",
+          "to": 0.74
+        },
+        {
+          "html": "<p>Everything in the basin becomes one small pane. Only what's carved into the stone comes back sharp: the root <code>CLAUDE.md</code> and unscoped rules, re-injected from disk; up to <span class=\"num\">5</span> files; skills capped at <span class=\"num\">5,000</span> tokens each and <span class=\"num\">25,000</span> in total.</p>\n<p>What survives depends on where an instruction came from, not on how much it mattered.</p>",
+          "src": "Claude Code docs, context window"
+        }
+      ]
+    },
+    {
+      "id": "laundering",
+      "draw": "laundering",
+      "beats": [
+        {
+          "html": "<div class=\"kicker\">The laundering</div>\n<h2>One piece came from outside.</h2>\n<p>The agent read a web page along the way. It carried an injected instruction. Right now you can still see it: it's a different colour, and the lead around it says where it came from.</p>"
+        },
+        {
+          "html": "<p>Compaction is a model rewriting its own memory. It melts the window down and leads it again, with no marking of which pieces came from where.</p>\n<p class=\"line\">The lead was the provenance.</p>\n<p>Try to find the outside piece now.</p>",
+          "to": 0.62
+        },
+        {
+          "html": "<p>The mirror image: a rule you typed halfway through the session, <em>\"don't touch the production config\"</em>. Each compaction summarises it a little more. Nobody deletes it. It just stops being what the summariser thought mattered.</p>",
+          "honest": "My own analysis of how compaction works. I haven't seen it demonstrated end to end."
+        }
+      ]
+    },
+    {
+      "id": "why-fetch",
+      "draw": "why-fetch",
+      "beats": [
+        {
+          "html": "<div class=\"kicker\">Why fetch</div>\n<h2>Turn to the cup.</h2>\n<p>Anthropic's worked example cut one job from <span class=\"num\">150,000</span> tokens to <span class=\"num\">2,000</span> by keeping intermediate results outside the model. An independent test measured <span class=\"num\">78.5%</span> fewer input tokens on its own workload.</p>",
+          "src": "Anthropic, Code execution with MCP, Nov 2025 &middot; AIMultiple"
+        },
+        {
+          "html": "<p>Efficiency is the argument you'll hear first. It isn't the strongest one. What a fetched piece keeps, and an upload loses:</p>\n<p><b>Freshness.</b> It reads today's version. <b>Access control.</b> The ribbon: the server checks who's asking. <b>Provenance.</b> Every piece keeps its lead. <b>Audit.</b> Every pour is a log line. <b>A smaller window.</b> Fewer distractors.</p>"
+        }
+      ]
+    },
+    {
+      "id": "cost",
+      "draw": "cost",
+      "beats": [
+        {
+          "html": "<div class=\"kicker\">The cost</div>\n<h2>The tap can lie.</h2>\n<p>The tap comes with a label: its tool description. The model reads every word of it, including the words you never see in the UI. The MCP spec says those descriptions <q>should be considered untrusted, unless obtained from a trusted server</q>.</p>\n<p>Invariant Labs hid instructions in one and pulled SSH keys in a demo. CyberArk showed the same trick works in schemas and outputs, and that a server can change its description after you approve it.</p>",
+          "src": "MCP spec &middot; Invariant Labs, Apr 2025 &middot; CyberArk, Poison everywhere",
+          "to": 0.42
+        },
+        {
+          "html": "<p>Now count the taps on one cup. Private data. Untrusted content. A way to send data out. With all three connected, an injected instruction can read the first and pour it down the third. That's Simon Willison's lethal trifecta.</p>\n<p>Cut any one leg and watch the cup.</p>\n<div class=\"knobs\" role=\"group\" aria-label=\"Trifecta legs\">\n<button type=\"button\" class=\"knob leg\" data-leg=\"0\" aria-pressed=\"true\">Private data</button>\n<button type=\"button\" class=\"knob leg\" data-leg=\"1\" aria-pressed=\"true\">Untrusted content</button>\n<button type=\"button\" class=\"knob leg\" data-leg=\"2\" aria-pressed=\"true\">A way out</button>\n</div>\n<p class=\"readout\" id=\"legOut\" aria-live=\"polite\"></p>\n<p class=\"line\">Uploads fail silently. Fetching fails where you can see it.</p>"
+        }
+      ]
+    },
+    {
+      "id": "rag",
+      "draw": "rag",
+      "beats": [
+        {
+          "html": "<div class=\"kicker\">RAG over MCP</div>\n<h2>Behind the fountain.</h2>\n<p>The harness calls the retrieval server's search tool. The server checks the caller's token, queries a hybrid index, filters by each chunk's access list, and returns a handful of chunks with their source attached.</p>\n<p>Filter at the valve, before the water reaches the cup. Filtering after the model has seen it is too late. Change who's asking:</p>\n<div class=\"knobs\" role=\"group\" aria-label=\"Who is asking\">\n<button type=\"button\" class=\"knob who\" data-who=\"analyst\" aria-pressed=\"true\">SOC analyst</button>\n<button type=\"button\" class=\"knob who\" data-who=\"contractor\" aria-pressed=\"false\">Contractor</button>\n</div>\n<p class=\"readout\" id=\"whoOut\" aria-live=\"polite\"></p>",
+          "honest": "The documents and access lists are made up to show the mechanism."
+        },
+        {
+          "html": "<p>Retrieval quality still matters. Anthropic reports contextual retrieval cut failed retrievals by <span class=\"num\">49%</span>, and by <span class=\"num\">67%</span> with reranking.</p>\n<p class=\"line\">Bad retrieval is just a smaller stuffed window.</p>",
+          "src": "Anthropic, Contextual Retrieval, Sept 2024 (own top-20 setup, vendor numbers)"
+        }
+      ]
+    },
+    {
+      "id": "when",
+      "draw": "when",
+      "beats": [
+        {
+          "html": "<div class=\"kicker\">When to use which</div>\n<h2>Where do you draw the line?</h2>\n<p>Small, stable and needed whole goes in the basin. Large, changing, permissioned or spread across systems comes from the tap. Drag the line on the glass, or use the slider, and watch what the basin has to carry.</p>\n<label class=\"slider\">Items in the basin\n<input type=\"range\" id=\"divider\" min=\"0\" max=\"7\" step=\"1\" value=\"3\" aria-describedby=\"divOut\">\n<span class=\"ends\"><span>fetch everything</span><span>upload everything</span></span>\n</label>\n<p class=\"readout\" id=\"divOut\" aria-live=\"polite\"></p>\n<ul class=\"warn\" id=\"divWarn\"></ul>",
+          "honest": "Token sizes are rough, for scale. The order is my decision rule from the briefing."
+        }
+      ]
+    },
+    {
+      "id": "hold",
+      "draw": "hold",
+      "beats": [
+        {
+          "html": "<h2>What does your agent start with?</h2>\n<p>Context is the right home for what the agent must always know. Fetching is the right home for what it might need to look up. Most failed designs put the second kind in the first place.</p>"
+        },
+        {
+          "html": "<p>Look at the basin one more time.</p>",
+          "short": true
+        }
+      ]
+    }
+  ],
+  "gaugeMax": 150000,
+  "gaugeLabel": "In the window",
+  "gaugeNote": "compaction fires at 150,000",
+  "scenesScript": "scenes.js"
+}
