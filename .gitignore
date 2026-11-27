@@ -6,3 +6,7 @@ tests/artifacts/
 
 # Local deliverables (may reference private tooling) — never publish
 .output/
+
+# Local agent tooling and social-post exports: keep out of the public repo
+.cursor/
+Research/*/social/
